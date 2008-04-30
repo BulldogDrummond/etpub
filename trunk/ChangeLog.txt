@@ -1,0 +1,1946 @@
+0.0.1
+* initial release
+
+0.0.2
+* fixed problem with !mute/!unmute
+* turned hitboxes back to the default height for corpses
+* made g_shrubbot and g_logAdmin cvars default to ""
+
+0.0.3
+* don't allow one admin to kick, ban, putteam, setlevel, or mute another
+  admin unless the victim has a lower (or equal) admin level.
+* fixed !kick so it works like a vote kick (complete with temp ban)
+* added guid stub and saved admin name to the output of listplayers
+* made shoving more like shrub (no pushback)
+* removed some debugging G_Printf()'s
+
+0.0.4
+* XPSave should now correctly remember the number of lives the client had.
+  This should prevent /reconnect for more lives on limited live servers.
+* !unmute is REALLY fixed now.
+* When a player is killed while playing dead, his death is now treated
+  normally.
+* XPSave will no longer reset after every map when on the first run of a
+  campaign.
+
+0.0.5
+* XPSave now correctly resets the number of lives after every map.
+* "Weapon not available" should only be printed now when trying to switch
+  to a disabled weapon (not when trying to join a locked team in warmup)
+* Shoving is only allowed when you're much closer to the victim than before.
+* linux binary should no longer require libstdc++ or libgcc shared libs.
+
+0.1.1
+* bumbed up to 0.1.x because of all the added features (be warned)
+* g_XPSave now has all shrub functionality (2 and 4 flags added).
+* XPSave no longer drops saved xp after 5 mins (missed that).
+* added g_maxTeamLandmines cvar
+* added fireteam letter in the output of !listplayers
+* increased the number of players allowed on one fireteam from 6 to 8
+* added cvars for the hitsounds used (see docs)
+* really fixed the "Weapon not available" message
+
+0.1.2
+* changed the maximum number of shrubbot admin levels from 6 to 32
+* changed the maximum number of shrubbot bans from 512 to 1024
+* changed the maximum number of shrubbot admins from 512 to 1024
+* fixed !ban so that the client is kicked normally instead of getting
+  phone jacked
+* if names are set for level definitions, those will be used instead of
+  the number in the output of !listplayers
+* when you kill someone playing dead it REALLY treats the kill normally now
+
+0.1.3
+* fixed a bug that prevented people from joining teams after the server sat
+  idle with no players.
+* fixed a bug that prevented the game from ending after the time ran out
+  on a dual objective map and one team got skulled.
+* XPSave will REALLY no longer drop stored XP after 5 minutes.
+
+0.1.4
+* changed Active Team Balance so that it will never offset teams by more than
+  2 players. (too many complaints with percentage)
+* when g_XPSave is set with the 2 flag XP is not lost anymore when doing a
+  map restart, shuffle, swapteams, etc on the first map of the campaign.
+* added proper space formatting for level names in the output of !listplayers
+* went on vacation
+
+0.1.5
+* fixed "Weapon is not available" message when going spec
+* reverted etpro weapon fix that allowed lvl 3 engineer to plant dynamite
+  too fast
+* players should no longer get lives when connecting to limited lives servers
+  running dual objective maps after the time runs out.
+* g_XPSave should now work when a player reconnects after a crash with a new
+  IP address.
+
+0.1.6
+* fixed a nasty XPSave bug that was introduced in 0.1.5 that caused people
+  be kicked when someone else joined.
+* included 2 new binary builds (win32 and glibc-2.1).
+
+0.1.7
+* fixed the "Weapon is not available" bug for what I hope is the last time.
+* XPSave now restores on connect instead of on team join.  Unfortunately, the
+  client won't draw XP in the limbo menu while on the spec team though.
+* converted g_shrubbot.c and g_shrubbot.h files to DOS newlines for
+  consistency's sake.
+* shrubbot 'flags' now support '*' as a wild card meaning all available flags
+  and any flag after the '*' is negated.
+* !admintest now draws the level 'name' if one is set
+* !listplayers now formats the level name column properly when color codes are
+  used in the name.
+* landmines can now be diffused on dual objective maps once the time runs out.
+* players joining after the time runs out on dual objective maps get no lives
+  on limited lives servers.  I mean it this time.
+* the weapon heat meter now draws properly for the tank mounted mg.
+
+0.1.8
+* can no longer use !setlevel to set a undefined level
+* !listplayers formatting will not mess up if un-named levels > 9 are used.
+* slightly defanged g_activeTeamBalance
+  (see http://linespeed.net/projects/etpub/ticket/21 )
+* this may be the last 0.1.x release since I'm going try adding some
+  features again.
+
+0.1.9
+* fixes a very annoying bug introduced in 0.1.7 where you can't switch to
+  different weapon without switching teams.
+* "Weapon not available" message is replaced with "{WEAPONNAME} not available"
+
+0.2.1
+* incremented to 0.2.x because of all the changes (be warned)
+* you can now type shrubbot commands in the chat dialog box as well as in the
+  client game console.
+* you can now send private messages from the chat dialog box
+* g_weapons now supports flags 4, 32, and 128 (see docs)
+* added several cvars for adjusting Active Team Balance: g_ATB_minXP,
+  g_ATB_minPlayers, g_ATB_axisHoldoff, and g_ATB_alliedHoldoff (see docs).
+* added g_mapConfigs cvar for per-map config files
+* added g_packDistance
+* added g_dropHealth
+* added g_dropAmmo
+* added g_tossDistance
+* josh: added g_logOptions (only flag 128 supported)
+* josh: added g_censor
+* josh: added g_censorPenalty (only flags 1 and 4 supported)
+* added g_intermissionTime
+* added g_intermissionReadyPercent
+* josh: added g_skills (only flags 2 and 4 supported)
+* josh: added !rename shrubbot command
+* hitboxes have been changed dramatically.  see
+  http://et.tjw.org/etpub/hitboxes/
+* if the match is paused, the match will automatically unpause after
+  match_timeoutlength seconds even if nobody unpauses it.
+* players will no longer get a skull next to their name when they switch teams
+  on unlimited lives servers.
+* teams are no longer locked when the warmup countdown starts
+* added the console commands cp, cpm, cpmsay, qsay, chat, chatclient, m, and
+  priv.
+* players with level 4 heavy and/or light weapons skills will not lose their
+  class and weapons when a new map starts.  However, they will still see the
+  limbo menu because of the client bug.
+* chat, chatclient, and cp  commands will recognize "\n" as a newline
+  character.
+
+0.2.2
+* fixed (I hope) a bug related to my hitbox changes that allows prone players
+  to get stuck in walls.
+* allow shrubbot commands to be run in the server console without a ! prefixed
+  to them.  this allows better shrubet functionality for cmds like cancelvote
+  and readconfig.
+* fixed (I hope) a race condition that could cause the temporary hitbox
+  lowering to be not so temporary and allow players to get stuck in walls
+  on revive.
+
+0.2.3
+* when using g_mapConfigs, "default.cfg" will now be exec'ed.
+* etpub now recognizes permanent bans in shrubbot.cfg although you still
+  can't make permanent bans with !ban (need time parameter).
+* fixed an animation bug when standing up from playdead.
+* josh: made several g_antilag fixes.
+* josh: censoring now colorcode- and case-insensitive
+* josh: antilag fixes for headshots, legshots, and tjw's hitboxes
+* josh: antilag hitbox fixes for head and legs. Not tested yet.
+* josh: antilag is pretty good except when prone.
+* tjw: added g_XPSave flag 8 (see docs)
+
+0.3.1
+* matt: !gib(g), !warn(R), !slap(A), !news(W) now available shrubbot commands
+* tjw: added g_hitboxes cvar (see docs)
+* tjw: antilag won't crash the server now.
+* josh: bans and kicks work with 2.60. They also give reasons to victims
+* josh: double jump added with g_misc 1 (bitflagged). Like shrub.
+* josh: /follow will now accept partial matches
+* tjw: hitboxes are now used for all traces, not just bullets.  for example,
+       you can now fire rifle grenades over teammate's shoulders.
+* tjw: extended matt's !slap command to also support !burn.  credit goes
+       to dvl drmmr.
+* josh: added g_skipCorrection
+* michael: added skill_ cvars http://linespeed.net/projects/etpub/ticket/67
+* matt: added !lock/unlock (K)
+* tjw: added compatability with the 2.60 maps/radar.script
+* tjw: added sanity checking to COM_BitSet().  this should prevent a common
+       server crash on several custom maps (e.g. glider)
+* tjw: prone MG soldiers can no longer shoot people standing on them or on
+       their gun
+* tjw: prone players are no much easier to stab.  the knife reach has been
+       increased and head and leg hitboxes are now knifable.
+
+0.3.2
+* josh: fixed censor so it works on more than the last word
+* josh: Added g_doubleJumpHeight defaulting to 1.4 to be tunable but feel
+        like shrub. g_doubleJumpHeight is a multiplier to the default jump
+        velocity. Your second jump velocity will be g_doubleJumpHeight time
+        the normal.
+* tjw: added checks in COM_BitCheck() and COM_BitClear() to prevent custom
+       map related server crashes.
+* matt: removed extra newlines from shrubbot AP() output.
+* josh: added documentation for the '3' shrubbot flag
+* tjw: updated to Tommes's latest German translation of the docs.
+* tjw: created a new shrubbot flag for !burn (u).  previously it shared the
+       (A) flag with !slap, but some admins may not want to enable both.
+* tjw: g_knifeonly should work again.
+* josh: Minor fixes to antilag. Shooting player no longer unlagged.
+* josh: Body hitboxes are now unlagged when drawn with debugBullets.
+* josh: Added antilag debug output from the server
+* josh: Added antilag debug output to the client for internal testing only
+        This client will also make the server hitboxes blue when g_debugBullets
+        is on and it will draw red hitboxes for what the client sees. Output
+        is on the console.
+* josh: Results of antilag debugging make it look perfect.
+* tjw: removed hack that prevented players with lvl 4 light/heavy weapons from
+       switching to spec for the first 60 seconds of the map.  this bug has
+       been fixed with the 2.60 patch so the hack is no longer neccessary.
+
+0.4.1
+* josh: fixed double jump bugs. Should be good now.
+* tjw: added g_debugHitboxes cvar
+* tjw: adjusted the standing/crouched head hitbox position to better match
+       the player model.
+* matt: added new 4 new cvars for Team Damage Restrictions, 1 client side
+       command.  cvars: g_teamdamagerestriction, g_minhits, g_autotempban,
+       g_autotempbantime.  client side command /damage
+* dvl: !lol command
+* josh: reordered antilag lerping to better match the client
+* josh: minor fixes to skip correction to better match ET's bg_slidemove.
+        This may have fixed the bouncing problem which is caused by
+        skip correction.
+* matt: partially implemented shrubbot flag 2 (not censored) and flag 9
+        (can do shrubbot commands via team and fireteam chat)
+* josh: antilag debug info now only prints for the hit entity. Won't print
+        anything if it does not hit a player. This happens in the same place
+        the hitbox is drawn.
+* tjw:  fixed knife and syringe while crouching over wounded player
+* tjw:  added !reset and !restart shrubbot commands.
+* tjw:  added support for the - and + operators in shrubbot [admin] flags.
+* tjw:  added g_voting cvar (see docs)
+* tjw:  changed the flag for !burn from 'u' to 'U'.  ('u' is reserved for
+        !uptime)
+* tjw:  added '6' and '8' shrubbot flags (see docs)
+* tjw:  overhauled g_goomba.  you can now goomba with falls that would not
+        normally damage you.  you can also do damage to wounded players by
+        jumping on them.
+* tjw:  corpse dragging now has a bit more pull, so corpses should keep up
+        when dragging from crouch.
+* tjw:  added g_weapons flag 256 (garands reload)
+* tjw:  akimbos will now reload when only 1 shot has been fired.  still reloads
+        both though.
+* matt: added g_skills flag 1, ability to spot landmines for teammates if you
+        have level 4 battlesense
+* tjw:  added g_moverScale cvar (see docs)
+* matt: added basic poison needles (g_poison)
+* dvl:  added !pip/!pop
+* matt: added mute status to !listplayers, red M is shown if player is muted
+        else, empty space
+* matt: changed !pause/unpause from z to Z, as !pip/!pop are z in shrub
+* dvl:  updated !pip/pop, !lol now accepts parameter for number of nades
+        !lol/!pop/!pip with no param does everyone
+	!lol -1 X does X nades around everyone
+* dvl:  g_slashKill partially implemented, only flag 8, disabling /kill
+* matt: added a primitive shake to poison needles
+* tjw:  added g_ammoCabinetTime and g_healthCabinetTime cvars (see docs)
+* tjw:  viewlock when wounded should no longer follow non-medics occasionally.
+* tjw:  XPSave should work for stopwatch gametypes now.
+* tjw:  ATB will not act during intermission anymore.
+* matt: fixed being poisoned across death/spawn
+* tjw:  added flags to g_hitsounds cvar (see docs)
+* tjw:  added /hitsounds client console command.  usage: /hitsounds [on|off]
+* tjw:  changed output of !admintest to better match shrubet
+* matt: added g_logOptions 256, to log private messages
+* tjw:  added g_spectator cvar (see docs)
+* tjw:  fixed bug that let you keep following a teammate when he switched
+        teams.
+* josh: Added bitflag 8 to g_censorPenalty which auto-mutes a player for
+        g_censorMuteTime [60] seconds.
+* josh: Fixed unlagged skip correction. The bouncing is gone now. It was
+        caused by the velocity never being copied over in the original
+        ET code. So velocity was always very very wrong. g_skipCorrection 1
+        should work VERY nicely now.
+* tjw:  fixed head hitbox position for moving animations
+* tjw:  increased the crouch hitbox adjustment because the moving animation
+        is taller than the idle one.
+* matt: added g_medics CVAR, controlling various aspects of the medic
+        added support for changing regeneration rate of the medic
+* josh: You can now use /follow to follow teammates when in limbo.
+* josh: Added g_truePing(0|1). Will calculate ping as the time between the
+        current time and the client's last command time stamp.
+* tjw:  added g_maxWarp cvar (see docs)
+* tjw:  added g_dropObj cvar (see docs)
+* tjw:  fixed a custom map related scripting segfault:
+        http://linespeed.net/projects/etpub/ticket/192
+* tjw:  players with slot 30 and higher should no longer have their names
+        displayed twice in the +scores
+* tjw:  fixed satchel auto-switch problem with 2.60
+* tjw:  merged 2.60 SDK
+* tjw:  added clearxp server console command.
+* matt: g_medics additions, medics can't self heal, can't heal self of poison
+* matt: removed ability to playdead when poisoned, ticket 191.  Potential fix
+        for using mobile MG or mounted MG to stop poison jitter effect
+* matt: added fling/launch/throw shrubbot commands
+* matt: fixed !slap bug that would revive if player was dead but not gibbed
+
+0.4.2
+* tjw: match_readypercent will now only be used for the ready percent in
+       warmup (like before).  g_intermissionReadyPercent will be used for
+       ready percent during intermission.
+* tjw: removed Players_Axis and Players_Allies from the server info string.
+       it turns out some admins do use up all of the extra space with 'sets'.
+       (e.g. .URL .IRC .FavoriteColor .ICQ .AstrologicalSign, etc.)
+* tjw: fixed (hopefully) a bug I introduced into G_SendScores() that caused
+       +scores to pop up seemingly randomly on servers with lots of players.
+       This can also cause client crashes.
+* tjw: MAX_SHRUBBOT_FLAGS increased from 32 to 64
+* tjw: MAX_SHURBBOT_ADMINS increased from 1024 to 32768
+* tjw: g_antilag was only working half the time.  I didn't understand
+       how EF_TELEPORT_BIT was used.  it's not set when the player
+       teleports, but rather toggled and the client looks for a change
+       between client frames.
+* tjw: non-soldier players with level 4 heavy weapons skill can now
+       pickup and use enemy SMG's.
+
+0.4.3
+* matt: Poison Needle kills now count as 3XP toward first aid skills
+* tjw:  removed correction on hitboxes for players in the tank.  2.60
+        fixed this, so it's no longer necessary.
+* tjw:  fixed tank MG overheating too fast.
+* tjw:  fixed "FLAMETHOWER not available" message spamming when using
+        team_maxFlamers.
+* tjw:  added g_serverInfo cvar (see docs)
+* tjw:  fixed a bug that caused spectators to follow the next player as
+        soon as ANYONE died unless the g_spectator 4 flag was set.
+* tjw:  shrubbot commands will now be ignored if g_shrubbot is set to "".
+        (for better etadmin_mod compatiblity).
+* tjw:  fixed the playdead on medkit bug.
+* tjw:  fixed a problem that caused incomplete scoreboards on servers with
+        high numbers of players.
+* tjw:  g_skipCorrection should work better now on servers with g_antilag
+        disabled.
+* tjw:  g_skipCorrection should work better now when the player is on a
+        ladder.
+* tjw:  calling !mute on a muted player will no longer unmute them.  calling
+        !unmute on a player who is not muted will no longer mute them.
+* tjw:  fixed problem with holding +attack while hitting jump as spectator.
+
+0.4.4
+* josh: Silenced akimbos are really silenced (thanks Azyu)
+* josh: Mutes persist across maps. auto_mute_time wasn't being saved, is now
+* tjw:  I'm a hypocrite and added yet another cvar in a bug fix release.
+        It's g_goombaFlags (see docs).  Many people do not like goomba doing
+        damage to teamates.  I will add more functionality to this cvar in
+        0.5.1.
+* josh: skip corrected entities are linked now so it will be harder to skip
+        over mines and players dropping packets will be more hittable if
+        antilag is not on.
+* tjw:  when using g_dropObj, players must switch to knife before they can
+        drop the objective.
+* tjw:  !reset and !restart will now work during intermission.
+* tjw:  fixed another problem with the scoreboard when there are over 32
+        players on a server.
+* tjw:  soldiers can again choose between pistol, akimbo, or mp40 when
+        they have level 4 heavy weapon skills.
+* tjw:  intermission countdown will now draw correctly for the client
+        if g_intermissionTime is set to something other than 60.
+        (thanks jaybird)
+
+0.5.1
+* matt: !listteams shrubbot command added
+* dvl:  g_logOptions 512 added, to log real time instead of server up time
+* azyu: g_weapons options 8,16 added, half/full restore of charge bar if
+        airstrike aborted
+* matt: poisoned players gurgle.  medics who caused the poisoning receiving
+        notification via a cp
+* matt: g_slashkill option 16 added, can't /kill when you are poisoned
+* matt: implemented azyu's patch for /kill functionality.  implements 1,2
+        flags, flag 4 doesn't work quite right
+* matt: added g_axisSpawnInvul, g_alliedSpawnInvul
+* josh: g_censorPenalty 2 flag now works. People with censored words in their
+        names will be kicked before they begin. If g_censorNames is not "",
+        censored words in names will be *'d and uncolored.
+* josh: g_logOptions 1 flag will print obituaries in chat instead of cpm.
+        Uses extra bandwidth.
+* josh: Poison and Goomba kills have new obituaries.
+* josh: g_logOptions 1024 will print obits faster from server. Uses more
+        bandwidth like g_logOptions 1. 1 will override 1024 so if you use
+        both you'll get obituaries in chat.
+* josh: g_killRating 1 added as default. Uses a probabilistic measure of a
+        players killing ability. Rating is based on how hard each kill is and
+        which weapon was used. See docs. /killrating shows your ratings.
+* josh: if g_killRating is 1, shuffle will use overall kill ratings.
+* josh: overall kill rating is included in XP save.
+* josh: Fixed a small spawn point bug I had made.
+* tjw:  added windows installer
+* tjw:  added mac installer
+* tjw:  used new PM_TraceAll() from 2.60 in playdead checking
+* tjw:  improved PM_TraceAll() related checking to test for players heads
+        and legs instead of just legs.  This should prevent player models
+        from sticking through doors when prone or dead next to them.
+* tjw:  added g_goombaFlags 2, 4, 8, and 16 (see docs)
+* josh: Added g_killRating flags 1,2,4, and 8 (see docs). Default is 7 for
+        testing purposes (0.5.0). Feel free to change the default for 0.5.1.
+* matt: added !passvote shrubbot command
+* tjw:  added g_shoveNoZ and g_shoveSound cvars (see docs)
+* tjw:  UPGRADE NOTE the value used for g_shove is significatly different
+        in this version of etpub.  It should be much closer to the shrubet
+        value, so lower values pack more punch.  80 is recommended.
+* tjw:  added g_ATB_swap and g_ATB_rating cvars (see docs)
+* tjw:  added 4 flag to g_serverInfo (see docs)
+* matt: added 8 flag to g_serverInfo
+* tjw:  added g_stats cvar (see docs)
+* matt: added 2048 g_logOptions option (see docs)
+* matt: shrubbot flags 4 and 7 implemented (see docs)
+* tjw:  added g_poisonSound (see docs)
+* tjw:  added visual effects to poisoned player behaviour.
+* tjw:  added g_hitsounds flag 16 (see docs)
+* tjw:  added g_poisonFlags cvar (see docs)
+* tjw:  "Project: Bug Fix" 002 merged
+* tjw:  "Project: Bug Fix" 006 merged
+* tjw:  "Project: Bug Fix" 007 merged
+* tjw:  "Project: Bug Fix" 008 merged (cgame)
+* tjw:  "Project: Bug Fix" 009 merged (cgame)
+* tjw:  "Project: Bug Fix" 010 merged
+* tjw:  "Project: Bug Fix" 011 merged (cgame)
+* tjw:  "Project: Bug Fix" 012 merged
+* tjw:  "Project: Bug Fix" 013 merged
+* tjw:  "Project: Bug Fix" 014 merged
+* tjw:  "Project: Bug Fix" 015 merged
+* tjw:  "Project: Bug Fix" 016 merged
+* tjw:  "Project: Bug Fix" 017 merged (ugh)
+* tjw:  "Project: Bug Fix" 018 merged (cgame)
+* tjw:  "Project: Bug Fix" 021 merged (cgame)
+* tjw:  "Project: Bug Fix" 023 merged (cgame)
+* tjw:  "Project: Bug Fix" 024 merged
+* tjw:  "Project: Bug Fix" 031 merged (cgame)
+* tjw:  "Project: Bug Fix" 032 merged (cgame)
+* tjw:  "Project: Bug Fix" 033 merged (cgame)
+* tjw:  "Project: Bug Fix" 034 merged (cgame)
+* tjw:  "Project: Bug Fix" 035 merged (cgame)
+* tjw:  "Project: Bug Fix" 036 merged
+* tjw:  "Project: Bug Fix" 037 merged (cgame)
+* tjw:  "Project: Bug Fix" 038 merged
+* tjw:  "Project: Bug Fix" 039 merged
+* tjw:  "Project: Bug Fix" 042 merged
+* tjw:  "Project: Bug Fix" 045 merged
+* tjw:  "Project: Bug Fix" 046 merged
+* tjw:  "Project: Bug Fix" 047 merged
+* tjw:  "Project: Bug Fix" 048 merged
+* tjw:  "Project: Bug Fix" 049 merged (cgame and ui)
+* tjw:  "Project: Bug Fix" 055 merged (botai)
+* tjw:  "Project: Bug Fix" 056 merged
+* tjw:  "Project: Bug Fix" 058 merged
+* tjw:  "Project: Bug Fix" 059 merged
+* tjw:  "Project: Bug Fix" 060 merged
+* tjw:  "Project: Bug Fix" 062 merged
+* tjw:  "Project: Bug Fix" 065 merged
+* tjw:  "Project: Bug Fix" 066 merged
+* tjw:  "Project: Bug Fix" 067 merged
+* tjw:  "Project: Bug Fix" 068 merged
+* tjw:  "Project: Bug Fix" 069 merged
+* tjw:  "Project: Bug Fix" 070 merged
+* tjw:  reformatted output of !showbans
+* tjw:  added g_tyranny (see docs)
+* tjw:  improved shrubbot documentation in docs/index.html
+* tjw:  removed *ChargeTime cvars from the serverInfo string by default
+        to save space.  These can be added back with the 16 flag to
+        g_serverInfo (see docs)
+* tjw:  when using g_serverInfo flags 1, 2, 4, or 8 the server will populate
+        the relevant cvars with "." characters to their maximum length
+	initially.  This will prevent "Info string length exceeded" crashes
+	from occurring mid-game if the admin has added too many 'sets'
+	cvars to support the g_serverInfo flag.  (The crash will instead
+	happen when the server starts.)
+* tjw:  /ignore and /unignore commands now accept slot# or partial
+        name match
+* tjw:  /unignore command now prints out all ignored clients if no
+        name or slot# is given.
+* tjw:  /m now recognizes the ignore list
+* tjw:  /vsay, /vsay_buddy, and /vsay_team now recognize the ignore list.
+* tjw:  /say, /say_team, and /say_buddy messages from clients who you
+        are ignoring will now print to your client console (not chat)
+        instead of dropping them altogether.
+* tjw:  when you use add or remove someone from your ignore list with
+        /ignore or /unignore, they are notified.
+* tjw:  !showbans now only prints out 30 bans at a time and accepts
+        a parameter (number to skip).
+* tjw:  doors will open silently when crouching (etpro thing I guess).
+* tjw:  added cvar g_mapScriptDirectory (see docs)
+* tjw:  added preliminary support for etpromapscripts.
+* tjw:  changed default for g_maxWarp to 4.  I also increased the number
+        of frames that g_skipCorrection will act on from 2 to 3.
+* tjw:  !showbans X supports negative number to show the last X bans in
+        the list.
+* tjw:  added !disorient and !orient shrubbot commands.
+* tjw:  /killrating now prints out a sorted list of all player's killratings
+        similar to the /players command.  the list is only printed to
+        the client that runs the command.
+* tjw:  added g_campaignFile cvar (see docs)
+* tjw:  fixed possible covert ops weapon issue with g_classChange
+* tjw:  added 'forcecvar' server command.  this will of course only work
+        if using the client mod.  unmodified clients will see the message
+        "Unknown client game command: forcecvar".
+* tjw:  improved etpromapscripts compatibility.  need client mod in order
+        to see "You are near the Back Door" popup.
+* tjw:  added g_fightSound cvar (see docs)
+* tjw:  client mod won't draw the wounded message when playing dead.
+* tjw:  client mod won't predict EV_NOFIRE_UNDERWATER.  this means if
+        you're using g_weapons 2 or 4 flags, you won't hear clicking
+	when using syringe or pliers underwater.
+* tjw:  removed +lookup, -lookup, +lookdown, and -lookdown commands from the
+        client mod.  these are used for anti-recoil cheats.
+* tjw:  added !resetxp shrubbot command (see docs)
+* tjw:  added 'playsound' server command.
+* tjw:  added "/callvote surrender" and cvar vote_allow_surrender
+* tjw:  added "/callvote restartcampaign" and cvar vote_allow_restartcampaign
+* tjw:  added "/callvote nextcampaign" and cvar vote_allow_nextcampaign
+* tjw:  added "/callvote poll" and cvar vote_allow_poll
+* tjw:  "/callvote nextmap" now loads the next map in the campaign instead
+        of loading the next campaign (when in campaign mode).
+* tjw:  "/callvote comp" now tries to "exec default_comp.cfg" instead of
+        loading the built-in competition settings.
+* tjw:  "/callvote pub" now tries to "exec default_pub.cfg" instead of
+        loading the built-in public settings.
+* tjw:  increased the range for shoving slightly to be more like shrubet.
+        it should be a lot easier to shove other players while you're
+        both moving now.
+* tjw:  added cvar g_fear (see docs)
+* tjw:  corpses can now be destroyed with satchel or dyno again.
+        (bug introduced by the 2.60 patch)
+* tjw:  fixed a couple of issues with inappropriate "spread scale" increases.
+* matt: added basic banner support, g_msgs, g_msgpos, g_msgX (see docs)
+* tjw:  g_slashKill 4 flag now restores the charge bar to the same state
+        it was in at the moment the player issued /kill (regardless of how
+	long they were in limbo).
+* tjw:  tank mg will now consider the incline the tank is on when limiting
+        the pitch restriction again (oops).
+* tjw:  added g_obituary cvar and removed g_logOptions flag 1024 (see docs)
+* tjw:  etpub_client now tries very hard not to save any of the forcecvar
+        cvars in the profile etconfig.cfg file.  also, once forcecvar is
+        used to set a client cvar, the client can no longer modify it
+	(until they restart their client).
+* tjw:  forcecvar remembers all forced cvars for the current map and sends
+        them to connecting clients.
+
+
+0.5.2
+* tjw:  !resetxp from the server console was causing a segfault.
+* tjw:  g_serverInfo 4 flag was only working for the first map in the
+        campaign.
+* tjw:  players who are dead or playing dead can no longer shove other
+        players.
+* tjw:  added vote_allow_maprestart cvar.  the button will still appear
+        in the MISC vote menu unless using the upcoming etpub_client.
+* tjw:  players can no longer /playdead with a ticking grenade or a
+        spinning up panzer.
+* tjw:  forcevar commands will be issued to the client when they've finished
+        connecting instead of when they start connecting.  this was causing
+	problems on (at least) servers without warmup because the map config
+	containing the forcecvar commands hadn't been executed yet.
+* tjw:  fixed (hopefully) a bug that was preventing most g_slashKill options
+        from working.
+* tjw:  !showbans was not accepting it's parameter when it was issued
+        with "say".
+* tjw:  you can now use /m to send private messages to yourself.  this
+        is for etadmin_mod compatability.
+* tjw:  g_shoveSound and g_poisonSound now use EV_GENERAL_SOUND instead
+        of EV_GLOBAL_SOUND so you won't hear them so far way from the
+	player emitting the sound.
+* tjw:  prevented sending duplicate forcecvar commands to the client when
+        those commands are issued at the very start of a map (e.g. g_mapConfigs)
+
+
+0.5.3
+* tjw:   fixed !showbans crash bug
+
+
+0.6.1
+* forty: fix for bug that breaks autoreload occasionally
+* forty: added min_airstriketime and min_artytime cvars
+* forty: added g_weapons 512 flag (garand/k43 equality)
+* josh: censor autogib will work with /kill on now
+* forty: added cvar g_constructibleXPSharing
+* forty: fixed team_maxGrenLaunchers for axis team (wasn't working)
+* forty: added cvar g_asblock
+* matt:  fixed !throw to throw in direction player is facing instead
+         of north/south (Thanks KillerWhale)
+* forty: XP Saver now preserves a players mute state to prevent reconnecting
+         to undo a mute.
+* matt:  added g_weapons option 64 for binoc dropping and g_misc option 2
+         for binoc master competition.  NOTE: to display binoc model
+         correctly, client-side file weapons/binocs.weap must be downloaded
+         to client
+* matt:  Courtesy of bacon's code in SD forums, added throwing knives (see docs)
+         NOTE: to display knife model correctly, client-side file
+         weapons/knife.weap must be downloaded to client
+* matt:  fixed shrubbot flag 1, so admins with flag 1 set can't be vote muted
+* forty: subversion lines endings are now always windows native
+* forty: Zinx's b_realhead code
+* forty: bugfix for b_realhead with antilag
+* forty: fix some vc++ compile errors
+* forty: sudden death dynamite
+* matt:  fixed a few throwing knives bugs, throwing knive kills now give
+         3 light weapons XP
+* gabriel: added party panzers
+* forty: fix realhead related corpse headbox problems and reenabled waiting
+	 for medic animation when b_realhead is enabled.
+* forty: dynamite chaining
+* forty: XP Save now preserves team_hits and hits to prevent teambleeders/griefs from
+         reconnecting to dodge team damage restriction kicks.
+* forty: #339 - Limbo'd and Spectators can throw knives fix
+* forty: #208 - can always obscure field ops canisters.
+	 Added bit to g_asblock to prevent lvl 3 and higher fdops from having their
+	 airstrikes blocked by players.
+* forty: some documentation updates as well.
+* forty: #84 - Added canister kicking.
+* forty: fixed bugs with canister kicking, and one more I missed with dead
+	 but following knife throwing
+* forty: g_canisterKick added to the documentation.
+* forty: #129 - Added 2 - adrenaline counter and options 4 - Disable the tap-out
+	 confirmation dialog box, 8 - Display connection attempts by banned players,
+	 and 32 - Omit "Item" lines from logfile.
+* forty: disarming a teammates satchel no longer gives you xp.
+* forty: #24 - playdeads no longer hold weapons. Also fixes the flame thrower fire drawing
+	 clientside while holding down fire and playing dead.
+* forty: #126 - Added 16 - report gibs
+* forty: fix for dead but not gibbed can capture flags
+* forty: fix for setlevel privilege escalation - players with s flag can set themselves and
+	 and others to levels higher than themselves
+* forty: Increased the number of xp savers slots. Xp saver now saves information before map
+	 changes, so people dropped during warmup and map changes don't lose xp. Xp saver
+	 is now more selective about which slot it will save into, It will try to overwrite
+	 your own data first, then use the first free slot if available, then use the oldest
+	 stored data. It also will clean it self up when appropriate, removing stale data.
+* forty: Fix for fireteam crash.
+* forty: Fix for switching team multiple times grants instant respawn.
+* matt:  Fix for team damage kick/rejoin/kick vicious cycle bug introduced by
+         changeset: 603
+* matt:  Added !swap shrubbot command
+* tjw:   http://linespeed.net/projects/etpub/ticket/359 used PerroGrande's fix
+         for the velcro grenade problem that showed up with kickable objects.
+* matt:  Added !nextmap shrubbot command
+* matt:  Added two new g_medics flags.  16 = no akimbos, 32 = pistol only
+* tjw:   Added ent->client->pers.etpubc which is an integer representing
+         the version of the connected client (if it's etpub).  This can
+         be useful for enabling certain behaviours only if the client's
+         client supports it.
+* tjw:   committed PerroGrande's patch for custom obituaries.
+         http://linespeed.net/projects/etpub/ticket/364
+* tjw:   committed PerroGrande's patch for g_killingspree
+         http://linespeed.net/projects/etpub/ticket/368
+* matt:  committed PerroGrande's updated patch for killing spree
+         streak messages
+* tjw:   committed PerroGrande's tunable-weapon-damage patches
+         http://linespeed.net/projects/etpub/ticket/372
+* tjw:   disabled g_dropAmmo/g_dropHealth during warmup
+         http://linespeed.net/projects/etpub/ticket/374
+* tjw:   referee's can no longer be complained against
+         http://linespeed.net/projects/etpub/ticket/362
+* tjw:   added g_cmdTimeRestriction cvar (see docs)
+         http://linespeed.net/projects/etpub/ticket/374
+* matt:  added team_maxMedics, Engineers, FieldOps and CovertOps
+         for limiting classes, based on Azyu's sample code on SD forums
+* tjw:   players can no longer /playdead when they have a view changing
+         weapon like a scope or a set heavy weapon.
+* perro: added g_staminaRecharge which can be used to tweak the rate at which
+         players rebuild stamina.  Implemented g_misc 16 which disables jumping
+         when stamina falls below approx 17%.  Client update required for these
+         to be effective.
+         http://linespeed.net/projects/etpub/ticket/355
+* tjw:   copied etpubc storage from client->pers to client->pmext so it can be
+         used in pmove.
+* tjw:   removed my overzealous version detection for PM_JUMP_STAMINA :)
+* tjw:   added g_misc 32 flag (see docs)
+* tjw:   improved version detection through the use of the ConfigString
+         CS_ETPUBINFO.  In order to protect the already crowded
+         CS_SERVERINFO configstring, add cvars to this instead of using
+         CVAR_SERVERINFO.  To do this you will need to add your cvar to
+         G_IsEtpubinfoCvar() and G_UpdateEtpubinfo() in g_main.c and also
+         to CG_ParseEtpubinfo() in cg_servercmds.c.  I've already done
+         this with g_misc, g_doubleJumpHeight, and g_staminaRecharge.
+* tjw:   renamed cvar min_airstriketime to g_minAirstrikeTime
+* tjw:   renamed cvar min_artytime to g_minArtyTime
+* tjw:   renamed cvar b_realhead to g_realHead, also made it default to 1
+* tjw:   removed g_cmdTimeRestriction.  The normal behaviour of the client
+         is to throw various commands at the server in fast succession.
+	    It was becoming very hackish allowing some commands to come in fast
+	    and some not.  I think it's best to just trust the game engine's
+	    built in rate limiting.  (a.k.a if it ain't broke don't fix it).
+* perro: changed g_staminarecharge to be a floating point multiplier rather than
+	 an offset.
+* matt:  Fixed typo in team_max checks
+* tjw:   File-based XPSave replacing cvar based XPSave.  This adds two new
+         cvars: g_XPSaveFile and g_XPSaveMaxAge.  Up to 32768 records can
+         be saved.  If you're running with the g_XPSave 4 flag, you will
+         probably want to tune g_XPSaveMaxAge (default is 1 week).
+* perro: Initial G_Damage code re-work to allow for Shrub-style "reflecting damage".
+	 Removed hardwired "headshot = 50".  Replaced with g_dmgHeadShot cvar that can
+	 work in conjunction with tunable weapons.
+	 Removed "nade-boosting" exploit that was present when FF was off.
+	 Removed blocks of code that had been commented-out to make G_Damage
+	 easier to read and understand.
+	 Added g_dmg cvar which will be used in some more optional G_Damage
+	 features/changes that I'm working on.
+* matt:  updated team_max checks so that it now also checks when initially
+         joining a team instead of only when switching classes within same
+         team
+* perro: Added g_reflectfriendlyfire [float] cvar that allows admin to set
+	 whether friendly fire reflects back to the player who did the damage.
+	 Acts as a multiplier to damage.
+* perro: Added #defines for future use with g_dmg cvar
+* perro: Added code to handle three experimental g_dmg settings
+	 Removed unnecessary floating-point computations in g_weapon.c
+* perro: Added g_killingSpreePos cvar to control where killing spree messages
+	 are displayed on the screen.
+* tjw:   cleaned up kill spree code.
+* perro: turned off reflecting damage for landmines.
+* tjw:   fixed a bug with new xpsave and limited lives
+* tjw:   hopefully fixed the bug that keeps XPSave from loading stored XP
+         if cl_guid has not been set yet at the time of initial connect.
+* perro: remove anti-landmine hack from reflecting damage.
+	   replaced with a bitmask cvar that allows admins to select which
+	   categories of weapons will reflect.
+* perro: updated commented server.cfg to show g_reflectFFWeapons bitmask values.
+* perro: actually removed the anti-landmine hack this time...
+* perro: added three new g_dmg bitmasks, tweaked g_dmg 4 downward for balance.
+* tjw:   created a new cvar g_coverts and moved g_dmg 64 flag to g_coverts 1
+* perro: fixed small typo
+* perro: corrected minor problem introduced by consolidating killing spree
+         into one function.  It was creating sprees where sprees should not
+         have been (a suicide, for example, created a one-kill spree).
+         Corrected this problem and prevented /kill and team switch from
+         ending sprees and creating death sprees.
+* perro: updated killing spree code to allow customizable messages.  Docs to
+         follow.
+* perro: Implemented g_dmgFlamer.
+         Removed brain-damaged g_dmg 8 function and replaced with tjw's
+         g_dmgHeadShotRatio suggestion.
+         Re-named g_dmgHeadshot to g_dmgHeadShotMin for clarity.
+* tjw:   Q_StrReplace() is now easier to use
+* tjw:   Added [a] for g_killingSpreeMsg_end and g_killingSpreeMsg_tk
+* perro: Changed custom obits to take advantage of new parsing capabilities.
+	 Updated docs accordingly.
+* perro: Fixed uniform stealing bug.  Covies can no longer steal opposition
+	 uniforms by stealing unis from covies on their own team.
+	 Added check for BODY_TEAM(ent) > 2
+* gabriel: Fixed buggy party panzers, now they fire correctly in all directions.
+* perro: Fixed Medic-with-Panzer bug.
+* gabriel: Added g_panzersVulnerable and g_panzersGravity.  Renamed
+	 g_partyPanzersSpeed to g_panzersSpeed and the setting now applies to
+	 both normal and party panzers.
+* perro: admins can now define any level of killing spree "levels" that they want
+	 undefined levels will use g_killingspreed_default as the message.
+* perro: added g_medics 64 bitflag to provide an alternative to medic tk/revive
+	 this option allows medics to use syringes, under certain conditions,
+	 to provide healing to living teammates.
+* perro: killing sprees were counting tk's toward killing spree
+	 added OnSameTeam() check to prevent this
+* perro: reflected friendlyfire was insta-gibbing players if they took
+	 enough damage to die. Fixed.
+* tjw:   dropped NO_FPHEX #ifdef in favor of always using the
+         non floating point hex notation for Zinx's realhead code.  This
+         was done for compiler compatability only.
+* tjw:   replaced g_XPSaveMaxAge with three seperate cvars:
+         g_XPSaveMaxAge_xp
+         g_XPSaveMaxAge_mute
+         g_XPSaveMaxAge_killrating
+         These control how long to keep each these three various long
+         term storage values.
+* tjw:   changed default for g_ATB_rating to 3 (use killRating)
+* tjw:   changed color for default kill spree messages to ^8
+         to be consistent and neutral of other meaningful chat colors.
+* tjw:   added g_shortcuts cvar (see docs)
+* tjw:   fixed a bug that caused !unmute to fail for someone who was
+         muted by XPSave.
+* tjw:   added classnames to all gentities to make debugging G_Spawn()
+         crashes easier.
+* tjw:   restricted weapon fire when the game engine starts running out of
+	 game entities to prevent "G_Spawn: no free entities" crashes.
+* tjw:   prevented MatchToken crashes when parsing badly formatted
+         g_shrubbot or g_XPSaveFile files.
+* perro: Added new g_weapons bitmask (1024).
+	 This optional bitmask places a hitbox around mortar rounds.
+	 When this bit is set, "horizontal mortaring" through windows
+	 and slits becomes very difficult, or impossible, depending on
+	 the size of the opening.
+* tjw:   XPSave will now only write relevant data to the file to keep the
+         file size and parsing time down.  Also fixed a but that allowed
+         players to reset their killrating by disconnecting when their score
+         was 0xp.
+* perro: Added cvars and code to allow separate tuning of damage and damage
+	 radius for exploding weapons (including panzers which were previously
+	 hardwired).  Fixed incorrect handling of tunable landmine damage.
+	 MAP_MORTAR will return traditional damage value (250) instead of
+	 incorrectly matching tunable grenade launcher damage.
+	 Docs to follow for new cvars.
+* tjw:   made gentities checking more strict (fun_beach causing "G_Spawn:
+         no free entities" crash)
+* tjw:   imported g_weapons, g_medics, and g_coverts into client space to
+         aid in prediction and add new future features.
+* tjw:   I may have fixed the multiple helmet bug caused by g_weapons 32
+* tjw:   clearxp should now work for connecting clients who were given XP
+         by XPSave as well.
+* josh: Added g_playerRating and most of its implementation. This will track
+        how valuable a player is based on how even that player wins against
+        teams that are good. It can be used to shuffle and for ATB as well.
+        player rating shuffle will override kill rating shuffle. player rating
+        will only be calculated if g_playerRating_minplayers have played in
+        the map.
+* josh: Made it so ATB by kill rating works as long as any kill rating options
+        are enabled, since it will be calculated.
+* tjw:   added g_shuffle_rating cvar (see docs)
+* tjw:   g_XPSaveMaxAge has been re-added.  It will be used in place of
+         g_XPSaveMaxAge_killrating and g_XPSaveMaxAge_mute and the default
+         maximum age for all things [xpsave] stores.
+* tjw:   added [mapstat] element to the xpsave.cfg file so map w/l ratio will
+         be available to playerRating.
+* tjw:   xpsave will only update [mapstat] records if there are
+         g_playerRating_minplayers clients are playing.
+* josh:  Player rating now takes the current map into account
+* josh:  Moved player rating to LogExit so it's calculated before the message
+* josh:  added g_teamForceBalance_playerrating: only allows a disparity of two
+         standard deviations between team ratings (200 rating points).
+* perro: Fixed some minor problems with reflected fire.  With ff-off, shooting at
+	 limbo'ed teammates does not damage you.  Added new MOD to support
+	 reflected FF.
+* tjw:   implemented g_coverts 2 and 4 flags (see docs)
+* forty: sigsegv stack traces on Linux.
+* forty: updated vcproj files to include g_crash.c,cg_hud.c,g_xpsave.c/h
+* perro: added g_friendlyFireOpts cvar.
+	 g_friendlyFireOpts can be used to change the behavior of certain
+	 friendly fire events.
+* perro: added g_friendlyfireOpts bitmask to prevent teammates (other than engies)
+	 from even triggering landmines from their teammates
+* tjw:   added shufflenorestart vote and vote_allow_shufflenorestart cvar.
+* perro: minor change to the VS project file so that MS Visual Studio
+	 isn't quite so whiney during compile
+* tjw:   turned of g_enforcemaxlives by default.  it uses IP bans and xpsave
+         can be used instead to keep track of lives between connects.
+* tjw:   added readxp and writexp server console commands.  readxp is
+         g_tyranny protected.
+* josh:  Added ratingsinfo server command.
+* josh:  Fixed a bug in g_teamForceBalance_playerrating. Now it will not allow
+         any player to join a team with a > 75% chance of winning in general.
+* perro: Added cvars to allow tuning of damage and damage radius for artillery
+	   and airstrikes.  Docs to follow.
+* tjw:   added name parameter to [xpsave] element in xpsave.cfg format.
+* josh:  made g_teamForceBalance_playerrating override
+         g_teamForceBalance to prevent teamjoin deadlocks.
+* gabriel: Added g_medics flag 128: disable medic health regeneration
+* perro: added optional g_dmg 8 bitmask which includes a simple
+	 bullet falloff computation based on weapon type and characteristics.
+	 Adjusted spread for FG42 when g_dmg 32 is set.
+* gabriel: Separated medic health regenerate rate adjustment into its own setting,
+	 g_medicHealthRegen, took out the regeneration rate values from g_medics,
+	 and added a couple more options for the sake of completeness.
+* josh:  Changed favored team max probability on adaptive balancing to 70%.
+* josh:  Mixed the map and playerrating probabilities in a more stable and
+         readable way.
+* josh:  Added team ratings info to the end of !listteams.
+* tjw:   added g_XPDecay and g_XPDecayRate cvars (see docs)
+* perro: Added experimental damage-based XP.  Added two cvars to support this:
+	 g_dmgXP and g_dmgXPLevel (see docs).
+* perro: reduced some of the minimums and defaults for damage-based xp.
+* josh:  modified winning probability to sum to one
+* tjw:   fixed g_XPDecay so that it will decay past the set skillPoints for
+         each level-up.  Note that this currently makes the scripting play
+         the "Congratulations on your promotion [Rank]" when the player is
+         actually being demoted which is kind of funny, but should probably
+         be turned off if possible.
+* perro: added et-pro-style damage XP option.  Changed cvars from
+	 g_dmgXP and g_dmgXPLevel to:
+	 g_damageXP and g_damageXPLevel
+* tjw:   added g_XPDecayFloor cvar (see docs)
+* tjw:   added g_XPDecay 32 flag (see docs)
+* tjw;   writexp command will now update the xpsave information of all of
+         currently connected players.
+* tjw:   added !resetmyxp shrubbot command.  Also fixed the !resetxp command
+         so that it didn't allow players to keep their skill points, rank,
+         and level specific weapons.
+* tjw:   added g_maxXP cvar (see docs)
+* josh:  Changed g_activeTeamBalance to g_ATB_diff, and added g_ATB
+         (see docs)
+* josh:  Added g_ATB 2 which uses playerrating to balance teams. Seems to
+         work well so far.
+* tjw:   rewrote g_dyno 1 so that checking for sudden death overtime is done
+         with the actualy scripting engine.  this is probably buggy but it
+         works on battery anyway.
+* tjw:   implemented a workaround for mapscripts such as fueldump's that
+         incorrectly put a "wait" before "wm_endround".  This was causing
+         the timelimit to be hit if the objective exploded in sudden death
+         incorrectly giving the defending team victory.
+* matt:  added team lock status to !listteams
+* josh:  g_ATB 2 now allows swapping with g_ATB_swap. Also, skill level in
+         player rating is now twice as important as map difficulty.
+* tjw:   may have fixed a g_shortcuts crash related to players having
+         shortcuts in their name.
+* tjw:   improved the "team" command so that it bails out if the selected
+         class or weapon are not available due to the team_max______ cvars.
+         also it will use latched weapons if no weapons were provided as
+         parameters.
+* perro: adjusted g_damageXP 1 settings to grant damage XP for kill shots, too.
+	   cleaned-up the damageXP code.
+	   fixed typo in g_main.c that was preventing linking
+* josh:  Fixed a min players playerrating bug and added sanity checking to
+         mapPad. g_playerRating_mapPad allows you to add wins to the maps to
+         stabilize the means early on.
+* forty: modernized the linux stack trace code, handles more errors (SIGILL,
+         SIGFPE, SIGBUS)
+* perro: fixed crash bug with G_DamageXP set and clients falling to their death.
+         also fixed several other non-reported bugs with G_DamageXP
+* kw:    bugfix: players could get in a tank while looking through a sniper scope.
+* kw:    most servercommands now work on non-dedicated servers too.
+* tjw:   added some glibc #ifdefs for glibc 2.1.3 compatability in g_crash.c
+* tjw:   added skill_weight and map_weight to [mapstat] in xpsave file
+* kw:    bugfix: "Reloading" the knife let you lose all your knives.
+         bugfix: double attack sounds when throwing knives was off or empty clip.
+         bugfix: throwing knives didn't play the correct sound.
+* josh:  bugfix: Map padding sanity check resulted in garbage for map pad
+* josh:  map padding now falls off as it is replaced with real matches.
+* josh:  map padding defaults to 50 per team. Disappears after 100 games.
+* josh:  skill and map weights now start and 0.5 and adapt. Changed to start
+         at 0.5 since the map padding will ofset any early imbalance.
+* josh:  "cleaned up" ratings code. made ratings updates more accurate.
+* tjw:   g_teamForceBalance_playerrating no longer requires g_teamForceBalance
+         to be enabled (which it overrides anyway).
+* josh:  Increased player award to reflect the new attenuation. Increased
+         weight update learning rate to adapt fast. The weight update LR
+         doesn't really matter in this case. Too high or too low will make
+         it adapt slower, but not incorrectly.
+* perro: reduced size of hitboxes on kickables to further reduce "velcro" effect
+	 hitboxes are now only drawn if the kickables cvar is actually non-zero
+* tjw:   g_ATB 2 will now warn players they are about to be moved 10 seconds
+         before the switch.
+* tjw:   ATB will not switch players who have a disguise or who are carrying
+         an objective
+* tjw:   ATB will not switch any players if any team has two players who are
+         out of lives on limited lives servers.
+* perro: prevented arty/air/grenade/etc damage from players who have disconnected
+	 or dropped to spec. mode.
+
+* tjw:   ATB will not switch any players if there's a dynamite plant ticking
+         that could end the game.
+* tjw:   added 64 and 128 flags to g_XPDecay (see docs)
+* tjw:   I added the raw netname to shrubbot.cfg and xpsave.cfg instead of
+         the "Sanitized" version.  This has been requested by those who
+         wish to see colors and case in their parsing scripts.  Also fixed
+         a bug with !listplayers that could screw up columns if a level
+         name had non alphanumerics in it.
+* tjw:   ATB will not switch any players if there are less than 5 mins left
+         in the match.
+* josh:  Changed my mind about some parts of the ratings for now. Needs more
+         work to take it to that level. Things scale as before now.
+* perro: added g_coverts 8 which causes disguised covies to take half damage
+* perro: added g_coverts 16 which causes disguised covies to be immune to
+         splash damage.
+* perro: added g_coverts 64 which covers non-silenced weapons
+         cleaned-up the "lose your uniform" code
+* tjw:   g_coverts 32 will now allow coverts to keep their disguise even
+         if an enemy sees them firing a weapon.
+* tjw:   added g_coverts 128 flag that allows disguised coverts to hop on
+         emplaced guns without losing uniforms.  firing emplaced weapons
+         will still lose uniforms unless the 64 flag is set.  Also, because
+         of client side prediction, it will look like the uniform is lost
+         to the client until they detatch from the gun.
+* tjw:   fixed flickering health bar bug when looking at disguised coverts.
+* tjw:   added csinfo and csdump console commands for debugging the
+         MAX_GAMESTATE_CHARS client crash.  Also added overflow protection
+         which might be more trouble than it's worth.
+* tjw:   I'm pretty sure I've tracked the MAX_GAMESTATE_CHARS client crashes
+         to the the initial population of SERVERINFO cvars that I added
+         to prevent a server crash mid-game on servers with lots of "sets"
+         cvars).  I replaced this populating with checking.
+* josh:  Changed default g_teamForceBalance_playerrating to 0 and recommended
+         60. People probably shouldn't start with this on.
+* josh:  bugfix: Changed PMF_DOUBLEJUMPING bitflag from 65536 to 128 since
+         only 16-bits are sent over to the client. This fixes a client bug,
+         since it is in bg, but is compiled into the server as well. Thanks
+         to Zozz for finding this.
+
+0.6.2
+* gabriel: Fixed [t] shortcut for throwing knives: [t] was expanding to knives
+           plus max knives.  Now it just returns the knives in player possession.
+* tjw:     fix for "player flicker" related to having a large number of
+           custom pk3 files on the server.
+
+
+0.6.3
+* tjw:     "csdump 1" command will now print the full string instead of just the
+           first 1024 characters.
+* tjw:     GAMESTATE size tracking now correctly accounts for '\0' for each CS
+           and correctly tracks the size of CS_SYSTEMINFO.  Thanks AK.Waters.
+* tjw:     fix for g_skipCorrection/PM_TraceLegs crash
+* josh:    bugfix: end-of-game top overall killer was wrong, it's right now.
+* josh:    rebalanced team sizes so that 1.5 vs. 1 is a blowout instead of 2x
+* tjw:     xpsave will not save that the player is muted if the player has been
+           auto-muted by g_censorMuteTime.
+* tjw:     fixed shrubbot/xpsave memory leak.  Thanks AK:Waters.
+* kw:      Campaigns sometimes couldn't load when server had lots of campaigns.
+* josh:    Changed initial map and skill weightings to 0.5 each.
+* tjw:     fix kill spree messages when players have keys in their names.
+* tjw:     fix custom obituary messages when players have keys in their names.
+* tjw:     fix for limited lives spectator exploit.
+* tjw:     g_shuffle_rating was using the wrong values.
+* tjw:     fix for etmain prone -> scoped weapon -> unprone bug
+* tjw:     fix for following a teammate as he switches teams bug
+* tjw:     g_throwableKnives 0 really disables /throwknife
+* tjw:     pass g_throwableKnives value to client in CS_ETPUBINFO
+* tjw:     added playsound_env for etadminmod compatability
+* tjw:     playsound and playsound_env are now properly g_tyranny protected
+           when used to play a sound to a specific client.
+
+
+0.7.1
+* josh:    Updated player rating model so that the better players on the team
+           get less points for winning than the worse ones, and they lose
+           more points for losing. This will prevent rating inflation.
+* josh:    No more swapping with g_ATB 2, only moving. But, g_ATB 2 will move
+           anyone, not just the top 3. It will start with the top 3. This way
+           the best players aren't hammered as much.
+* josh:    Those g_ATB'd 2 swapped can't move back during the match, but the
+           ATB count is reset on each map. This should be ok since everyone
+           is a move candidate. Though it will mean the best are still moved
+           first. This is kind of a hack that should be replaced with a
+           boolean on the map that says whether or not someone has been ATB'd
+           that map. That would be better.
+* josh:    Replaced the last change with map_ATBd_team which tracks the last
+           team ATB'd too. This way the best players won't be the first on
+           every map AND those ATB'd can only play on the last team they were
+           ATB'd to. ATB_count is not reset now.
+* josh:    Added !howfair which prints a simple summary of team fairness
+           based on player rating. This is printed to everyone on chat.
+* josh:    Added a fun little hack that for now shows player rating in the
+           scoreboard instead of XP, although it still says XP. This will
+           happen if you add 4 to g_playerRating. This will be replaced with
+           the new scoreboard by tjw, coming soon to an etpub near josh.
+* josh:    Fixed a bug where ATB was never allowing you to switch teams
+           without disconnecting.
+* josh:    Made it so ATB will unlock a player's ATB'd status if the team
+           they have been switched to becomes a little too good as defined by
+           g_teamForceBalance_playerrating. This unlock only happens when
+           they try and move to a different team, however.
+* josh:    g_teamForceBalance_playerrating now checks what a team's
+           probability of winning would be AFTER adding that player. If both
+           teams become "too good" it will allow the player to join the
+           lesser of the two evils.
+* josh:    ATB won't move a player if doing so will upset the balance the
+           other way. It'll pick a less skilled player instead.
+* josh:    When g_inactivity is hit, it will putspec instead of kick.
+* josh:    g_ATB 2 will now also act during intermission and warmup.
+* josh:    Added time per team tracking for later use in pro-rating rating.
+* josh:    Increased player rating learning rate (award) since it updates a
+           bit slower now based on how close a player is to his team's
+           average.
+* josh:    g_spectatorInactivity will only kick if the server is full.
+* josh:    Player will now get messages about their end map rating change.
+* josh:    Player rating is now prorated by the time a player plays on each
+           team. If you play only half the match and play on the winning
+           team, you only get half the points, etc.
+* josh:    Added the "hero" flag. If you are ATB'd or if you switch to a team
+           that only has a 35% chance or worse of winning, you become a hero.
+           If you stay with that team, you will get full points if your team
+           wins instead of being prorated. Any team change will untoggle the
+           flag.
+* josh:    PLAYER_RATING_SCOREBOARD will now sort the scoreboard by rating.
+* forty:   mine id
+* forty:   added g_coverts 256 flag which gives xp for constructive use of smoke
+* josh:    Added g_misc 64, gives ZERO fall damage. For those crazy servers.
+* forty:   fix mine id toggling.
+* josh:    Made sure the ATB unlocking check passes an ent into GetWinProb.
+* forty:   #422 - Medpack animation fix by jaquboss
+* forty:   #381 - Revive Messages
+* forty:   #387 - Optionally forbid teammates from blocking each other's strikes.
+* josh:    Moved the win probability model's use of map win / loss records and
+           size advantage calculations into allies_rating and axis_rating.
+           This will simplify the calculations and allow the model to adapt to
+           differences in size advantages per map. The new ratings basically
+           say how important your average axis or allies team member is on
+           that map.
+* kw:      g_msgpos/g_killingSpreePos "3" displays banners/killingsprees at the
+           top of the screen (REQUIRES etpub_client).
+* kw:      g_msgpos/g_killingSpreePos "4" displays banners/killingsprees only
+           into the console.
+* kw:      The servercommand "bp" prints messages at the top of the screen
+           (REQUIRES etpub_client).
+* forty:   Gib logging reports all gibs.
+* forty:   #127 - Censor XP loss, and censor burn options
+* josh:    Added support for tracking if players have played enough games for
+           their player rating to be trusted. Currently, 24 = full trust.
+* josh:    Fixed a bug in ATB allowing unstable moves.
+* josh:    Fixed a player rating bug giving the wrong points to losers.
+* josh:    Added a games left measure to add uncertainty to the probability
+           measures when the players are less known.
+* josh:    Cleaned up some code to be more in line with the guidelines.
+* josh:    Fixed a potentially critical PTB prediction error.
+* josh:    !howfair is now customizable with g_teamForceBalance_playerrating
+           and g_ATB_diff.
+* forty:   #428 - Gib Logging Crash Fix
+* josh:    Hero threshold moved to 0.20 or 20%.
+* forty:   #377 - g_dropMsg
+* forty:   Fix auto temp ban isn't enforced consistently across patch versions.
+* forty:   Clients dropped for being banned are now given the reason for banning
+           and time until expiration.
+* josh:    Changed g_teamForceBalance_playerrating to just a boolean. 0 for on,
+           1 for off. The threshold used is now g_ATB_diff. I didn't see a point
+           in having two thresholds.
+* josh:    From now on, teams will always be balanced by numbers if
+           g_teamForceBalance is on. If g_teamForceBalance_playerrating is
+           also on, it will balance by numbers ONLY when joining either team
+           results in a probability < g_ATB_diff. If you don't want this, set
+           g_teamForceBalance to 0. This will also mean that
+           g_teamForceBalance_playerrating will no longer trigger
+           g_balancedteams, which is probably fair.
+* josh:    Switched player rating from being 1600-based to 0-based because of
+           better results in simulations. This will necessitate starting the
+           ratings over. To do this, I'm using playerrating2,
+           rated_games_played, axis_rating2, and allies_rating2. By 0.8, these
+           should all just replace the originals, and by 0.9, they should be
+           removed.
+* josh:    If PLAYER_RATING_VISIBLE isn't set, there will be no ratings points
+           messages at the end of the map.
+* magik:   added Omni-Bot support (currently supporting Omni-Bot v0.51)
+* forty:   Added auto temp ban isn't enforced consistently across patch versions
+           with !kick.
+* kw:      Fixed a lag "blink" in health display in the crosshairnames of
+           disguised coverts which made them easy to spot.
+* forty:   stack traces on win32 w/ vc 6 & vc 7.
+* matt:    fix linux stack trace compile error
+* josh:    Trying to fix a sync bug between Connect and Disconnect
+* josh:    Changed  g_ATB_diff default to 80 since in actuality when the model
+           says 75 it's really close to 65, but when it says 80 it's not far
+           from 75.
+* kw:      Spectators can team (voice)chat. (etpub_client >= 20060119 is needed
+	   to open the voicechat menu as spectator)
+* kw:      added /mt command that sends a private message to matching players
+           in your team only.
+* forty:   #430 - base race mineid and map mines fix.
+* forty:   FORUM - specs/team specs get xp for spot.
+* forty:   #423 - Fix Opposite team mine spotted while being diffused
+           (by opposing engie) renders mine un-disarmable.
+* kw:      major rewrite of the !help command, works more like shrub now.
+* forty:   enabled bad connection icon for clients newer than 20051230.
+* forty:   Fix riflenade bug, where after firing a rifle grenade and not having
+           enough time to finish the automatic switching to the rifle before
+           dying, Player ends up with a useless rifle grenade or losing their
+           rifle.
+* forty:   Add g_canisterKickOwner, set this to 1 gives kicker ownership of the
+           kicked canister.
+* forty:   #349 - Moved team damage kick to the end of ClientEndFrame to
+           prevent invisible clips from forming.
+* forty:   #396 - Fix shooting in your own feet when g_panzersVulnerable is
+           enabled.
+* josh:    Added percent_time into the player rating model. It will now take
+           into account how much time has passed and therefore ATB can detect
+           the spawnkilling of the the achieving team, or at least if the
+           achieving team is being held longer than average. When this
+           happens, ATB can move players to that team.
+* tjw:     use etmain uniform handling related to satchel/smoke/knife/binoc
+           when g_coverts is 0.
+* forty:   some additional things needed for etpro mapscripts
+* forty:   spawn function for fake brushes
+* tjw:     added some modifiers to the time parameter of the !ban command.
+           the modifiers are 'm', 'h', 'd', and 'w' meaning minutes, hours,
+           days, and weeks respectively.  for example, it is now possible to
+           use the command "!ban tjw 2w take two weeks off" to ban tjw for
+           2 weeks instead of trying to add up how many seconds that would be.
+* josh:    Added SHUFR_PROB which is basically a smarter player rating shuffle.
+           It will take into account the map now when it shuffles and greedily
+           give the teams closest to 50/50. It's not optimal. If someone wants
+           to, they can code up a time bounded branch and bound to find the
+           optimal teams. It's option 5, 4 is normal prate shuffle.
+* forty:   fun_on_ice/jv-trainjump-v3 crash fix.
+* tjw:     ATB must not run run during GS_WARMUP because it goes nuts as
+           people connect at the start of warmup.  Also without a respawn
+           timer, ATB has no time restraint.
+* tjw:     ATB warning message now uses correct color to describe the other
+           team.
+* tjw:     ATB will stop its infinite swapping fits if moving a player
+           would not improve the losing team's score.
+* kw:      fixed a server crash issue in the team command.
+* kw:      selected weapons are saved over class and team changes.
+* kw:      fixed single pistol wasn't selectable at level 4 light weapon skill.
+* kw:      added etpro's class and nextteam commands.
+* tjw:     don't drop people for g_inactivity when in limbo
+* josh:    changed the hero threshold to (1 - g_ATB_diff) and the default
+           g_ATB_diff to 70 since recent model evaluations show the time
+           weights to make the model conservative instead of extreme.
+* tjw:     removed XPSave persistence across STOPWATCH rounds.
+* josh:    Added disconnect tracking and fixed a couple of bugs in rating
+           updates as well.
+* josh:    Changed non-updating calls to GetWinProb to take into account the
+           amount of time the players have spent so far, and assume they are
+           going to spend the rest of the time on their current team. ATB and
+           PTB will have better info this way. What this means is if a player
+           joins half-way through, he'll only count as HALF a player instead
+           of a full-player. This means PTB will let him join teams it
+           wouldn't have in the past.
+* josh:    Player rating now assumes the worth of the number of players per
+           team grows exponentially instead of linearly. This should result in
+           less unevenness in numbers when ATB is running.
+* tjw:     added g_coverts 512 flag to bring back the pre 0.6.4 disguise
+           handling for knife/binoc/smoke/satchel.
+* tjw:     possible fix for GAMESTATE length tracking.
+* josh:    ATB uses sums instead of means for team ratings. This prevents a
+           lone player from having an effectively high rating.
+* josh:    Major changes to ATB. It's back to using win record information
+           instead of explicit map weights. So the map rating weights in xpsave
+           don't do anything for now, maybe for awhile. This also means that
+           g_playerRating_mapPad is used again. Also, in stopwatch mode, rating
+           and ATB will ignore all map info. This changes should help ATB
+           handle map info information in a more balanced way.
+* kw:      Throwing knives inside a tank, while leaning or using binocs fixed.
+* josh:    g_shuffle_rating 5 should work OK now. Let me know if it doesn't.
+* josh:    In stopwatch mode, rating updates will proceed the same, but non-
+           updating calls to G_GetWinProbability will ignore map info. This
+           makes the updating calls more fair.
+* tjw:     added message for dropped clients related to g_XPSave 8
+* josh:    Fixed a bug that broke hero detection.
+* josh:    Fixed a team force balance bug that prevented ATB'd players from
+           rejoining their ATB'd team if it had too many players and it wasn't
+           to unfair.
+* josh:    Even stopwatch rounds will be ignored in ratings updates until the
+           probability model accounts for the shorter timelimit.
+* tjw:     possible fix for g_shortcuts related crashes
+* josh:    PLAYER_RATING_DATASET now logs when objectives are accomplished and
+           outputs the timelimit on maps.
+* josh:    Began adding support for including objective times in ratings.
+* josh:    Added tc_base.script to the Examples because the original tc_base
+           marks completed objectives as "failed" instead of "complete" which
+           will confuse later versions of the player rating system. Whoever
+           writes the docs for 0.7.1, PLEASE tell them to use this script if
+           they are going to use player rating with tc_base.
+* forty:   ps->grenadeTimeLeft was not fully predicted.
+* josh:    Added rank to xpsave_table.php
+* tjw:     fixed coloring of "(called by NAME)" when using g_voting 4 flag
+           (this only effects newer etpub_client)
+* tjw:     even g_ATB 2 is now limited to only moving one person per team
+           spawn cycle.
+* tjw:     Applied jaybird's fix for possible floating point calculation
+           problem that can lead to crashing in G_RunThink().  Thanks jaybird.
+* tjw:     seperated code for g_ATB 1 and g_ATB 2 so it's more readable.
+* tjw:     g_ATB 2 now tries to keep the teams balanced in number of players
+           as well as skill.
+* tjw:     duplicate guid drop message should not contain guid since it gets
+           broadcast to all players.
+* tjw:     g_ATB 2 will now try to balance teams by number immediatly after
+           moving someone.
+* tjw:     discover max timelimit from mapscript to use in calculations for
+           playerrating, ATB, and max live computation on maps with variable
+           timelimits like temple and daybreak.
+* tjw:     added checking to keep party panzer from using up all available
+           game entities and crashing the server.
+* josh:    Added network code for sending http posts to a web server. I don't
+           recommend using it without threads. bgr is preparing a thread
+           library we can use. The net code will be used for sending any
+           information you like to a web server. The example I coded in will
+           send chats to a web server somewhere. This way you can have a web
+           page that shows server chats. But don't use it as is. It will lag
+           the server on every chat. That's why I put that qfalse there. I'll
+           make it grab the host name, etc., only once per url change. Also,
+           the net code isn't adapted for windows yet. I need to add some
+           ifdefs that I haven't yet, sorry.
+* josh:    Added windows support to g_http_client.c. Probably. Needs testing
+* tjw:     changed ATB shutoff time from 5 mins before map end to 3 mins.
+* josh:    Added some preliminary threading support, but it's useless until we
+           can link threading libraries statically into qagame. Anyone know
+           how to do that?
+* josh:    Increased kill rating points on the flamethrower from 4 to 8 based
+           on tjw's discovery that there are at least twice as many kills with
+           the 4 point panzer.
+* josh:    Added !balance (uses shuffle's admin rights 'S') which calls one
+           cycle of ATB to balance teams.
+* josh:    ATB wouldn't even the numbers if it didn't bring the odds below
+           g_ATB_diff---even if it did improve them. Now ATB will be able to
+           move players to even numbers even when it won't completely fix the
+           odds---as long as they don't get worse. This will allow numbers
+           balancing when odds balancing may not be possible or easy.
+* josh:    Also, ATB wouldn't move anyone to odds balance if it didn't bring
+           the prob below ATB_diff. Now, it will still move a player even if
+           it doesn't completely fix things. The next ATB run may be able to
+           fix things even more. We could make it odds balance more than one
+           at a time by letting it recurse for that reason too, but we may not
+           have to. It does mean waiting an extra spawn though.
+* josh:    Modified kill rating to prorate the update based on the amount of
+           damage you do instead of just the kill itself. This will make sure
+           whoever does the most damage to you gets the update. So if someone
+           much better than you almost kills you, you won't lose to much if a
+           n00b comes along and finishes you off.
+* josh:    Made kill rating a float so you don't miss out on small points.
+* josh:    Fixed a major bug in player certainty for !howfair.
+* josh:    Found another bug in player certainty for !howfair.
+* josh:    If you've been ATBd, you can't change to another team unless the
+           map changes or the odds swing the other way---even if ATB is turned
+           off. This is to make !balance more effective on non-ATB servers.
+* josh:    Added "Start of warmup." and "Start of round." to the log. Used
+           this convention because it's how shrubet did it and those no reason
+           to do it different. For log watchers mostly.
+* tjw:     pthreads is now dlopen()'d in an effort to make the qagame.so
+           compatable for glibc 2.1 through 2.3.  Thanks bgr for figuring
+           this out for me.
+* tjw:     "Project: Bug Fix" 073 merged
+* tjw:     "Project: Bug Fix" 080 merged
+* tjw:     "Project: Bug Fix" 081 merged
+* tjw:     "Project: Bug Fix" 083 merged
+* josh:    Added an http ratings post. At the end of each map it will post one
+           line per player with GUID, PR, KR_match, KR_overall, and name.
+           Currently it will create one thread per player. When bgr adds the
+           thread queue stuff, I'll make it more efficient. Set
+           g_httpPostURL_ratings to enable this.
+* tjw:     added initial support for killrating and playerrating score commands.
+* forty:   fix for !resetmyxp gives a full chargebar exploit
+* josh:    match_killrating is now the change in overall_killrating within a
+           match instead of a separate killrating.
+* forty:   fix for multiple helmets with antilag disabled
+* tjw:     fixed bug with checking for game ending dyno plants that let
+           the "cvar" script action run.
+* josh:    Fixed a bug in damage-based kill rating that gave too much credit
+           to single instances of high damage.
+* josh:    Added preliminary g_tactics code. So far what this does is make it
+           so when you shoot an SMG with at least one enemy within your fOV,
+           you will hit that player no matter what. It will pick the closest
+           player to you. It makes sure they're visible as well. I need to add
+           something to the client that takes the angles stored in
+           ps.stats[STAT_AIMING_*] and actually moves the aim of the player.
+           This will make it more intuitive. I also still need to add some
+           randomness based on your LW, BS, and distance.
+* josh:    Added snapping to server-side aiming. It will snap the client's view
+           to the chosen target now.
+* josh:    Added g_httpPostURL_log (ticket 464). All log entries in
+           G_LogPrintf will be posted if a URL is given. Only on linux and
+           maybe MacOS (untested?) currently. The LogPrintfs in the posting
+           code won't get http posted though. Maybe later.
+* josh:    ATBd team is now tracked across disconnects.
+* josh:    tactics auto-aiming is done randomly based on distance, LW, and BS.
+           You start at 66% likely to hit and go up / down from there. Still
+           need to make weapon specific effects. I also need to change the
+           hackish way I prevent you from damaging when you "miss". I just set
+           damage to 0 but still call Bullet_Fire. I need to simulate a real
+           miss.
+* josh:    Auto-aimed misses are handled in Bullet_Fire_Extended now.
+* forty:   Added g_floodprotect which moves the flood protection code into the
+           mod code and disables the engine flood protection.
+           callvote, say/vsay/teamsay/etc, fireteam, rconauth, ready, specinvite,
+           teamready, ref are currently rate limited.
+* josh:    Cleaned up antilag code and fixed the real unremovable helmet bug.
+* josh:    Added headshots to g_tactics. Also, you will ALWAYS aim at the head
+           now, even if the randomness decides you will only hit the body. The
+           only time you won't aim at the head is if you roll almost 3 higher
+           than the difficulty. This is, like, a critical miss and you won't
+           aim at all.
+* forty:   Added thread/http_client support for win32.
+* tjw:     fixed damage stats so they don't count more damage than the victim
+           had to give.  This was most noticable on goomba kills and
+           construction madness.  (Ticket 468)
+* tjw:     added some shrubbot flags:
+              '0' - is not effected by any inactivity setting (removed from the
+                    '1' flag.)
+              '!' - any shrubbot command will have no effect on a player with
+                    this flag.
+              '@' - no matter what level a player with this flag has, he
+                    will show up as a level 0 admin in !listplayers.
+* josh:    Tactics now aims MG42s on tanks, etc., and the weapons are now
+           balanced for skill and distance.
+* forty:   Fixed bug with flood protect.
+* tjw:     g_shuffle_rating 5 now does essentially the same thing as !shuffle
+           followed by !balance if g_shuffle_rating was 4.
+* josh:    g_tactics aiming will ignore playdeads. They can be shot normally.
+* tjw:     added SBP() as a buffered alternative to SP() for use with shrubbot
+           commands with a lot of output.  This should help !listplayers lag.
+* tjw:     added SBP() support to !listteams, !help, and !showbans
+* tjw:     the "made" parameter should now be consistent across all platforms
+           this will make the output of !showbans consistent for newly created
+           bans.
+* tjw:     added a new optional shrubbot.cfg element called [command].
+           (see docs)
+* tjw:     cache probabilities when using g_playerRating to lessen server load.
+* tjw:     added playerrating tracking for a player's skill levels (e.g. battle
+           sense) at the time of every playerrating change.  in the future,
+           this will be used to adjust playerrating importance in win
+           probability calculations depending on the players current class
+           and skill level.  currently off by default, requires g_playerRating
+           32 flag for now.
+* tjw:     updated skill pr tracking so that it desperses rating points based
+           on total time a player was at each skill level instead of just using
+           the skill level class he was using at the end of the round.
+* tjw:     added caching if cl_guid from ClientConnect() so reduce the
+           amount of userinfo parsing. WARNING: if you're running nightly
+           builds you probably want to backup your xpsave.cfg and shrubbot.cfg
+           just in case.
+* josh:    Rebalanced the weapon ratings for kill rating.
+* tjw:     added disconnect tracking for skill-based playerrating tracking.
+* tjw:     Oops, I never fully added lives tracking into the new XPSave.
+           I added it now using the new disconnect tracking.
+* josh:    Added prinfo and krinfo console / rcon commands which give player
+           and kill ratings sorted and by team. Also made the prob model
+           global in level.win_probability_model for more informative howfair
+           info, etc. Really shouldn't be used without a G_GetWinProb call
+           beforehand though.
+* josh:    Replaced console / rcon command ratingsinfo with winprob which
+           gives A LOT of info about the current win_probability_model,
+           including timeleft! Yay!
+* josh:    krinfo gives averages and so does prinfo. prinfo also  gives time
+           related info per player now, including the effective player rating
+           of that player for that team, assuming he stays on that team for the
+           rest of the match. Note that the average given in prinfo takes into
+           account disconnects. Disconnects are shown as well.
+* josh:    Fixed a bug that allowed KR updates when the victim was already
+           dead. This could lead to large, negative KRs since the damage ratio
+           would be negative.
+* tjw:     fix for getting stuck in walls/solids.
+* tjw:     set default shrubbot levels properly.
+* tjw:     new shrubbot flags '!' and '@' do not get implied with the '*'
+           wildcard.  they are meant for individual admins only.
+* matt:    hopefully fixed team_maxCLASS cvars incorrectly calculating team
+           totals
+* kw:      Referee's can vote a second time to instantly pass/fail a running
+           vote. Referee's can now also vote as spectator.
+* tjw:     Added ensiform's COM_StripExtensionSafe and fixed remapShader arg
+           handling. (from ticket:502)
+* josh:    ATB will ignore map info DURING a stopwatch round. At the end of
+           the first round it will still update using map info. It will not
+           update at the end of the second round since we would have to track
+           either the effects of time or how long each player spent on both
+           teams throughout both rounds.
+* josh:    Made major changes to the player rating and related systems. The
+           main difference is that there is now a measure of uncertainty
+           with the players' ratings. They have a rating and a variance. The
+           currently stored player_rating_variance is NOT the variance though,
+           it is a running SUM over 25 matches of the variance. Maps have
+           ratings again, and variances with those ratings as well. Again,
+           divide by 25 to get the variance. Take the square root of that to
+           get the standard deviation. A player's effective rating on a map
+           is: player_rating + map_rating. So if a player's rating is 1.2 and
+           the axis rating for the current map is -0.2, his effective rating
+           is 1.0.
+
+           Fairness is no longer judged by an arbitrary cutt-off either.
+           Instead, if 2 standard deviations lower than a team's mean winning
+           probability is still above 50%, then that time is "too" likely to
+           win. This is when both ATB and forced balancing will kick in. This
+	   means etpub will change the threshold adaptively based on how well
+	   it knows the teams and how well it knows the map.
+
+	   Updated howfair to use a range instead of a point as well. The
+	   ranges used are generally 2*std_dev.
+
+           I removed a lot of no longer used stuff as well. This WILL reset
+           your player ratings.
+* josh:    Added the /adrenother command in conjuction with g_medics 128. If
+           this is enabled, level 4 medics can adren others by using the
+           command /adrenother. It will be altfire in etpubclient.
+           It will act like normal adren and use the full
+           charge bar and one medic needle.
+* josh:    Added g_medics 256 which prevents medics from using adren on
+           themselves. Medics won't even GET adren.
+* josh:    The PR code is now Bayesian with normal / gaussian distributions
+           for priors on both the map and player ratings. The prior
+           distribution is currently N(0,2.0) or 0-mean 2.0 variance for the
+           players, and N(0,0.66) for the map-side ratings. The mean and
+           variance of the players and maps will always "shrink" a little back
+           towards the priors. The more games you play, the more you can
+           overcome the priors. We can now say we have a Bayesian PR system,
+           yay!
+* josh:    ATB will display howfair before an odds balance as well as after
+           so players can see why it acted.
+* josh:    Removed some of the vsp-specific stuff I had left in
+           xpsave_table.php. Sorry.
+* josh:    Fixed some more xpsave.php bugs
+* josh:    Added some preliminary structures for using g_etpub_stats_id, etc.
+           The matchinfo structures are for queueing match results to
+           eventually send them to a master server.
+* josh:    rated_games for players is now a float. It's the sum of the percent
+           of the games each player played in. So playing half of two games is
+           the same as playing one full game.
+* josh:    Added a server bias to the PR system since it results in closer to
+           70% overall accuracy vs. the 64% we're at now.
+* josh:    Added prresetplayers and prreseteverything commands to allow admins
+           to completely reset parts of the PR system. These may be useful for
+           admins who have run pre-release versions of the system that are no
+           longer as valid mathematically at release time.
+* josh:    Added some preliminary code for later improving the curse filter
+* matt:    Hopefully fixed nightly build problems, win32 compile problems
+* josh:    Fixed a bug that allowed bots to log team and class changes before
+           logging ClientConnect.
+* josh:    g_censorNames now catches renames as well as connects.
+* josh:    Fixed resetting variance in prreset and prreseteveryting. Thanks
+           NHLfan.
+* josh:    fixed a censor problem that was always using the names dictionary
+           instead of the words one for chats.
+* josh:    fixed some of the stat theory and changed the priors on the
+           variances to ones that work better. This will make predictions
+           more accurate.
+* josh:    Switched back from using ranges on the probability of a team
+           winning to using just the prediction and a threshold because it's
+           actually more correct. Always use
+           level.win_probability_model.moderated_probability when making a
+           judgement call from a prediction. The moderated_probability takes
+           into account the current uncertainty about players, maps, and the
+           server itself. This is better to use in ATB, PTB, howfair, and the
+           scoreboard. NOTE: Remember to call G_GetWinProbability before using
+           level.win_probability_model.
+* josh:    Fixed a bug where stopwatch ATB'ing was still taking into account
+           map variance.
+* matt:    Implemented map voting features if server is set to gametype 6
+* josh:    Ported Neil Toronto's censor filter over from the altfire cgame to
+           qagame. It'll catch some symbol and number replacements, and spaces
+           now. It also adds some common words and common words with "swears"
+           in them that should really be OK. For example, it will not censor
+           "assassin" but it will censor "ass". If you want Neil's word
+           lists, then set g_censorNeil and g_censorNamesNeil to 1. These are
+           decent word lists, by the way, I recommend setting those to 1. You
+           can view the lists in g_censor.c. If there's a NULL next to a word,
+           then that word is OK whereas if there's a substitution next to it,
+           then it's NOT OK.
+* josh:    Adding 4 to g_killRating will result in log file lines that give
+           the guids of the players involved in kills. This makes kill
+           tracking a lot easier.
+* magik:   Added support for Omni-Bot 0.52 stable.
+* josh:    Removed "shag" from Neil's filter. If it's offensive where you are,
+           add it to g_censor.
+* josh:    Changed xpsave.php and xpsave_table.php to reflect the effects of a
+           player's kill rating and player rating in more understandable
+           terms. KR K/D is how many kills a player would get against other
+           *average* players before dying. It's an adjusted Kills per Death
+           measure. PR Win% is how often you would win if you played with 19
+           other players who were all average players. We will eventually work
+           these numbers into the scoreboard.
+* josh:    Added etpub_stats.pl as an extra for etadmin_mod, etc., users.
+* josh:    Added some suggestions from deej for consistency and compiling on
+           64-bit architectures.
+* matt:    Fixed bug that caused clients joining during intermission to create
+           negative vote totals
+* matt:    Hopefully fixed objective/bot bug
+* matt:    Fixed mapvoting exploit
+* josh:    Converted most of the player rating reports to show PR win %
+           instead.
+* josh:    Converted KR reports to show KR K/D. This requires the new client
+           to look right since KR was an int before client-side.
+* josh:    Only send KR K/D to new enough clients.
+* josh:    Added support for submission of match info to a central stats
+           server. Ready for global stats alpha / beta soon. Servers
+           that want to participate in the beta need to contact me
+           directly---do NOT just set g_etpub_stats_id at this point without
+           talking to me first.
+* zeebok (josh):  Debugged my (josh) match sending stats code. Thanks!
+* josh:    Made the match posting code non-threaded. It doesn't crash now, as
+           far as I can tell. It could potentially lag intermission a bit if
+           there's a tcp timeout, but it's just intermission---no biggie.
+* josh:    The time counter for player time per team will now ignore skulled
+           players. This will only slightly affect ATB since ATB won't move
+           anyone after a few skulls anyways. Endgame stats updates will be
+           more accurate though.
+* gabriel: Merged in exploit fix by Dens: [p] shortcut could be used to
+           detect an enemy in disguise
+* gabriel: Merged in CheckIntermissionExit() fixes by Dens: 1) Spectators and
+           newly-connected players do not count for intermission ready pct,
+           2) /ref allready ends intermission again, and 3) Fixes a bug in
+           which etpub does not load the next map until a player connects
+* gabriel: Merged in G_shrubbot_admintest() fix by Dens: !admintest does not
+           display the level name of a user when that user is not in the
+           shrubbot.cfg file (which would make the user level 0)
+* gabriel: Merged fix by Dens: !warn does not display the warning message in
+           the intermission
+* gabriel: CheckIntermissionExit() changes: Undid a change by Dens: Spectators
+           count for readypercent (since they can press the ready button), and
+           can vote on maps (since the client counts their vote).  Also, bots
+           are now completely disregarded for readypercent and map voting
+           purposes
+* gabriel: Another bugfix by Dens (Thanks!): !ban command without a time
+           modifier removed the last character in the time parameter
+* gabriel: Dens bug fix merged for G_shrubbot_ban_check(): 1) Connecting
+           permanently banned players see "NEVER" as the ban expiration date
+           now. 2) Users banned without a reason do not see "Reason: " anymore
+* gabriel: Removed spaces from omni-bot's GUID to work around a bug in
+           g_xpsave.c (multiple spaces in the settings are not preserved), that
+           caused many duplicate entries for bots in the xpsave file
+* gabriel: Dens bug fix merged for G_players_cmd(): Ready spectators were being
+           ignored in /players command
+* gabriel: Fixed G_shrubbot_admintest() bug: If the server was set up with
+           non-sequential shrubbot level numbers, !admintest would use the
+           wrong shrubbot element index
+* josh:    Slight change to g_medics 256. Medics won't get self-adren ammo at
+           all now, like before. But if non-medics are allowed adren, they will
+           be able to use it fine. If you don't want non-medics to have adren,
+           then change your g_skills setting.
+* gabriel: Applied kamikazee's bugfixes for map scripts, as explained here:
+           http://splashdamage.com/index.php?name=pnPHPbb2&file=viewtopic&t=15243
+* gabriel: Forced g_ATB_rating and g_shuffle_rating to have legal values when
+           g_ATB is set to 2
+* gabriel: Merged in changes for omni-bot 0.521
+* gabriel: Fixed VC6 project files so that: 1) correct omni-bot interface file
+           is compiled, and 2) post-build file copy step is eliminated.
+
+0.7.2
+* gabriel: added comma (,) as a separator for party panzer pattern
+* gabriel: hopefully fixed a bug with buffered prints and rcon
+* gabriel: fixed server crashes with shortcuts when run from the console
+* gabriel: several cosmetic fixes to !listplayers output: omnibots display
+           "*OMNIBOT*" instead of the GUID fragment, shrubbot level names with
+           color codes are correctly justified now
+* gabriel: fixed a bug where if g_hitsounds bit 4 was set, no headshot sounds
+           were ever heard
+* gabriel: fixed !showbans formatting when color codes are in the banned server
+           name or in the banner
+* gabriel: merged KillSpree bugfix code by Dens: All kill spree message
+           locations now print where they should
+* gabriel: bugfix: lvl4 soldiers can no longer hold both mp40 and thompson at
+           the same time
+* gabriel: bugfix: prevented players from circumventing /kill restrictions by
+           throwing knives to their own feet and killing themselves
+* gabriel: exploitfix: implemented mandatory low value for g_throwKnifeWait
+           (0.2 sec) to prevent players from binding /throwknife to mouse wheel
+           and throwing a ton of knives within a very short amount of time
+* gabriel: exploitfix: expanded g_fear to apply to team changes in addition to
+           /kill, as some players were switching teams instead of /kill to
+           circumvent g_fear
+* gabriel: bugfix: Put in bugfix by Dens: headshots were being counted even
+           though g_stats flag 1 was enabled
+* gabriel: bugfix: several cosmetic changes as submitted by Dens
+* gabriel: exploitfix: players that disconnect or change teams will have their
+           artillery and airstrikes canceled/removed
+* gabriel: bugfix: If there were more than 63 bans no custom commands would be
+           read from the shrubbot.cfg file
+* josh:    bufix: winprob should work from rcon now.
+
+0.8.1
+* gabriel: g_damageXP added to serverinfo string
+* gabriel: implemented g_bot_maxXP - Like g_maxXP but for bots only
+* gabriel: implemented g_bot_minPlayers - See docs
+* gabriel: implemented g_bot_flags with flag 1: disable xpsave for bots
+* gabriel: added shortcuts for custom ! commands
+* gabriel: added [g] (GUID) shortcut
+* gabriel: added parameter placeholders [1]..[9] to the [command] section
+* gabriel: added kill and death spree sounds
+* gabriel: added SPC functionality as submitted by Dens.  The result of some
+           commands will be switched from SP() to SPC() so that the result
+           prints on both the console and the chat area instead of just the
+           console
+* gabriel: merged in _shrubbot_immutable() function submitted by ensiform for
+           better error messages when shrubbot commands are performed on immune
+		   (! flag) targets
+* gabriel: implemented shrubbot command replies using Dens' SPC() function. Now
+           shrubbot command replies/results are displayed in the chat area as
+           well as the console
+* gabriel: "Project: Bug Fix" 087 merged - Player always mouting the last gun
+           used, on multiple tank maps
+* gabriel: "Project: Bug Fix" 089 merged - Player view is distorted in
+           intermission if you have ridden an vehicle, mounted a tank
+* gabriel: "Project: Bug Fix" 091 merged - Spawnpoints not movable
+* gabriel: "Project: Bug Fix" 094 merged - Playing time shown at debriefing
+           keep increasing
+* gabriel: "Project: Bug Fix" 095 verify already merged - Campaign window not
+           big enough to contain big campaigns
+* gabriel: "Project: Bug Fix" 097 merged - Kick command is not able to kick
+           some players by name
+* gabriel: "Project: Bug Fix" 099 merged - Calling for a lot of artillery or
+           airstrikes can result voice over spam
+* gabriel: added g_killingSpreeOpts cvar: Controls whether killing sprees end
+           when player does /kill or switches teams
+* gabriel: changed killspree sounds to have a configurable sound for every kill
+           spree message that can be displayed.  It can be said that there is
+           full killspree sound support as of this change
+* gabriel: added modifiers to g_xpDecayRate (/d: per day, /m: per minute,
+           etc...) see docs for full details
+* gabriel: added modifiers to g_XPSaveMaxAge ((d)ays, m(o)nths, etc...) see
+           docs for full details
+* gabriel: added modifiers to g_XPSaveMaxAge_xp ((d)ays, m(o)nths, etc...) see
+           docs for full details
+* gabriel: added g_bot_flag #2 flag: Bots are automatically granted ! command
+           immunity (the ! shrubbot privilege flag)
+* gabriel: added g_bot_flag #4 flag: Bots cannot be !kicked or !banned
+* gabriel: added g_maxXPResetWarn, which enables warnings to players who are
+           about to get their XP reset due to g_maxXP
+* gabriel: expanded g_maxXPResetWarn to be able to hold negative values which
+           will be interpreted to mean offsets from g_maxXP (-50 means 50 XP
+           before reset, -5% means when 95% of g_maxXP has been reached)
+* gabriel: implemented client-side weapons restrictions enforcement (team_max*
+           cvars): Unavailable weapons will be marked as "not available" in the
+           limbo menu. Requires etpub client > 20060818.
+* josh:    bugfix: Helmet loss and regain with antilag on is now stable.
+* josh:    bugfix: major ATB bug repaired. It was NEVER helping the Allies,
+           only Axis.
+* josh:    Major upgrade of PR system, code cleanup (a little). Much more
+           accurate. This will require major changes to etpub_stats.pl and the
+           php stuff.
+* josh:    Updated extras for new ratings.
+* josh:    Removed warn from ATB. It was either not noticed or abused.
+* josh:    Fixed howfair before and after ATB so it reports before correct.
+* josh:    g_noTeamSwitching now forces same teams even after goin spec and
+           disconnecting. Notice, this will allow players to join back on
+           potentially unfair or unbalanced teams, and therefore is not
+           recommended without some form of team balancing, be it ATB or
+           active admins.
+* josh:    Going back to only one move per map with ATB. This gets reset if
+           you go spec though.
+* matt:    Added crude g_excludedMaps support for g_gametype 6
+* matt:    Added g_mapConfigs support for files names vote_X.cfg when in
+           g_gametype 6 mode (See docs)
+* gabriel: Added "X%-" format to team_max* cvars.  This uses a floor() call
+           instead of ceil() for computing allowed class types per team.
+* gabriel: Added weapons restrictions percentages.  This will enable admins to
+           restrict weapons depending on the number of players in the server.
+           The same percentage rules apply as the team_max* cvars
+* josh:    Added g_ATB_offtime which shuts off ATB after offtime minutes. It's
+           so admins can leave ATB on for just the first 5 minutes, etc.
+           Defaults to 0. This is for those who don't like ATB fixing things
+           mid-map even when they get bad. Hopefully there is less churn
+           after, say, 5 minutes. Then, if g_teamForceBalance_playerrating is
+           on, new joiners will be balanced passively anyways.
+* tjw:     antilag was adjusting for a time that is slightly too old
+* forty:   fix overbounces.
+* forty:   pmove_fixed _should_ work right now. recoil problems and jitters
+           fixed.
+* forty:   #367 - added preliminary fixed physics. This is just Haste's
+           pmove_accurate code from q3.
+           only options 0 and 1 implemented for now.
+* forty:   fix negative damage stats.
+* forty:   bacon's dyno counters
+* forty:   #601 - jaguboss's client-side hitbox prediction
+* forty:   #528 - constructible xp sharing - repairing an em placed mg42
+* matt:    g_asblock option (32) added to give 2 XP Battle Sense for blocking 
+           an airstrike.  No XP given for blocking a teammate's or your own
+           airstrike
+* forty:   #258 - !spec999 -> notification when 0 users moved to spec
+* forty:   #453 - Ammo packs resupply Adrenaline
+* forty:   #589 - Dens slashkill exploit fix
+* forty:   #515 - g_inactivity moves MG42 although player is active
+* forty:   #303 - Make etpub client check the xp needed to level
+* forty:   #608 - g_fear minor bug
+* forty:   #607 - Merge in Density's damage received display code
+* forty:   Added g_misc 256, 512, 1024 options
+           256 - Enable New TraceAllParts Code - Default
+           512 - Stock Prone Box Height
+           1024 - Old Etpub CrouchMaxZ
+* forty:   #612 - playdeads on tank
+* forty:   PatheticCockroach's vote_allow_shufflenorestart display fix.
+* forty:   Ensiform's rcon !help fix.
+* forty:   Den's minimum shrubbotlevel required to connect patch.
+* forty:   #474 - don't give xp if we're picking up our own ammo/med packs.
+* forty:   #511 - make an rcon command for shuffling without restart
+* forty:   Keep landmines from being merged into snapshots if they are not in a
+           players PVS. (2.56 and up)
+* forty:   Make sweeps for landmines take a bit less time.
+* matt:    fixed g_classChange bug that gave thompson to axis player when they
+           stole a teammates uni
+* matt:    !uptime (u) shrubbot flag
+* josh:    Added preliminary player behavior tracking: just mouse velocity
+* forty:   DrEvil - Omni-bot 0.6 support
+* forty:   VC6 Fixes for Omni-bot 0.6 support
+* josh:    g_tactics: Made tactics a rock paper scissors-type game. Each class
+           has a class it can kill easily, one not so easy, and one very hard.
+           M > S > E > F > C > M.
+* matt:    added uneven team notification (g_unevenTeamDiff, g_unevenTeamFreq)
+* matt:    hopefully fixed ws exploit and unignore crash without breaking
+           functionality
+* matt:    merged Density's anti IP/GUID spoofing code
+* stephan: fixed floodprotection bug that disabled /ref commands
+* stephan: added greeting which is displayed when a shrubbot admin connects
+* stephan: !admintest will now show level 0 when a user has the incognito (@)
+           flag
+* stephan: added !finger (f) shrubbot command
+* stephan: added g_weapons flag 1: a level 0 field ops doesn't spawn with
+           binoculars
+* stephan: fixed a bug where a medic would get adrena upon reaching level 4,
+           even though adrena was disabled
+* stephan: removed a small !help display bug
+* stephan: all shrubbot command output should have the same look now
+* stephan: added g_noVoteTime cvar that sets a minimum time between two votes
+* stephan: completely changed the killingspree system. All old killinspree
+           cvars are removed and g_setting, g_spreeOptions and g_multikillTime
+           are added. Furthermore a new settings file is made which contains
+           the spree settings. Finally multikills are added. Read the docs
+           carefully and look at the example settings.cfg to see how to enable
+           sprees.
+* stephan: fixed a small omnibot 0.6 path problem (needs 0.61 omnibot files
+           though)
+* stephan: added cvar g_spoofing which gives admins the possibility to disable
+           the spoofing protection (see the docs for more information about
+           this protection)
+* stephan: added !userinfo (e) shrubbot command
+* stephan: added !stats (t) shrubbot command
+* stephan: fixed a bug in omnibot 0.6 where gibbing a bot would cause an extra
+           body and a weird spectator mode
+* stephan: added [banner] blocks to the g_settings file. This replaces the old
+           cvars g_msgs, g_msgpos and g_msgX.
+* stephan: added g_mapVoteFlags 16 which makes a nextmap vote go to
+           intermission so people can vote which map should be played next
+* stephan: added multiple output for one spree/end/multikill
+* stephan: added g_bot_flags 8: bots cannot mount tanks
+* stephan: g_spoofing removed and g_spoofOptions added (better name). A lot of
+           changes made to this cvar, so read the docs carefully
+* stephan: added g_coverts flag 1024: a disguised covert can still steal an
+           enemy uniform
+* stephan: added g_spreeOptions flag 128: multikill messages will be delayed to
+           prevent flooding
+* stephan: added advanced warnings. Cvars: g_warningDecay, g_warningOptions and
+           g_maxWarnings
+* stephan: someone who is kicked for reaching the max amount of warnings is now
+           kicked for 120 secs
+* stephan: changed g_auoTempBan into a bitflag, so teamdamage, !kick and !warn
+           tempbans are separated
+* stephan: added g_spreeOptions flag 256: killing bots doesn't count in 
+           sprees/multikills
+* josh:    Turned off threads. They're a pain and not used.
+* josh:    Changed g_teamForceBalance_playerrating to override and allow
+           players to enter unfair teams if the numbers are imbalanced.
+* josh:    Made g_ATB 2 event driven so it only runs once per team change, and
+           will not run after a !putteam command. 
+* josh:    Made it so ATB will allow unfair teams when numbers balancing if
+           numbers are off by more than 2.
+* stephan: added an orange W to !listplayers output, that appears when someone
+           has a warning. Also moved the fireteam letter to appear right after
+           the team letter
+* josh:    Added kill rating tracking to match outcome logging in order to
+	   investigate the possiblity of including kill rating in predicting
+	   winners.
+* stephan: removed shrubbot !finger command and added shrubbot flag $ instead.
+           $ allows users to do an !admintest on other players
+* stephan: fixed bots not leaving when setting g_bot_minplayers 0
+* josh:    ATB will allow 2 more players on a team, but not 3
+* josh:    Made sure ATB will only run after someone goes spec or disconnects.
+	   This means it won't fight with PTB. If you can get on a team by
+	   your server's rules (balancing) then ATB won't try and fix it.
+* josh:    !putteam only turns off ATB when it puts a player on axis or
+	   allies.
+* stephan: fixed a bug where ending a spree with a teamkill, would play the
+           selfkill sound
+* stephan: g_bot_minplayers default value is now -1
+* stephan: added g_voting flag 8 that displays the number of YES and NO votes
+           after a vote passed or failed. This also displays if a vote is
+           is passed or canceled by an admin.
+* stephan: added g_privateMessageSound which plays a sound to all player that
+           receive a private message
+* stephan: /players command now gives the total number of humans and bots
+* stephan: !passvote and !cancelvote give some output when there is no vote
+* stephan: added g_maxNameChanges cvar, that limits the number of namechanges
+           at one map
+* stephan: added g_medicHealthRegen flag 7 and 8 which allow medic to
+           regenerate health only when they have full "normal" health allready
+* stephan: omnibot 0.65 support added by gabriel
+* josh:    With zinx's code and permission and a little help from Jaybird, added
+	   etpro's antiwarp code. Use g_antiwarp 1. It will override both
+	   g_maxWarp AND g_skipCorrection in order to keep things consistent.
+* stephan: removed g_bot_flags cvar. All options can be set by using the
+           omnibot cvar omnibot_flags. See the (ETPub) docs for more details
+* stephan: from now on bots won't be tempbanned for doing too much teamdamage
+* stephan: The g_dropMsg is now added to every !kick and !ban and not just to
+           the message shown when a banned player tried to reconnect
+* stephan: added g_medics flag 4: when a level 4 medic gets revived he will
+           always receive full health (same goes for syringe heal)
+* stephan: added g_floodWait which controls the miminum time between 2 (v)says
+* matt:    Fixed minor map voting bug
+* stephan: added g_disableComplaints flag 8: no complaints for dynamite tk
+* stephan: added omnibot 0.66 support
+* stephan: added g_misc flag 4 (display killer health) as submitted by chaos
+* stephan: applied g_medicSelfhealTime patch by Chaos. This CVAR prevents a
+           medic to pick up its own medpacks after being hit
+* stephan: added g_maxPanzerSuicides which makes panzerfaust shoot medpacks
+           after too much panzerselfkills. Idea based on OPENShrub's special
+           panzer, but bit different functionallity
+* stephan: fixed minor nameCensor bug (Thanks ensiform)
+* stephan: added variable mutetime storage in the XPSave file. The !mute
+           command now supports the optional [TIME] and [REASON]. Time can be
+           a number of seconds, or a time with modifier (see !ban for more
+           information). Note that all players that are muted will be unmuted
+           the first time you use 0.8.x
+* stephan: added g_damageXPLevel to the serverinfo string (splatterladder
+           request)
+* stephan: added g_dyno flag 8: dynamite can only be disarmed by the other team
+* stephan: fixed a bug where getting revived after being killed while reloading
+           made a player hold WP_NONE (no weapon)
+* stephan: added g_spoofOptions flag 256 which checks the userinfo in a similar
+           way as Reyalp's lua script. Also changed the default g_spoofOptions
+           value to 323 because just too many innocent people were getting
+           kicked for guidspoofing
+* stephan: added g_dyno flag 16: enable dynamite ID. With ETPubclient >= 
+           20070719 you can see the owner of a dynamite when you point at it
+* stephan: added adminchat "/ma". All users with the shrubbot flag ~ and all
+           referees can type and read this chat. When a new adminchat message
+           is received, the user will hear the g_privateMessageSound and see
+           the adminchat message in orange
+* stephan: changed the color of the location (A,1) in team and fireteam chat to
+           yellow, so that it better matches fireteam and vsay locations
+* stephan: fixed an (omnibot) bug where grabbing unnamed objectives (like the
+           christmas star on "Northpole") results in a server crash
+* tijmen:  added g_misc flag 8: disable self damage as requested by ticket #408
+* stephan: added vote_allow_putspec that gives people the possibility to vote a
+           player into spec
+* tijmen:  added g_maxSelfkills: amount of times a person can user /kill per
+           map
+* stephan: added g_panzerPackDistance which controls the packdistance of the
+           medpacks fired from the panzerfaust when g_maxPanzerSuicides is
+           enabled
+* stephan: added g_maxPanzerSuicides option -2: always enabled
+* tijmen:  added g_showVoteResults: show the amount of votes per team to
+	   admins (and optionally other clients) 
+	   as requested by ticket #482
+* tijmen:  bugfix: xp now writes when someone uses !nextmap, !restart,
+           /callvote maprestart, /callvote nextmap, /callvote map *
+* tijmen:  added g_minCommandWaitTime: this command sets the time you have to
+           wait between using shrubbot commands.
+* stephan: removed g_slashkill flag 8 (disable /kill). This can be achieved by
+           setting g_maxSelfkills 0
+* stephan: fixed g_maxPanzerSuicides display bug
+* stephan: changed g_minCommandWaitTime to show the time in milliseconds when
+           smaller then 2 secs. Hopefully also fixed the crashes
+* stephan: added g_warningOptions flag 16: allow clients to do /warnings
+* stephan: added g_knifeKillSound as submitted by balgo
+* stephan: added g_XPSave flag 16, which makes the xpsaving at !restarts,
+           mapvotes etc optional. Also expanded this to work at campaignvotes.
+           Finally made sure that the disconnects get erased at a !restart etc
+* stephan: added g_spreeOptions flags 512 + 1024. Flag 512 will display the map
+           and overall spreerecords when entering intermission. Spree records
+           are saved into the xpsave file automatically (as long as
+           g_xpSaveFile is set). When a !restart or something similar (see
+           g_XPSave flag 16) takes place, the spreerecords aren't stored by
+           default because this might take some extra resources. It can be
+           enabled by setting flag 1024. The most resources are used when
+           g_XPSave flag 16 is NOT set. Though these resources aren't that bad,
+           it is a bit useless to enable this flag when you don't use the
+           spreerecords
+* stephan: added shrubbot command !spreerecord (t) which shows the spreerecords
+* stephan: added consolecommand /clearspreerecords that deletes all records
+* stephan: removed shrubbot % flag and g_showVoteResults and added
+           g_voteResultsMinLevel instead, because I think this should not have
+           been a shrubbot flag and the old CVAR was redundant. See the docs
+* stephan: added "warner" line in the [warning] shrubbot block. The "warner" is
+           also displayed when using !dewarn [player]
+* stephan: changed SPC to remove newlines before text is sent to CLIENTS. There
+           should NOT be a trailing \n in an SPC message. This should improve
+           the output of shrubbot commands when there are more than 1 username-
+           matches
+* stephan: hopefully fixed antiwarp. Thanks zinx
+* stephan: g_spoofOptions default value changed (again) to 339
+* josh:    Added support for logging the distance kills happen at for later
+           use in an improved kill rating.
+* stephan: [g] and !userinfo changed from full guid, to last 8 characters of
+           the guid
+* stephan: removed one !rename message (admins would see the !rename twice)
+* stephan: fixed weaponrestriction infokey bug
+* josh:    g_ATB 2 now uses g_ATB_minPlayers instead of
+           g_playerRating_minplayers
+
+0.8.2
+* stephan: g_teamChangeKills 0 now doesn't save the health anymore (so you will
+           always start with full health). This also fixes a bug where you
+           sometimes didn't have full health the very first time when you join
+           a team
+* stephan: fixed a small vote coloration bug

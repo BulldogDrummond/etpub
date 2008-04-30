@@ -1,0 +1,162 @@
+# game
+
+Import qw( BASE_CFLAGS CONFIG_DIR BUILD_DIR BASEGAME do_lddabort CC CXX LINK );
+
+$env = new cons(
+	ENV => { PATH => $ENV{PATH}, HOME => $ENV{HOME} },
+  CC => $CC,
+	CXX => $CXX,
+	LINK => 'g++',
+  CPPPATH => '#../game:#../botai:#../../Omnibot/Common:#../../Omnibot/ET',
+  # NOTE TTimo what about the GAMEDLL define? where is it needed?
+  # tjw: this file is only used for glib 2.1/gcc 2.95 builds so no need
+  #      to check gcc ver for NO_FPHEX
+  CFLAGS => $BASE_CFLAGS . '-fPIC -DGAMEDLL -DUSE_MDXFILE -DNO_FPHEX',
+  CXXFLAGS => '-fpermissive',
+  LDFLAGS => '-L. -shared -ldl -lm -rdynamic -m32'
+);
+
+@FILES = qw(
+  ../botai/ai_cmd.c
+  ../botai/ai_dmgoal_mp.c
+  ../botai/ai_dmnet_mp.c
+  ../botai/ai_dmq3.c
+  ../botai/ai_main.c
+  ../botai/ai_script.c
+  ../botai/ai_script_actions.c
+  ../botai/ai_team.c
+  ../game/bg_animation.c
+  ../game/bg_animgroup.c
+  ../game/bg_campaign.c
+  ../game/bg_character.c
+  ../game/bg_classes.c
+  ../game/bg_misc.c
+  ../game/bg_pmove.c
+  ../game/bg_slidemove.c
+  ../game/bg_sscript.c
+  ../game/bg_stats.c
+  ../game/bg_tracemap.c
+  ../game/g_active.c
+  ../game/g_alarm.c
+  ../game/g_antilag.c
+  ../game/g_bot.c
+  ../game/g_buddy_list.c
+  ../game/g_character.c
+  ../game/g_client.c
+  ../game/g_cmds.c
+	../game/g_cmds_ext.c
+  ../game/g_combat.c
+	../game/g_config.c
+  ../game/g_fireteams.c
+  ../game/g_items.c
+  ../game/g_main.c
+	../game/g_match.c
+  ../game/g_mem.c
+  ../game/g_misc.c
+  ../game/g_missile.c
+  ../game/g_mover.c
+	../game/g_multiview.c
+  ../game/g_props.c
+	../game/g_referee.c
+  ../game/g_script.c
+  ../game/g_script_actions.c
+  ../game/g_session.c
+  ../game/g_spawn.c
+  ../game/g_stats.c
+  ../game/g_sv_entities.c
+  ../game/g_svcmds.c
+  ../game/g_syscalls.c
+  ../game/g_systemmsg.c
+  ../game/g_target.c
+  ../game/g_team.c
+  ../game/g_teammapdata.c
+  ../game/g_trigger.c
+  ../game/g_utils.c
+	../game/g_vote.c
+  ../game/g_weapon.c
+  ../game/q_math.c
+  ../game/q_shared.c
+  ../game/g_shrubbot.c
+  ../game/g_xpsave.c
+  ../game/etpro_mdx.c
+  ../game/g_crash.c
+  ../game/g_etbot_interface.cpp
+  ../game/g_http_client.c
+  ../game/g_matchinfo.c
+  ../game/g_censor.c
+  ../game/g_player_rating.c
+  ../game/g_settings.c
+  ../../../../../Omnibot/Common/BotLoadLibrary.cpp
+  ../game/et-antiwarp.c
+   );
+$FILESREF = \@FILES;
+
+# build a list of the *.c files in game/ for generation and dependencies
+# we exclude g_save of course
+$game_files_string = `ls -1 ../game/*.c | grep -v g_save`;
+@GAMES = split "\n",  $game_files_string;
+$GAMESREF = \@GAMES;
+# process into a friendly string for extractfunc
+$GAMES_STRING = "";
+$LDIR = `pwd`;
+chop $LDIR;
+$LDIR .= '/../game';
+for($i=0; $i<scalar(@GAMES); $i++)
+{
+  my $tmp = $GAMES[$i];
+  $tmp =~ s/\.\.\/game\/(.*)/\1/;
+  $GAMES_STRING .= "$tmp ";
+}
+
+# explicit perl code to generate the func headers
+# run extractfuncs with straight .c filenames, output to the right place
+sub build_funcs {
+  print "Building functions table\n";
+  system("LDIR=`pwd`; cd ../game; echo \"in `pwd`\"; \$LDIR/extractfuncs -o \$LDIR/$BUILD_DIR/game/g_funcs.h \$LDIR/$BUILD_DIR/game/g_func_decs.h -D MISSIONPACK GAMEDLL -f $GAMES_STRING");
+  return 1;
+}
+
+# explicit dependency of those headers
+Depends $env ['../game/g_funcs.h', '../game/g_func_decs.h'], @$GAMESREF;
+Depends $env ['../game/g_funcs.h', '../game/g_func_decs.h'], '#extractfuncs';
+
+# generation command
+Command $env ['../game/g_funcs.h', '../game/g_func_decs.h'], "[perl] &build_funcs()";
+
+# build a list of the *.c files in botai/ for generation and dependencies
+$botai_files_string = `ls -1 ../botai/*.c`;
+@BOTAI = split "\n",  $botai_files_string;
+$BOTAIREF = \@BOTAI;
+# process into a friendly string for extractfunc
+$BOTAI_STRING = "";
+$LDIR = `pwd`;
+chop $LDIR;
+$LDIR .= '/../botai';
+for($i=0; $i<scalar(@BOTAI); $i++)
+{
+  my $tmp = $BOTAI[$i];
+  $tmp =~ s/\.\.\/botai\/(.*)/\1/;
+  $BOTAI_STRING .= "$tmp ";
+}
+
+# explicit perl code to generate the func headers
+# run extractfuncs with straight .c filenames, output to the right place
+sub build_ai_funcs {
+  print "Building botai/ functions table\n";
+#	print("command : extractfuncs -o $BUILD_DIR/botai/ai_funcs.h $BUILD_DIR/botai/ai_func_decs.h -d MISSIONPACK GAMEDLL -f $BOTAI_STRING\n");
+  system("LDIR=`pwd`; cd ../botai; echo \"in `pwd`\"; \$LDIR/extractfuncs -o \$LDIR/$BUILD_DIR/botai/ai_funcs.h \$LDIR/$BUILD_DIR/botai/ai_func_decs.h -d MISSIONPACK GAMEDLL -f $BOTAI_STRING");
+  return 1;
+}
+
+# ai_ ones
+Depends $env ['../botai/ai_funcs.h', '../botai/ai_func_decs.h'], @$BOTAIREF;
+Depends $env ['../botai/ai_funcs.h', '../botai/ai_func_decs.h'], '#extractfuncs';
+
+Command $env ['../botai/ai_funcs.h', '../botai/ai_func_decs.h'], "[perl] &build_ai_funcs()";
+
+# FIXME CPU string
+Program $env 'qagame.mp.i386.so', @$FILESREF;
+my $path = FilePath('qagame.mp.i386.so');
+AfterBuild $env 'qagame.mp.i386.so', "[perl] &ldd_check::do_check(\'$path\', $do_lddabort)";
+
+Install $env '#' . $CONFIG_DIR . '/out/' . $BASEGAME, 'qagame.mp.i386.so';

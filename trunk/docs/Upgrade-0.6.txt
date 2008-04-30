@@ -1,0 +1,33 @@
+
+Important Notes For Upgrading etpub 0.5.x to 0.6.x
+--------------------------------------------------
+
+1) the cvar g_activeTeamBalance has been renamed to g_ATB_diff.  You must
+   also set g_ATB to 1 in order to get the 0.5.x behaviour.  If you had
+
+	set g_activeTeamBalance 50
+   
+   and want to keep the same settings, you must change it to:
+
+	set g_ATB 1
+	set g_ATB_diff 50
+
+2) If you want the behaviour from 0.5.x that prevented players from sticking
+   their heads into solids, you must enable the g_misc 32 flag.
+
+3) If you use etpub_client, you should update it to at least version 20051103.
+   Available at: http://et.tjw.org/etpub/
+
+4) XPSave now saves to a file.  The name of this file is set with the
+   g_XPSaveFile cvar and is relative to the fs_game directory.  If you use
+   g_XPSave, ensure that the user that runs your server process has permission
+   to write to your fs_game directory so that this file can be created.
+
+5) A new vote option (shufflenorestart) has been added and is allowed by
+   default.  If you don't want this vote to be allowed you must do:
+	set vote_allow_shufflenorestart 0
+
+6) If you've previously used the g_killrating 4 flag to have players sorted
+   by killrating when shuffling, you'll need to set the new cvar
+   g_shuffle_rating to 3 instead. 
+

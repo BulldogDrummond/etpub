@@ -1,0 +1,315 @@
+<html>
+<head>
+<title>etpub - custom obituaries</title>
+</head>
+<body>
+<h2>
+Custom Obituary  Messages:  Overview
+</h2>
+<p>
+The purpose of this enhancement is to allow server administrators to change the "obituary messages" on their server.  Obituary messages are displayed when a player is killed during the course of game play.   An administrator can change as many or as few obituary messages as they wish.  If no changes are made, the customary default messages will be displayed.   
+<p>
+The customization is accomplished by the use of configuration variables (cvars) that can be placed in a map-specific configuration file (railgun.cfg, for example) or in default.cfg (which is selected if no map-specific file is available).  This allows the customization to be set on a per-map basis if the administrator so desires.
+<pre>
+
+
+</pre>
+
+<h2>
+Custom Obituary Messages: Types of Messages
+</h2>
+<p>
+Enemy Territory displays several different varieties of messages when a player is killed.  The style of message displayed depends on the events which lead to the player's ultimate demise.  With this enhancement, all of these styles are configurable.
+<p>
+When a player dies from damage given by "the world" (falling, drowning, etc) or when a player dies from self-inflicted damage (dove on own grenade, etc) this produces one style of obituary message.
+<p>Example:  PlayerX fell to his death
+
+<p>
+When a player dies from damage given by a member of the opposing team, this produces a second style of obituary message.
+<p>Example:  PlayerX was killed by PlayerY's thompson.
+
+<p>
+Finally, when a player dies from damage given by a teammate (team kill), this produces a third style of obituary message.
+<p>Example: Player X WAS KILLED BY TEAMMATE PlayerY
+
+
+<p>
+IMPORTANT NOTE:   You MUST be sending obituaries from the server in order for custom obituaries to work.  This is NOT the way etpub is configured by default.  To enable server-side obituaries:
+<p>
+<pre>set g_obituary 3</pre>
+<pre>
+
+
+</pre>
+
+
+<h2>
+CVAR Parsing
+</h2>
+
+<p>
+The CVARs used for custom obituaries are parsed prior to displaying.  This allows you to customize as many aspects of the 
+displayed message as possible.  The parser considers two keys when building the obituary:
+
+<pre>
+[v] - display the name of the victim (the one who died)
+[a] - display the name of the attacker
+</pre>
+
+The parser looks for occurances of these keys, and replaces them accordingly.
+
+
+<pre>
+
+
+</pre>
+
+
+<h2>
+Configuring World/Self-Inflicted Custom Obituaries
+</h2>
+
+<p>
+This style of obituary is the easiest to configure.  Only one cvar is required to configure this message, and it simply needs to describe the method of death.  
+The parser only looks for a victim, as there is not really an attacker in this situation.
+
+<p>
+Below, you will find a list of the configurable cvars that cover this style of obituary.  In this example, the cvars contain the text of the game's default messages.  Remember, however, that if you configure nothing, you will still have the default messages.  To save processing overhead, it is recommended that you customize only the obituary messages you wish to change and have no entries for the other obituaries.
+
+<pre>
+set g_obit36 "[v]^7 fell to his death."
+set g_obit34 "[v]^7 was crushed."
+set g_obit31 "[v]^7 drowned."
+set g_obit32 "[v]^7 died by toxic materials."
+set g_obit54 "[v]^7 got buried under a pile of rubble."
+set g_obit33 "[v]^7 was incinerated."
+
+set g_obit26 "[v]^7 dynamited himself to pieces."
+set g_obit18 "[v]^7 dove on his own grenade." 	// Axis
+set g_obit20 "[v]^7 dove on his own grenade." 	// Allies
+set g_obit17 "[v]^7 vaporized himself." 		// Panzerfaust
+set g_obit19 "[v]^7 played with fire." 		// Flamethrower
+set g_obit27 "[v]^7 obliterated himself." 		// Airstrike
+set g_obit30 "[v]^7 fired for effect on himself."	// Artillery
+set g_obit43 "[v]^7 ate his own rifle grenade."	// Axis
+set g_obit44 "[v]^7 ate his own rifle grenade."	// Allies
+set g_obit45 "[v]^7 failed to spot his own landmine."
+set g_obit46 "[v]^7 embraced his own satchel explosion."
+set g_obit52 "[v]^7 engineered himself into oblivion."
+set g_obit53 "[v]^7 buried himself alive."
+set g_obit57 "[v]^7 never saw his own mortar round coming."
+set g_obit62 "[v]^7 danced on his own airstrike marker."
+set g_obit69 "[v]^7 was killed by his own friendly fire." // reflected friendly fire
+set g_obit37 "[v]^7 killed himself." 			// /kill command
+</pre>
+<p>
+Note:  You can use the normal color flags to spruce up the messages even more.
+<p>
+For example:
+<pre>
+set g_obit26 "[v]^7 had an ^1EXPLOSIVE^7 relationship with his dynamite"
+</pre>
+<p><b> Note that in all cases, ^7 has been added after the [v] designation.  This is done so that color codes that might be present in the player's name do not affect the obituary message color.</b>
+
+<pre>
+
+
+</pre>
+
+<h2>
+Configuring combat-related obituary messages (non-team kill)
+</h2>
+<p>
+Combat-related obituary messages contain three pieces of information:
+<pre>
+     - The name of the victim
+     - The name of the attacker
+     - Description of the method/weapon used.
+</pre>
+
+<p>
+To build this type of obituary is not difficult.  You simply build the cvar in question using the [a] and [v] designators, and a description.
+You must take into account punctuation and colors, as mentioned before, as the game will not add these for you.
+You can customize as many or as few of these as you like.  If you do not customize a given obituary, the game will use the default message.
+
+<p>
+Below is a listing of available combat-related configurable cvars showing the game defaults.
+
+
+<pre>
+set g_obit206 "[v]^7 was killed by [a]^7's knife."  			// knife (not thrown)
+set g_obit258 "[v]^7 was killed by [a]^7's Akimbo .45ACP 1911's." 	// akimbo Colt (allies)
+set g_obit260 "[v]^7 was killed by [a]^7's Akimbo .45ACP 1911's." 	// akimbo Colt w/silencer
+set g_obit259 "[v]^7 was killed by [a]^7's Akimbo Luger 9mm's." 		// Akimbo Luger (axis)
+set g_obit261 "[v]^7 was killed by [a]^7's Akimbo Luger 9mm's" 		// Akimbo Luger  w/silencer
+set g_obit207 "[v]^7 was killed by [a]^7's Luger 9mm."			// Luger (axis)
+set g_obit214 "[v]^7 was killed by [a]^7's Luger 9mm."			// Luger (axis) w/silencer
+set g_obit208 "[v]^7 was killed by [a]^7's .45ACP 1911."			// Colt (allies)
+set g_obit250 "[v]^7 was killed by [a]^7's .45ACP 1911."			// Colt (allies) w/silencer
+set g_obit209 "[v]^7 was killed by [a]^7's MP40."			// MP40 (axis)
+set g_obit210 "[v]^7 was killed by [a]^7's Thompson."			// Thompson (allies)
+set g_obit211 "[v]^7 was killed by [a]^7's Sten."			// Sten
+set g_obit226 "[v]^7 was blasted by [a]^7's dynamite."			// dynamite
+set g_obit217 "[v]^7 was blasted by [a]^7's Panzerfaust."		// Panzerfaust
+set g_obit218 "[v]^7 was exploded by [a]^7's grenade."			// Axis grenade
+set g_obit220 "[v]^7 was exploded by [a]^7's grenade."			// Allied grenade
+set g_obit219 "[v]^7 was cooked by [a]^7's flamethrower."		// Flamethrower
+set g_obit257 "[v]^7 never saw [a]^7's mortar round coming."		// Mortar
+set g_obit201 "[v]^7 was perforated by [a]^7's crew-served MG."		// Crew-served MG action
+set g_obit202 "[v]^7 was perforated by [a]^7's tank-mounted browning 30cal."	// Tank gun (allied)
+set g_obit203 "[v]^7 was perforated by [a]^7's tank-mounted MG42."		// Tank gun (axis)
+set g_obit227 "[v]^7 was blasted by [a]^7's support fire."		// Airstrike
+set g_obit230 "[v]^7 was shelled by [a]^7's artillery support."		// Artillery
+set g_obit242 "[v]^7 was killed by [a]^7's K43."			// Axis Base rifle
+set g_obit255 "[v]^7 was killed by [a]^7's K43."			// Axis sniper rifle w/o scope
+set g_obit241 "[v]^7 was killed by [a]^7's Garand."			// Allied Base rifle
+set g_obit212 "[v]^7 was killed by [a]^7's Garand."			// Allied sniper rifle w/o scope
+set g_obit243 "[v]^7 was killed by [a]^7's rifle grenade."		// Axis grenade launcher
+set g_obit244 "[v]^7 was killed by [a]^7's rifle grenade."		// Allied grenade launcher
+set g_obit245 "[v]^7 failed to spot [a]^7's Landmine."			// Landmine
+set g_obit252 "[v]^7 got caught in [a]^7's construction madness."	// Construction
+set g_obit253 "[v]^7 got buried under [a]^7's rubble."			//  
+set g_obit249 "[v]^7 was mown down by [a]^7's Mobile MG42."		// Mobile MG42
+set g_obit251 "[v]^7 was silenced by [a]^7's Garand."			// Allied sniper using scoped weapon
+set g_obit256 "[v]^7 was silenced by [a]^7's K43."			// Axis sniper using scoped weapon
+set g_obit215 "[v]^7 was killed by [a]^7's FG42."			// FG-42 non-scoped
+set g_obit216 "[v]^7 was sniped by [a]^7's FG42."			// FG-42 scoped.
+set g_obit246 "[v]^7 was blasted by [a]^7's Satchel Charge."		// Satchel charge
+set g_obit262 "[v]^7 stood on [a]^7's airstrike marker."		// Airstrike marker explosion
+set g_obit266 "[v]^7 was poisoned by [a]^7's needle."			// Medic poison needle
+set g_obit265 "[v]^7 experienced death from above from [a]^7."		// goomba!
+set g_obit267 "[v]^7 was scared to death by [a]^7."			// fear
+set g_obit268 "[v]^7 was killed by [a]^7's throwing knife." 		// throwing knife
+
+</pre>
+<p><b>Note that in all cases, ^7 has been added after the [v] and [a] designations.  
+This is done so that color codes that might be present in the player's name do not affect the obituary message color.</b>
+
+
+<p>
+EXAMPLES:
+<pre>
+set g_obit206 "[v]^7 was sliced by [a]^7's knife."
+</pre>
+produces:
+PlayerX was sliced by PlayerY's knife.
+
+
+<pre>
+set g_obit206 "[v]^7 was carved to shreds by [a]^7's ginsu knife."
+</pre>
+produces:
+PlayerX was carved to shreds by PlayerY's ginsu knife	
+
+<pre>
+
+
+</pre>
+
+<h2>
+Team-Kill obituary messages:
+</h2>
+<p>
+By default, the game does not include weapon information for a teamkill event.  This action (depending on how obituaries are displayed) always reads: "WAS KILLED BY TEAMMATE" in red letters.
+
+<p>
+The same methodology can be used to create teamkill messages as is used to create combat messages.  You can include as much or as little information as you desire.
+
+<p>
+Note:  When you create a custom teamkill obituary, you MUST include the teamkill wording in your message.  The game will NOT insert this for you!
+
+<p>
+To create a custom teamkill obituary message:  Add "tk" to the combat cvars for the event you'd like to customize.  You can create as many or as few of these as you like.  
+The game will use the default message for any events you have not customized.
+
+<p>
+An example for configuring an Axis team-kill-by-grenade message (g_obit 218 is the obituary for a normal axis grenade kill): 
+<pre>
+set g_obit218tk "[v]^7 was exploded by ^1TEAMMATE^7 [a]^7's grenade"		
+	
+</pre>
+Produces:  "PlayerX was exploded by TEAMMATE PlayerY's grenade"
+
+<pre>
+
+
+</pre>
+
+
+
+
+<h2>
+FINAL THOUGHTS and FAQ:
+</h2>
+<p>
+Q: Why enable these?
+<p>
+A: To give your server its own special feel, to amuse yourself or your players, etc
+<pre>
+
+
+</pre>
+<p>
+Q: If I want the default messages, do I need to copy the entire cvar list above?
+<p>
+A: NO!! In fact, you shouldn't do so.  If you set nothing, the defaults will still work.
+<p>
+<pre>
+
+
+</pre>
+Q: Can I customize all the cvars?
+<p>
+A: Sure... Just be advised that more cvars may require more horsepower from the server.  You'll have to test for any impact.
+<p>
+<pre>
+
+
+</pre>
+Q:  Why don't the cvar numbers just go in order?
+<p>
+A: The cvar number is based upon a variable inside Enemy Territory.  Using this allowed the creation of custom obituary messages while using dynamic cvars (saving on server resources).  Additionally, if new methods of death are added to the mod in the future, no code changes will be necessary.  You will be able to add the appropriate cvar and immediately have custom messages.
+<p>
+<pre>
+
+
+</pre>
+Q: I'd like my server to display very little information in my obituary messages - such as "PlayerX was killed" or "PlayerX was killed by PlayerY".  Can I do this?
+<p>
+A:  Sure.  Set your obituary messages to something like:
+
+<pre>
+set g_obit206 "[v]^7 was killed..."
+</pre>
+produces:  
+
+PlayerX was killed...
+<p>
+<pre>
+
+
+</pre>
+Q: Do I always have to do things in the same order -- victim, then attacker?
+<p>
+A: No.  You can get creative with these obituaries, including the order.  For example:
+<p>
+<pre>
+set g_obit206 "[a]^7 carved up [v]^7 with a sharp knife!"
+</pre>
+produces:  PlayerY was carved up by PlayerX with a sharp knife!
+<p>
+<pre>
+
+
+</pre>
+Q: Can I use a key more than once in an obituary?
+<p>
+A: Sure.  An obituary like:
+<pre>
+set g_obit206 "[v] was killed by [a]'s knife... Poor [v], skillful [a]!"
+</pre>
+produces:  PlayerX was killed by PlayerY's knife... Poor PlayerX, skillful PlayerY!
+
+
+</body>
+</html>

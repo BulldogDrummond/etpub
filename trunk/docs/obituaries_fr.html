@@ -1,0 +1,233 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN">
+<html>
+<head>
+  <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
+  <title>etpub - custom obituaries</title>
+<!-- base href="http://et.tjw.org/etpub/docs/" --><!-- removed -->
+  <style type="text/css">
+ dt { font-weight: bold; }</style>
+</head>
+<body>
+<h2>
+Messages N&eacute;crologiques Personnalis&eacute;s : Vue d'ensemble
+</h2>
+<p>Le but de cette am&eacute;lioration est de permettre aux
+administrateurs de serveurs de changer "les
+messages&nbsp;n&eacute;crologiques" sur leur serveur. Les
+messages&nbsp;n&eacute;crologiques sont affich&eacute;s lorsqu'un
+joueur est tu&eacute; durant le jeu. Un administrateur peut changer
+autant&nbsp;de messages&nbsp;n&eacute;crologique qu'il le souhaite. Si
+aucune modification n'est apport&eacute;, les messages standard sont
+utilis&eacute;s par le jeu.&nbsp;</p>
+<p>La personnalisation est faite en utilisant les variables de
+configuration (cvars) qui seront plac&eacute;es dans les fichiers de
+configuration sp&eacute;cifiques des maps (par exemple : railgun.cfg)
+ou dans default.cfg (qui est utilis&eacute; si aucun fichier de
+configuration sp&eacute;cifique&nbsp;n'est disponible disponible pour
+une map). Cela permet aux administrateurs de personnalis&eacute; les
+messages par map s'ils le d&eacute;sirent.</p>
+<h2>Messages N&eacute;crologiques Personnalis&eacute;s : Types de
+messages </h2>
+<p>
+Enemy Territory affiche diff&eacute;rents types de messages quand un
+joueur est tu&eacute;. Le type de message affich&eacute; d&eacute;pend
+des &eacute;v&eacute;nements li&eacute;s &agrave; la mort du joueur.
+Avec cette am&eacute;lioration, les diff&eacute;rents types de messages
+sont configurables.
+</p>
+<p>Lorsqu'un joueur meurt du fait de dommages occasion&eacute;s par "le
+monde" (chute, noyade...) ou qu'il meurt par une de ses actions (une de
+ses grenade...), un premier type de messages est affich&eacute;.
+</p>
+<p>Exemple: JoueurX fell to his death
+</p>
+<p>
+Lorsqu'un joueur meurt du fait de dommages occasion&eacute;s par un
+joueur de l'&eacute;quipe adverse, un second type de messages est
+affich&eacute;.
+</p>
+<p>Exemple:&nbsp;JoueurX was killed by&nbsp;JoueurY's thompson.
+</p>
+<p>
+Enfin, lorsqu'un joueur meurt du fait de dommages occasion&eacute;s par
+un de ses &eacute;quipiers, un troisi&egrave;me type de messages est
+affich&eacute;.
+</p>
+<p>Exemple: JoueurX WAS KILLED BY TEAMMATE JoueurY
+</p>
+<p>NOTE: les messages n&eacute;crologiques <strong>DOIVENT</strong>
+&ecirc;tre g&eacute;r&eacute;s par le serveur afin que la customisation
+fonctionne.
+Ce comportement n'est pas celui par d&eacute;faut l'etpub. Pour activer
+la gestion des messages n&eacute;crologiques c&ocirc;t&eacute; serveur
+:
+</p>
+<p></p>
+<pre>set <a href="index_fr.html#g_obituary">g_obituary</a> 3</pre>
+<pre></pre>
+<h2>
+Analyse syntaxique des CVAR </h2>
+<p>
+Les CVARs utilis&eacute;s les messages n&eacute;crologiques sont
+analys&eacute;s syntaxiquement avant d&ecirc;tre affich&eacute;s. Cela
+permet de personnaliser autant que vous le souhaitez les messages
+affich&eacute;s. L'analyseur syntaxique reconnait deux cl&eacute;s lors
+de la construction du message :
+</p>
+<pre>[v] - Affiche le nom de la victime(nom du joueur tu&eacute;)<br>[a] - Affiche le nom de l'attaquant<br></pre>
+L'analyseur cherche les occurences de ces cl&eacute;s et les remplace
+par leurs valeurs respectives. Les caract&egrave;res accentu&eacute;s,
+i.e. &eacute; &egrave; &agrave;... n'&eacute;tant pas bien
+support&eacute; dans le jeu, il n'est pas recommand&eacute; de les
+inclure dans les messages afin d'avoir un affichage correct.
+<pre></pre>
+<h2>
+Configuration des messages n&eacute;crologiques provoqu&eacute;s par le
+"Monde" ou du joueur sur lui m&ecirc;me
+</h2>
+<p>
+Ce style de messages n&eacute;crologiques est le plus facile pour
+configurer. Un seul CVAR doit &ecirc;tre modifi&eacute; et doit
+d&eacute;crire la fa&ccedil;on dont le joueur est mort. L'analyseur
+syntaxique ne cherche que la victime (cl&eacute; [v]) puisqu'il n'y a
+pas d'attaquant dans ce genre d'action.
+</p>
+<p>
+Ci-dessous, vous trouverez une liste des CVARs configurable qui permet
+la customisation de ce type de messages n&eacute;crologiques. Dans la
+liste qui suit, les CVARs contiennent le texte des messages par
+d&eacute;faut. Pour &eacute;viter des traitements inutiles par
+l'analyseur, il est recommand&eacute; de ne modifier que les messages
+que vous voulez changer et de ne pas fixer les valeurs des messages que
+vous ne voulez pas changer. En effet si la valeur d'un CVAR n'est pas
+explicitement fix&eacute;e, les valeurs par d&eacute;faut du jeu sont
+utilis&eacute;es. </p>
+<pre>set g_obit36 "[v]^7 fell to his death."<br>set g_obit34 "[v]^7 was crushed."<br>set g_obit31 "[v]^7 drowned."<br>set g_obit32 "[v]^7 died by toxic materials."<br>set g_obit54 "[v]^7 got buried under a pile of rubble."<br>set g_obit33 "[v]^7 was incinerated."<br><br>set g_obit26 "[v]^7 dynamited himself to pieces."<br>set g_obit18 "[v]^7 dove on his own grenade." 	// Axis<br>set g_obit20 "[v]^7 dove on his own grenade." 	// Allies<br>set g_obit17 "[v]^7 vaporized himself." 		// Panzerfaust<br>set g_obit19 "[v]^7 played with fire." 		// Flamethrower<br>set g_obit27 "[v]^7 obliterated himself." 		// Airstrike<br>set g_obit30 "[v]^7 fired for effect on himself."	// Artillery<br>set g_obit43 "[v]^7 ate his own rifle grenade."	// Axis<br>set g_obit44 "[v]^7 ate his own rifle grenade."	// Allies<br>set g_obit45 "[v]^7 failed to spot his own landmine."<br>set g_obit46 "[v]^7 embraced his own satchel explosion."<br>set g_obit52 "[v]^7 engineered himself into oblivion."<br>set g_obit53 "[v]^7 buried himself alive."<br>set g_obit57 "[v]^7 never saw his own mortar round coming."<br>set g_obit62 "[v]^7 danced on his own airstrike marker."<br>set g_obit37 "[v]^7 killed himself." 			// /kill command<br></pre>
+<p>
+Note: Les flags des couleurs peuvent &ecirc;tre utilis&eacute;s dans
+les messages.
+</p>
+<p>Par exemple:
+</p>
+<pre>set g_obit26 "[v]^7 had an ^1EXPLOSIVE^7 relationship with his dynamite"<br></pre>
+<p><b> Remarquez que dans tous les cas la couleur ^7 est ajout&eacute;e
+apr&egrave;s la cl&eacute; [v] afin que les couleurs d&eacute;finies
+dans le nom du joueurs n'affectent pas l'affichage du message.</b>
+</p>
+<pre></pre>
+<h2>
+Configuration des messages n&eacute;crologiques li&eacute;s aux combat
+(hors team-kill)</h2>
+<p>
+Ce type de messages n&eacute;crologiques contient 3 informations :
+</p>
+<pre>     - Le nom de la victime<br>     - Le nom de l'attaquant<br>     - M&eacute;thode/arme utilis&eacute;e pour le kill.<br></pre>
+<p>Le param&eacute;trage de ces messages est fait simplement en
+utilisant les cl&eacute;s [a], [v] et une description. Vous devez tenir
+compte de la ponctuation et des couleurs, comme dans les messages
+pr&eacute;c&eacute;dents. Vous pouvez modifier autant de messages que
+vous le souhaitez. Comme pr&eacute;c&eacute;dement, un message non
+customis&eacute; provoquera l'affiche du message par d&eacute;faut
+contenu dans le jeu.</p>
+<p>La liste des CVARs g&eacute;rant les messages n&eacute;crologiques
+li&eacute;s au combat est (les valeurs affich&eacute;es sont celles
+contenues par d&eacute;faut dans le jeu) :
+</p>
+<pre>set g_obit206 "[v]^7 was killed by [a]^7's knife."  			// knife (not thrown)<br>set g_obit258 "[v]^7 was killed by [a]^7's Akimbo .45ACP 1911's." 	// akimbo Colt (allies)<br>set g_obit260 "[v]^7 was killed by [a]^7's Akimbo .45ACP 1911's." 	// akimbo Colt w/silencer<br>set g_obit259 "[v]^7 was killed by [a]^7's Akimbo Luger 9mm's." 		// Akimbo Luger (axis)<br>set g_obit261 "[v]^7 was killed by [a]^7's Akimbo Luger 9mm's" 		// Akimbo Luger  w/silencer<br>set g_obit207 "[v]^7 was killed by [a]^7's Luger 9mm."			// Luger (axis)<br>set g_obit214 "[v]^7 was killed by [a]^7's Luger 9mm."			// Luger (axis) w/silencer<br>set g_obit208 "[v]^7 was killed by [a]^7's .45ACP 1911."			// Colt (allies)<br>set g_obit250 "[v]^7 was killed by [a]^7's .45ACP 1911."			// Colt (allies) w/silencer<br>set g_obit209 "[v]^7 was killed by [a]^7's MP40."			// MP40 (axis)<br>set g_obit210 "[v]^7 was killed by [a]^7's Thompson."			// Thompson (allies)<br>set g_obit211 "[v]^7 was killed by [a]^7's Sten."			// Sten<br>set g_obit226 "[v]^7 was blasted by [a]^7's dynamite."			// dynamite<br>set g_obit217 "[v]^7 was blasted by [a]^7's Panzerfaust."		// Panzerfaust<br>set g_obit218 "[v]^7 was exploded by [a]^7's grenade."			// Axis grenade<br>set g_obit220 "[v]^7 was exploded by [a]^7's grenade."			// Allied grenade<br>set g_obit219 "[v]^7 was cooked by [a]^7's flamethrower."		// Flamethrower<br>set g_obit257 "[v]^7 never saw [a]^7's mortar round coming."		// Mortar<br>set g_obit201 "[v]^7 was perforated by [a]^7's crew-served MG."		// Crew-served MG action<br>set g_obit202 "[v]^7 was perforated by [a]^7's tank-mounted browning 30cal."	// Tank gun (allied)<br>set g_obit203 "[v]^7 was perforated by [a]^7's tank-mounted MG42."		// Tank gun (axis)<br>set g_obit227 "[v]^7 was blasted by [a]^7's support fire."		// Airstrike<br>set g_obit230 "[v]^7 was shelled by [a]^7's artillery support."		// Artillery<br>set g_obit242 "[v]^7 was killed by [a]^7's K43."			// Axis Base rifle<br>set g_obit255 "[v]^7 was killed by [a]^7's K43."			// Axis sniper rifle w/o scope<br>set g_obit241 "[v]^7 was killed by [a]^7's Garand."			// Allied Base rifle<br>set g_obit212 "[v]^7 was killed by [a]^7's Garand."			// Allied sniper rifle w/o scope<br>set g_obit243 "[v]^7 was killed by [a]^7's rifle grenade."		// Axis grenade launcher<br>set g_obit244 "[v]^7 was killed by [a]^7's rifle grenade."		// Allied grenade launcher<br>set g_obit245 "[v]^7 failed to spot [a]^7's Landmine."			// Landmine<br>set g_obit252 "[v]^7 got caught in [a]^7's construction madness."	// Construction<br>set g_obit253 "[v]^7 got buried under [a]^7's rubble."			//  <br>set g_obit249 "[v]^7 was mown down by [a]^7's Mobile MG42."		// Mobile MG42<br>set g_obit251 "[v]^7 was silenced by [a]^7's Garand."			// Allied sniper using scoped weapon<br>set g_obit256 "[v]^7 was silenced by [a]^7's K43."			// Axis sniper using scoped weapon<br>set g_obit215 "[v]^7 was killed by [a]^7's FG42."			// FG-42 non-scoped<br>set g_obit216 "[v]^7 was sniped by [a]^7's FG42."			// FG-42 scoped.<br>set g_obit246 "[v]^7 was blasted by [a]^7's Satchel Charge."		// Satchel charge<br>set g_obit262 "[v]^7 stood on [a]^7's airstrike marker."		// Airstrike marker explosion<br>set g_obit266 "[v]^7 was poisoned by [a]^7's needle."			// Medic poison needle<br>set g_obit265 "[v]^7 experienced death from above from [a]^7."		// goomba!<br>set g_obit267 "[v]^7 was scared to death by [a]^7."			// fear<br>set g_obit268 "[v]^7 was killed by [a]^7's throwing knife." 		// throwing knife<br><br></pre>
+<p><b> Remarquez que dans tous les cas la couleur ^7 est ajout&eacute;e
+apr&egrave;s la
+cl&eacute; [v] afin que les couleurs d&eacute;finies dans le nom du
+joueurs
+n'affectent pas l'affichage du message..</b>
+</p>
+<p>EXEMPLES:
+</p>
+<pre>set g_obit206 "[v]^7 was sliced by [a]^7's knife."<br></pre>
+G&eacute;n&eacute;rera : JoueurX was sliced by&nbsp;JoueurY's knife.
+<pre>set g_obit206 "[v]^7 was carved to shreds by [a]^7's ginsu knife."<br></pre>
+G&eacute;n&eacute;rera :&nbsp;JoueurX was carved to shreds
+by&nbsp;JoueurY's ginsu knife
+<pre></pre>
+<h2>M&eacute;ssages n&eacute;crologiques du Team-Kill :
+</h2>
+<p>Dans ce type de messages l'arme utilis&eacute;e n'est pas
+affich&eacute;e dans le message. Ce type d'&eacute;v&eacute;nement
+entraine l'affichage d'un message en rouge&nbsp;"<span
+ style="font-weight: bold; color: rgb(255, 0, 0);">WAS KILLED BY
+TEAMMATE</span>".</p>
+<p>La m&ecirc;me m&eacute;thode que pour les messages li&eacute;s au
+combat peut &ecirc;tre appliqu&eacute;e pour cr&eacute;er des messages
+de team-kill personnalis&eacute;s. Il est donc possible d'ajouter plus
+d'information que dans le message par d&eacute;faut.</p>
+<p>Note: &nbsp;Quand vous cr&eacute;ez un message pour le teamkill,
+vous DEVEZ mettre cette information dans le message car le jeu ne la
+mettra pas pour vous.
+</p>
+<p>Pour customiser ces message, il vous faut ajouter "tk" au nom du
+CVAR utilis&eacute; pour les messages li&eacute;s&nbsp;au combat. Le
+nombre de messages &agrave; personnaliser est laiss&eacute; &agrave;
+votre libre choix.</p>
+<p>Exemple :</p>
+<p>Configuration d'un message teamkill avec une grenade, le message sur
+cet &eacute;v&eacute;nement dans les combat est le g_obit218, il vous
+faut donc ajouter "tk" au CVAR, ce qui donne : </p>
+<pre>set g_obit218tk "[v]^7 was exploded by ^1TEAMMATE^7 [a]^7's grenade"		<br>	<br></pre>
+G&eacute;nerera : "JoueurX was exploded by TEAMMATE&nbsp;JoueurY's
+grenade"
+<pre></pre>
+<h2>PENS&Eacute;ES FINALES et FAQ :</h2>
+Q: Pourquoi permettent cette configuration?<br>
+<br>
+R: Donner une touche personelle&nbsp; &agrave; votre serveur, vous
+amuser...<br>
+<p>Q: Si je veux garder les messages originaux, dois-je copier tous les
+cvar list&eacute;s ci-dessus ?
+</p>
+<p>R: NON !!! En fait il vaut m&ecirc;me mieux ne pas le faire. Si vous
+ne changer rien, les messages par d&eacute;faut sont utilis&eacute;s.</p>
+<br>
+Q:&nbsp;Puis-je modifier tous les cvar ?
+<p>A: Oui... mais souvenez vous que plus vous modifiez de cvars, plus
+la puissance sur serveur va &ecirc;tre utilis&eacute;e. Faites des test
+pour mesurer l'impact de vos modifications.
+</p>
+Q: Pourquoi les num&eacute;ro des CVARs ne sont ils pas ordonn&eacute;s
+?
+<p>A: La num&eacute;rotation des cvar est bas&eacute;e sur une variable
+interne d'Enemy Territory. Cela pertmet la cr&eacute;ation de CVAR
+personnalis&eacute;s en utilisant des CVARs dynamiques permettant de
+limiter les ressources utilis&eacute;es sur le serveur. De plus si le
+dans le mod d'autre &eacute;v&eacute;nement sont cr&eacute;&eacute;s
+pouvant g&eacute;n&eacute;rer des messages n&eacute;crologiques, aucun
+d&eacute;veloppement suppl&eacute;mentaire ne sera requit, il suffira
+de renseigner les CVARs correspondant pour les customiser.</p>
+Q: J'aimerais que mes messages soit tr&egrave;s court et contiennent
+peu d'information comme&nbsp; "JoueurX a ete tue" ou "JoueurX a ete tue
+JoueurY". Puis je le faire ?
+<p>A: Bien sur, remplissez les CVARs comme suit :
+</p>
+<pre>set g_obit206 "[v]^7 a ete tue..."<br></pre>
+G&eacute;nerera : JoueurX a ete tue...<br>
+<br>
+&nbsp;
+Q: Les messages sont ils obligatoirement dans l'ordre victime puir
+attaquant ?
+<p>A: Non. Vous pouvez mettre les cl&eacute;s [v] et [a] dans l'ordre
+que vous souhaitez, par exemple :
+</p>
+set g_obit206 "[a]^7 a decoupe [v]^7 avec un couteau bien aiguise !"<br>
+<br>
+G&eacute;nerera : JoueurX a decoupe JoueurY avec un couteau bien
+aiguise !<br>
+<br>
+&nbsp;
+Q: Est il possible d'utiliser une cl&eacute; plus d'une fois par
+message ?
+<p>A: Bien sur, par exemple :
+</p>
+<pre>set g_obit206 "[v] a ete tue par le couteau de [a]... Pauvre [v], bien vu [a]!"<br></pre>
+Generera:&nbsp;JoueurX <span style="font-family: monospace;">a ete tue
+par le couteau de</span>&nbsp;JoueurY... Pauvre&nbsp;JoueurX, bien
+vu&nbsp;JoueurY!
+</body>
+</html>

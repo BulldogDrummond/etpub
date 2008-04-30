@@ -1,0 +1,49 @@
+
+etpub Installation
+------------------
+
+etpub is a server side only modification.  This means that it only is 
+installed on servers and clients do not need to download any files to
+play on etpub servers. 
+
+To install etpub on your server, you only need to ensure that the 
+Enemy Territory binary loads the qagame shared library instead of the
+default one when it is started.  Below I'll describe how to
+install etpub for each of the supported platforms.
+
+Configuration and detailed setup instructions are not covered in this
+document.  See the directory docs/Example of the etpub distribution
+for example configuration files and visit http://etpub.org/ for more
+detailed instructions.
+
+Linux
+-----
+
+1) Create a directory named 'etpub' next to the 'etmain' directory in either
+the enemy-territory installation directory or the ~/.etwolf/ directory
+of the user that runs etded.x86.  By default the game installation directory
+is located at /usr/local/games/enemy-territory/
+
+2) Copy the glibc-2.1/qagame.mp.i386.so file from the etpub distribution
+to the 'etpub' directory created in step one.
+
+3) Ensure that etded is called with the command line arguments 
+' +set fs_game etpub ' (in addition to the ones you already use).
+
+See http://etpub.org/content.php?content.1
+
+Windows
+-------
+
+1) Run setup.exe in the win32 directory.
+
+For manual install instructions, see http://etpub.org/content.php?content.4
+
+
+Mac
+---
+
+Sorry, mac support has been dropped for the server version of etpub.  There
+doesn't appear to be a way to load a custom qagame without packing it into a 
+pk3.
+

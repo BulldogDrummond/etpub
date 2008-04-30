@@ -1,0 +1,12 @@
+#!/bin/sh
+
+if [ ! -d /Applications/Wolfenstein\ ET ]; then
+	exit 112 
+fi
+
+cd $1
+cd ../
+if [ ! -d qagame_mac.bundle ]; then
+	exit 113 
+fi
+exit 0

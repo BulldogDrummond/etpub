@@ -1,0 +1,15 @@
+
+Important Notes For Upgrading etpub 0.7.x to 0.8.x
+--------------------------------------------------
+
+1) Greetings are added to the [level] and [admin] shrubbot blocks. Though the
+   server should add those field automatically, you might want to back-up your
+   shrubbot.cfg first.
+
+2) All the old killingspree and banner cvars have been changed or moved to the
+   new settings.cfg file. Carefully read the docs to see how to set up this
+   file.
+
+3) The "muted" field in the xpsave file has been replaced by the "mutetime"
+   field. This allows a variable mutetime. This also means all the players that
+   where muted will be unmuted during the upgrade to 0.8.x.
