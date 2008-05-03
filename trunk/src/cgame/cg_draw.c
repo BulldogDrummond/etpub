@@ -421,7 +421,7 @@ static float CG_DrawSnapshot( float y ) {
 CG_DrawFPS
 ==================
 */
-#define	FPS_FRAMES	4
+#define	FPS_FRAMES	32
 static float CG_DrawFPS( float y ) {
 	char		*s;
 	int			w;
@@ -638,8 +638,13 @@ static float CG_DrawTimer( float y ) {
 	seconds -= tens * 10;
 
 	if(cgs.gamestate != GS_PLAYING) {
-		//%	s = va( "%s^*WARMUP", rt );
-		s = "^*WARMUP";	// ydnar: don't draw reinforcement time in warmup mode
+		//quad: draw mission time in warmup
+		seconds = cgs.timelimit * 60.f;
+		mins = seconds / 60;
+		seconds -= mins * 60;
+		tens = seconds / 10;
+		seconds -= tens * 10;
+		s = va("^d%i:%i%i ^*WARMUP", mins, tens, seconds);	
 		color[3] = fabs(sin(cg.time * 0.002));
 	} else if ( msec < 0 && cgs.timelimit > 0.0f) {
 		s = va( "^N0:00" );

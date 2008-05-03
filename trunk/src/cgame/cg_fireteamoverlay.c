@@ -422,7 +422,7 @@ void CG_DrawFireTeamOverlay( rectDef_t* rect ) {
 		} else if( ci->health > 0 ) {
 			CG_Text_Paint_Ext(x, y + FT_BAR_HEIGHT,  .2f, .2f, colorYellow, va("%i", ci->health < 0 ? 0 : ci->health ), 0, 0, ITEM_TEXTSTYLE_SHADOWED, &cgs.media.font3 );
 		} else {
-			CG_Text_Paint_Ext(x, y + FT_BAR_HEIGHT,  .2f, .2f, colorRed, va("%i", ci->health < 0 ? 0 : ci->health ), 0, 0, ITEM_TEXTSTYLE_SHADOWED, &cgs.media.font3 );
+			CG_Text_Paint_Ext(x, y + FT_BAR_HEIGHT,  .2f, .2f, colorRed, va("0%s", ci->health < 0 ? "" : "*" ), 0, 0, ITEM_TEXTSTYLE_SHADOWED, &cgs.media.font3 );
 		}
 		//x += 20;
 

@@ -395,3 +395,5 @@ current
 * quad:    added cg_tracers by Elf Friend
 * quad:    added GeoIP country flags in scoreboard, made by mcwf.
 * quad:    added dropweapon command by Terifire
+* quad:    show not-gibbed indicator in fireteam & show total time in warmup
+
