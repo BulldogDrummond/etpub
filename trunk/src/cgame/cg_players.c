@@ -20,7 +20,7 @@ static float		jumpHeight;
 animation_t		*lastTorsoAnim;
 animation_t		*lastLegsAnim;
 
-extern const char* cg_skillRewards[SK_NUM_SKILLS][NUM_SKILL_LEVELS-1];
+//extern const char* bg_skillRewards[SK_NUM_SKILLS][NUM_SKILL_LEVELS-1];
 
 /*
 ================
@@ -363,7 +363,11 @@ void CG_NewClientInfo( int clientNum ) {
 
 				CG_AddPMItemBig( PM_SKILL, va("Increased %s skill to level %i!", skillNames[i], newInfo.skill[i] ), cgs.media.skillPics[ i ] );
 
-				CG_PriorityCenterPrint( va( "You have been rewarded with %s", cg_skillRewards[ i ][ newInfo.skill[i]-1 ]), CP_DEFAULTHEIGHT, SMALLCHAR_WIDTH, 99999 );
+				if( cgs.etpub >= ETPUB_VERSION(0,9,0)){
+					trap_SendClientCommand( va("skrwrd %i %i", i, newInfo.skill[i]) );
+				}else{
+					CG_PriorityCenterPrint( va( "You have been rewarded with %s", bg_skillRewards[ i ][ newInfo.skill[i]-1 ]), CP_DEFAULTHEIGHT, SMALLCHAR_WIDTH, 99999 );
+				}
 			}
 		}
 

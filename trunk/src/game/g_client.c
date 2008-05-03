@@ -1,5 +1,5 @@
 #include "g_local.h"
-#include "../../etmain/ui/menudef.h"
+#include "../ui/menudef.h"
 
 // g_client.c -- client functions that don't happen every frame
 
@@ -1470,6 +1470,24 @@ qboolean _SetCovertSpawnWeapons(gclient_t *client)
 	return qtrue;
 }
 
+void G_SetKnifeOnly(gclient_t *client, int pc)
+{
+	switch(pc) {
+		case PC_MEDIC:
+			AddWeaponToPlayer(client,
+				WP_MEDIC_SYRINGE, 0, 20, qfalse);
+			if(client->sess.skill[SK_FIRST_AID] >= 4) {
+				AddWeaponToPlayer(client,
+					WP_MEDIC_ADRENALINE, 0, 10, qfalse);
+			}
+			break;
+		case PC_ENGINEER:
+			AddWeaponToPlayer(client, WP_DYNAMITE, 0, 1, qfalse);
+			AddWeaponToPlayer(client, WP_PLIERS, 0, 1, qfalse);
+			break;
+	}
+}
+
 /*
 ===========
 SetWolfSpawnWeapons
@@ -1481,7 +1499,7 @@ void SetWolfSpawnWeapons( gclient_t *client )
 	qboolean isBot = qfalse;
 	qboolean isPOW = qfalse;
 
-       	pc = client->sess.playerType;
+    pc = client->sess.playerType;
 	
 	if(g_entities[client->ps.clientNum].r.svFlags & SVF_BOT)
 		isBot = qtrue;
@@ -1579,23 +1597,9 @@ void SetWolfSpawnWeapons( gclient_t *client )
 	client->ps.weaponstate = WEAPON_READY;
 
 	if(g_knifeonly.integer) {
-		switch(pc) {
-		case PC_MEDIC:
-			AddWeaponToPlayer(client,
-				WP_MEDIC_SYRINGE, 0, 20, qfalse);
-			if(client->sess.skill[SK_FIRST_AID] >= 4) {
-				AddWeaponToPlayer(client,
-					WP_MEDIC_ADRENALINE, 0, 10, qfalse);
-			}
-			break;
-		case PC_ENGINEER:
-			AddWeaponToPlayer(client, WP_DYNAMITE, 0, 1, qfalse);
-			AddWeaponToPlayer(client, WP_PLIERS, 0, 1, qfalse);
-			break;
-		}
-		return;
+		G_SetKnifeOnly(client, pc);
 	}
-
+	
 	switch(pc) {
 		case PC_SOLDIER:
 			_SetSoldierSpawnWeapons(client);
@@ -1963,9 +1967,14 @@ void ClientUserinfoChanged( int clientNum ) {
 	}
 
 	// look for cg_hitsounds
-	s = Info_ValueForKey(userinfo, "cg_hitsounds");
-	if(*s) client->pers.hitsounds = atoi(s);
-	else client->pers.hitsounds = 1;
+	if (g_hitsounds.integer & HSF_ENABLE) {
+		s = Info_ValueForKey(userinfo, "cg_hitsounds");
+		if (*s) {
+			client->pers.hitsounds = atoi(s);
+		} else {
+			client->pers.hitsounds = 1;
+		}
+	} else client->pers.hitsounds = 0;
 	
 	// set name
 	Q_strncpyz( oldname, client->pers.netname, sizeof( oldname ) );

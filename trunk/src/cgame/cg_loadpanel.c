@@ -479,7 +479,9 @@ void CG_LoadPanel_RenderMissionDescriptionText( panel_button_t* button ) {
 
 		cs = DC->descriptionForCampaign();
 		if( !cs ) {
-			return;
+			cs = "Not all maps of the current campaign are found on your computer. "
+				"Untill you downloaded all maps, you won't be able to see "
+				"the campaignname, campaigndescription and maps\0";
 		}
 
 	} else if( cgs.gametype == GT_WOLF_LMS ) {

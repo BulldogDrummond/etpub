@@ -2322,6 +2322,7 @@ extern	vmCvar_t		cg_gun_z;
 extern	vmCvar_t		cg_drawGun;
 extern	vmCvar_t		cg_cursorHints;
 extern	vmCvar_t		cg_letterbox;	//----(SA)	added
+extern	vmCvar_t		cg_tracers; // Elf
 extern	vmCvar_t		cg_tracerChance;
 extern	vmCvar_t		cg_tracerWidth;
 extern	vmCvar_t		cg_tracerLength;
@@ -2360,6 +2361,7 @@ extern	vmCvar_t		cg_predictItems;
 extern	vmCvar_t		cg_teamChatsOnly;
 extern	vmCvar_t		cg_noVoiceChats;			// NERVE - SMF
 extern	vmCvar_t		cg_noVoiceText;				// NERVE - SMF
+extern	vmCvar_t		cg_customVoiceChats;
 extern	vmCvar_t		cg_enableBreath;
 extern	vmCvar_t		cg_autoactivate;
 //extern	vmCvar_t		cg_smoothClients;		// UNUSED
@@ -2552,6 +2554,8 @@ extern	vmCvar_t		cg_maxEnemyDynas;
 extern vmCvar_t			cg_logConsole;
 
 extern vmCvar_t			cg_fireTeamOptions;
+extern vmCvar_t			cg_hitSounds;
+extern vmCvar_t			cg_damageKick;
 
 #define FTOPTS_AUTO_MEMBER_SELECT 1
 

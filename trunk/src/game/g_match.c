@@ -2,42 +2,33 @@
 // -------------------------
 //
 #include "g_local.h"
-#include "../../etmain/ui/menudef.h"
+#include "../ui/menudef.h"
 
 // josh: prints out top match and overall killers at end of game
 void G_TopKillersMessage(gentity_t *ent) {
 	// Find top match and overall killers
-	gentity_t *match_ent = NULL, *session_ent = NULL;
-	float match_top = 0;
+	gentity_t *session_ent = NULL;
 	float session_top = 0;
 	int j;
 	float kr_kills_per_death;
 
 	for(j=0; j<level.numConnectedClients; j++) {
 		gentity_t *ent = &g_entities[level.sortedClients[j]];
-		if (ent->client->sess.match_killrating > match_top) {
-			match_top = ent->client->sess.match_killrating;
-			match_ent = ent;
-		}
-		if (ent->client->sess.overall_killrating > session_top) {
-			session_top = ent->client->sess.overall_killrating;
+		kr_kills_per_death = G_GetAdjKillsPerDeath(
+			ent->client->sess.overall_killrating
+			,ent->client->sess.overall_killvariance
+		);
+		if (kr_kills_per_death > session_top) {
+			session_top = kr_kills_per_death;
 			session_ent = ent;
 		}
 	}
 
-	if (match_ent && session_ent) {
-		CP(va("chat \"^fMatch Top Killer: ^7%s^7 ^fKill Rating: ^3%.0f\" -1",
-			match_ent->client->pers.netname,
-			match_ent->client->sess.match_killrating));
-
-		kr_kills_per_death = 1.0/
-			(1.0 + 
-			 exp(-(match_ent->client->sess.overall_killrating-1600.0)/400.0));
-		kr_kills_per_death /= 1.0 - kr_kills_per_death;
+	if (session_ent) {
 		CP(va("chat \"^fOverall Top Killer: ^7%s^7 "
 					"^fKR K/D: ^3%.3f\" -1",
 			session_ent->client->pers.netname,
-			kr_kills_per_death));
+			session_top));
 	}
 }
 
@@ -413,16 +404,13 @@ void G_addStats(gentity_t *targ, gentity_t *attacker, int dmg_ref, int mod)
 				attacker->client->sess.hits++;
 		}
 		targ->client->sess.damage_received += dmg;
-		// josh: track kill rating with ELO probability
-		//       statisticics
-                // josh: Going to make kill rating damage-based instead of
-                //       just kill-based. More fair.
-		if (g_killRating.integer) {
-			G_UpdateKillRatings(attacker,targ,mod,dmg);
-		}
 		if(targ->health <= 0) {
 			attacker->client->sess.kills++;
 			targ->client->sess.deaths++;
+			// josh: track kill rating with enhanced glicko 
+			if (g_killRating.integer) {
+				G_UpdateKillRatings(attacker,targ,mod);
+			}
 			if (g_killRating.integer & KILL_RATING_DATASET) {
 				G_LogKillGUID(attacker,targ,mod);
 			}
@@ -668,7 +656,6 @@ void G_deleteStats(int nClient)
 	cl->sess.game_points = 0;
 	cl->sess.rounds = 0;
 	cl->sess.kills = 0;
-	cl->sess.match_killrating = 0.f;
 	cl->sess.suicides = 0;
 	// forty - #607 - Merge in Density's damage received display code
 	cl->sess.team_damage_given = 0;

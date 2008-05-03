@@ -383,4 +383,12 @@ matt:    Remove inaccurate Permanent XP Save designation when in map vote mode
 
 current
 -------
-
+* stephan: fixed a bug where percentage based weapon restrictions weren't
+           displayed in the client (requires etpub server >= 0.8.1)
+* stephan: fixed the alignment of the ZOMBIE and CONNECTING text on the
+           scoreboard when the server is not using maxlives
+* stephan: improved some promotion reward popups. The popups will be improved
+           even more when used with etpub >= 0.9.0
+* tijmen:  added custom voicechats, which can also be disables clientside
+           with cg_customVoiceChats
+* terifire:added cg_damageKick for controling the damage kick, check docs.           TODO: Should be limited by the server.

@@ -9,7 +9,7 @@ dt {
 </head>
 <body>
 <h2>etpub documentation</h2>
-<p><i>Updated for etpub 0.8.1</i></p>
+<p><i>Updated for etpub 0.9.1</i></p>
 <a href="#cvars">cvars</a><br>
 <a href="#statistics">Statistics / Rankings Terms</a><br>
 <a href="#consolecommands">Server Console Commands</a><br>
@@ -19,89 +19,25 @@ dt {
 <br>
 
 <dl>
-<dt>New for 0.8.x
+<dt>New for 0.9.x
 <dd>
-<p>The following have been added or changed since 0.7.x</p>
+<p>The following have been added or changed since 0.8.x</p>
 
 <table border=1 cellpadding=5 cellspacing=0>
 <tr>
 <td colspan=4 align=center><b>cvars</b></td>
 </tr>
 <tr>
-<td><a href="#g_antilagDelay">g_antilagDelay</a></td>
-<td><a href="#g_antiwarp">g_antiwarp</a></td> 
-<td><a href="#g_ATB_offtime">g_ATB_offtime</a></td>
-<td><a href="#g_autoTempBan">g_autoTempBan</a></td>
-</tr><tr>
-<td><a href="#g_bot_maxXP">g_bot_maxXP</a></td>
-<td><a href="#g_bot_minPlayers">g_bot_minPlayers</a></td>
-<td><a href="#g_coverts">g_coverts</a></td>
-<td><a href="#g_disableComplaints">g_disableComplaints</a></td>
-</tr><tr>
-<td><a href="#g_dyno">g_dyno</a></td>
-<td><a href="#g_fixedphysics">g_fixedphysics</a></td>
-<td><a href="#g_fixedphysicsfps">g_fixedphysicsfps</a></td>
-<td><a href="#g_floodWait">g_floodWait</a></td>
-</tr><tr>
-<td><a href="#g_greetingPos">g_greetingPos</a></td>
-<td><a href="#g_knifeKillSound">g_knifeKillSound</a></td>
-<td><a href="#g_maxNameChanges">g_maxNameChanges</a></td>
-<td><a href="#g_maxPanzerSuicides">g_maxPanzerSuicides</a></td>
-</tr><tr>
-<td><a href="#g_maxSelfkills">g_maxSelfkills</td>
-<td><a href="#g_maxWarnings">g_maxWarnings</a></td>
-<td><a href="#g_maxXPResetWarn">g_maxXPResetWarn</a></td>
-<td><a href="#g_medicHealthRegen">g_medicHealthRegen</a></td>
-</tr><tr>
-<td><a href="#g_medics">g_medics</a></td>
-<td><a href="#g_medicSelfhealTime">g_medicSelfhealTime</a></td>
-<td><a href="#g_minCommandWaitTime">g_minCommandWaitTime</a></td> 
-<td><a href="#g_minConnectLevel">g_minConnectLevel</a></td>
-</tr><tr>
-<td><a href="#g_misc">g_misc</a></td>
-<td><a href="#g_multikillTime">g_multikillTime</a></td>
-<td><a href="#g_noVoteTime">g_noVoteTime</a></td>
-<td><a href="#g_panzerPackDistance">g_panzerPackDistance</a></td>
-</tr><tr>
-<td><a href="#g_privateMessageSound">g_privateMessageSound</a></td>
-<td><a href="#g_settings">g_settings</a></td>
-<td><a href="#g_slashKill">g_slashKill</a></td> 
-<td><a href="#g_spoofOptions">g_spoofOptions</a></td>
-</tr><tr>
-<td><a href="#g_spreeOptions">g_spreeOptions</a></td>
-<td><a href="#g_unevenTeamDiff">g_unevenTeamDiff</a></td>
-<td><a href="#g_unevenTeamFreq">g_unevenTeamFreq</a></td>
-<td><a href="#g_voteResultsMinLevel">g_voteResultsMinLevel</a></td>
-</tr><tr>
-<td><a href="#g_voting">g_voting</a></td>
-<td><a href="#g_warningDecay">g_warningDecay</a></td>
-<td><a href="#g_warningOptions">g_warningOptions</a></td>
-<td><a href="#g_watermark">g_watermark</a></td>
-</tr><tr>
-<td><a href="#g_watermarkFadeAfter">g_watermarkFadeAfter</a></td>
-<td><a href="#g_watermarkFadeTime">g_watermarkFadeTime</a></td>
+<td><a href="#g_healthSpeedStart">g_healthSpeedStart</a></td>
+<td><a href="#g_healthSpeedBottom">g_healthSpeedBotttom</a></td>
 <td><a href="#g_weapons">g_weapons</a></td>
-<td><a href="#g_XPDecayRate">g_XPDecayRate</a></td>
-</tr><tr>
-<td><a href="#g_XPSave">g_XPSave</a></td>
-<td><a href="#g_XPSaveMaxAge">g_XPSaveMaxAge</a></td>
-<td><a href="#g_XPSaveMaxAge_xp">g_XPSaveMaxAge_xp</a></td>
-<td><a href="#omnibot_flags">omnibot_flags</a></td>
-</tr><tr>
-<td><a href="#team_maxCovertOps">team_maxCovertOps</a></td>
-<td><a href="#team_maxEngineers">team_maxEngineers</a></td>
-<td><a href="#team_maxFieldOps">team_maxFieldOps</a></td>
-<td><a href="#team_maxFlamers">team_maxFlamers</a></td>
-</tr><tr>
-<td><a href="#team_maxGrenLaunchers">team_maxGrenLaunchers</a></td>
-<td><a href="#team_maxMedics">team_maxMedics</a></td>
-<td><a href="#team_maxMG42s">team_maxMG42s</a></td>
-<td><a href="#team_maxMortars">team_maxMortars</a></td>
-</tr><tr>
-<td><a href="#team_maxPanzers">team_maxPanzers</a></td>
-<td><a href="#vote_allow_putspec">vote_allow_putspec</a></td>
-<td>&nbsp;</td>
-<td>&nbsp;</td>
+<td><a href="#g_damageBonus">g_damageBonus</a></td>
+</tr>
+<tr>
+<td><a href="#g_damageBonusOpts">g_damageBonusOpts</a></td>
+<td><a href="#g_panzerwar">g_panzerwar</a></td>
+<td><a href="#g_sniperwar">g_sniperwar</a></td>
+<td><a href="#g_customVoiceChats">g_customVoiceChats</a></td>
 </tr>
 </table>
 
@@ -111,14 +47,9 @@ dt {
 <tr>
 <td colspan=4 align=center><b>shrubbot ! commands</b></td>
 </tr><tr>
-<td><a href="#!uptime">uptime</a></td>
-<td><a href="#!dewarn">dewarn</a></td>
-<td><a href="#!userinfo">userinfo</a></td>
-<td><a href="#!stats">stats</a></td>
-</tr><tr>
-<td><a href="#!spreerecord">spreerecord</a></td>
-<td>&nbsp;</td>
-<td>&nbsp;</td>
+<td><a href="#!panzerwar">panzerwar</a></td>
+<td><a href="#!sniperwar">sniperwar</a></td>
+<td><a href="#!gib">gib</a></td>
 <td>&nbsp;</td>
 </tr>
 </table>
@@ -129,8 +60,8 @@ dt {
 <tr>
 <td colspan=4 align=center><b>server console commands</b></td>
 </tr><tr>
-<td><a href="#readsettings">readsettings</a></td>
-<td><a href="#clearspreerecords">clearspreerecords</a></td>
+<td>&nbsp;</td>
+<td>&nbsp;</td>
 <td>&nbsp;</td>
 <td>&nbsp;</td>
 </tr>
@@ -179,6 +110,8 @@ have punkbuster enabled on your server.</p>
             be played when shooting a teammate for the first time.
 	<dt>16
 	<dd>disable hitsounds from poison damage.
+	<dt>32
+	<dd>disable hitsounds from explosive weapons.
 	</dl>
 <p>A client will hear a sound when they damage another player.
 The sounds it uses are ones that are included in the pak0.pk3 file so it
@@ -559,7 +492,7 @@ Sense)
 <dt> 128
 <dd>soldiers with level 4 heavy weapons don't lose their pistols
 <dt> 256
-<dd>garands can reload when not clip is not empty
+<dd>garands can reload when clip is not empty
 <dt> 512
 <dd>balance the clip size between the allies and axis rifles. allied rifles
 get same clip sizes and max ammo as the k43.
@@ -567,6 +500,9 @@ get same clip sizes and max ammo as the k43.
 <dd>creates a hitbox for mortar shells.  This reduces (or eliminates   
 in some cases) the ability to fire mortars through smaller   
 windows and bunker slits. 
+<dt> 2048
+<dd> Knifes will always gib a body (not a player, use
+<a href="#g_dmgKnife">g_dmgKnife</a> instead if you want that)
 </dl>
 <p>Default is 0</p>
 
@@ -1376,12 +1312,13 @@ their behavior.  Currently supported flags include:</p>
 	    to the tk/revive cycle.
 	<dt>128
 	<dd>Level 4 medics can inject other players with their adrenaline.  This
-            can be done with the alt-fire button on the etpub client, or with the
-            /adrenother client command. (Requires etpub client >= 20060606 for
-            alt-fire button functionality).
+            can be done when holding the revive needle by pressing the alt-fire
+			button on the etpub client, or with the /adrenother client command.
+			(Requires etpub client >= 20060606 for alt-fire button functionality).
 	<dt>256
 	<dd>Level 4 medics cannot adrenaline self.  If this flag is on, Medics will
-            not receive adrenaline upon reaching level 4.
+            not receive adrenaline upon reaching level 4. (This won't affect
+			flag 128)
 	</dl>
 <p>Default is 0</p>
 
@@ -3078,6 +3015,95 @@ Set this to &quot;&quot; to disable it.
 Default is &quot;&quot;
 </p>
 
+<a name="g_healthSpeedStart"></a>
+<a name="g_healthSpeedBottom"></a>
+<dt>g_healthSpeedStart [float]
+<dt>g_healthSpeedBottom [float]
+<dd>
+<p>Make people walk/run slower when they are damaged. g_healtSpeedStart is the
+percentage of the maxhealth of a player when the slowdowns starts. The slowdown
+is linear and holds until reaching 0 health. g_healthSpeedBottom is the minimum
+percentage of g_speed that every player will have.</p>
+<p>
+Example <pre>
+set g_speed 320
+set g_healthSpeedStart 64
+set g_healthSpeedBottom 50</pre>
+A player with a maxhealth of 100 (level 0 non medic) will have a speed of 320
+until he reaches a health of 64. From that moment his health will be decreasing
+linear if he gets hurt. This linear decrement will continue untill he reaches a
+health of 1. At that moment his speed will be 50% of g_speed (so 160). At the
+moment he has 32 health, his speed will be 75% of g_speed (so 240). A speed
+decrement is not permanent: when he gets healed his speed will increase lineair
+or even be 320 again when he has 64 hp or more.
+</p>
+<p>Set g_healthSpeedStart to 0 to disable this feature.<br>
+Note that settings this cvars higher than 100 or below 0 will not work.<br>
+Also note that g_healthSpeedBottom should not be set to low to keep the game
+fair. g_healthspreeStart should not be set above ±80 since players with level 3
+battle sense and medics would be slowed down at start then
+<p>Defaults are<br>
+g_healthSpeedStart 0.0<br>
+g_healthSpeedBottom 50.0<br>
+(Disabled)</p>
+
+<a name="g_damageBonus"></a>
+<dt>g_damageBonus [float]
+<dd>
+<p>The percentage of extra damage that is done when one of the g_damageBonusOpts
+conditions is reached</p>
+<p>Default is 20.0 (Max is 100.0)</p>
+
+<a name="g_damageBonusOpts"></a>
+<dt>g_damageBonusOpts [bitflag]
+<dd>
+<p>Adds/Substracts the g_damageBonus percentage of damage when the conditions
+are reached. When one positive and one negative condition is reached, the damage
+will just be default. When two negative or two positive conditions occure the
+damage will change only once</p>
+<dl>
+	<dt>1
+	<dd>Do less damage when there is no engi on the attackers team
+	<dt>2
+	<dd>Do less damage when the attacker is a medic and there are at least 2
+	other medics near the attacker
+	<dt>4
+	<dd>Do extra damage when the attacker is no engi and is near an engi
+	<dt>8
+	<dd>When two or more negative/positive conditions occur, change the damage
+	multiple times (cumulative)
+	<dt>16
+	<dd>Do the same checks at the target (when the target has no engi, the
+	attacker does more damage, etc)
+	<dt>32
+	<dd>Print a lot of debug info (best used on listening servers)
+</dl>
+<p>Note: this CVAR should have different values for different maps, since not
+every map requires an engi for example</p>
+<p>Default is 0</p>
+
+<a name="g_panzerwar"></a>
+<dt>g_panzerwar [integer]
+<dd>
+<p>Enables/Disables Panzerwar. 1 is enabled, 0 is disabled</p>
+<p>Default is 0</p>
+
+<a name="g_sniperwar"></a>
+<dt>g_sniperwar [integer]
+<dd>
+<p>Enables/Disables Sniperwar. 1 is enabled, 0 is disabled</p>
+<p>Default is 0</p>
+
+<a name="g_customVoiceChats"></a>
+<dt>g_customVoiceChats [integer]
+<dd>
+<p>Sets the ability to use custom voice chats
+example: vsay hi Hey, how are you doing
+will write on the screen Hey, how are you doing, and also plays the voicechat 'hi"
+<p>Note: this requires ETPub client > 20070825</p>
+</p>
+<p>Default is 1</p>
+
 <hr>
 <a name="mapvoting"></a>
 <h3>Map Voting</h3>
@@ -3615,16 +3641,18 @@ to the command:
 </td></tr>
 
 <tr><td>
+	<a name="!gib"></a>
 	!gib
 	</td><td>
 	g
 	</td><td>
 	YES
 	</td><td>
-	!gib (NAME|SLOT)
+	!gib (NAME|SLOT|-1|all)
 	</td><td>
 	kills and gibs the player in slot number SLOT or with name containing
-	NAME
+	NAME<br>
+	if name is -1 or all or if no name is entered, everybody will be gibbed
 </td></tr>
 
 <tr><td>
@@ -3978,6 +4006,32 @@ etpub autobalance features)<br>
 	!spreerecord
 	</td><td>
 	Displays the map and overall spreerecord
+</td></tr>
+
+<tr><td>
+	<a name="!panzerwar"></a>
+	!panzerwar
+	</td><td>
+	q
+	</td><td>
+	-
+	</td><td>
+	!panzerwar [on|off]
+	</td><td>
+	Enables panzerwar
+</td></tr>
+
+<tr><td>
+	<a name="!sniperwar"></a>
+	!sniperwar
+	</td><td>
+	q
+	</td><td>
+	-
+	</td><td>
+	!sniperwar [on|off]
+	</td><td>
+	Enables sniperwar
 </td></tr>
 
 </table>

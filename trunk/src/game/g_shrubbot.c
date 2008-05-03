@@ -14,7 +14,7 @@
  */
 
 #include "g_local.h"
-#include "../../etmain/ui/menudef.h"
+#include "../ui/menudef.h"
 
 char *G_Shortcuts(gentity_t *ent, char *text);
 
@@ -1290,7 +1290,7 @@ qboolean G_shrubbot_readconfig(gentity_t *ent, int skiparg)
 					c->desc, sizeof(c->desc)); 
 			}
 			else if(!Q_stricmp(t, "levels")) {
-				char level[4] = {""};
+				char level[6] = {""};
 				char *lp = levels;
 				int cmdlevel = 0;
 
@@ -1312,6 +1312,9 @@ qboolean G_shrubbot_readconfig(gentity_t *ent, int skiparg)
 					c->levels[cmdlevel++] = atoi(level);
 				// tjw: ensure the list is -1 terminated
 				c->levels[MAX_SHRUBBOT_LEVELS] = -1;
+				// Dens: probably better if this is done earlier
+				if(cmdlevel < MAX_SHRUBBOT_LEVELS)
+					c->levels[cmdlevel] = -1;
 			}
 			else {
 				SPC(va("^/readconfig: ^7[command] parse error near "
@@ -2693,12 +2696,29 @@ qboolean G_shrubbot_gib(gentity_t *ent, int skiparg)
 	int pids[MAX_CLIENTS];
 	char name[MAX_NAME_LENGTH], err[MAX_STRING_CHARS];
 	gentity_t *vic;
+	qboolean doAll = qfalse;
 
-	if(Q_SayArgc() < 2+skiparg) {
-		SPC("^/gib usage: ^7!gib [name|slot#]");
-		return qfalse;
+	if(Q_SayArgc() < 2+skiparg) doAll = qtrue;
+
+	Q_SayArgv(1+skiparg, name, sizeof(name));
+	if(!Q_stricmp(name, "-1") || !Q_stricmp(name, "all") || doAll) {
+		int it;
+		int count = 0;
+
+		for( it = 0; it < level.numConnectedClients; it++ ) {
+			vic = g_entities + level.sortedClients[it];
+			if( !_shrubbot_admin_higher(ent, vic) ||
+				_shrubbot_immutable(ent, vic) ||
+				!(vic->client->sess.sessionTeam == TEAM_AXIS ||
+				  vic->client->sess.sessionTeam == TEAM_ALLIES))
+				continue;
+			G_Damage(vic, NULL, NULL, NULL, NULL, 500, 0, MOD_UNKNOWN);
+			count++;
+		}
+		AP(va("chat \"^/gib: ^7%i ^7players gibbed\" -1", count));
+		return qtrue;
 	}
-	Q_SayArgv(1+skiparg, name, sizeof(name)); 
+
 	if(ClientNumbersFromString(name, pids) != 1) {
 		G_MatchOnePlayer(pids, err, sizeof(err));
 		SPC(va("^/gib: ^7%s", err));
@@ -3720,7 +3740,6 @@ qboolean G_shrubbot_nextmap(gentity_t *ent, int skiparg)
 	AP("chat \"^/nextmap: ^7Next map was loaded\" -1");
 	return qtrue;
 }
-
 
 qboolean G_shrubbot_resetmyxp(gentity_t *ent, int skiparg) 
 {

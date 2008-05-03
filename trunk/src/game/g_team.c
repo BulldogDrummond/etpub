@@ -1702,8 +1702,10 @@ int QDECL G_SortPlayersByKillRating( const void *a, const void *b ) {
 	if(cla->pers.connectTime <= 0) return 1;
 	if(clb->pers.connectTime <= 0) return -1;
 
-	arate = cla->sess.overall_killrating;
-	brate = clb->sess.overall_killrating;
+	arate = G_GetAdjKillsPerDeath(cla->sess.overall_killrating
+			,cla->sess.overall_killvariance);
+	brate = G_GetAdjKillsPerDeath(clb->sess.overall_killrating
+			,clb->sess.overall_killvariance);
 
 	if(arate > brate) {
 		return -1;

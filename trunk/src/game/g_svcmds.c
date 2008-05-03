@@ -1649,7 +1649,7 @@ qboolean	ConsoleCommand( void ) {
 		int axis[MAX_CLIENTS], allies[MAX_CLIENTS];
 		int num_axis = 0, num_allies = 0, i;
 		gclient_t *cl;
-		float overall_sum, match_sum;
+		float overall_sum;
 		for(i = 0; i < level.numConnectedClients; i++) {
 			cl = level.clients + level.sortedClients[i];
 			if(cl->sess.sessionTeam == TEAM_AXIS) 
@@ -1665,39 +1665,33 @@ qboolean	ConsoleCommand( void ) {
 
 		G_Printf("Axis\n");
 		overall_sum = 0;
-		match_sum = 0;
 		for (i = 0; i < num_axis; ++i) {
 			cl = level.clients + axis[i];
 			G_Printf("%-24s %-10.0f %-10.f\n",
-				cl->pers.netname,
-				cl->sess.overall_killrating,
-				cl->sess.match_killrating);
+				cl->pers.netname
+				,cl->sess.overall_killrating
+			);
 			overall_sum += cl->sess.overall_killrating;
-			match_sum += cl->sess.match_killrating;
 		}
 		G_Printf("%-24s %-10.0f %-10.f\n",
 			"Average:",
-			overall_sum / num_axis,
-			match_sum / num_axis);
+			overall_sum / num_axis);
 
 		G_Printf("\n");
 
 		G_Printf("Allies\n");
 		overall_sum = 0;
-		match_sum = 0;
 		for (i = 0; i < num_allies; ++i) {
 			cl = level.clients + allies[i];
 			G_Printf("%-24s %-10.0f %-10.f\n",
-				cl->pers.netname,
-				cl->sess.overall_killrating,
-				cl->sess.match_killrating);
+				cl->pers.netname
+				,cl->sess.overall_killrating
+			);
 			overall_sum += cl->sess.overall_killrating;
-			match_sum += cl->sess.match_killrating;
 		}
-		G_Printf("%-24s %-10.0f %-10.f\n",
+		G_Printf("%-24s %-10.0f\n",
 			"Average:",
-			overall_sum / num_allies,
-			match_sum / num_allies);
+			overall_sum / num_allies);
 	}
 
 	// WARNING: this will reset every players' rating,

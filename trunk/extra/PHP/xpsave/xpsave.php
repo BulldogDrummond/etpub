@@ -34,16 +34,17 @@ function xpsave_readconfig(
 			// tjw: old versions of xpsave lacked name
 			if($xpsave["name"] == "")
 				continue;
-			if(!isset($xpsave["killrating"]))
-				$xpsave["killrating"] = 1600;
+			if(!isset($xpsave["kill_rating"]))
+				$xpsave["kill_rating"] = 0;
+			if(!isset($xpsave["kill_variance"]))
+				$xpsave["kill_variance"] = 1.0;
 			if(!isset($xpsave["rating"]))
 				$xpsave["rating"] = "0.000000";
 			if(!isset($xpsave["rating_variance"]))
 				$xpsave["rating_variance"] = "1.0";
-			$xpsave["rating_variance"] = sqrt($xpsave["rating_variance"]);
-			$xpsave["kd"] = 1.0 / (1.0 + exp(-($xpsave["killrating"]-1600)/400.0));
+			$xpsave["kd"] = 1.0 / (1.0 + exp(-($xpsave["kill_rating"]/sqrt(1.0+3*$xpsave["kill_variance"]*2/(pi()*pi())))));
 			$xpsave["kd"] /= 1.0 - $xpsave["kd"];
-			$xpsave["win"] = 1.0 / (1.0 + exp(-$xpsave["rating"]/sqrt(1.0+3*($xpsave["rating_variance"]*$xpsave["rating_variance"]*20)/(pi()*pi()))));
+			$xpsave["win"] = 1.0 / (1.0 + exp(-$xpsave["rating"]/sqrt(1.0+3*($xpsave["rating_variance"]*20)/(pi()*pi()))));
 			$xpsave["win"] = sprintf("%.3f",$xpsave["win"]);
 			$xpsave["kd"] = sprintf("%.3f",$xpsave["kd"]);
 			$xpsaves[$xpsave["guid"]] = $xpsave;

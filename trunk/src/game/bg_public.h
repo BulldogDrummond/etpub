@@ -877,11 +877,12 @@ typedef enum {
 #define WPF_TM_AIRSTRIKE_RESTORE_FULL	8 
 #define WPF_TM_AIRSTRIKE_RESTORE_HALF	16 
 #define WPF_AMMO_RESTORES_HELMET	32 
-#define WPF_DROP_BINOCS			64
+#define WPF_DROP_BINOCS				64
 #define WPF_L4HW_KEEPS_PISTOL		128 
 #define WPF_GARAND_RELOADS			256
 #define WPF_GARAND_EQUALITY			512
 #define WPF_MORTAR_BOXED			1024 //perro: Mortar boxing
+#define WPF_KNIFE_GIBS				2048 // Dens: knife gibs when dead
 
 #define MISC_DOUBLE_JUMP 1
 #define MISC_BINOC_MASTER 2
@@ -1021,6 +1022,8 @@ extern int skillLevels[SK_NUM_SKILLS][NUM_SKILL_LEVELS];
 /*#else 
 extern const int skillLevels[NUM_SKILL_LEVELS];
 #endif*/
+
+extern char* bg_skillRewards[SK_NUM_SKILLS][NUM_SKILL_LEVELS-1];
 
 typedef struct {
 	weaponStats_t	weaponStats[WP_NUM_WEAPONS];

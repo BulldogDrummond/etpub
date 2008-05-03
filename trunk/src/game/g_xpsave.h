@@ -16,7 +16,10 @@ typedef struct {
 	float pr_skill[SK_NUM_SKILLS][NUM_SKILL_LEVELS];
 	// tjw: lives moved into g_disconnect_t
 	//int lives;
-	float killrating;
+    
+    // josh: killrating removed, now kill_rating AND kill_variance
+    float kill_rating;
+    float kill_variance;
 
 	// The real player rating for 0.8.x
 	float rating;
@@ -44,6 +47,8 @@ typedef struct {
 	// for 0.8.x
 	float rating;
 	float rating_variance;
+    float distance_rating;
+    float distance_variance;
 } g_serverstat_t;
 
 typedef struct {
@@ -55,6 +60,7 @@ typedef struct {
 	int skill_time[SK_NUM_SKILLS][NUM_SKILL_LEVELS];
 	int lives;
 	float killrating;
+	float killvariance;
 	// These are temp variables for PR system usage, not really tracked
 	float total_percent_time;
 	float diff_percent_time;

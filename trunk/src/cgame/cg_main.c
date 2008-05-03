@@ -107,6 +107,7 @@ vmCvar_t	cg_crosshairHealth;
 vmCvar_t	cg_teamChatsOnly;
 vmCvar_t	cg_noVoiceChats;		// NERVE - SMF
 vmCvar_t	cg_noVoiceText;			// NERVE - SMF
+vmCvar_t	cg_customVoiceChats; // Elf
 //vmCvar_t	cg_drawStatus;			// UNUSED
 vmCvar_t	cg_animSpeed;
 vmCvar_t	cg_drawSpreadScale;
@@ -127,6 +128,7 @@ vmCvar_t	cg_gun_frame;
 vmCvar_t	cg_gun_x;
 vmCvar_t	cg_gun_y;
 vmCvar_t	cg_gun_z;
+vmCvar_t	cg_tracers;
 vmCvar_t	cg_tracerChance;
 vmCvar_t	cg_tracerWidth;
 vmCvar_t	cg_tracerLength;
@@ -362,6 +364,8 @@ vmCvar_t	cg_maxTeamDynas;
 vmCvar_t	cg_maxEnemyDynas;
 
 vmCvar_t	cg_fireTeamOptions;
+vmCvar_t	cg_hitSounds; // Elf
+vmCvar_t	cg_damageKick; // Terifire
 
 typedef struct {
 	vmCvar_t	*vmCvar;
@@ -416,11 +420,11 @@ cvarTable_t		cvarTable[] = {
 	{ &cg_gun_y, "cg_gunY", "0", CVAR_CHEAT },
 	{ &cg_gun_z, "cg_gunZ", "0", CVAR_CHEAT },
 	{ &cg_centertime, "cg_centertime", "5", CVAR_CHEAT },		// DHM - Nerve :: changed from 3 to 5
-	{ &cg_runpitch, "cg_runpitch", "0.002", CVAR_ARCHIVE},
-	{ &cg_runroll, "cg_runroll", "0.005", CVAR_ARCHIVE },
-	{ &cg_bobup , "cg_bobup", "0.005", CVAR_ARCHIVE },
-	{ &cg_bobpitch, "cg_bobpitch", "0.002", CVAR_ARCHIVE },
-	{ &cg_bobroll, "cg_bobroll", "0.002", CVAR_ARCHIVE },
+	{ &cg_runpitch, "cg_runpitch", "0.000", CVAR_ARCHIVE},
+	{ &cg_runroll, "cg_runroll", "0.000", CVAR_ARCHIVE },
+	{ &cg_bobup , "cg_bobup", "0.000", CVAR_ARCHIVE },
+	{ &cg_bobpitch, "cg_bobpitch", "0.000", CVAR_ARCHIVE },
+	{ &cg_bobroll, "cg_bobroll", "0.000", CVAR_ARCHIVE },
 //	{ &cg_bobyaw, "cg_bobyaw", "0.002", CVAR_ARCHIVE },		// UNUSED
 
 	// JOSEPH 10-27-99
@@ -449,6 +453,7 @@ cvarTable_t		cvarTable[] = {
 	{ &cg_noPlayerAnims, "cg_noplayeranims", "0", CVAR_CHEAT },
 	{ &cg_showmiss, "cg_showmiss", "0", 0 },
 	{ &cg_footsteps, "cg_footsteps", "1", CVAR_CHEAT },
+	{ &cg_tracers, "cg_tracers", "1", CVAR_ARCHIVE  },
 	{ &cg_tracerChance, "cg_tracerchance", "0.4", CVAR_CHEAT },
 	{ &cg_tracerWidth, "cg_tracerwidth", "0.8", CVAR_CHEAT },
 	{ &cg_tracerSpeed, "cg_tracerSpeed", "4500", CVAR_CHEAT },
@@ -489,6 +494,7 @@ cvarTable_t		cvarTable[] = {
 	{ &cg_noVoiceChats, "cg_noVoiceChats", "0", CVAR_ARCHIVE },				// NERVE - SMF
 	{ &cg_noVoiceText, "cg_noVoiceText", "0", CVAR_ARCHIVE },				// NERVE - SMF
 
+	{ &cg_customVoiceChats, "cg_customVoiceChats", "1", CVAR_ARCHIVE }, // Elf
 	// the following variables are created in other parts of the system,
 	// but we also reference them here
 
@@ -657,6 +663,8 @@ cvarTable_t		cvarTable[] = {
 	{ &cg_drawClassIcons, "cg_drawClassIcons", "7", CVAR_ARCHIVE },
 	{ &cg_drawCrosshairHP, "cg_drawCrosshairHP", "0", CVAR_ARCHIVE },
 	{ &cg_fireTeamOptions, "cg_fireTeamOptions", "0", CVAR_ARCHIVE },
+	{ &cg_hitSounds, "cg_hitSounds", "1", CVAR_ARCHIVE | CVAR_USERINFO }, // Elf
+	{ &cg_damageKick, "cg_damageKick", "1", CVAR_ARCHIVE }	// Terifire
 };
 
 int		cvarTableSize = sizeof( cvarTable ) / sizeof( cvarTable[0] );
@@ -732,6 +740,10 @@ void CG_UpdateCvars( void ) {
 
 				else if(cv->vmCvar == &cg_crosshairColorAlt || cv->vmCvar == &cg_crosshairAlphaAlt) {
 					BG_setCrosshair(cg_crosshairColorAlt.string, cg.xhairColorAlt, cg_crosshairAlphaAlt.value, "cg_crosshairColorAlt");
+				}
+				
+				else if(cv->vmCvar == &cg_hitSounds) {
+					trap_SendConsoleCommand( va( "hitsounds %s", cg_hitSounds.integer ? "on" : "off") );
 				}
 
 				else if(cv->vmCvar == &cg_rconPassword && *cg_rconPassword.string) {

@@ -673,8 +673,8 @@ typedef struct {
 	int				XPdmg;
 
 	// josh
-	float match_killrating;
 	float overall_killrating;
+	float overall_killvariance;
 	float rating;
 	float rating_variance;
 	float pr_skill[SK_NUM_SKILLS][NUM_SKILL_LEVELS];
@@ -1378,6 +1378,13 @@ typedef struct {
 	int mapsSinceLastXPReset;
 	int lastUnevenNotify;
 
+	// Chaos: save chargetimes + panzer damage/radius
+	int ChargeTime[5];
+	int PanzerDamage;
+	int PanzerRadius;
+
+	int sniperDamage;
+
 } level_locals_t;
 
 typedef struct {
@@ -2029,6 +2036,7 @@ extern	vmCvar_t	g_filtercams;
 extern	vmCvar_t	g_maxlives;				// DHM - Nerve :: number of respawns allowed (0==infinite)
 extern	vmCvar_t	g_maxlivesRespawnPenalty;
 extern	vmCvar_t	g_voiceChatsAllowed;	// DHM - Nerve :: number before spam control
+extern	vmCvar_t	g_customVoiceChats;		// Elf
 extern	vmCvar_t	g_alliedmaxlives;		// Xian
 extern	vmCvar_t	g_axismaxlives;			// Xian
 extern	vmCvar_t	g_fastres;				// Xian - Fast medic res'ing
@@ -2482,6 +2490,10 @@ extern vmCvar_t g_voteResultsMinLevel;
 
 extern vmCvar_t g_minCommandWaitTime;
 extern vmCvar_t g_knifeKillSound;
+extern vmCvar_t g_healthSpeedStart;
+extern vmCvar_t g_healthSpeedBottom;
+extern vmCvar_t g_damageBonus;
+extern vmCvar_t g_damageBonusOpts;
 
 void	trap_Printf( const char *fmt );
 void	trap_Error( const char *fmt );
@@ -3273,7 +3285,8 @@ extern g_shrubbot_ban_t *g_shrubbot_bans[MAX_SHRUBBOT_BANS];
 #define HSF_NO_TEAM_WARN 8
 // no hitsound from poison damage
 #define HSF_NO_POISON 16
-
+// no hitsound from explosive weapons (Elf)
+#define HSF_NO_EXPLOSIVE 32
 // tjw: g_voting flags
 
 // use the number of voters instead of the total players to
@@ -3576,7 +3589,15 @@ enum etpubBotFlags
 // Dens: autotempban
 #define TEMPBAN_TEAMDAMAGE 1
 #define TEMPBAN_SHRUB_KICK 2
-#define TEMPBAN_SHRUB_WARN 4 
+#define TEMPBAN_SHRUB_WARN 4
+
+// Dens: g_damageBonusOpts
+#define DMGBONUS_NO_ENGI 1 // Do less damage when no engi in your team
+#define DMGBONUS_3_MEDICS 2 // Do less damage when near 2 other medics
+#define DMGBONUS_NEAR_ENGI 4 // Do extra damage when near an engi
+#define DMGBONUS_CUMULATIVE 8 // When multiple bonusses found, do count them all instead of just reducing damage once
+#define DMGBONUS_CHECK_ENEMY 16 // Also check the other team (do more damage when no engi in other team, etc.)
+#define DMGBONUS_DEBUG 32 // Print a lot of debug info
 
 // forty - canister kicking
 void G_CanisterKick();

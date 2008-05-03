@@ -488,7 +488,7 @@ BotFindSparseDefendArea
 ==================
 */
 int BotFindSparseDefendArea( bot_state_t *bs, bot_goal_t *goal, qboolean force ) {
-	vec3_t	dSpot, targetPos;
+	vec3_t	dSpot = {0., 0., 0.}, targetPos;
 	int		numTeam, i, j, t, t2, teammates[64];
 	int		numareas, numTPos, area, bestArea=0, bestTime=0;
 	vec3_t	tPos[64], waypoints[64];

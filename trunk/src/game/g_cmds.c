@@ -1,6 +1,6 @@
 #include "g_local.h"
 #include "g_http_client.h"
-#include "../../etmain/ui/menudef.h"
+#include "../ui/menudef.h"
 
 void BotDebug(int clientNum);
 void GetBotAutonomies(int clientNum, int *weapAutonomy, int *moveAutonomy);	
@@ -9,13 +9,6 @@ qboolean G_IsOnFireteam(int entityNum, fireteamData_t** teamNum);
 
 // Josh: print out their kill rating information
 void G_KillRatingStats(gentity_t *ent) {
-	/*
-	CPx(-1,
-		va("chat \"^f[ ^7%s ^f] [Match: ^3%d^f] [Session:^3%d^f]\" -1",
-		ent->client->pers.netname,
-		ent->client->sess.match_killrating,
-		ent->client->sess.overall_killrating));
-	*/
 	int i;
 	char name[MAX_NETNAME];
 	gclient_t *cl;
@@ -36,14 +29,15 @@ void G_KillRatingStats(gentity_t *ent) {
 		cl = &level.clients[sort[i]];
 		SanitizeString(cl->pers.netname, name, qtrue);
 		name[24] = '\0';
-		kr_kills_per_death = 1.0/
-			(1.0 + exp(-(cl->sess.overall_killrating-1600.0)/400.0));
+		kr_kills_per_death = G_GetAdjKillsPerDeath(
+			cl->sess.overall_killrating
+			,cl->sess.overall_killvariance
+		);
 		kr_kills_per_death /= 1.0 - kr_kills_per_death;
-		CP(va("print \"%s%-3d %-24s %-.0f %-.3f\n\"",
+		CP(va("print \"%s%-3d %-24s %-.2f\n\"",
 			(ent->s.number == sort[i]) ? "^3" : "",
 			sort[i],
 			name,
-			cl->sess.match_killrating,
 			kr_kills_per_death));
 	}
 }
@@ -193,7 +187,8 @@ void G_AdminChat(gentity_t *ent)
 	}
 
 	if(Q_SayArgc() < 2+skipargs) {
-		SP(va("usage: /ma [message]\n", cmd));
+//		SP(va("usage: /ma [message]\n", cmd));
+		SP(va("usage: /ma [message]\n"));
 		return;
 	}
 
@@ -469,9 +464,10 @@ static void G_SendKR(gentity_t *ent)
 	for(i=0; i < level.numConnectedClients; i++) {
 		cl = &level.clients[level.sortedClients[i]];
 		if(ent->client->pers.etpubc > 20060606) {
-			kr_kills_per_death = 1.0/
-				(1.0 + exp(-(cl->sess.overall_killrating-1600.0)/400.0));
-			kr_kills_per_death /= 1.0 - kr_kills_per_death;
+			kr_kills_per_death = G_GetAdjKillsPerDeath(
+				cl->sess.overall_killrating
+				,cl->sess.overall_killvariance
+			);
 			Q_strcat(buff, sizeof(buff), va("%.3f ", 
 				kr_kills_per_death));
 		} else {
@@ -1336,7 +1332,8 @@ void Cmd_Kill_f( gentity_t *ent )
 	ent->client->ps.persistant[PERS_HWEAPON_USE] = 0;
 
 	// tjw: put an end to /kill binding stat whores.
-	if (attacker = G_FearCheck(ent)) {
+//	if (attacker = G_FearCheck(ent)) {
+	if (attacker == G_FearCheck(ent)) {
 		// tjw: 150 added to make sure the player is gibbed since
 		//      that was the intent.
 
@@ -1472,12 +1469,12 @@ qboolean G_CheckTeamBalance(gentity_t *ent, team_t team)
 	}
 
 	// If their ATB'd team is now much better than the other team
-	if (ent->client->sess.map_ATBd_team != TEAM_FREE &&
+	if ((ent->client->sess.map_ATBd_team != TEAM_FREE &&
 		g_ATB.integer == ATB_PLAYERRATING &&
 		team != ent->client->sess.map_ATBd_team &&
-		atbd_team_winprob > g_ATB_diff.integer ||
-		counts[TEAM_AXIS] + counts[TEAM_ALLIES] < 
-		g_playerRating_minplayers.integer) {
+		atbd_team_winprob > g_ATB_diff.integer) ||
+		(counts[TEAM_AXIS] + counts[TEAM_ALLIES] < 
+		g_playerRating_minplayers.integer)) {
 		ent->client->sess.map_ATBd_team = TEAM_FREE;
 	}
 
@@ -2176,6 +2173,7 @@ qboolean G_IsWeaponDisabled(
 			return qtrue;
 		}
 		break;
+	default:;
 	}
 	return qfalse;
 }
@@ -2276,7 +2274,7 @@ int G_ClassCount(gentity_t *ent, int playerType, team_t team)
 	for( i = 0; i < level.numConnectedClients; i++ ) {
 		j = level.sortedClients[i];
 
-		if( j == ent-g_entities ) {
+		if( ent && j == ent-g_entities ) {
 			continue;
 		}
 
@@ -3292,6 +3290,7 @@ extern void BotRecordVoiceChat( int client, int destclient, const char *id, int 
 void G_VoiceTo( gentity_t *ent, gentity_t *other, int mode, const char *id, qboolean voiceonly ) {
 	int color;
 	char *cmd;
+	char *space;
 
 	if (!other) {
 		return;
@@ -3326,6 +3325,13 @@ void G_VoiceTo( gentity_t *ent, gentity_t *other, int mode, const char *id, qboo
 				return;
 			}
 		}
+	}
+
+	// Elf - don't allow custom vsays if server forbids it.
+	// Change them to normal vsays instead.
+	space = Q_strchr(id, ' ');	
+	if (space && !g_customVoiceChats.integer) {
+		space[0] = '\0';
 	}
 
 	if( mode == SAY_TEAM ) {
@@ -5613,6 +5619,138 @@ qboolean ClientIsFlooding(gentity_t *ent) {
 	return qfalse;
 }
 
+// Dens: etpubclient >= 20070819 lets the server make the reward message, so
+// that it really matches the serversettings (no more "You have been rewarded
+// with Adrenaline Self" when this is disabled serverside
+// This code can probably be done far more efficient...
+char *G_SkillRewardString(int skill, int level){
+	char buffer[MAX_STRING_CHARS];
+
+	buffer[0] = '\0';
+
+	if((level != 4 && !(level == 3 && skill == SK_SIGNALS)) ||
+		skill == SK_LIGHT_WEAPONS || skill == SK_HEAVY_WEAPONS){
+		Q_strncpyz(buffer, bg_skillRewards[skill][level-1],
+			sizeof(buffer));
+	}else{ // Dens: level 4 or (level 3 fieldops)
+		if(level == 3){ // Dens: fieldops
+			Q_strncpyz(buffer,
+				bg_skillRewards[SK_SIGNALS][2],
+				sizeof(buffer));
+			if(g_asblock.integer & ASBLOCK_LVL3_FDOPS_NOBLOCK){
+				Q_strcat(buffer, sizeof(buffer),
+					" and Unblockable Airstrikes");
+			}
+		}else if(skill == SK_MILITARY_INTELLIGENCE_AND_SCOPED_WEAPONS){
+			Q_strncpyz(buffer,
+				bg_skillRewards[SK_MILITARY_INTELLIGENCE_AND_SCOPED_WEAPONS][3],
+				sizeof(buffer));
+			if(g_coverts.integer & COVERTF_L4_MARKSMAN){
+				Q_strcat(buffer, sizeof(buffer),
+					" and Assassin");
+			}
+		}else if(skill == SK_EXPLOSIVES_AND_CONSTRUCTION){
+			if(g_skills.integer & SKILLS_FLAK){
+				Q_strncpyz(buffer,
+					"a Permanent Flack Jacket",
+					sizeof(buffer));
+			}else{
+				Q_strncpyz(buffer,
+					bg_skillRewards[SK_EXPLOSIVES_AND_CONSTRUCTION][3],
+					sizeof(buffer));
+			}
+		}else if(skill == SK_BATTLE_SENSE){
+			Q_strncpyz(buffer,
+				bg_skillRewards[SK_BATTLE_SENSE][3],
+				sizeof(buffer));
+			if(g_skills.integer & SKILLS_MINES){
+				Q_strcat(buffer, sizeof(buffer),
+					" and Landmine Spotting");
+			}
+		}else{ // Dens: SK_FIRST_AID
+			if(g_skills.integer & SKILLS_ADREN || 
+				!(g_medics.integer & MEDIC_NOSELFADREN)){
+				Q_strncpyz(buffer,
+					"Adrenaline",
+					sizeof(buffer));
+				if(g_skills.integer & SKILLS_ADREN &&
+					g_medics.integer & MEDIC_NOSELFADREN){
+					Q_strcat(buffer, sizeof(buffer),
+						" for Non-Medic Classes");
+				}else if(!(g_skills.integer & SKILLS_ADREN)){
+					Q_strcat(buffer, sizeof(buffer),
+						" when Medic");
+				}else{
+					Q_strcat(buffer, sizeof(buffer),
+						" for All Classes");
+				}
+
+				if(g_medics.integer & MEDIC_ADRENOTHER &&
+					g_medics.integer & MEDIC_LVL4_FULLREVIVE){
+					Q_strcat(buffer, sizeof(buffer),
+						", Adrenaline Others and Getting Fully Revived");
+				}else if(g_medics.integer & MEDIC_ADRENOTHER){
+					Q_strcat(buffer, sizeof(buffer),
+						" and Adrenaline Others");
+				}else if(g_medics.integer & MEDIC_LVL4_FULLREVIVE){
+					Q_strcat(buffer, sizeof(buffer),
+						" and Getting Fully Revived");
+				}
+			}else if(g_medics.integer & MEDIC_ADRENOTHER){
+				Q_strncpyz(buffer,
+					"Adrenaline Others",
+					sizeof(buffer));
+				if(g_medics.integer & MEDIC_LVL4_FULLREVIVE){
+					Q_strcat(buffer, sizeof(buffer),
+						" and Getting Fully Revived");
+				}
+			}else if(g_medics.integer & MEDIC_LVL4_FULLREVIVE){
+				Q_strncpyz(buffer,
+					"Getting Fully Revived",
+					sizeof(buffer));
+			}
+		}
+	}
+
+	if(buffer[0]){
+		return va("%s",buffer);
+	}else{
+		return "\0";
+	}
+}
+
+void G_SendSkillReward(gentity_t *ent) {
+	char arg1[MAX_STRING_CHARS], arg2[MAX_STRING_CHARS];
+	int skill, level;
+
+	if ( trap_Argc() != 3 ) {
+		return;
+	}
+
+	if(ent->client->pers.etpubc < 20070819){
+		return;
+	}
+
+	skill = level = -1;
+
+	trap_Argv( 1, arg1, sizeof( arg1 ) );
+	skill = atoi( arg1 );
+	trap_Argv( 2, arg2, sizeof( arg2 ) );
+	level = atoi( arg2 );
+
+	if(skill >= SK_NUM_SKILLS || skill < 0 ||
+		level < 1 || level >= NUM_SKILL_LEVELS){
+			return;
+	}
+
+	if( ent->client->sess.skillpoints[skill] < skillLevels[skill][level] ) {
+		return;
+	}
+
+	CPx(ent-g_entities, va("skrwrdtxt \"%s\"", G_SkillRewardString(skill, level)));
+	return;
+}
+
 /*
 =================
 ClientCommand
@@ -5819,6 +5957,13 @@ void ClientCommand( int clientNum ) {
 		}
 
 		return;
+	} else if( !Q_stricmp( cmd, "skrwrd" ) ) {
+		if( !ent || !ent->client ) {
+			return;
+		}
+
+		G_SendSkillReward(ent);
+		return;
 	}
 
 	// OSP
@@ -5972,7 +6117,7 @@ char *Q_SayConcatArgs(int start) {
 }
 
 
-// replaces all occurances of "\n" with '\n'
+// replaces all occurences of "\n" with '\n'
 char *Q_AddCR(char *s)
 {
 	char *copy, *place, *start;

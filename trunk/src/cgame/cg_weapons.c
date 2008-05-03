@@ -5825,6 +5825,8 @@ void CG_SpawnTracer( int sourceEnt, vec3_t pstart, vec3_t pend ) {
 	orientation_t or;
 	vec3_t start, end;
 
+	if (!cg_tracers.integer) return;
+
 	VectorCopy( pstart, start );
 	VectorCopy( pend, end );
 
@@ -5877,6 +5879,7 @@ void CG_DrawTracer( vec3_t start, vec3_t finish ) {
 	polyVert_t	verts[4];
 	vec3_t		line;
 
+	if (!cg_tracers.integer) return;
 	VectorSubtract( finish, start, forward );
 
 	line[0] = DotProduct( forward, cg.refdef_current->viewaxis[1] );

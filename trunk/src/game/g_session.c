@@ -1,5 +1,5 @@
 #include "g_local.h"
-#include "../../etmain/ui/menudef.h"
+#include "../ui/menudef.h"
 
 
 /*
@@ -47,8 +47,8 @@ void G_WriteClientSessionData( gclient_t *client, qboolean restart )
 		client->sess.deaths,
 		client->sess.game_points,
 		client->sess.kills,
-		client->sess.match_killrating,
 		client->sess.overall_killrating,
+		client->sess.overall_killvariance,
 		client->sess.rating,
 		client->sess.rating_variance,
 		client->sess.referee,
@@ -202,8 +202,8 @@ void G_ReadSessionData( gclient_t *client )
 		&client->sess.deaths,
 		&client->sess.game_points,
 		&client->sess.kills,
-		&client->sess.match_killrating,
 		&client->sess.overall_killrating,
+		&client->sess.overall_killvariance,
 		&client->sess.rating,
 		&client->sess.rating_variance,
 		&client->sess.referee,
@@ -376,7 +376,8 @@ void G_InitSessionData( gclient_t *client, char *userinfo ) {
 	// OSP
 	
 	// josh:
-	sess->overall_killrating = 1600.0f;
+	sess->overall_killrating = 0.0f;
+	sess->overall_killvariance = SIGMA2_DELTA;
 	//  rating = player rating now
 	sess->rating = 0.0;
 	sess->rating_variance = SIGMA2_THETA;

@@ -66,17 +66,6 @@ while(list($guid,$x) = each($xpsaves)) {
 	while(list($k,$v) = each($fields)) {
 		if($x[$k] == "") {
 			switch($k) {
-			case "killrating":
-				$x[$k] = 1600;
-			case "rating":
-				$x[$k] = 0;
-				break;
-			case "rating_variance":
-				$x[$k] = 1.0;
-				break;
-			case "name":
-				$x[$k] = "";
-				break;
 			default:
 				$x[$k] = 0;
 				break;

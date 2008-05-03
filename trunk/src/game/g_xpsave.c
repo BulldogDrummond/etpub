@@ -106,6 +106,10 @@ void G_xpsave_writeconfig()
 	G_shrubbot_writeconfig_float(g_serverstat.rating, f);
 	trap_FS_Write("rating_variance  = ", 19, f);
 	G_shrubbot_writeconfig_float(g_serverstat.rating_variance, f);
+	trap_FS_Write("distance_rating  = ", 19, f);
+	G_shrubbot_writeconfig_float(g_serverstat.distance_rating, f);
+	trap_FS_Write("distance_variance= ", 19, f);
+	G_shrubbot_writeconfig_float(g_serverstat.distance_variance, f);
 	trap_FS_Write("\n", 1, f);
 	G_Printf("xpsave: wrote server rating: %f\n", g_serverstat.rating);
 
@@ -150,9 +154,14 @@ void G_xpsave_writeconfig()
 					g_xpsaves[i]->skill[j], f);
 			}
 		}
-		if(g_xpsaves[i]->killrating != 1600.0f) { 
-			trap_FS_Write("killrating       = ", 19, f);
-			G_shrubbot_writeconfig_float(g_xpsaves[i]->killrating,
+		if(g_xpsaves[i]->kill_rating != 0.0f) { 
+			trap_FS_Write("kill_rating      = ", 19, f);
+			G_shrubbot_writeconfig_float(g_xpsaves[i]->kill_rating,
+				f);
+		}
+		if(g_xpsaves[i]->kill_variance != SIGMA2_DELTA) { 
+			trap_FS_Write("kill_variance    = ", 19, f);
+			G_shrubbot_writeconfig_float(g_xpsaves[i]->kill_variance,
 				f);
 		}
 		if(g_xpsaves[i]->rating != 0) { 
@@ -271,8 +280,11 @@ void G_xpsave_readconfig()
 					break;
 				}
 			}
-			else if(!Q_stricmp(t, "killrating")) {
-				G_shrubbot_readconfig_float(&cnf, &x->killrating);
+			else if(!Q_stricmp(t, "kill_rating")) {
+				G_shrubbot_readconfig_float(&cnf, &x->kill_rating);
+			}
+			else if(!Q_stricmp(t, "kill_variance")) {
+				G_shrubbot_readconfig_float(&cnf, &x->kill_variance);
 			}
 			else if(!Q_stricmp(t, "rating")) {
 				G_shrubbot_readconfig_float(&cnf,
@@ -350,6 +362,14 @@ void G_xpsave_readconfig()
 				G_shrubbot_readconfig_float(&cnf,
 					&g_serverstat.rating_variance);
 			}
+			else if(!Q_stricmp(t, "distance_rating")) {
+				G_shrubbot_readconfig_float(&cnf,
+					&g_serverstat.distance_rating);
+			}
+			else if(!Q_stricmp(t, "distance_variance")) {
+				G_shrubbot_readconfig_float(&cnf,
+					&g_serverstat.distance_variance);
+			}
 			else {
 				G_Printf("xpsave: [serverstat] parse error near "
 					"%s on line %d\n", 
@@ -366,7 +386,8 @@ void G_xpsave_readconfig()
 			x = malloc(sizeof(g_xpsave_t));
 			x->guid[0] = '\0';
 			x->name[0] = '\0';
-			x->killrating = 1600.0f;
+			x->kill_rating = 0.0f;
+			x->kill_variance = SIGMA2_DELTA;
 			x->rating = 0.0f;
 			x->rating_variance = SIGMA2_THETA;
 			for(i=0; i<SK_NUM_SKILLS; i++) {
@@ -399,6 +420,8 @@ void G_xpsave_readconfig()
 			// server prior = 2.6, NOT 0
 			g_serverstat.rating = 2.6f;
 			g_serverstat.rating_variance = SIGMA2_PSI;
+			g_serverstat.distance_rating = 0.0f;
+			g_serverstat.distance_variance = SIGMA2_DELTA;
 			serverstat_open = qtrue;
 			found_serverstat = qtrue;
 		}
@@ -423,7 +446,8 @@ void AddDisconnect(gentity_t *ent
 	,int allies_time
 	,team_t map_ATBd_team
 	,team_t last_playing_team
-	,float killrating) {
+	,float killrating
+    ,float killvariance) {
 
 	int i, j, k;
 
@@ -437,6 +461,7 @@ void AddDisconnect(gentity_t *ent
 			g_disconnects[i].map_ATBd_team = map_ATBd_team;
 			g_disconnects[i].last_playing_team = last_playing_team;
 			g_disconnects[i].killrating = killrating;
+			g_disconnects[i].killvariance = killvariance;
 			for(j=0; j<SK_NUM_SKILLS; j++) {
 				for(k=0; k<NUM_SKILL_LEVELS; k++) {
 					g_disconnects[i].skill_time[j][k] =
@@ -485,6 +510,8 @@ void Reconnect(g_xpsave_t *connect, gentity_t *ent) {
 				g_disconnects[i].last_playing_team;
 			ent->client->sess.overall_killrating =
 				g_disconnects[i].killrating;
+			ent->client->sess.overall_killvariance =
+				g_disconnects[i].killvariance;
 			for(j=0; j<SK_NUM_SKILLS; j++) {
 				for(k=0; k<NUM_SKILL_LEVELS; k++) {
 					ent->client->sess.skill_time[j][k] =
@@ -556,7 +583,8 @@ qboolean G_xpsave_add(gentity_t *ent,qboolean disconnect)
 		x = malloc(sizeof(g_xpsave_t));
 		x->guid[0] = '\0';
 		x->name[0] = '\0';
-		x->killrating = 1600.0f;
+		x->kill_rating = 0.0f;
+		x->kill_variance = SIGMA2_DELTA;
 		x->rating = 0.0f;
 		x->rating_variance = SIGMA2_THETA;
 		for(j=0; j<SK_NUM_SKILLS; j++) {
@@ -584,7 +612,8 @@ qboolean G_xpsave_add(gentity_t *ent,qboolean disconnect)
 				ent->client->sess.pr_skill[i][j];
 		}
 	}
-	x->killrating = ent->client->sess.overall_killrating;
+	x->kill_rating = ent->client->sess.overall_killrating;
+	x->kill_variance = ent->client->sess.overall_killvariance;
 	x->rating = ent->client->sess.rating;
 	x->rating_variance = ent->client->sess.rating_variance;
 
@@ -607,6 +636,7 @@ qboolean G_xpsave_add(gentity_t *ent,qboolean disconnect)
 			,ent->client->sess.map_ATBd_team
 			,ent->client->sess.last_playing_team
 			,ent->client->sess.overall_killrating
+			,ent->client->sess.overall_killvariance
 		);
 	}
 	return qtrue;
@@ -668,7 +698,8 @@ qboolean G_xpsave_load(gentity_t *ent)
 		}
 	}
 
-	ent->client->sess.overall_killrating = x->killrating;
+	ent->client->sess.overall_killrating = x->kill_rating;
+	ent->client->sess.overall_killvariance = x->kill_variance;
 	//ent->client->sess.playerrating = x->playerrating;
 	ent->client->sess.rating = x->rating;
 	ent->client->sess.rating_variance = x->rating_variance;
@@ -807,9 +838,6 @@ void G_xpsave_resetxp()
 		g_xpsaves[i]->hits = 0;
 		g_xpsaves[i]->team_hits = 0;
 
-		// tjw: keep these going.  
-		//g_xpsaves[i]->killrating = 1600;
-		//g_xpsaves[i]->playerrating = 1600;
 	}
 }
 

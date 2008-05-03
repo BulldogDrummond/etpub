@@ -722,8 +722,8 @@ qboolean ClientInactivityTimer( gclient_t *client ) {
 					}
 				}
 				// if the server is full, drop the client
-				if (isPrivate && privateSlotsUsed == sv_privateClients.integer ||
-						level.numConnectedClients == level.maxclients - sv_privateClients.integer + privateSlotsUsed) {
+				if ((isPrivate && privateSlotsUsed == sv_privateClients.integer) ||
+						(level.numConnectedClients == level.maxclients - sv_privateClients.integer + privateSlotsUsed)) {
 					trap_DropClient(client - level.clients, "Dropped due to inactivity", 0 );
 				} else {
 					// otherwise give the client some more time until the server is full
@@ -1466,6 +1466,19 @@ void ClientThink_real( gentity_t *ent ) {
 
 	// set speed
 	client->ps.speed = g_speed.value;
+
+	// Dens: just ignore the 12% medic hp bonus
+	if(g_healthSpeedStart.value > 0.0f && g_healthSpeedStart.value <= 100.0f
+		&& g_healthSpeedBottom.value >= 0.0f && g_healthSpeedBottom.value < 100.0f
+		&& ent->health > 0){
+			if(ent->health < (int)(client->ps.stats[STAT_MAX_HEALTH] * 
+				g_healthSpeedStart.integer / 100)){
+					client->ps.speed = (int)(((ent->health * 
+						(100.000f - g_healthSpeedBottom.value)/
+						(g_healthSpeedStart.value * client->ps.stats[STAT_MAX_HEALTH])) +
+						g_healthSpeedBottom.integer / 100.000f) * g_speed.value);
+			}	
+	}
 
 	if( client->speedScale )				// Goalitem speed scale
 		client->ps.speed *= (client->speedScale * 0.01);

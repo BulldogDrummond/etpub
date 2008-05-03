@@ -1189,9 +1189,9 @@ qboolean IsHeadShot( gentity_t *attacker, gentity_t *targ, vec3_t dir, vec3_t po
 	// not a player or critter so bail
 	if( !(targ->client) )
 		return qfalse;
-
-	//if( targ->health <= 0 )
-	//	return qfalse;
+	
+	if( targ->health <= 0 ) // uncomment Elf (no hs for corpses)
+		return qfalse;
 
 	if (!IsHeadShotWeapon (mod) ) {
 		return qfalse;
@@ -1358,6 +1358,8 @@ void G_Hitsound(gentity_t *targ,
 		return;
 	if((g_hitsounds.integer & HSF_NO_POISON) && mod == MOD_POISON)
 		return;
+	if((g_hitsounds.integer & HSF_NO_EXPLOSIVE) && G_WeaponIsExplosive(mod)) // Elf
+		return;
 	if(!attacker->client)
 		return;
 	if(!attacker->client->pers.hitsounds)
@@ -1422,6 +1424,152 @@ void G_Hitsound(gentity_t *targ,
 			snd = G_SoundIndex(g_hitsound_head.string);
 	}
 	hs_ent->s.eventParm = snd;
+}
+
+int G_TeamPlayerTypeInRange(gentity_t *ent, int playerType, team_t team, int range)
+{
+	int i, j, cnt=0;
+
+	if( playerType < PC_SOLDIER || playerType > PC_COVERTOPS )
+		return 0;
+
+	for( i = 0; i < level.numConnectedClients; i++ ) {
+		j = level.sortedClients[i];
+
+		if( level.clients[j].sess.sessionTeam != team ) {
+			continue;
+		}
+
+		if( level.clients[j].sess.playerType != playerType) {
+			continue;
+		}
+
+		if(g_entities[level.sortedClients[i]].health <= 0){
+			continue;
+		}
+
+		if(Distance(ent->r.currentOrigin, g_entities[level.sortedClients[i]].r.currentOrigin) > range){
+			continue;
+		}
+
+		if(!trap_InPVS(ent->r.currentOrigin, g_entities[level.sortedClients[i]].r.currentOrigin)){
+			continue;
+		}
+		cnt++;
+	}
+	return cnt;
+}
+
+float G_calculateDamageBonus(gentity_t *targ, gentity_t *attacker){
+	int count = 0;
+	int closerange = 750;
+	char debug[1024];
+
+	debug[0] = '\0';
+
+	if(!g_damageBonusOpts.integer || g_damageBonus.value > 100.0f 
+		|| g_damageBonus.value <= 0)
+		return 1.0f;
+
+	if(attacker && attacker->client && targ && targ->client &&
+		attacker->client->sess.sessionTeam == targ->client->sess.sessionTeam)
+		return 1.0f;
+
+	if(attacker && attacker->client){
+		if(g_damageBonusOpts.integer & DMGBONUS_DEBUG)
+			Q_strcat(debug, sizeof(debug),va("Attacker: %s ^7",attacker->client->pers.netname));
+
+		if(g_damageBonusOpts.integer & DMGBONUS_NO_ENGI){
+			if( G_ClassCount(NULL, PC_ENGINEER, attacker->client->sess.sessionTeam) == 0){
+				count--;
+				if(g_damageBonusOpts.integer & DMGBONUS_DEBUG)
+					Q_strcat(debug, sizeof(debug),"Att No Engi (-) ");
+			}
+		}
+
+		if(g_damageBonusOpts.integer & DMGBONUS_3_MEDICS &&
+			attacker->client->sess.playerType == PC_MEDIC){
+			if( G_TeamPlayerTypeInRange(attacker, PC_MEDIC, attacker->client->sess.sessionTeam, closerange) > 2){
+				count--;
+				if(g_damageBonusOpts.integer & DMGBONUS_DEBUG)
+					Q_strcat(debug, sizeof(debug),"Att 3 Meds (-) ");
+			}
+		}
+
+		if(g_damageBonusOpts.integer & DMGBONUS_NEAR_ENGI &&
+			attacker->client->sess.playerType != PC_ENGINEER){
+			if( G_TeamPlayerTypeInRange(attacker, PC_ENGINEER, attacker->client->sess.sessionTeam, closerange) >= 1){
+				count++;
+				if(g_damageBonusOpts.integer & DMGBONUS_DEBUG)
+					Q_strcat(debug, sizeof(debug),"Att Near Engi (+) ");
+			}
+		}
+	}
+
+	if(targ && targ->client && g_damageBonusOpts.integer & DMGBONUS_CHECK_ENEMY){
+		if(g_damageBonusOpts.integer & DMGBONUS_DEBUG)
+			Q_strcat(debug, sizeof(debug),va("Target: %s ^7",targ->client->pers.netname));
+
+		if(g_damageBonusOpts.integer & DMGBONUS_NO_ENGI){
+			if( G_ClassCount(NULL, PC_ENGINEER, targ->client->sess.sessionTeam) == 0){
+				count++;
+				if(g_damageBonusOpts.integer & DMGBONUS_DEBUG)
+					Q_strcat(debug, sizeof(debug),"Tar No Engi (+) ");
+			}
+		}
+
+		if(g_damageBonusOpts.integer & DMGBONUS_3_MEDICS &&
+			targ->client->sess.playerType == PC_MEDIC){
+			if( G_TeamPlayerTypeInRange(targ, PC_MEDIC, targ->client->sess.sessionTeam, closerange) > 2){
+				count++;
+				if(g_damageBonusOpts.integer & DMGBONUS_DEBUG)
+					Q_strcat(debug, sizeof(debug),"Tar 3 Meds (+) ");
+			}
+		}
+
+		if(g_damageBonusOpts.integer & DMGBONUS_NEAR_ENGI &&
+			targ->client->sess.playerType != PC_ENGINEER){
+			if( G_TeamPlayerTypeInRange(targ, PC_ENGINEER, targ->client->sess.sessionTeam, closerange) >= 1){
+				count--;
+				if(g_damageBonusOpts.integer & DMGBONUS_DEBUG)
+					Q_strcat(debug, sizeof(debug),"Tar Near Engi (-) ");
+			}
+		}
+	}
+
+	if(count != 0){
+		if(g_damageBonusOpts.integer & DMGBONUS_CUMULATIVE){
+			if(count < 0){
+				if(g_damageBonusOpts.integer & DMGBONUS_DEBUG){
+					Q_strcat(debug, sizeof(debug),va("^3%f\n",pow((100.0f - g_damageBonus.value)/100.0f, abs(count))));
+					G_Printf(debug);
+				}
+				return pow((100.0f - g_damageBonus.value)/100.0f, abs(count));
+			}else{
+				if(g_damageBonusOpts.integer & DMGBONUS_DEBUG){
+					Q_strcat(debug, sizeof(debug),va("^3%f\n",pow((100.0f + g_damageBonus.value)/100.0f, count)));
+					G_Printf(debug);
+				}
+				return pow((100.0f + g_damageBonus.value)/100.0f, count);
+			}
+		}else{
+			if(count < 0){
+				if(g_damageBonusOpts.integer & DMGBONUS_DEBUG){
+					Q_strcat(debug, sizeof(debug),va("^3%f\n",(100.0f - g_damageBonus.value)/100.0f));
+					G_Printf(debug);
+				}
+				return (100.0f - g_damageBonus.value)/100.0f;
+			}else{
+				if(g_damageBonusOpts.integer & DMGBONUS_DEBUG){
+					Q_strcat(debug, sizeof(debug),va("^3%f\n",(100.0f + g_damageBonus.value)/100.0f));
+					G_Printf(debug);
+				}
+				return (100.0f + g_damageBonus.value)/100.0f;
+			}
+		}
+	}
+	
+	return 1.0f;
 }
 
 /*
@@ -1743,13 +1891,12 @@ void G_Damage( gentity_t *targ, gentity_t *inflictor, gentity_t *attacker,  vec3
 		}
 	}
 
-  // perro: optionally do half-damage if the target is a covie in disguise (g_coverts 8)
-  if (targ -> client &&
-	  targ->client->ps.powerups[PW_OPS_DISGUISED] &&
-	  (g_coverts.integer & COVERTF_DISGUISE_HALFDMG) )
-  {
-		take *= .5f;
-  }
+	// perro: optionally do half-damage if the target is a covie in disguise (g_coverts 8)
+	if (targ -> client &&
+		targ->client->ps.powerups[PW_OPS_DISGUISED] &&
+		(g_coverts.integer & COVERTF_DISGUISE_HALFDMG) ){
+			take *= .5f;
+	}
 
 	headShot = IsHeadShot(attacker, targ, dir, point, mod);
 	if ( headShot ) {
@@ -1899,7 +2046,9 @@ void G_Damage( gentity_t *targ, gentity_t *inflictor, gentity_t *attacker,  vec3
 			}
 		}
 	}
-		
+
+	// Dens: check if the attacker gets some bonus/punishment
+	take *= G_calculateDamageBonus(targ, attacker);
 
 	// check for completely getting out of the damage
 	if ( !(dflags & DAMAGE_NO_PROTECTION) ) {

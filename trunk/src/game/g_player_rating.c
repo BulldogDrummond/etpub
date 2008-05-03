@@ -567,6 +567,7 @@ void G_UpdateSkillTime(gentity_t *ent, qboolean final)
 
 	}
 }
+
 // these are just for logging, the client prints its own messages
 char *modNames2[] =
 {
@@ -660,177 +661,92 @@ char *modNames2[] =
 	"MOD_REFLECTED_FF",
 };
 
-// josh: these structures are for looking up the weapon's rating for kill
-//       rating
-typedef struct mod_weapRating_convert_s {
-	weapon_t			mod;
-	int rating;
-} mod_weapRating_convert_t;
+float g_of_x(float variance) {
+	return 1.0 / sqrt(1.0+variance*3.0/(M_PI*M_PI));
+}
 
-static const mod_weapRating_convert_t weaponRating[MOD_NUM_MODS] = {
-	{ MOD_MACHINEGUN,			12 },
-	{ MOD_GRENADE,				16 },
-	{ MOD_ROCKET,				4 },
-	{ MOD_KNIFE,				64 },
-	{ MOD_LUGER,				24 },
-	{ MOD_COLT,				24 },
-	{ MOD_MP40,				16 },
-	{ MOD_THOMPSON,				16 },
-	{ MOD_STEN,				16 },
-	{ MOD_GARAND,				24 },
-	{ MOD_SILENCER,				24 },
-	{ MOD_FG42,				16 },
-	{ MOD_FG42SCOPE,			2 },
-	{ MOD_PANZERFAUST,			2 },
-	{ MOD_GRENADE_LAUNCHER,			24 },
-	{ MOD_FLAMETHROWER,			8 },
-	{ MOD_GRENADE_PINEAPPLE,		24 },
-	{ MOD_AKIMBO_COLT,			16 },
-	{ MOD_AKIMBO_LUGER,			16 },
-	{ MOD_AKIMBO_SILENCEDCOLT,		16 },
-	{ MOD_AKIMBO_SILENCEDLUGER,		16 },
-	{ MOD_DYNAMITE,				4 },
-	{ MOD_AIRSTRIKE,			8 },
-	{ MOD_ARTY,				4 },
-	{ MOD_CARBINE,				24 },
-	{ MOD_KAR98,				24 },
-	{ MOD_GPG40,				8 },
-	{ MOD_M7,				8 },
-	{ MOD_LANDMINE,				4 },
-	{ MOD_SATCHEL,				64 },
-	{ MOD_SMOKEGRENADE,			24 }, // rain - airstrike tag
-	{ MOD_MOBILE_MG42,			12},
-	{ MOD_SILENCED_COLT,			24 },	// where is silencer? // Gordon: up top^
-	{ MOD_GARAND_SCOPE,			2 },
-	{ MOD_K43,				24 },
-	{ MOD_K43_SCOPE,			2 },
-	{ MOD_MORTAR,				2 },
-	{ MOD_BROWNING,				12 },
-	{ MOD_MG42,				12 },
-	{ MOD_POISON,				48 },
-};
+float kill_probability(float net, float g_of_x_margin) {
+	return 1.0 / (1.0+exp(-(net*g_of_x_margin)));
+}
 
-void G_UpdateKillRatings(gentity_t *killer, gentity_t *victim, int mod, int dmg) {
-	int i;
+void UpdateKillRating(float* rating, float* variance, float input, float margin_variance, float net) {
 	float
-		killer_rating
-		,victim_rating
-		,points
-		,distance_apart
-		,prob_killer_won
+		g_of_x_margin
+		,probability
+		,error
+		,deriv_error_net
+		,first_derivative
+		,second_derivative
+	;
+	g_of_x_margin = g_of_x(margin_variance);
+	probability = kill_probability(net,g_of_x_margin);
+	error = 1.0 - probability;
+	deriv_error_net = probability*error;
+	first_derivative = input*error*g_of_x_margin;
+	second_derivative = g_of_x_margin*g_of_x_margin*input*input*deriv_error_net;
+	(*variance) = 1.0 / (1.0/(*variance) + second_derivative);
+	(*rating) += (*variance)*first_derivative;
+}
+
+void G_UpdateKillRatings(gentity_t *killer, gentity_t *victim, int mod) {
+	float
+		killer_variance
+		,victim_variance
+		,distance_variance
+		,distance_weight
+		,net
 	;
 	vec3_t distance_vector;
-	int weapon_rating = 0;
-	int max_health;
-	float damage_ratio;
+	g_serverstat_t *server = G_xpsave_serverstat();
 
 	//  calculate distance apart
 	VectorSubtract(killer->r.currentOrigin,victim->r.currentOrigin,distance_vector);
-	distance_apart = VectorLength(distance_vector);
-
-        // Got 140 from AddMedicTeamBonus in g_client.c, there is no
-        // constant for it. Also, medics get up to 1.12*max_health
-        // Also, I'm using max possible since it's l33ter to pwn someone with
-        // more HP.
-        max_health = 156;
-
-
-	// health+dmg since we get this AFTER the dmg has been subtracted
-	// from their health
-        damage_ratio = min(dmg,victim->health+dmg)*1.0 / max_health;
-	
-	// If they were already dead, ignore
-	if (damage_ratio <= 0)
-		return;
-
-	// find weapon rating
-	for(i=0; i<MOD_NUM_MODS; i++) {
-		if(mod == weaponRating[i].mod) {
-			weapon_rating = weaponRating[i].rating;
-		}
-	}
-
-	if (killer && 
-		killer->client && 
-		// Turn this off for now
-		qfalse) {
-		//g_killRating.integer & KILL_RATING_DATASET) {
-		char *obit, *holding;
-		int held = GetAmmoTableData(victim->s.weapon)->mod;
-
-		if(mod < 0 
-			|| mod >= sizeof(modNames2) 
-			/ sizeof(modNames2[0])) {
-			obit = "<bad obituary>";
-		} else {
-			obit = modNames2[mod];
-		}
-
-		if(held < 0 
-			|| held >= sizeof(modNames2) 
-			/ sizeof(modNames2[0])) {
-			holding = "<bad obituary>";
-		} else {
-			holding = modNames2[held];
-		}
-
-
-		G_LogPrintf("KILL_RATING_DATASET: %s %s %i %f %i:"
-			" \\%s\\ damaged \\%s\\ %f by %s"
-			" holding %s\n",
-			killer->client->sess.guid, 
-			victim->client->sess.guid,
-			mod,
-			damage_ratio,
-			held,
-			killer->client->pers.netname,
-			victim->client->pers.netname,
-			damage_ratio,
-			obit,
-			holding
-		);
-	}
-
-
-	// No reason to continue if unknown weapon
-	if (weaponRating == 0)
-		return;
+	distance_weight = VectorLength(distance_vector)/ 10000.0;
 
 	// first do overall
-	killer_rating = killer->client->sess.overall_killrating;
-	victim_rating = victim->client->sess.overall_killrating;
-	//distance_bias = G_xpsave_serverstat->distance_rating*distance_apart;
-	//prob_killer_won = 1.0 / (1.0+exp(-(distance_bias+killer_rating) /(integrate!)));
-	prob_killer_won = 1.0 / (1.0+pow(10.0, (victim_rating-killer_rating)
-				/400.0));
+	killer_variance = killer->client->sess.overall_killvariance;
+	victim_variance = victim->client->sess.overall_killvariance;
+	distance_variance = server->distance_variance*distance_weight*distance_weight;
 
-	// award * (observation - prediction)
-	points = damage_ratio*weapon_rating*(1.0 - prob_killer_won); 
+	net = killer->client->sess.overall_killrating
+		- victim->client->sess.overall_killrating
+		+ server->distance_rating*distance_weight;
 
-	// Assign
-	killer->client->sess.overall_killrating += points;
-	victim->client->sess.overall_killrating -= points;
+	// distance update marginalizes out killer and victim variance
+	UpdateKillRating(
+			&server->distance_rating
+			,&server->distance_variance
+			,distance_weight
+			,killer_variance+victim_variance
+			,net
+		);
 
-	// for match, do something a little weird
-	// basically, killing people with higher ratings gives more points,
-	// but being killed makes you lose the same amount of points
-	// I'll try this out till I model it better
-	killer_rating = 1600.0;
-	victim_rating = victim->client->sess.overall_killrating;
-	prob_killer_won = 1.0 / (1.0+pow(10.0, (victim_rating-killer_rating)
-				/400.0));
+	// killer update
+	UpdateKillRating(
+			&killer->client->sess.overall_killrating
+			,&killer->client->sess.overall_killvariance
+			,1.0
+			,distance_variance+victim_variance
+			,net
+		);
 
-	// award * (observation - prediction)
-	points = damage_ratio*weapon_rating*(1.0 - prob_killer_won); 
-
-	// match_killrating just tracks this match's increase
-	killer->client->sess.match_killrating += points;
-	victim->client->sess.match_killrating -= damage_ratio*weapon_rating*0.5;
+	// victim update
+	UpdateKillRating(
+			&victim->client->sess.overall_killrating
+			,&victim->client->sess.overall_killvariance
+			,-1.0
+			,distance_variance+killer_variance
+			,net
+		);
 }
 
 void G_LogKillGUID(gentity_t *killer, gentity_t *victim, int mod) {
 
-	char *killerClass, *victimClass, *obit;
+	char 
+		*killerClass = NULL
+		,*victimClass = NULL
+		, *obit = NULL
+	;
 	vec3_t distance_vector;
 	float 
 		distance_apart
@@ -906,4 +822,9 @@ void G_LogKillGUID(gentity_t *killer, gentity_t *victim, int mod) {
 		obit,
 		distance_apart
 	);
+}
+
+float G_GetAdjKillsPerDeath(float rating, float variance) {
+	float probability = kill_probability(rating,g_of_x(variance));
+	return probability / (1.0f - probability);
 }

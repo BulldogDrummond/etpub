@@ -6696,7 +6696,7 @@ BotGetReachableEntityArea
 */
 qboolean BotGetReachableEntityArea( bot_state_t *bs, int entityNum, bot_goal_t *goal )
 {
-	vec3_t brushPos, vec, center, mins, maxs;
+	vec3_t brushPos = {0., 0., 0.}, vec, center, mins, maxs;
 	//int list[256], numList;
 	int oldestTime = 0, i, oldest = 0;
 	//float bestDist, dist;

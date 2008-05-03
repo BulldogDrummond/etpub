@@ -742,7 +742,6 @@ static float PM_CmdScale( usercmd_t *cmd ) {
 // full speed.  not completely realistic (well, sure, you can run faster with the weapon strapped to your
 // back than in carry position) but more fun to play.  If it doesn't play well this way we'll bog down the
 // player if the own the weapon at all.
-//
 	if ((pm->ps->weapon == WP_PANZERFAUST) ||
 		(pm->ps->weapon == WP_MOBILE_MG42) ||
 		(pm->ps->weapon == WP_MOBILE_MG42_SET) ||
@@ -4637,7 +4636,7 @@ static void PM_Weapon( void ) {
 
 	// JPW NERVE -- in multiplayer, pfaust fires once then switches to pistol since it's useless for a while
 	if ( (pm->ps->weapon == WP_PANZERFAUST) || (pm->ps->weapon == WP_SMOKE_MARKER ) || (pm->ps->weapon == WP_DYNAMITE) || (pm->ps->weapon == WP_SMOKE_BOMB) || (pm->ps->weapon == WP_LANDMINE) || (pm->ps->weapon == WP_SATCHEL))
-		PM_AddEvent( EV_NOAMMO );
+			PM_AddEvent( EV_NOAMMO );
 	// jpw
 
 	if( pm->ps->weapon == WP_SATCHEL ) {

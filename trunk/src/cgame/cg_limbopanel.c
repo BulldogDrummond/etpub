@@ -2902,14 +2902,15 @@ qboolean CG_LimboPanel_RealWeaponIsDisabled( weapon_t weap ) {
 	wcount =	CG_LimboPanel_TeamCount( weap );
 
 	// gabriel: enforce weapons restrictions client-side
+	// Dens: "." is send as "%" by the server (engine problem)
 
 	switch (weap) {
 		case WP_PANZERFAUST:
 			if (ExtractInt(cgs.team_maxPanzers) != -1) {
 				maxCount = ExtractInt(cgs.team_maxPanzers);
-				if (strstr(cgs.team_maxPanzers, "%-"))
+				if (strstr(cgs.team_maxPanzers, ".-"))
 					maxCount = floor(ExtractInt(cgs.team_maxPanzers) * count * 0.01f);
-				else if (strstr(cgs.team_maxPanzers, "%"))
+				else if (strstr(cgs.team_maxPanzers, "."))
 					maxCount = ceil(ExtractInt(cgs.team_maxPanzers) * count * 0.01f);
 				if (wcount >= maxCount)
 					return qtrue;
@@ -2919,9 +2920,9 @@ qboolean CG_LimboPanel_RealWeaponIsDisabled( weapon_t weap ) {
 			if (ExtractInt(cgs.team_maxMortars) != -1) {
 				wcount += CG_LimboPanel_TeamCount(WP_MORTAR_SET);
 				maxCount = ExtractInt(cgs.team_maxMortars);
-				if (strstr(cgs.team_maxMortars, "%-"))
+				if (strstr(cgs.team_maxMortars, ".-"))
 					maxCount = floor(ExtractInt(cgs.team_maxMortars) * count * 0.01f);
-				else if (strstr(cgs.team_maxMortars, "%"))
+				else if (strstr(cgs.team_maxMortars, "."))
 					maxCount = ceil(ExtractInt(cgs.team_maxMortars) * count * 0.01f);
 				if (wcount >= maxCount)
 					return qtrue;
@@ -2931,9 +2932,9 @@ qboolean CG_LimboPanel_RealWeaponIsDisabled( weapon_t weap ) {
 			if (ExtractInt(cgs.team_maxMG42s) != -1) {
 				wcount += CG_LimboPanel_TeamCount(WP_MOBILE_MG42_SET);
 				maxCount = ExtractInt(cgs.team_maxMG42s);
-				if (strstr(cgs.team_maxMG42s, "%-"))
+				if (strstr(cgs.team_maxMG42s, ".-"))
 					maxCount = floor(ExtractInt(cgs.team_maxMG42s) * count * 0.01f);
-				else if (strstr(cgs.team_maxMG42s, "%"))
+				else if (strstr(cgs.team_maxMG42s, "."))
 					maxCount = ceil(ExtractInt(cgs.team_maxMG42s) * count * 0.01f);
 				if (wcount >= maxCount)
 					return qtrue;
@@ -2942,9 +2943,9 @@ qboolean CG_LimboPanel_RealWeaponIsDisabled( weapon_t weap ) {
 		case WP_FLAMETHROWER:
 			if (ExtractInt(cgs.team_maxFlamers) != -1) {
 				maxCount = ExtractInt(cgs.team_maxFlamers);
-				if (strstr(cgs.team_maxFlamers, "%-"))
+				if (strstr(cgs.team_maxFlamers, ".-"))
 					maxCount = floor(ExtractInt(cgs.team_maxFlamers) * count * 0.01f);
-				else if (strstr(cgs.team_maxFlamers, "%"))
+				else if (strstr(cgs.team_maxFlamers, "."))
 					maxCount = ceil(ExtractInt(cgs.team_maxFlamers) * count * 0.01f);
 				if (wcount >= maxCount)
 					return qtrue;
@@ -2956,9 +2957,9 @@ qboolean CG_LimboPanel_RealWeaponIsDisabled( weapon_t weap ) {
 				wcount = CG_LimboPanel_TeamCount(WP_KAR98) +
 					CG_LimboPanel_TeamCount(WP_CARBINE);
 				maxCount = ExtractInt(cgs.team_maxGrenLaunchers);
-				if (strstr(cgs.team_maxGrenLaunchers, "%-"))
+				if (strstr(cgs.team_maxGrenLaunchers, ".-"))
 					maxCount = floor(ExtractInt(cgs.team_maxGrenLaunchers) * count * 0.01f);
-				else if (strstr(cgs.team_maxGrenLaunchers, "%"))
+				else if (strstr(cgs.team_maxGrenLaunchers, "."))
 					maxCount = ceil(ExtractInt(cgs.team_maxGrenLaunchers) * count * 0.01f);
 				if (wcount >= maxCount)
 					return qtrue;

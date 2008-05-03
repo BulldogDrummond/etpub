@@ -164,7 +164,7 @@ void Weapon_Knife( gentity_t *ent ) {
 	if( ent->client->sess.playerType == PC_COVERTOPS )
 		damage *= 2;	// Watch it - you could hurt someone with that thing!
 	// CHRUKER: b002 - Only do backstabs if the body is standing up (ie. alive)
-	if(traceEnt->client && traceEnt->health > 0) 
+	if(traceEnt->client) // && traceEnt->health > 0)  Elf
 	{
 		AngleVectors (ent->client->ps.viewangles,		pforward, NULL, NULL);
 		AngleVectors (traceEnt->client->ps.viewangles,	eforward, NULL, NULL);
@@ -179,6 +179,13 @@ void Weapon_Knife( gentity_t *ent ) {
 				damage = traceEnt->health;
 			}
 		}
+	}
+
+	// Dens: do enough damage to limbo, but not gib, and don't add random
+	if(traceEnt->client && traceEnt->health <= 0 && g_weapons.integer & WPF_KNIFE_GIBS){
+		damage = abs(GIB_HEALTH) - abs(traceEnt->health) - 1;
+		G_Damage( traceEnt, ent, ent, vec3_origin, tr.endpos, damage, 0, mod);
+		return;
 	}
 
 	G_Damage( traceEnt, ent, ent, vec3_origin, tr.endpos, (damage + rand()%5), 0, mod);

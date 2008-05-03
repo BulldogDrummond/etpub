@@ -1,7 +1,7 @@
 #include "g_local.h"
 #include "etpro_mdx.h"
 #include "g_http_client.h"
-#include "../../etmain/ui/menudef.h" // Dens: needed for the ref level
+#include "../ui/menudef.h" // Dens: needed for the ref level
 
 // Include the "External"/"Public" components of AI_Team
 #include "../botai/ai_teamX.h"
@@ -89,6 +89,7 @@ vmCvar_t	g_filtercams;
 vmCvar_t	g_maxlives;				// DHM - Nerve
 vmCvar_t	g_maxlivesRespawnPenalty;
 vmCvar_t	g_voiceChatsAllowed;	// DHM - Nerve
+vmCvar_t	g_customVoiceChats;		// Elf
 vmCvar_t	g_alliedmaxlives;		// Xian
 vmCvar_t	g_axismaxlives;			// Xian
 vmCvar_t	g_fastres;				// Xian
@@ -523,6 +524,14 @@ vmCvar_t g_minCommandWaitTime;
 
 vmCvar_t g_knifeKillSound;
 
+// Dens: start slowing down at Start % of health and stop at Bottom % of g_speed
+vmCvar_t g_healthSpeedStart;
+vmCvar_t g_healthSpeedBottom;
+
+// Dens: do some extra damage at certain conditions (see g_local.h)
+vmCvar_t g_damageBonus;
+vmCvar_t g_damageBonusOpts;
+
 cvarTable_t		gameCvarTable[] = {
 	// don't override the cheat state set by the system
 	{ &g_cheats, "sv_cheats", "", 0, qfalse },
@@ -539,13 +548,11 @@ cvarTable_t		gameCvarTable[] = {
 
 // JPW NERVE multiplayer stuffs
 	{ &g_redlimbotime, "g_redlimbotime", "30000", CVAR_SERVERINFO | CVAR_LATCH, 0, qfalse },
-	{ &g_bluelimbotime, "g_bluelimbotime", "30000", CVAR_SERVERINFO | CVAR_LATCH, 0, qfalse },
+	{ &g_bluelimbotime, "g_bluelimbotime", "20000", CVAR_SERVERINFO | CVAR_LATCH, 0, qfalse },
 	{ &g_medicChargeTime, "g_medicChargeTime", "45000", CVAR_LATCH, 0, qfalse, qtrue },
 	{ &g_engineerChargeTime, "g_engineerChargeTime", "30000", CVAR_LATCH, 0, qfalse, qtrue },
 	{ &g_LTChargeTime, "g_LTChargeTime", "40000", CVAR_LATCH, 0, qfalse, qtrue },
 	{ &g_soldierChargeTime, "g_soldierChargeTime", "20000", CVAR_LATCH, 0, qfalse, qtrue },
-// jpw
-
 	{ &g_covertopsChargeTime, "g_covertopsChargeTime", "30000", CVAR_LATCH, 0, qfalse, qtrue },
 	{ &g_landminetimeout, "g_landminetimeout", "1", CVAR_ARCHIVE, 0, qfalse, qtrue },
 
@@ -627,6 +634,7 @@ cvarTable_t		gameCvarTable[] = {
 	{ &g_maxlives, "g_maxlives", "0", CVAR_ARCHIVE|CVAR_LATCH|CVAR_SERVERINFO, 0, qtrue },		// DHM - Nerve
 	{ &g_maxlivesRespawnPenalty, "g_maxlivesRespawnPenalty", "0", CVAR_ARCHIVE|CVAR_LATCH|CVAR_SERVERINFO, 0, qtrue },
 	{ &g_voiceChatsAllowed, "g_voiceChatsAllowed", "4", CVAR_ARCHIVE, 0, qfalse },				// DHM - Nerve
+	{ &g_customVoiceChats, "g_customVoiceChats", "1", CVAR_ARCHIVE, 0, qfalse },				// Elf
 
 	{ &g_alliedmaxlives, "g_alliedmaxlives", "0", CVAR_LATCH|CVAR_SERVERINFO, 0, qtrue },		// Xian
 	{ &g_axismaxlives, "g_axismaxlives", "0", CVAR_LATCH|CVAR_SERVERINFO, 0, qtrue },			// Xian
@@ -1045,6 +1053,10 @@ cvarTable_t		gameCvarTable[] = {
 
 	{ &g_minCommandWaitTime, "g_minCommandWaitTime", "0", 0},
 	{ &g_knifeKillSound, "g_knifeKillSound", "", 0},
+	{ &g_healthSpeedStart, "g_healthSpeedStart", "0.0", 0},
+	{ &g_healthSpeedBottom, "g_healthSpeedBottom", "50.0", 0},
+	{ &g_damageBonus, "g_damageBonus", "20.0", 0},
+	{ &g_damageBonusOpts, "g_damageBonusOpts", "0", 0},
 
 	{ NULL, "mod_version", ETPUB_VERSION, CVAR_SERVERINFO | CVAR_ROM },
 	{ NULL, "mod_url", "http://etpub.org", CVAR_SERVERINFO | CVAR_ROM },
@@ -4043,8 +4055,8 @@ void LogExit( const char *string ) {
 	//			cl->sess.guid,
 	//			cl->sess.rating,
 	//			2.0f*cl->sess.rating_variance,
-	//			cl->sess.match_killrating,
 	//			cl->sess.overall_killrating,
+	//			cl->sess.overall_killvariance,
 	//			cl->pers.netname
 	//		);
 	//		Q_strncpyz( post_info->url, g_httpPostURL_ratings.string, sizeof(post_info->url) );

@@ -2885,7 +2885,7 @@ static void CG_DrawSpectator(void) {
 	// kw: don't show if bannerprinting
 	if(cg.bannerPrintTime)
 		alpha = 0.2f;
-	CG_DrawBigString( 320 - 9 * 8, 10, CG_TranslateString( "SPECTATOR" ), alpha );
+	CG_DrawBigString( 320 - 9 * 8, 0, CG_TranslateString( "SPECTATOR" ), alpha );
 }
 
 /*
@@ -3677,7 +3677,7 @@ static void CG_DrawWarmup( void ) {
 
 			s1 = va( CG_TranslateString( "^3WARMUP:^7 Waiting on ^2%i^7 %s" ), cgs.minclients, cgs.minclients == 1 ? "player" : "players" );
 			w = CG_DrawStrlen( s1 );
-			CG_DrawStringExt(320 - w * 12/2, 188, s1, colorWhite, qfalse, qtrue, 12, 18, 0);
+			CG_DrawStringExt(320 - w * cw/2, 0, s1, colorWhite, qfalse, qtrue, cw, cw * 3 / 2, 0);
 
 			if(!cg.demoPlayback && cg.snap->ps.persistant[PERS_TEAM] != TEAM_SPECTATOR &&
 			  (!(cg.snap->ps.pm_flags & PMF_FOLLOW) || (cg.snap->ps.pm_flags & PMF_LIMBO))) {
@@ -3690,7 +3690,7 @@ static void CG_DrawWarmup( void ) {
 					s2 = CG_TranslateString( s2 );
 				}				
 				w = CG_DrawStrlen( s2 );
-				CG_DrawStringExt(320 - w * cw/2, 208, s2, colorWhite, qfalse, qtrue, cw, (int)(cw * 1.5), 0);
+				CG_DrawStringExt(320 - w * cw/2, 16, s2, colorWhite, qfalse, qtrue, cw, (int)(cw * 1.5), 0);
 			}
 	
 /*	if ( !sec ) {
@@ -3729,7 +3729,7 @@ static void CG_DrawWarmup( void ) {
 		s = va( "%s %i", CG_TranslateString( "(WARMUP) Match begins in:" ), sec + 1 );
 
 	w = CG_DrawStrlen( s );
-	CG_DrawStringExt( 320 - w * 6, 120, s, colorYellow, qfalse, qtrue, 12, 18, 0 );
+	CG_DrawStringExt( 320 - w * cw / 2, 0, s, colorYellow, qfalse, qtrue, cw, cw * 3 / 2, 0 );
 
 	// NERVE - SMF - stopwatch stuff
 	s1 = "";
@@ -3794,16 +3794,16 @@ static void CG_DrawWarmup( void ) {
 		cw = 10;
 
 		w = CG_DrawStrlen( s );
-		CG_DrawStringExt( 320 - w * cw/2, 140, s, colorWhite, 
-			qfalse, qtrue, cw, (int)(cw * 1.5), 0 );
+		CG_DrawStringExt( 320 - w * cw/2, 16, s, colorWhite, 
+			qfalse, qtrue, cw, cw * 3 / 2, 0 );
 
 		w = CG_DrawStrlen( s1 );
-		CG_DrawStringExt( 320 - w * cw/2, 160, s1, colorWhite, 
-			qfalse, qtrue, cw, (int)(cw * 1.5), 0 );
+		CG_DrawStringExt( 320 - w * cw/2, 32, s1, colorWhite, 
+			qfalse, qtrue, cw, cw * 3 / 2, 0 );
 
 		w = CG_DrawStrlen( s2 );
-		CG_DrawStringExt( 320 - w * cw/2, 180, s2, colorWhite, 
-			qfalse, qtrue, cw, (int)(cw * 1.5), 0 );
+		CG_DrawStringExt( 320 - w * cw/2, 48, s2, colorWhite, 
+			qfalse, qtrue, cw, cw * 3 / 2, 0 );
 	}
 }
 

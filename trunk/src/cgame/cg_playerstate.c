@@ -115,7 +115,8 @@ void CG_DamageFeedback( int yawByte, int pitchByte, int damage ) {
 	}
 	kick = damage * scale;
 
-	if (kick < 5)
+	//terifire: allow for "simple" damageKick
+	if (cg_damageKick.integer == 2 || kick < 5)
 		kick = 5;
 	if (kick > 10)
 		kick = 10;
@@ -493,10 +494,12 @@ void CG_TransitionPlayerState( playerState_t *ps, playerState_t *ops )
 
 		cg.weaponFireTime = 0;
 	}
-
-	// damage events (player is getting wounded)
-	if( ps->damageEvent != ops->damageEvent && ps->damageCount ) {
-		CG_DamageFeedback( ps->damageYaw, ps->damagePitch, ps->damageCount );
+	
+	// damage events (player is getting wounded) 
+	if( cg_damageKick.integer ) { // Terifire - only if the client wants this
+		if( ps->damageEvent != ops->damageEvent && ps->damageCount ) {
+			CG_DamageFeedback( ps->damageYaw, ps->damagePitch, ps->damageCount );
+		}
 	}
 
 	// respawning

@@ -1666,12 +1666,13 @@ void CG_AddBufferedVoiceChat( bufferedVoiceChat_t *vchat ) {
 	CG_PlayVoiceChat(&voiceChatBuffer[0]);
 }
 
+extern vmCvar_t cg_customVoiceChats; // Elf
 /*
 =================
 CG_VoiceChatLocal
 =================
 */
-void CG_VoiceChatLocal( int mode, qboolean voiceOnly, int clientNum, int color, const char *cmd, vec3_t origin ) {
+void CG_VoiceChatLocal( int mode, qboolean voiceOnly, int clientNum, int color, const char *cmd, char *msg, vec3_t origin ){
 	char *chat;
 	voiceChatList_t *voiceChatList;
 	clientInfo_t *ci;
@@ -1697,7 +1698,10 @@ void CG_VoiceChatLocal( int mode, qboolean voiceOnly, int clientNum, int color, 
 	voiceChatList = CG_VoiceChatListForClient( clientNum );
 
 	if ( CG_GetVoiceChat( voiceChatList, cmd, &snd, &sprite, &chat ) ) {
-		//
+		// Elf - if we get a player-specified chat text, use that instead.
+		if (msg && cg_customVoiceChats.integer) {
+			chat = msg;
+		}
 		if ( mode == SAY_TEAM || !cg_teamChatsOnly.integer ) {
 			vchat.clientNum = clientNum;
 			vchat.snd = snd;
@@ -1729,30 +1733,65 @@ void CG_VoiceChatLocal( int mode, qboolean voiceOnly, int clientNum, int color, 
 	}
 }
 
+// Elf - get a range of arguments in a string (all remaining if end == -1).
+char *CG_Args(int start, int end)
+{
+	int i;
+	char *s, *arg;
+
+	i = start;
+	arg = CG_Argv(i++);
+	s = va( "%s", arg);
+	if( end == -1 ) {
+		while ( 1 ) {
+			arg = CG_Argv(i++);
+			if (!arg[0]) break;
+			s = va("%s %s", s, arg);
+		}
+	} else {
+		for( ; i <= end; ++i ) {
+			arg = CG_Argv(i);
+			s = va("%s %s", s, arg);
+		}
+	}
+	return s;
+}
+
 /*
 =================
 CG_VoiceChat
 =================
 */
 void CG_VoiceChat( int mode ) {
-	const char *cmd;
-	int clientNum, color;
+	const char *cmd, *msg = NULL;
+	int clientNum, color, i, j;
 	qboolean voiceOnly;
 	vec3_t origin;			// NERVE - SMF
 
-	voiceOnly = atoi(CG_Argv(1));
-	clientNum = atoi(CG_Argv(2));
-	color = atoi(CG_Argv(3));
-
-	if( mode != SAY_ALL ) {
-		// NERVE - SMF - added origin
-		origin[0] = atoi(CG_Argv(5));
-		origin[1] = atoi(CG_Argv(6));
-		origin[2] = atoi(CG_Argv(7));
+	switch(mode) {
+		case SAY_ALL:
+			voiceOnly = atoi(CG_Argv(1));
+			clientNum = atoi(CG_Argv(2));
+			color = atoi(CG_Argv(3));
+			cmd = va( "%s", CG_Argv(4) );
+			if (trap_Argc() > 5) {
+				msg = CG_Args(5, -1); // the chat text
+			}
+		break;
+		case SAY_TEAM:
+		case SAY_BUDDY:
+			voiceOnly = atoi(CG_Argv(1));
+			clientNum = atoi(CG_Argv(2));
+			color = atoi(CG_Argv(3));
+			cmd = va( "%s", CG_Argv(4) );
+			for (i = 0; i < 3; ++i) {
+				origin[i] = atoi(CG_Argv(trap_Argc() - 3 + i));
+			}
+			if (trap_Argc() > 8) {
+				msg = CG_Args(5, trap_Argc() - 4);
+			}
+		break;	
 	}
-
-	cmd = CG_Argv(4);
-
 	if (cg_noTaunt.integer != 0) {
 		if (!strcmp(cmd, VOICECHAT_KILLINSULT)  || !strcmp(cmd, VOICECHAT_TAUNT) || \
 			!strcmp(cmd, VOICECHAT_DEATHINSULT) || !strcmp(cmd, VOICECHAT_KILLGAUNTLET) || \
@@ -1761,7 +1800,7 @@ void CG_VoiceChat( int mode ) {
 		}
 	}
 
-	CG_VoiceChatLocal( mode, voiceOnly, clientNum, color, cmd, origin );
+	CG_VoiceChatLocal( mode, voiceOnly, clientNum, color, cmd, msg, origin );
 }
 // -NERVE - SMF
 
@@ -2400,6 +2439,15 @@ static void CG_ServerCommand( void ) {
 			cgs.teamobjectiveStats[i] = atoi(CG_Argv(start++));
 		}
 
+		return;
+	}
+
+	if ( !Q_stricmp( cmd, "skrwrdtxt" ) ) {
+		if(CG_LocalizeServerCommand( CG_Argv(1) )[0]){
+			CG_PriorityCenterPrint( va( "You have been rewarded with %s",
+				CG_LocalizeServerCommand( CG_Argv(1) )),
+				CP_DEFAULTHEIGHT, SMALLCHAR_WIDTH, 99999 );
+		}
 		return;
 	}
 

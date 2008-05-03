@@ -737,8 +737,7 @@ CG_EventHandling
 */
 void CG_EventHandling( int type, qboolean fForced )
 {
-
-	CG_Printf("EventHandling: %d\n", type);
+//	CG_Printf("EventHandling: %d\n", type);
 
 	if( cg.demoPlayback && type == CGAME_EVENT_NONE && !fForced ) {
 		type = CGAME_EVENT_DEMO;

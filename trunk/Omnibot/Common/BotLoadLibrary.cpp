@@ -5,15 +5,9 @@
 // $LastChangedRevision: 1635 $
 //
 ////////////////////////////////////////////////////////////////////////////////
+
 #include "BotExports.h"
 #include <string>
-
-// ET specific
-extern "C" {
-  #define MAX_CVAR_VALUE_STRING 255
-  void    trap_Cvar_VariableStringBuffer( const char *var_name, char *buffer, 
-                                          int bufsize );
-}
 
 //////////////////////////////////////////////////////////////////////////
 
@@ -281,10 +275,7 @@ eomnibot_error Omnibot_LoadLibrary(int version, const char *lib, const char *pat
 	}
 	if(!g_BotLibrary)
 	{
-		char hp[MAX_CVAR_VALUE_STRING] = {""};
-
-		trap_Cvar_VariableStringBuffer("fs_homepath", hp, sizeof(hp));
-		g_BotLibrary = Omnibot_LL(OB_VA("%s/omni-bot/%s.so", hp, lib));
+		g_BotLibrary = Omnibot_LL(OB_VA("./omni-bot/%s.so", lib));
 	}
 	if(!g_BotLibrary)
 	{

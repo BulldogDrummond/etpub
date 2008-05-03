@@ -1944,3 +1944,23 @@
            sometimes didn't have full health the very first time when you join
            a team
 * stephan: fixed a small vote coloration bug
+
+0.9.1
+* josh:    Revamped kill rating. Now it will is based purely on skill and
+           distance to target.
+* josh:    Updated the xpsave.cfg php viewers to reflect KR change.
+* josh:    Major bugfix to new kill rating system. Anyone who started using it
+           already may want to delete distance_rating, distance_variance, and 
+	   kill_* from their xpsave .cfg.
+* josh:    Fixed etpub_stats.pl to work with new kill rating.
+* stephan: added healthdepending speed cvars g_healthSpeedStart and
+           g_healthSpeedBottom. See docs for more info
+* stephan: added g_weapons flag 2048: knife always gibs a dead player
+* stephan: added g_damageBonus and g_damageBonusOpts. See docs for more info
+* stephan: moved the promotion rewards from the client to the server, so that
+           the server can check if players should really get promotions like
+           adrena (requires etpubclient >= 20070819)
+* tijmen:  added !gib -1|all, which gibs every player in the game
+* tijmen:  added !panzer and !sniperwar, which was finished by Elf Friend
+* tijmen:  added custom voicechats, made by Elf Friend
+           command: g_customVoiceChats
