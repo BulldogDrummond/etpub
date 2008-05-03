@@ -1332,8 +1332,7 @@ void Cmd_Kill_f( gentity_t *ent )
 	ent->client->ps.persistant[PERS_HWEAPON_USE] = 0;
 
 	// tjw: put an end to /kill binding stat whores.
-//	if (attacker = G_FearCheck(ent)) {
-	if (attacker == G_FearCheck(ent)) {
+	if (attacker = G_FearCheck(ent)) {
 		// tjw: 150 added to make sure the player is gibbed since
 		//      that was the intent.
 

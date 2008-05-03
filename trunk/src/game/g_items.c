@@ -472,8 +472,24 @@ void G_DropWeapon( gentity_t *ent, weapon_t weapon )
 		COM_BitClear( client->ps.weapons, WP_MOBILE_MG42_SET );
 	}
 
+	if( weapon == WP_GPG40 ) { // etace
+		COM_BitClear( client->ps.weapons, WP_KAR98 );
+	} else if ( weapon == WP_M7 ) {
+		COM_BitClear( client->ps.weapons, WP_CARBINE );
+	} else if ( weapon == WP_FG42SCOPE ) {
+		COM_BitClear( client->ps.weapons, WP_FG42 );
+	} else if( weapon == WP_K43_SCOPE ) {
+		COM_BitClear( client->ps.weapons, WP_K43 );
+	} else if( weapon == WP_GARAND_SCOPE ) {
+		COM_BitClear( client->ps.weapons, WP_GARAND );
+	} else if( weapon == WP_MORTAR_SET ) {
+		COM_BitClear( client->ps.weapons, WP_MORTAR );
+	} else if( weapon == WP_MOBILE_MG42_SET ) {
+		COM_BitClear( client->ps.weapons, WP_MOBILE_MG42 );
+	}
+
 	// Clear out empty weapon, change to next best weapon
-	G_AddEvent( ent, EV_WEAPONSWITCHED, 0 );
+	G_AddEvent( ent, EV_WEAPONSWITCHED, 1 );
 
 	if( weapon == client->ps.weapon )
 		client->ps.weapon = 0;
@@ -645,7 +661,7 @@ int Pickup_Weapon( gentity_t *ent, gentity_t *other ) {
 			weapon_t primaryWeapon = G_GetPrimaryWeaponForClient( other->client );
 
 			// rain - added parens around ambiguous &&
-			if( primaryWeapon || 
+			if( 1 || // Terifire, for dropweapon
 				(other->client->sess.playerType == PC_SOLDIER && other->client->sess.skill[SK_HEAVY_WEAPONS] >= 4) ) {
 
 				// gabriel: If a lvl 4 soldier is picking un a mp40/thompson,
@@ -824,8 +840,13 @@ void Touch_Item_Auto( gentity_t *ent, gentity_t *other, trace_t *trace )
 
 	if( !ent->active && ent->item->giType == IT_WEAPON ) {
 		if( ent->item->giTag != WP_AMMO  && ent->item->giTag != WP_BINOCULARS ) {
+			if ( G_GetPrimaryWeaponForClient(other->client) || 
+					 (!BG_WeaponIsPrimaryForClassAndTeam( other->client->sess.playerType, TEAM_ALLIES, ent->item->giTag ) &&
+						!BG_WeaponIsPrimaryForClassAndTeam( other->client->sess.playerType, TEAM_AXIS, ent->item->giTag )
+					 ) ) {
 			if( !COM_BitCheck( other->client->ps.weapons, ent->item->giTag ) ) {
 				return;	// force activate only
+				}
 			}
 		}
 	}

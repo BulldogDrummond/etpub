@@ -84,6 +84,7 @@ static const cmd_reference_t aCommandInfo[] = {
 //	{ "viewremove",		qfalse,	qtrue,	NULL, " [player_ID]:^7 Removes current selected or specific player from multi-screen view" },
 //
 	{ "hitsounds",		qtrue,	qtrue,	G_hitsounds_cmd, " toggles hitsounds "},
+	{ "dropweapon", qtrue, qtrue, G_dropWeapon_cmd, ":^7 drops your primary weapon"}, // Terifire
 	{ 0,				qfalse,	qtrue,  NULL, 0 }
 };
 
@@ -794,4 +795,22 @@ void G_hitsounds_cmd(gentity_t *ent, unsigned int dwCommand, qboolean fValue)
 	else {
 		CP("print \"usage: hitsounds [on|off]\n\"");
 	}
+}
+
+void G_dropWeapon_cmd(gentity_t *ent, unsigned int dwCommand, qboolean fValue) // Terifire
+{
+	weapon_t primaryWeapon;
+	
+	if( g_gamestate.integer == GS_INTERMISSION || 
+			ent->client->sess.sessionTeam == TEAM_SPECTATOR ||
+			ent->health <= 0 ) { // Don't dropweapon if spec or dead
+		return;
+	}
+
+	primaryWeapon = G_GetPrimaryWeaponForClient( ent->client );
+	if( primaryWeapon ) {
+		// drop our primary weapon
+		G_DropWeapon( ent, primaryWeapon );
+		CP("print \"Weapon dropped!\n\""); // Suprime
+	}	
 }

@@ -471,7 +471,7 @@ static void CG_Obituary( entityState_t *ent ) {
 		if( ci->team == ca->team ) {
 			tk = qtrue;
 			if ( cg_obituary.integer < 2 ) {
-				message = "^1WAS KILLED BY TEAMMATE^7";
+				message = "^7WAS KILLED BY TEAMMATE^7";
 				message2="";
 			}
 		}
@@ -2163,7 +2163,7 @@ void CG_EntityEvent( centity_t *cent, vec3_t position ) {
 			trap_S_StartSound (NULL, es->number, CHAN_AUTO, cgs.media.noAmmoSound );
 
 		if( es->number == cg.snap->ps.clientNum && (
-		    ( cg_noAmmoAutoSwitch.integer > 0 && !CG_WeaponSelectable( cg.weaponSelect ) ) ||
+		    ( ( es->eventParm ? 1 : cg_noAmmoAutoSwitch.integer ) && !CG_WeaponSelectable( cg.weaponSelect ) ) ||
 			es->weapon == WP_MORTAR_SET ||
 			es->weapon == WP_MOBILE_MG42_SET ||
 			es->weapon == WP_GRENADE_LAUNCHER ||

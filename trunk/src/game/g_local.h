@@ -3030,8 +3030,7 @@ void G_weaponStats_cmd(gentity_t *ent, unsigned int dwCommand, qboolean fDump);
 void G_weaponStatsLeaders_cmd(gentity_t* ent, qboolean doTop, qboolean doWindow);
 void G_VoiceTo( gentity_t *ent, gentity_t *other, int mode, const char *id, qboolean voiceonly );
 void G_hitsounds_cmd(gentity_t *ent, unsigned int dwCommand, qboolean fValue);
-
-
+void G_dropWeapon_cmd(gentity_t *ent, unsigned int dwCommand, qboolean fValue);
 
 ///////////////////////
 // g_config.c

@@ -1376,10 +1376,11 @@ void CG_InitConsoleCommands( void ) {
 	trap_AddCommand("throwknife");
 	trap_AddCommand("adrenother");
 	trap_AddCommand("knives");
-	trap_AddCommand ("class");
-	trap_AddCommand ("nextteam");
+	trap_AddCommand("class");
+	trap_AddCommand("nextteam");
 
-	
+	trap_AddCommand("dropweapon"); // Terifire
+
 	// tjw: remove engine commands
 	trap_RemoveCommand("+lookup");
 	trap_RemoveCommand("-lookup");

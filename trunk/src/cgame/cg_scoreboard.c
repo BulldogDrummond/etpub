@@ -606,6 +606,11 @@ static void WM_DrawClientScore_Small( int x, int y, score_t *score, float *color
 		const char *s;
 		int w, totalwidth;
 
+		// Dens: we don't want any changes here
+		if(!show_lives){
+			tempx -= INFO_LIVES_WIDTH;
+		}
+
 		totalwidth = INFO_CLASS_WIDTH + INFO_SCORE_WIDTH + INFO_LATENCY_WIDTH - 8;
 
 		s = CG_TranslateString( "^3CONNECTING" );
@@ -619,6 +624,11 @@ static void WM_DrawClientScore_Small( int x, int y, score_t *score, float *color
 	if ( score->ping == 999) {
 		const char *s;
 		int w, totalwidth;
+
+		// Dens: we don't want any changes here
+		if(!show_lives){
+			tempx -= INFO_LIVES_WIDTH;
+		}
 		
 		totalwidth = INFO_CLASS_WIDTH + INFO_SCORE_WIDTH + INFO_LATENCY_WIDTH - 8;
 		

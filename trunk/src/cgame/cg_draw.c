@@ -2880,12 +2880,18 @@ CG_DrawSpectator
 =================
 */
 static void CG_DrawSpectator(void) {
-	float alpha = cg_specAlpha.value;
-
+//	float alpha = cg_specAlpha.value;
+	int w, cw = 10;
+	char *s;
 	// kw: don't show if bannerprinting
+	/*
 	if(cg.bannerPrintTime)
 		alpha = 0.2f;
-	CG_DrawBigString( 320 - 9 * 8, 0, CG_TranslateString( "SPECTATOR" ), alpha );
+	*/
+	s = va( "%s", CG_TranslateString("SPECTATOR") );
+	w = CG_DrawStrlen( s );
+	CG_DrawStringExt( 320 - w * cw/2, 32, s, colorWhite,  // Elf
+		qfalse, qtrue, cw, cw * 3 / 2, 0 );
 }
 
 /*
@@ -3671,11 +3677,11 @@ static void CG_DrawWarmup( void ) {
 	const char	*s, *s1, *s2;
 
 	sec = cg.warmup;
+	cw = 10;
 	if(!sec) {
 		if((cgs.gamestate == GS_WARMUP && !cg.warmup) || cgs.gamestate == GS_WAITING_FOR_PLAYERS) {
-			cw = 10;
 
-			s1 = va( CG_TranslateString( "^3WARMUP:^7 Waiting on ^2%i^7 %s" ), cgs.minclients, cgs.minclients == 1 ? "player" : "players" );
+			s1 = va( CG_TranslateString( "^7WARMUP: Waiting on ^2%i^7 %s" ), cgs.minclients, cgs.minclients == 1 ? "player" : "players" );
 			w = CG_DrawStrlen( s1 );
 			CG_DrawStringExt(320 - w * cw/2, 0, s1, colorWhite, qfalse, qtrue, cw, cw * 3 / 2, 0);
 
@@ -3729,7 +3735,7 @@ static void CG_DrawWarmup( void ) {
 		s = va( "%s %i", CG_TranslateString( "(WARMUP) Match begins in:" ), sec + 1 );
 
 	w = CG_DrawStrlen( s );
-	CG_DrawStringExt( 320 - w * cw / 2, 0, s, colorYellow, qfalse, qtrue, cw, cw * 3 / 2, 0 );
+	CG_DrawStringExt( 320 - w * cw / 2, 0, s, colorWhite, qfalse, qtrue, cw, cw * 3 / 2, 0 );
 
 	// NERVE - SMF - stopwatch stuff
 	s1 = "";
@@ -3745,43 +3751,42 @@ static void CG_DrawWarmup( void ) {
 		defender = atoi( Info_ValueForKey( cs, "defender" ) );
 
 		if ( !defender ) {
-			if ( cg.snap->ps.persistant[PERS_TEAM] == TEAM_AXIS ) {
-				if ( cgs.currentRound == 1 ) {
-					s1 = "You have been switched to the Axis team";
-					s2 = "Keep the Allies from beating the clock!";
-				}
-				else {
-					s1 = "You are on the Axis team";
-				}
+			switch( cg.snap->ps.persistant[PERS_TEAM] ) {
+				case TEAM_AXIS:
+					if ( cgs.currentRound == 1 ) {
+						s1 = "You have been switched to the Axis team";
+						s2 = "Keep the Allies from beating the clock!";
+					} else {
+						s1 = "You are on the Axis team";
+					}
+					break;
+				case TEAM_ALLIES:
+					if ( cgs.currentRound == 1 ) {
+						s1 = "You have been switched to the Allied team";
+						s2 = "Try to beat the clock!";
+					} else {
+						s1 = "You are on the Allied team";
+					}
+					break;
 			}
-			else if ( cg.snap->ps.persistant[PERS_TEAM] == TEAM_ALLIES ) {
-				if ( cgs.currentRound == 1 ) {
-					s1 = "You have been switched to the Allied team";
-					s2 = "Try to beat the clock!";
-				}
-				else {
-					s1 = "You are on the Allied team";
-				}
-			}
-		}
-		else {
-			if ( cg.snap->ps.persistant[PERS_TEAM] == TEAM_AXIS ) {
-				if ( cgs.currentRound == 1 ) {
-					s1 = "You have been switched to the Axis team";
-					s2 = "Try to beat the clock!";
-				}
-				else {
-					s1 = "You are on the Axis team";
-				}
-			}
-			else if ( cg.snap->ps.persistant[PERS_TEAM] == TEAM_ALLIES ) {
-				if ( cgs.currentRound == 1 ) {
-					s1 = "You have been switched to the Allied team";
-					s2 = "Keep the Axis from beating the clock!";
-				}
-				else {
-					s1 = "You are on the Allied team";
-				}
+		} else {
+			switch( cg.snap->ps.persistant[PERS_TEAM] ) {
+				case TEAM_AXIS:
+					if ( cgs.currentRound == 1 ) {
+						s1 = "You have been switched to the Axis team";
+						s2 = "Try to beat the clock!";
+					} else {
+						s1 = "You are on the Axis team";
+					}
+					break;
+				case TEAM_ALLIES:
+					if ( cgs.currentRound == 1 ) {
+						s1 = "You have been switched to the Allied team";
+						s2 = "Keep the Axis from beating the clock!";
+					} else {
+						s1 = "You are on the Allied team";
+					}
+					break;
 			}
 		}
 

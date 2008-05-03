@@ -1966,3 +1966,5 @@
            command: g_customVoiceChats
 * quad:    added GeoIP country flags in scoreboard, made by mcwf
            g_scoreboard_cf / cg_scoreboard_cf
+* quad:    backstab works on wounded players (instant gib) by Elf
+
