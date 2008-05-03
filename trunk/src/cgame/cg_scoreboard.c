@@ -24,6 +24,31 @@ WM_DrawObjectives
 #define INFO_LINE_HEIGHT		30
 #define INFO_TOTAL_WIDTH		(INFO_PLAYER_WIDTH + INFO_CLASS_WIDTH + INFO_SCORE_WIDTH + INFO_LATENCY_WIDTH)
 
+//mcwf GeoIP
+qboolean cf_draw(float x, float y, float fade, int clientNum) {
+
+        float alpha[4];
+        float flag_step = 32;
+        unsigned int flag_sd = 512;
+        unsigned int client_flag = atoi(Info_ValueForKey(CG_ConfigString(clientNum + CS_PLAYERS),"uci"));
+
+
+        if (client_flag < 255) {
+        float x1 = (float)((client_flag * (unsigned int)flag_step) % flag_sd);
+        float y1 = (float)(floor((client_flag * flag_step) / flag_sd) * flag_step);
+        float x2 = x1 + flag_step;
+        float y2 = y1 + flag_step;
+        alpha[0] = alpha[1] = alpha[2] = 1.0; alpha[3] = fade;
+
+        trap_R_SetColor(alpha);
+        CG_DrawPicST(x, y, flag_step, flag_step, x1/flag_sd, y1/flag_sd, x2/flag_sd , y2/flag_sd, cgs.media.countryFlags);
+        trap_R_SetColor(NULL);
+        return qtrue;
+        }
+        return qfalse;
+}
+//mcwf GeoIP
+
 int WM_DrawObjectives( int x, int y, int width, float fade ) {
 	const char *s, *str;
 	int tempy, rows;
@@ -283,6 +308,17 @@ static void WM_DrawClientScore( int x, int y, score_t *score, float *color, floa
 		}
 	}
 
+        //mcwf GeoIP
+        // draw flag before name
+        if ((score->ping != -1) && (score->ping != 999) && (cg_scoreboard_cf.integer)) {
+                if(cf_draw(tempx-11, y-8, fade, ci->clientNum)) {
+                        offset += 14;
+                        tempx += 14;
+                        maxchars -= 2;
+                }
+        }
+        //mcwf GeoIP
+
 	// draw name
 	CG_DrawStringExt( tempx, y, ci->name, hcolor, qfalse, qfalse, SMALLCHAR_WIDTH, SMALLCHAR_HEIGHT, maxchars );
 	maxchars -= CG_DrawStrlen( ci->name );
@@ -498,6 +534,17 @@ static void WM_DrawClientScore_Small( int x, int y, score_t *score, float *color
 			maxchars -= 2;
 		} 
 	}
+
+        //mcwf GeoIP
+        // draw flag before name
+        if ((score->ping != -1) && (score->ping != 999) && (cg_scoreboard_cf.integer)) {
+                if(cf_draw(tempx-11, y-10, fade, ci->clientNum)) {
+                        offset += 14;
+                        tempx += 14;
+                        maxchars -= 2;
+                }
+        }
+        //mcwf GeoIP
 
 	// draw name
 	CG_DrawStringExt( tempx, y, ci->name, hcolor, qfalse, qfalse, MINICHAR_WIDTH, MINICHAR_HEIGHT, maxchars );

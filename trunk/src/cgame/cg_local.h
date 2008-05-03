@@ -1892,6 +1892,7 @@ typedef struct {
 
 	qhandle_t		axisFlag;
 	qhandle_t		alliedFlag;
+	qhandle_t		countryFlags; //mcwf GeoIP
 
 	qhandle_t		disconnectIcon;
 
@@ -2543,6 +2544,7 @@ extern	vmCvar_t		cg_watermarkAlpha;
 extern	vmCvar_t		cg_weapaltReloads;
 extern	vmCvar_t		cg_drawRanks;
 extern	vmCvar_t		cg_drawClassIcons;
+extern	vmCvar_t		cg_scoreboard_cf; //mcwf GeoIP
 extern	vmCvar_t		cg_drawCrosshairHP;
 
 // Dens: dyno counter

@@ -392,3 +392,5 @@ current
 * tijmen:  added custom voicechats, which can also be disables clientside
            with cg_customVoiceChats
 * terifire:added cg_damageKick for controling the damage kick, check docs.           TODO: Should be limited by the server.
+* elf:     added cg_tracers
+* quad:    added GeoIP country flags in scoreboard, made by mcwf.

@@ -690,6 +690,7 @@ typedef struct {
 	char guid[33];
 	// Dens: added to prevent spoofing
 	char ip[22];
+	unsigned int uci; //mcwf GeoIP
 
 	// tjw
 	int ATB_count;
@@ -2495,6 +2496,8 @@ extern vmCvar_t g_healthSpeedBottom;
 extern vmCvar_t g_damageBonus;
 extern vmCvar_t g_damageBonusOpts;
 
+extern vmCvar_t g_scoreboard_cf; //mcwf GeoIP
+
 void	trap_Printf( const char *fmt );
 void	trap_Error( const char *fmt );
 int		trap_Milliseconds( void );
@@ -3607,5 +3610,20 @@ void EnableCoreDumps();
 void DisableCoreDumps();
 void EnableStackTrace();
 void DisableStackTrace();
+
+//mcwf GeoIP
+typedef struct GeoIPTag {
+    fileHandle_t GeoIPDatabase;
+        unsigned char * cache;
+	unsigned int memsize;
+} GeoIP;
+
+unsigned long GeoIP_addr_to_num(const char *addr);
+unsigned int GeoIP_seek_record(GeoIP *gi, unsigned long ipnum);
+void GeoIP_open(void);
+void GeoIP_close(void);
+
+extern GeoIP * gidb;
+//mcwf GeoIP
 
 #endif

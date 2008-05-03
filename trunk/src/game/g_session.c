@@ -71,7 +71,8 @@ void G_WriteClientSessionData( gclient_t *client, qboolean restart )
 		client->sess.ATB_count,
 		// Dens: Needs to be saved to prevent spoofing
 		client->sess.guid ? client->sess.guid : "NOGUID",
-		client->sess.ip ? client->sess.ip : "NOIP"
+		client->sess.ip ? client->sess.ip : "NOIP",
+		client->sess.uci//mcwf GeoIP
 		);
 
 	trap_Cvar_Set( va( "session%i", client - level.clients ), s );
@@ -185,7 +186,7 @@ void G_ReadSessionData( gclient_t *client )
 
 	trap_Cvar_VariableStringBuffer( va( "session%i", client - level.clients ), s, sizeof(s) );
 
-	sscanf( s, "%i %i %i %i %i %i %i %i %i %i %i %i %i %i %f %f %f %f %i %i %i %i %i %i %i %i %i %i %i %i %i %s %s",
+	sscanf( s, "%i %i %i %i %i %i %i %i %i %i %i %i %i %i %f %f %f %f %i %i %i %i %i %i %i %i %i %i %i %i %i %s %s %u", //mcwf GeoIP
 		(int *)&client->sess.sessionTeam,
 		&client->sess.spectatorTime,
 		(int *)&client->sess.spectatorState,
@@ -226,7 +227,8 @@ void G_ReadSessionData( gclient_t *client )
 		&client->sess.ATB_count,
 		// Dens: Needed to prevent spoofing
 		client->sess.guid,
-		client->sess.ip
+		client->sess.ip,
+		&client->sess.uci//mcwf GeoIP
 		);
 
 	// OSP -- reinstate MV clients
@@ -381,6 +383,8 @@ void G_InitSessionData( gclient_t *client, char *userinfo ) {
 	//  rating = player rating now
 	sess->rating = 0.0;
 	sess->rating_variance = SIGMA2_THETA;
+
+	sess->uci = 0;//mcwf GeoIP
 
 	G_WriteClientSessionData( client, qfalse );
 }

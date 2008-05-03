@@ -532,6 +532,8 @@ vmCvar_t g_healthSpeedBottom;
 vmCvar_t g_damageBonus;
 vmCvar_t g_damageBonusOpts;
 
+vmCvar_t g_scoreboard_cf; //mcwf GeoIP
+
 cvarTable_t		gameCvarTable[] = {
 	// don't override the cheat state set by the system
 	{ &g_cheats, "sv_cheats", "", 0, qfalse },
@@ -1057,6 +1059,8 @@ cvarTable_t		gameCvarTable[] = {
 	{ &g_healthSpeedBottom, "g_healthSpeedBottom", "50.0", 0},
 	{ &g_damageBonus, "g_damageBonus", "20.0", 0},
 	{ &g_damageBonusOpts, "g_damageBonusOpts", "0", 0},
+
+	{ &g_scoreboard_cf, "g_scoreboard_cf", "1", 0}, //mcwf GeoIP
 
 	{ NULL, "mod_version", ETPUB_VERSION, CVAR_SERVERINFO | CVAR_ROM },
 	{ NULL, "mod_url", "http://etpub.org", CVAR_SERVERINFO | CVAR_ROM },
@@ -2879,6 +2883,10 @@ void G_InitGame( int levelTime, int randomSeed, int restart ) {
 		}
 	}
 
+        //mcwf GeoIP
+        GeoIP_open(); //open/update
+        //mcwf GeoIP
+
 	/*Dens: Removed the warning
 	// forty - fixed physics
 	if(g_fixedphysics.integer) {
@@ -2925,6 +2933,9 @@ void G_ShutdownGame( int restart ) {
 
 	// write all the client session data so we can get it back
 	G_WriteSessionData( restart );
+
+	// redeye/mcwf - release allocated GeoIP stuff
+	GeoIP_close();
 
 #ifndef NO_BOT_SUPPORT
 	if ( bot_enable.integer ) {
