@@ -1095,6 +1095,39 @@ static void CG_LoadFont_f(void)
 	}
 }
 
+//quad: etpro style enemy spawntimer
+void CG_TimerSet_f( void )
+{
+	int spawnPeriod, msec;
+	char buff[32] = {""};
+
+	if (cg.warmup)
+	{
+		CG_Printf("You may only use this command during the match.\n");
+		return;
+	}
+
+	if (trap_Argc() == 1)
+	{
+		trap_Cvar_Set("cg_spawnTimer_set", "-1");
+	}
+	else if (trap_Argc() == 2)
+	{
+		trap_Argv( 1, buff, sizeof(buff) );
+		spawnPeriod = atoi(buff);
+		if (spawnPeriod < 1 || spawnPeriod > 60)
+			CG_Printf("Argument must be a number between 1 and 60.\n");
+		else
+		{
+			msec = ( cgs.timelimit * 60.f * 1000.f ) - ( cg.time - cgs.levelStartTime );
+			trap_Cvar_Set("cg_spawnTimer_period", buff);
+			trap_Cvar_Set("cg_spawnTimer_set", va("%d", msec/1000));
+		}
+	}
+	else
+		CG_Printf("Usage: timerSet [seconds]\n");
+}
+
 typedef struct {
 	char	*cmd;
 	void	(*function)(void);
@@ -1215,6 +1248,9 @@ static consoleCommand_t	commands[] =
 	{ "cancelhudmenucmd", CG_CancelHudMenu_f },
 
 	{ "scoreboard", CG_Scoreboard_f },
+
+	//quad: spawntimer
+	{ "timerSet", CG_TimerSet_f },
 };
 
 
@@ -1380,6 +1416,7 @@ void CG_InitConsoleCommands( void ) {
 	trap_AddCommand("nextteam");
 
 	trap_AddCommand("dropweapon"); // Terifire
+	trap_AddCommand("timerset");
 
 	// tjw: remove engine commands
 	trap_RemoveCommand("+lookup");

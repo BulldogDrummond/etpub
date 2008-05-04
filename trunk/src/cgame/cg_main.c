@@ -367,6 +367,8 @@ vmCvar_t	cg_maxEnemyDynas;
 vmCvar_t	cg_fireTeamOptions;
 vmCvar_t	cg_hitSounds; // Elf
 vmCvar_t	cg_damageKick; // Terifire
+vmCvar_t	cg_spawnTimer_set;//quad
+vmCvar_t	cg_spawnTimer_period;//quad
 
 typedef struct {
 	vmCvar_t	*vmCvar;
@@ -666,7 +668,9 @@ cvarTable_t		cvarTable[] = {
 	{ &cg_drawCrosshairHP, "cg_drawCrosshairHP", "0", CVAR_ARCHIVE },
 	{ &cg_fireTeamOptions, "cg_fireTeamOptions", "0", CVAR_ARCHIVE },
 	{ &cg_hitSounds, "cg_hitSounds", "1", CVAR_ARCHIVE | CVAR_USERINFO }, // Elf
-	{ &cg_damageKick, "cg_damageKick", "1", CVAR_ARCHIVE }	// Terifire
+	{ &cg_damageKick, "cg_damageKick", "1", CVAR_ARCHIVE },	// Terifire
+	{ &cg_spawnTimer_set, "cg_spawnTimer_set", "-1", CVAR_TEMP }, //quad
+	{ &cg_spawnTimer_period, "cg_spawnTimer_period", "20", CVAR_TEMP }, //quad
 };
 
 int		cvarTableSize = sizeof( cvarTable ) / sizeof( cvarTable[0] );

@@ -659,6 +659,11 @@ static float CG_DrawTimer( float y ) {
 		color[3] = 1.f;
 	}
 
+	//quad: spawntimer
+	seconds = msec/1000;
+	if (cg_spawnTimer_set.integer != -1 && cg_spawnTimer_period.integer>0)
+		s = va( "^1%d %s", cg_spawnTimer_period.integer+(seconds-cg_spawnTimer_set.integer)%cg_spawnTimer_period.integer, s);
+
 	w = CG_Text_Width_Ext( s, 0.19f, 0, &cgs.media.font1 );
 
 	CG_FillRect( UPPERRIGHT_X - w - 2, y, w + 5, 12 + 2, timerBackground );

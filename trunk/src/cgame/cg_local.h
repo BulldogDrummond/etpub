@@ -2558,6 +2558,8 @@ extern vmCvar_t			cg_logConsole;
 extern vmCvar_t			cg_fireTeamOptions;
 extern vmCvar_t			cg_hitSounds;
 extern vmCvar_t			cg_damageKick;
+extern vmCvar_t			cg_spawnTimer_period;
+extern vmCvar_t			cg_spawnTimer_set;
 
 #define FTOPTS_AUTO_MEMBER_SELECT 1
 

@@ -395,5 +395,6 @@ current
 * quad:    added cg_tracers by Elf Friend
 * quad:    added GeoIP country flags in scoreboard, made by mcwf.
 * quad:    added dropweapon command by Terifire
-* quad:    show not-gibbed indicator in fireteam & show total time in warmup
-
+* quad:    show not-gibbed indicator in fireteam & show level time in warmup
+* quad:    added timerSet command for enemy spawntimer
+           Note: stores data in temp cvar, it won't be lost on vid_restart.
