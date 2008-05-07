@@ -19,11 +19,11 @@ all: depend $(LIBS)
 
 cgame.mp.i386.so: $(ALL_OBJECTS)
 	$(CC) $(LDFLAGS) $(ALL_OBJECTS) -o $@
-	${STRIP} $@
+	#${STRIP} $@
 
 cgame_mp_x86.dll: $(WIN_ALL_OBJECTS)
 	$(MINGW) $(WIN_LDFLAGS) $(WIN_ALL_OBJECTS) /usr/i586-mingw32msvc/lib/libpsapi.a -o $@
-	${WIN_STRIP} $@
+	#${WIN_STRIP} $@
 
 depend: $(SRCS)
 	touch Makefile.depend

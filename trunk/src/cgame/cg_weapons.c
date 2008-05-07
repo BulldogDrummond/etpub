@@ -2633,10 +2633,11 @@ void CG_AddPlayerWeapon( refEntity_t *parent, playerState_t *ps, centity_t *cent
 			if ( cg.time - cent->muzzleFlashTime < MUZZLE_FLASH_TIME ) {
 			//if (firing) {	// Ridah
 				// forty - muzzleflash
-				if(isPlayer && cg_muzzleFlash.integer)
+				if(isPlayer && cg_muzzleFlash.integer) {
 					trap_R_AddRefEntityToScene( &flash );
-				else if(!isPlayer)
+				} else if(!isPlayer) {
 					trap_R_AddRefEntityToScene( &flash );
+				}
 			}
 		}
 	}

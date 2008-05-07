@@ -1,6 +1,6 @@
 SRCS=$(wildcard *.c)
 SRCSCPP=$(wildcard *.cpp) ../../Omnibot/Common/BotLoadLibrary.cpp
-OBJECTS=$(subst .c,.o,$(SRCS)) $(subst .cpp,.o,$(SRCSCPP))
+OBJECTS=$(subst .c,.o,$(SRCS)) $(subst .cpp,.oxx,$(SRCSCPP))
 ALL_OBJECTS=$(OBJECTS)
 
 UI_OBJECTS=../game/bg_campaign.ui ../game/bg_classes.ui ../game/bg_misc.ui ../game/q_math.ui ../game/q_shared.ui
@@ -21,7 +21,7 @@ all: qagame.mp.i386.so $(UI) $(CGAME)
 
 qagame.mp.i386.so: botai depend $(ALL_OBJECTS)
 	$(CXX) $(LDFLAGS) $(ALL_OBJECTS) $(wildcard ../botai/*.bai) -o $@
-	${STRIP} $@
+	#${STRIP} $@
 
 botai: 
 	$(MAKE) -C ../botai
@@ -37,6 +37,9 @@ depend: $(SRCS)
 
 %.o: %.c
 	$(CC) -c $(CFLAGS) $< -o $@
+	
+%.oxx: %.cpp
+	$(CXX) -c $(CXXFLAGS) $< -o $@
 
 %.ui: %.c
 	$(CC) -c $(UI_CFLAGS) $< -o $@
@@ -52,7 +55,8 @@ depend: $(SRCS)
 	
 clean:
 	$(MAKE) -C ../botai clean
-	-rm qagame.mp.i386.so *.o *.ui *.wui *.cg *.wcg Makefile.depend*
+	-rm qagame.mp.i386.so *.o *.oxx *.ui *.wui *.cg *.wcg Makefile.depend*
+	-rm ../../Omnibot/Common/BotLoadLibrary.oxx
 
 -include Makefile.depend
 

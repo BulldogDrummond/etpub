@@ -1101,7 +1101,7 @@ void CG_TimerSet_f( void )
 	int spawnPeriod, msec;
 	char buff[32] = {""};
 
-	if (cg.warmup)
+	if (cgs.gamestate != GS_PLAYING)
 	{
 		CG_Printf("You may only use this command during the match.\n");
 		return;
@@ -1251,6 +1251,7 @@ static consoleCommand_t	commands[] =
 
 	//quad: spawntimer
 	{ "timerSet", CG_TimerSet_f },
+
 };
 
 

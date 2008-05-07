@@ -19,11 +19,11 @@ all: depend $(LIBS) $(CGAME)
 
 ui.mp.i386.so: $(ALL_OBJECTS)
 	$(CC) $(LDFLAGS) $(ALL_OBJECTS) -o $@
-	${STRIP} $@
+	#${STRIP} $@
 
 ui_mp_x86.dll: $(WIN_ALL_OBJECTS)
 	$(MINGW) $(UI_WIN_LDFLAGS) $(WIN_ALL_OBJECTS) -o $@
-	${WIN_STRIP} $@
+	#${WIN_STRIP} $@
 
 %.ui: %.c
 	$(CC) -c $(CGAME_CFLAGS) $< -o $@

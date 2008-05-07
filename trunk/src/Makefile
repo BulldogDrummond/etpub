@@ -2,8 +2,8 @@ OPT=-O3
 SERVER=qagame.mp.i386.so
 CLIENT=etpub.pk3
 CLIENT_OBJECTS=cgame.mp.i386.so cgame_mp_x86.dll ui.mp.i386.so ui_mp_x86.dll
-CC=gcc
-CXX=g++
+CC=gcc-3.3
+CXX=g++-3.3
 MINGW=i586-mingw32msvc-gcc
 MINGWXX=i586-mingw32msvc-g++
 GAME_FLAGS=-march=pentium4 -DGAMEDLL -DUSE_MDXFILE -DTHREADS

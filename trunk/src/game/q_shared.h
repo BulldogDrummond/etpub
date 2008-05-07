@@ -8,7 +8,7 @@
 //#define PRE_RELEASE_DEMO
 
 #ifndef PRE_RELEASE_DEMO
-#define	Q3_VERSION		"ET 2.60c"
+#define	Q3_VERSION		"ET 2.60b"
 #else
 #define	Q3_VERSION		"ET 2.32"
 #endif // PRE_RELEASE_DEMO
