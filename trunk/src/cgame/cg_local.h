@@ -3874,4 +3874,8 @@ void CG_CancelHudMenu_f(void);
 
 extern qboolean resetmaxspeed;
 
+// yada - crash info stuff from qagame
+void EnableStackTrace();
+void DisableStackTrace();
+
 #endif
