@@ -3,6 +3,8 @@
 
 // g_client.c -- client functions that don't happen every frame
 
+extern vmCvar_t g_panzerwar, g_sniperwar, g_riflewar;
+
 // Ridah, new bounding box
 //static vec3_t	playerMins = {-15, -15, -24};
 //static vec3_t	playerMaxs = {15, 15, 32};
@@ -1470,6 +1472,58 @@ qboolean _SetCovertSpawnWeapons(gclient_t *client)
 	return qtrue;
 }
 
+qboolean G_SetPanzerOnly(gclient_t *client)
+{
+  AddWeaponToPlayer(client, WP_PANZERFAUST, 0, 9999, qtrue);
+  AddWeaponToPlayer(client, WP_KNIFE, 0, 0, qfalse);
+  if (client->sess.sessionTeam == TEAM_AXIS) {
+    AddWeaponToPlayer(client, WP_GRENADE_LAUNCHER, 0, 45, qfalse);
+  } else {
+    AddWeaponToPlayer(client, WP_GRENADE_PINEAPPLE, 0, 45, qfalse);
+  }
+  return qtrue;
+}
+
+qboolean G_SetSniperOnly(gclient_t *client)
+{
+  weapon_t w, ws;
+  int maxammo = 390, startclip;
+
+  if (client->sess.sessionTeam == TEAM_AXIS) {
+    w = WP_K43;
+    ws = WP_K43_SCOPE;
+    startclip = 10;
+  } else //if (client->sess.sessionTeam == TEAM_ALLIES) 
+  {
+    w = WP_GARAND;
+    ws = WP_GARAND_SCOPE;
+    startclip = 10;
+  }
+  AddWeaponToPlayer(client, w, 0, 0, qtrue);
+  AddWeaponToPlayer(client, ws, maxammo, startclip, qfalse);
+  return qtrue;
+}
+
+qboolean G_SetRifleOnly(gclient_t *client)
+{
+  weapon_t w, ws;
+  int maxammo = 200, startclip;
+
+  if (client->sess.sessionTeam == TEAM_AXIS) {
+    w = WP_KAR98;
+    ws = WP_GPG40;
+    startclip = 10;
+  } else //if (client->sess.sessionTeam == TEAM_ALLIES) 
+  {
+    w = WP_CARBINE;
+    ws = WP_M7;
+    startclip = 10;
+  }
+  AddWeaponToPlayer(client, w, 200, 10, qtrue);
+  AddWeaponToPlayer(client, ws, maxammo, startclip, qfalse);
+  return qtrue;
+}
+
 void G_SetKnifeOnly(gclient_t *client, int pc)
 {
 	switch(pc) {
@@ -1599,7 +1653,22 @@ void SetWolfSpawnWeapons( gclient_t *client )
 	if(g_knifeonly.integer) {
 		G_SetKnifeOnly(client, pc);
 	}
+
+  if(g_panzerwar.integer) {
+    G_SetKnifeOnly(client, pc);
+    return G_SetPanzerOnly(client);
+  }
+
+  if(g_sniperwar.integer) {
+    G_SetKnifeOnly(client, pc);
+    return G_SetSniperOnly(client);
+  }
 	
+	if(g_riflewar.integer) {
+		G_SetKnifeOnly(client, pc);
+		return G_SetRifleOnly(client);
+	}
+
 	switch(pc) {
 		case PC_SOLDIER:
 			_SetSoldierSpawnWeapons(client);

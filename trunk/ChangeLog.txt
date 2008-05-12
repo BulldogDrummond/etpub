@@ -1967,4 +1967,6 @@
 * quad:    added GeoIP country flags in scoreboard, made by mcwf
            g_scoreboard_cf / cg_scoreboard_cf
 * quad:    backstab works on wounded players (instant gib) by Elf
+* quad:    added panzer/rifle/sniper war by Elf (was missing from the sources)
+           also !panzer, !sniper, !riflewar, and !giba, !splat, !splata
 

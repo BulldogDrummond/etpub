@@ -182,6 +182,15 @@ void trap_Cvar_Set( const char *var_name, const char *value ) {
 	syscall( G_CVAR_SET, var_name, value );
 }
 
+void trap_Cvar_Setf( const char *var_name, const char *fmt, ...) {
+  va_list ap;
+  char cvs[MAX_CVAR_VALUE_STRING];
+
+  va_start(ap, fmt);
+  Q_vsnprintf(cvs, MAX_CVAR_VALUE_STRING, fmt, ap);
+  syscall( G_CVAR_SET, var_name, cvs);
+}
+
 int trap_Cvar_VariableIntegerValue( const char *var_name ) {
 	return syscall( G_CVAR_VARIABLE_INTEGER_VALUE, var_name );
 }

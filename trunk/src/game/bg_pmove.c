@@ -686,6 +686,7 @@ static void PM_Accelerate( vec3_t wishdir, float wishspeed, float accel ) {
 	extern vmCvar_t			cg_movespeed;
 #endif
 #ifdef GAMEDLL
+	extern	vmCvar_t		g_panzerwar;
 	extern	vmCvar_t		g_gametype;
 	extern	vmCvar_t		g_movespeed;
 #endif
@@ -742,16 +743,22 @@ static float PM_CmdScale( usercmd_t *cmd ) {
 // full speed.  not completely realistic (well, sure, you can run faster with the weapon strapped to your
 // back than in carry position) but more fun to play.  If it doesn't play well this way we'll bog down the
 // player if the own the weapon at all.
-	if ((pm->ps->weapon == WP_PANZERFAUST) ||
-		(pm->ps->weapon == WP_MOBILE_MG42) ||
-		(pm->ps->weapon == WP_MOBILE_MG42_SET) ||
-		(pm->ps->weapon == WP_MORTAR)) {
-		if( pm->skill[SK_HEAVY_WEAPONS] >= 3 ) {
-			scale *= 0.75;
-		} else {
-			scale *= 0.5;
+#ifdef GAMEDLL    
+ 	if (!g_panzerwar.integer) {
+#endif		
+		if ((pm->ps->weapon == WP_PANZERFAUST) ||
+			(pm->ps->weapon == WP_MOBILE_MG42) ||
+			(pm->ps->weapon == WP_MOBILE_MG42_SET) ||
+			(pm->ps->weapon == WP_MORTAR)) {
+			if( pm->skill[SK_HEAVY_WEAPONS] >= 3 ) {
+				scale *= 0.75;
+			} else {
+				scale *= 0.5;
+			}
 		}
+#ifdef GAMEDLL
 	}
+#endif
 	
 	if (pm->ps->weapon == WP_FLAMETHROWER) { // trying some different balance for the FT
 		if( !(pm->skill[SK_HEAVY_WEAPONS] >= 3) || pm->cmd.buttons & BUTTON_ATTACK )
@@ -4635,8 +4642,13 @@ static void PM_Weapon( void ) {
 	}
 
 	// JPW NERVE -- in multiplayer, pfaust fires once then switches to pistol since it's useless for a while
-	if ( (pm->ps->weapon == WP_PANZERFAUST) || (pm->ps->weapon == WP_SMOKE_MARKER ) || (pm->ps->weapon == WP_DYNAMITE) || (pm->ps->weapon == WP_SMOKE_BOMB) || (pm->ps->weapon == WP_LANDMINE) || (pm->ps->weapon == WP_SATCHEL))
-			PM_AddEvent( EV_NOAMMO );
+  if ( (pm->ps->weapon == WP_PANZERFAUST 
+#ifdef GAMEDLL // elf
+&& !g_panzerwar.integer
+#endif
+	) || (pm->ps->weapon == WP_SMOKE_MARKER ) || (pm->ps->weapon == WP_DYNAMITE) || (pm->ps->weapon == WP_SMOKE_BOMB) || (pm->ps->weapon == WP_LANDMINE) || (pm->ps->weapon == WP_SATCHEL)) {
+    PM_AddEvent( EV_NOAMMO );
+  }
 	// jpw
 
 	if( pm->ps->weapon == WP_SATCHEL ) {

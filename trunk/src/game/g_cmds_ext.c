@@ -83,7 +83,7 @@ static const cmd_reference_t aCommandInfo[] = {
 //	{ "viewnone",		qfalse,	qtrue,	NULL, ":^7 Disables multiview mode and goes back to spectator mode" },
 //	{ "viewremove",		qfalse,	qtrue,	NULL, " [player_ID]:^7 Removes current selected or specific player from multi-screen view" },
 //
-	{ "hitsounds",		qtrue,	qtrue,	G_hitsounds_cmd, " toggles hitsounds "},
+	{ "hitsounds",		qtrue,	qtrue,	G_hitsounds_cmd, ":^7 toggles hitsounds"},
 	{ "dropweapon", qtrue, qtrue, G_dropWeapon_cmd, ":^7 drops your primary weapon"}, // Terifire
 	{ 0,				qfalse,	qtrue,  NULL, 0 }
 };

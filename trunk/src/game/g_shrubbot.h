@@ -104,6 +104,9 @@ typedef struct g_shrubbot_warning {
 	char warner[MAX_NAME_LENGTH];
 } g_shrubbot_warning_t;
 
+#define WARPROTO(TYPE) \
+	qboolean G_shrubbot_ ## TYPE ## war(gentity_t *ent, int skiparg);
+
 qboolean G_shrubbot_tempban(int clientnum, char *reason, int length);
 qboolean G_shrubbot_ban_check(char *userinfo, char *reason);
 qboolean G_shrubbot_levelconnect_check(char *userinfo, char *reason);
@@ -129,6 +132,7 @@ qboolean G_shrubbot_spec999(gentity_t *ent, int skiparg);
 qboolean G_shrubbot_shuffle(gentity_t *ent, int skiparg);
 qboolean G_shrubbot_rename(gentity_t *ent, int skiparg);
 qboolean G_shrubbot_gib(gentity_t *ent, int skiparg);
+qboolean G_shrubbot_giba(gentity_t *ent, int skiparg);
 qboolean G_shrubbot_slap(gentity_t *ent, int skiparg);
 qboolean G_shrubbot_burn(gentity_t *ent, int skiparg);
 qboolean G_shrubbot_warn(gentity_t *ent, int skiparg);
@@ -137,6 +141,9 @@ qboolean G_shrubbot_lock(gentity_t *ent, int skiparg);
 qboolean G_shrubbot_unlock(gentity_t *ent, int skiparg);
 qboolean G_shrubbot_lockteams(gentity_t *ent, int skiparg, qboolean toLock);
 qboolean G_shrubbot_lol(gentity_t *ent, int skiparg);
+WARPROTO(panzer)
+WARPROTO(sniper)
+WARPROTO(rifle)
 qboolean G_shrubbot_pip(gentity_t *ent, int skiparg);
 qboolean G_shrubbot_pop(gentity_t *ent, int skiparg);
 qboolean G_shrubbot_reset(gentity_t *ent, int skiparg);

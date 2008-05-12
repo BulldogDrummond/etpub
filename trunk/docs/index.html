@@ -37,11 +37,11 @@ dt {
 <td><a href="#g_damageBonusOpts">g_damageBonusOpts</a></td>
 <td><a href="#g_panzerwar">g_panzerwar</a></td>
 <td><a href="#g_sniperwar">g_sniperwar</a></td>
-<td><a href="#g_customVoiceChats">g_customVoiceChats</a></td>
+<td><a href="#g_riflewar">g_riflewar</a></td>
 </tr>
 <tr>
+<td><a href="#g_customVoiceChats">g_customVoiceChats</a></td>
 <td><a href="#g_scoreBoard_cf">g_scoreBoard_cf</a></td>
-<td>&nbsp;</td>
 <td>&nbsp;</td>
 <td>&nbsp;</td>
 </tr>
@@ -55,7 +55,13 @@ dt {
 </tr><tr>
 <td><a href="#!panzerwar">panzerwar</a></td>
 <td><a href="#!sniperwar">sniperwar</a></td>
+<td><a href="#!riflewar">riflewar</a></td>
 <td><a href="#!gib">gib</a></td>
+</tr>
+<tr>
+<td><a href="#!giba">giba</a></td>
+<td><a href="#!splat">splat</a></td>
+<td><a href="#!splata">splata</a></td>
 <td>&nbsp;</td>
 </tr>
 </table>
@@ -3100,6 +3106,12 @@ every map requires an engi for example</p>
 <p>Enables/Disables Sniperwar. 1 is enabled, 0 is disabled</p>
 <p>Default is 0</p>
 
+<a name="g_riflewar"></a>
+<dt>g_riflewar [integer]
+<dd>
+<p>Enables/Disables Riflewar. 1 is enabled, 0 is disabled</p>
+<p>Default is 0</p>
+
 <a name="g_customVoiceChats"></a>
 <dt>g_customVoiceChats [integer]
 <dd>
@@ -4048,6 +4060,58 @@ etpub autobalance features)<br>
 	!sniperwar [on|off]
 	</td><td>
 	Enables sniperwar
+</td></tr>
+
+<tr><td>
+	<a name="!riflewar"></a>
+	!riflewar
+	</td><td>
+	q
+	</td><td>
+	-
+	</td><td>
+	!riflewar [on|off]
+	</td><td>
+	Enables riflewar
+</td></tr>
+
+<tr><td>
+	<a name="!giba"></a>
+	!giba
+	</td><td>
+	g
+	</td><td>
+	YES
+	</td><td>
+	!giba
+	</td><td>
+	kills and gibs all players
+</td></tr>
+
+<tr><td>
+	<a name="!splat"></a>
+	!splat
+	</td><td>
+	g
+	</td><td>
+	YES
+	</td><td>
+	!splat (NAME|SLOT|-1|all)
+	</td><td>
+	equivalent of !gib
+</td></tr>
+
+<tr><td>
+	<a name="!splata"></a>
+	!splata
+	</td><td>
+	g
+	</td><td>
+	YES
+	</td><td>
+	!splata
+	</td><td>
+	equivalent of !giba
 </td></tr>
 
 </table>

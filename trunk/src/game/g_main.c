@@ -35,6 +35,10 @@ vmCvar_t	g_OmniBotEnable;
 vmCvar_t	g_OmniBotPlaying;
 vmCvar_t	g_OmniBotFlags;
 
+vmCvar_t  g_panzerwar;
+vmCvar_t  g_sniperwar;
+vmCvar_t  g_riflewar;
+
 vmCvar_t	g_gametype;
 vmCvar_t	g_fraglimit;
 vmCvar_t	g_timelimit;
@@ -606,6 +610,10 @@ cvarTable_t		gameCvarTable[] = {
 	{ &g_filterBan, "g_filterBan", "1", CVAR_ARCHIVE, 0, qfalse },
 
 	{ &g_dedicated, "dedicated", "0", 0, 0, qfalse },
+
+  { &g_panzerwar, "g_panzerwar", "0", 0, 0, qtrue, qtrue },
+	{ &g_sniperwar, "g_sniperwar", "0", 0, 0, qtrue, qtrue },
+	{ &g_riflewar, "g_riflewar", "0", 0, 0, qtrue, qtrue },
 
 	{ &g_speed, "g_speed", "320", 0, 0, qtrue, qtrue },
 	{ &g_gravity, "g_gravity", "800", 0, 0, qtrue, qtrue },
@@ -2134,6 +2142,74 @@ void G_UpdateEtpubinfo(void)
 	trap_SetConfigstring(CS_ETPUBINFO, cs);
 }
 
+void G_PanzerWar()
+{
+  ammotable_t *panzer;
+  // Already enabled
+  panzer = GetAmmoTableData(WP_PANZERFAUST);
+
+  if (g_panzerwar.integer) {
+
+    panzer->maxammo = 9999;
+    panzer->nextShotTime = 800;
+    panzer->fireDelayTime = 0;
+
+    trap_Cvar_Set("g_dmgpanzer", "133");
+    trap_Cvar_Set("g_panzersspeed", "2000");
+
+  } else {
+
+    panzer->maxammo = 4;
+    panzer->nextShotTime = 2000;
+    panzer->fireDelayTime = 750;
+
+    trap_Cvar_Set("g_dmgpanzer", "400");
+    trap_Cvar_Set("g_panzerspeed", "2500");
+  }
+}
+
+void G_SniperWar()
+{
+  ammotable_t *garand, *k43;
+  // Already enabled;
+  garand = GetAmmoTableData(WP_GARAND);
+  k43 = GetAmmoTableData(WP_K43);
+  if (g_sniperwar.integer) {
+    garand->maxammo = 400;
+    k43->maxammo = 400;
+    trap_Cvar_Set("g_dmg_garand_scope", "70");
+    trap_Cvar_Set("g_dmg_k43_scope", "70");
+  } else {
+  	// TODO: Make sure this fits with the g_weapons flag for equalising 
+  	// the weapon constants.  (quad)
+    garand->maxammo = 24;
+    k43->maxammo = 30;
+    trap_Cvar_Set("g_dmg_garand_scope", "50");
+    trap_Cvar_Set("g_dmg_k43_scope", "50");
+  }
+}
+
+void G_RifleWar()
+{
+  ammotable_t *carbine, *m7, *kar98, *gpg40;
+  // Already enabled;
+  carbine = GetAmmoTableData(WP_CARBINE);
+  m7 = GetAmmoTableData(WP_M7);
+  kar98 = GetAmmoTableData(WP_KAR98);
+  gpg40 = GetAmmoTableData(WP_GPG40);
+  if (g_riflewar.integer) {
+    carbine->maxammo = 200;
+    m7->maxammo = 200;
+		kar98->maxammo = 200;
+		gpg40->maxammo = 200;
+  } else {
+    carbine->maxammo = 30;
+    m7->maxammo = 200;
+		kar98->maxammo = 4;
+		gpg40->maxammo = 4;
+  }
+}
+
 /*
 =================
 G_UpdateCvars
@@ -2157,6 +2233,13 @@ void G_UpdateCvars( void )
 
 				if ( cv->trackChange && !(cv->cvarFlags & CVAR_LATCH) ) {
 					trap_SendServerCommand( -1, va("print \"Server:[lof] %s [lon]changed to[lof] %s\n\"", cv->cvarName, cv->vmCvar->string ) );
+	          if(cv->vmCvar == &g_panzerwar) {
+            	G_PanzerWar();
+          	} else if(cv->vmCvar == &g_sniperwar) {
+            	G_SniperWar();						
+          	} else if(cv->vmCvar == &g_riflewar) {
+							G_RifleWar();
+						}
 				}
 
 				if (cv->teamShader) {

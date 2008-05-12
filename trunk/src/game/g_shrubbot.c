@@ -20,6 +20,12 @@ char *G_Shortcuts(gentity_t *ent, char *text);
 
 extern char bigTextBuffer[100000];
 
+extern vmCvar_t g_panzerwar, g_sniperwar, g_riflewar;
+
+#define WARCOMMAND(TYPE)\
+	{#TYPE "war", G_shrubbot_ ## TYPE ## war, 'G', 0,\
+		"enables/disables " #TYPE "war", "on|off"}
+	
 // note: list ordered alphabetically 
 static const struct g_shrubbot_cmd g_shrubbot_cmds[] = {
 	{"admintest",	G_shrubbot_admintest,	'a', 0,
@@ -45,6 +51,8 @@ static const struct g_shrubbot_cmd g_shrubbot_cmds[] = {
 		"fling all players", ""},
 	{"gib",		G_shrubbot_gib,		'g', SCMDF_TYRANNY,
 		"instantly gib a player", "[^3name|slot#^7]"},
+  {"giba",  G_shrubbot_giba,    'G', SCMDF_TYRANNY,
+    "instantly gib all players", ""},
 	{"help",	G_shrubbot_help,	'h', 0,
 		"display commands available to you or help on a specific command",
 		"(^hcommand^7)"},
@@ -76,6 +84,7 @@ static const struct g_shrubbot_cmd g_shrubbot_cmds[] = {
 		"go to the next map in the cycle", ""},
 	{"orient",	G_shrubbot_orient,	'd', SCMDF_TYRANNY,
 		"orient a player after a !disorient", "[^3name|slot#^7]"},
+	WARCOMMAND(panzer),
 	{"passvote",	G_shrubbot_passvote,	'V', 0,
 		"pass a vote currently taking place", ""},
 	{"pause",	G_shrubbot_pause,	'Z', 0,
@@ -101,6 +110,7 @@ static const struct g_shrubbot_cmd g_shrubbot_cmds[] = {
 		"reset the XP of a specified player to zero", "[^3name|slot#^7]"},
 	{"restart",	G_shrubbot_reset,	'r', 0,
 		"restart the current map", ""},
+	WARCOMMAND(rifle),
 	{"setlevel",	G_shrubbot_setlevel,	's', 0,
 		"sets the admin level of a player", "[^3name|slot#^7] [^3level^7]"},
 	{"showbans",	G_shrubbot_showbans,	'B', 0,
@@ -110,8 +120,13 @@ static const struct g_shrubbot_cmd g_shrubbot_cmds[] = {
 	{"slap",	G_shrubbot_slap,	'A', SCMDF_TYRANNY,
 		"give a player a specified amount of damage for a specified reason", 
 		"[^3name|slot#^7] (^hdamage^7) (^hreason^7)"},
+	WARCOMMAND(sniper),
 	{"spec999",	G_shrubbot_spec999,	'P', 0,
 		"move 999 pingers to the spectator team", ""},
+  {"splat",   G_shrubbot_gib,   'g', SCMDF_TYRANNY,
+    "instantly gib a player", "[^3name|slot#^7]"},
+  {"splata",  G_shrubbot_giba,    'G', SCMDF_TYRANNY,
+    "instantly gib all players", ""},
 	{"spreerecord",G_shrubbot_spreerecord, 't', 0,
 		"see the spreerecord of this map and the overall spreerecord", ""},
 	{"stats",G_shrubbot_stats, 't', 0,
@@ -3740,6 +3755,65 @@ qboolean G_shrubbot_nextmap(gentity_t *ent, int skiparg)
 	AP("chat \"^/nextmap: ^7Next map was loaded\" -1");
 	return qtrue;
 }
+
+qboolean G_shrubbot_giba(gentity_t *ent, int skiparg)
+{
+  int it;
+  gentity_t *vic;
+
+  for( it = 0; it < level.numConnectedClients; it++ ) {
+    vic = g_entities + level.sortedClients[it];
+    if( vic->client->sess.sessionTeam == TEAM_SPECTATOR)
+      continue;
+    G_Damage(vic, NULL, NULL, NULL, NULL, 500, 0, MOD_UNKNOWN);
+  }
+  AP(va("chat \"Gibbed all"));
+  return qtrue;
+}
+
+#define WAR(TYPE)\
+  qboolean G_shrubbot_ ## TYPE ## war(gentity_t *ent, int skiparg)\
+  {\
+    char status[MAX_STRING_CHARS];\
+    Q_SayArgv(1+skiparg, status, sizeof(status));\
+    if(Q_SayArgc() < 2+skiparg) {\
+      if(g_ ## TYPE ## war.integer == 1) {\
+        SP( #TYPE "war: " #TYPE "war is currently ^nON^7\n");\
+      } \
+      if(g_ ## TYPE ## war.integer == 0) {\
+        SP( #TYPE "war: " #TYPE "war is currently ^nOFF^7\n");\
+      }\
+      return qfalse;\
+    }\
+    if(!Q_stricmp(status, "on")) {\
+      if(g_ ## TYPE ## war.integer != 1) {\
+        trap_Cvar_Set("g_" #TYPE "war", "1");\
+        G_shrubbot_giba(NULL, 0);\
+      } else {\
+        SP( #TYPE "war: " #TYPE "war is already enabled!\n");\
+        return qfalse;\
+      }\
+    }\
+    if(!Q_stricmp(status, "off")) {\
+      if(g_ ## TYPE ## war.integer) {\
+        trap_Cvar_Set("g_" #TYPE "war", "0");\
+        G_shrubbot_giba(NULL, 0);\
+      } else {\
+        SP( #TYPE "war: " #TYPE "war is already disabled!\n");\
+        return qfalse;\
+      }\
+    }\
+    AP(va("chat \"" #TYPE "war is now %s\" -1", status));\
+    return qtrue;\
+  }
+
+// panzerwar and sniperwar by CHAOS as per http://www.etpub.org/e107_plugins/forum/forum_viewtopic.php?20809
+// macro/changes by elf
+WAR(panzer)
+// sniperwar command
+WAR(sniper)
+// riflewar command
+WAR(rifle)
 
 qboolean G_shrubbot_resetmyxp(gentity_t *ent, int skiparg) 
 {
