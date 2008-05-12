@@ -2205,6 +2205,7 @@ char *ClientConnect( int clientNum, qboolean firstTime, qboolean isBot ) {
     int			clientNum2;
 	char		guid[33];
 	char		*userinfoReason;
+	char 		name[MAX_NETNAME];
 
 
 	ent = &g_entities[ clientNum ];
@@ -2230,12 +2231,18 @@ char *ClientConnect( int clientNum, qboolean firstTime, qboolean isBot ) {
 		return userinfoReason;
 	}
 
+	value = Info_ValueForKey (userinfo, "name");
+	Q_strncpyz( name, value, sizeof(name) );
+	// redeye/IRATA - ext. ASCII chars check
+	for (i = 0; i < strlen(name); i++)
+	{
+		if (name[i] < 0) // extended ASCII chars have values between -128 and 0 (signed char)
+			return "Bad Name: Extended ASCII Characters. Please change your name.";
+	}
+
 	// josh: censor names
 	if (g_censorNames.string[0] || g_censorNamesNeil.integer) {
 		char censoredName[MAX_NETNAME];
-		char name[MAX_NETNAME];
-		value = Info_ValueForKey (userinfo, "name");
-		Q_strncpyz( name, value, sizeof(name) );
 		SanitizeString(name, censoredName, qtrue);
 		if (G_CensorText(censoredName,&censorNamesDictionary)) {
 			Info_SetValueForKey( userinfo, "name", censoredName);
@@ -2581,7 +2588,7 @@ client->sess.uci = 255; //Don't draw anything if DB error
 		trap_SendServerCommand( -1, va("cpm \"%s" S_COLOR_WHITE " connected\n\"", client->pers.netname) );
 
 		// Dens: check for greeting
-		G_shrubbot_greeting(ent);
+		//G_shrubbot_greeting(ent); // redeye - moved greeting message to ClientBegin
 
 		// forty - fresh connects don't get their skill levels updated with custom skill leveling.
 		//        
@@ -2890,6 +2897,12 @@ void ClientBegin( int clientNum )
 
 	// No surface determined yet.
 	ent->surfaceFlags = 0;
+
+	// redeye - moved greeting message to ClientBegin to show it only once at all
+	if (client->sess.need_greeting) {
+		G_shrubbot_greeting(ent);
+		client->sess.need_greeting = qfalse;
+	}
 
 	// OSP
 	G_smvUpdateClientCSList(ent);

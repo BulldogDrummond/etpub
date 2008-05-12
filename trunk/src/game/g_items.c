@@ -496,6 +496,11 @@ void G_DropWeapon( gentity_t *ent, weapon_t weapon )
 
 	if( weapon == WP_MORTAR ) {
 		ent2->count = client->ps.ammo[BG_FindAmmoForWeapon(weapon)] + client->ps.ammoclip[BG_FindClipForWeapon(weapon)];
+/* quad: maybe make a g_weapons flag for this?!?	
+	} else if (weapon == WP_MP40 || weapon == WP_THOMPSON) { 
+		// redeye - NQ style weapon switching with full ammo
+		ent2->count = client->ps.ammo[BG_FindAmmoForWeapon(weapon)] + client->ps.ammoclip[BG_FindClipForWeapon(weapon)];
+*/
 	} else {
 		ent2->count = client->ps.ammoclip[BG_FindClipForWeapon(weapon)];
 	}
@@ -712,6 +717,27 @@ int Pickup_Weapon( gentity_t *ent, gentity_t *other ) {
 					if( ent->delay ) {
 						Add_Ammo( other, weapAlts[ ent->item->giTag ], ent->delay, qfalse );
 					}
+/*	quad: maybe make a g_weapons flag for this?
+				} else if ((ent->item->giTag == WP_THOMPSON || ent->item->giTag == WP_MP40)) { // TODO: ???? (quad)
+					// redeye - NQ style weapon switching with full ammo
+					// note: I wrote this code before source of NQ was available, so this is less
+					// good than NQ's implementation but still better than original ETPub
+					int weap = BG_FindClipForWeapon(ent->item->giTag);
+					int ammoweap = BG_FindAmmoForWeapon(ent->item->giTag);
+					int max_ammo_per_clip = GetAmmoTableData(ammoweap)->maxclip;
+					int ammo_in_clips = quantity - max_ammo_per_clip;
+
+					if (quantity <= max_ammo_per_clip)
+					{
+						other->client->ps.ammoclip[weap] = quantity;
+						other->client->ps.ammo[weap] = 0;
+					}
+					else 
+					{
+						other->client->ps.ammoclip[weap] = max_ammo_per_clip;
+						other->client->ps.ammo[weap] = ammo_in_clips;
+					}
+*/
 				} else {
 					other->client->ps.ammoclip[BG_FindClipForWeapon(ent->item->giTag)] = quantity;
 

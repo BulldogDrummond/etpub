@@ -715,6 +715,9 @@ typedef struct {
 	int auto_unmute_time;
 
 	qboolean	versionOK;
+
+	// redeye - moved greeting message to ClientBegin
+	qboolean need_greeting;
 } clientSession_t;
 
 //
@@ -1980,6 +1983,9 @@ void Bot_ScriptEvent( int entityNum, char *eventStr, char *params );
 
 void Bot_TeamScriptEvent( int team, char *eventStr, char *params );
 
+// redeye - firsblood message state
+extern qboolean firstblood;
+
 
 #include "g_team.h" // teamplay specific stuff
 
@@ -2273,6 +2279,10 @@ extern vmCvar_t g_XPDecayFloor;
 extern vmCvar_t g_maxXP;
 extern vmCvar_t g_maxXPResetWarn;
 
+// redeye
+extern vmCvar_t g_firstBloodSound;
+extern vmCvar_t g_knifeSound;
+
 // Josh
 extern vmCvar_t g_logOptions;
 extern vmCvar_t g_censor;
@@ -2343,6 +2353,7 @@ extern vmCvar_t g_throwKnifeWait;
 extern vmCvar_t g_unevenTeamFreq;
 extern vmCvar_t g_unevenTeamDiff;
 
+extern vmCvar_t team_maxSoldiers;
 extern vmCvar_t team_maxMedics;
 extern vmCvar_t team_maxEngineers;
 extern vmCvar_t team_maxFieldOps;

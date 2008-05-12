@@ -1969,4 +1969,5 @@
 * quad:    backstab works on wounded players (instant gib) by Elf
 * quad:    added panzer/rifle/sniper war by Elf (was missing from the sources)
            also !panzer, !sniper, !riflewar, and !giba, !splat, !splata
-
+* quad:    added a patch from redeye, with some fixes, greeting sound, 
+           some shrubbot commands, and others.

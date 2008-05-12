@@ -2305,6 +2305,24 @@ qboolean G_IsClassFull( gentity_t *ent, int playerType, team_t team)
 		tcount++;
 	}
 	switch( playerType ) {
+		// redeye - add soldier restriction
+		case PC_SOLDIER:
+			if( team_maxSoldiers.integer == -1 ) break;
+			maxCount = team_maxSoldiers.integer;
+			if( strstr(team_maxSoldiers.string,"%-") ) {
+				maxCount = floor(team_maxSoldiers.integer
+						* tcount * 0.01f);
+			} else if( strstr(team_maxSoldiers.string,"%") ) {
+				maxCount = ceil(team_maxSoldiers.integer
+						* tcount * 0.01f);
+			}
+			if( count >= maxCount )
+			{
+				CP( "cp \"^1Soldier^7 is not available! "
+					"Choose another class!\n\"" );
+				return qtrue;
+			}
+			break;
 		case PC_MEDIC:
 			if( team_maxMedics.integer == -1 ) break;
 			maxCount = team_maxMedics.integer;
@@ -2900,7 +2918,7 @@ char *G_ShortcutSanitize(char *text)
 	return n;
 }
 
-char *G_Shortcuts(gentity_t *ent, char *text)
+char *G_Shortcuts(gentity_t *ent, const char *text)
 {
 	static char out[MAX_SAY_TEXT];
 	char a[MAX_NAME_LENGTH] = {"*unknown*"};
@@ -3290,6 +3308,7 @@ void G_VoiceTo( gentity_t *ent, gentity_t *other, int mode, const char *id, qboo
 	int color;
 	char *cmd;
 	char *space;
+	char text[MAX_SAY_TEXT]; // redeye
 
 	if (!other) {
 		return;
@@ -3333,6 +3352,13 @@ void G_VoiceTo( gentity_t *ent, gentity_t *other, int mode, const char *id, qboo
 		space[0] = '\0';
 	}
 
+	// redeye - replace shortcuts in customvoicechats
+	if(g_shortcuts.integer) {
+		char *shortcuts;
+		shortcuts = G_Shortcuts(ent, id);
+		Q_strncpyz(text, shortcuts, sizeof(text));
+	}
+
 	if( mode == SAY_TEAM ) {
 		color = COLOR_CYAN;
 		cmd = "vtchat";
@@ -3366,9 +3392,9 @@ void G_VoiceTo( gentity_t *ent, gentity_t *other, int mode, const char *id, qboo
 	}
 
 	if( mode == SAY_TEAM || mode == SAY_BUDDY ) {
-		CPx( other-g_entities, va("%s %d %d %d %s %i %i %i", cmd, voiceonly, ent - g_entities, color, id, (int)ent->s.pos.trBase[0], (int)ent->s.pos.trBase[1], (int)ent->s.pos.trBase[2] ));
+		CPx( other-g_entities, va("%s %d %d %d %s %i %i %i", cmd, voiceonly, ent - g_entities, color, text, (int)ent->s.pos.trBase[0], (int)ent->s.pos.trBase[1], (int)ent->s.pos.trBase[2] ));
 	} else {
-		CPx( other-g_entities, va("%s %d %d %d %s", cmd, voiceonly, ent - g_entities, color, id ));
+		CPx( other-g_entities, va("%s %d %d %d %s", cmd, voiceonly, ent - g_entities, color, text ));
 	}
 }
 

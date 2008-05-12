@@ -38,6 +38,9 @@ static const struct g_shrubbot_cmd g_shrubbot_cmds[] = {
 	{"burn",	G_shrubbot_burn,	'U', SCMDF_TYRANNY,
 		"burns a player taking some of his health", 
 		"[^3name|slot#^7] (^hreason^7)"},
+	// redeye
+	{"bye",	G_shrubbot_bye,	'D', 0,
+		"Print a goodbye message to all players", ""},
 	{"cancelvote",	G_shrubbot_cancelvote,	'c', 0,
 		"cancel a vote taking place", ""},
 		{"dewarn",	G_shrubbot_dewarn,	'R', 0,
@@ -117,9 +120,17 @@ static const struct g_shrubbot_cmd g_shrubbot_cmds[] = {
 		"display a (partial) list of active bans", "(^hstart at ban#^7)"},
 	{"shuffle",	G_shrubbot_shuffle,	'S', 0,
 		"shuffle the teams to even them out", ""},
+	// redeye
+	// {"sk",	G_shrubbot_sk,	'F', 0, 
+	//	"call a player a spawnkiller and warn him to be kicked next time",
+	//	"[^3name|slot#^7]"},
 	{"slap",	G_shrubbot_slap,	'A', SCMDF_TYRANNY,
 		"give a player a specified amount of damage for a specified reason", 
 		"[^3name|slot#^7] (^hdamage^7) (^hreason^7)"},
+	// redeye
+	// {"smoke",	G_shrubbot_smoke,	'E', 0,
+    //	"player is going to have a smoke and joins the spectators",
+	//	""},
 	WARCOMMAND(sniper),
 	{"spec999",	G_shrubbot_spec999,	'P', 0,
 		"move 999 pingers to the spectator team", ""},
@@ -129,6 +140,9 @@ static const struct g_shrubbot_cmd g_shrubbot_cmds[] = {
     "instantly gib all players", ""},
 	{"spreerecord",G_shrubbot_spreerecord, 't', 0,
 		"see the spreerecord of this map and the overall spreerecord", ""},
+	// redeye
+	{"spree",	G_shrubbot_spree,	'E', 0,
+		"show the players current killing spree count", ""},
 	{"stats",G_shrubbot_stats, 't', 0,
 		"see accuracy and headshotratio of all players", ""},
 	{"swap",	G_shrubbot_swap,	'w', 0,
@@ -139,6 +153,9 @@ static const struct g_shrubbot_cmd g_shrubbot_cmds[] = {
 		"throw all players", ""},
 	{"time",	G_shrubbot_time,	'C', 0,
 		"show the current local server time", ""},
+	// redeye
+	{"tspree",	G_shrubbot_tspree,	'E', 0,
+		"show the top n current killing spree (default top 5)", "[n]"},
 	{"unban",	G_shrubbot_unban,	'b', 0,
 		"unbans a player specified by the slot as seen in !showbans", 
 		"[^3ban slot#^7]"},
@@ -351,6 +368,9 @@ void _shrubbot_writeconfig()
 		G_shrubbot_writeconfig_string(g_shrubbot_levels[i]->flags, f);
 		trap_FS_Write("greeting = ", 11, f);
 		G_shrubbot_writeconfig_string(g_shrubbot_levels[i]->greeting, f);
+		// redeye
+		trap_FS_Write("greeting_sound = ", 17, f);
+		G_shrubbot_writeconfig_string(g_shrubbot_levels[i]->greeting_sound, f);
 		trap_FS_Write("\n", 1, f);
 	}
 	for(i=0; g_shrubbot_admins[i]; i++) {
@@ -368,6 +388,9 @@ void _shrubbot_writeconfig()
 		G_shrubbot_writeconfig_string(g_shrubbot_admins[i]->flags, f);
 		trap_FS_Write("greeting = ", 11, f);
 		G_shrubbot_writeconfig_string(g_shrubbot_admins[i]->greeting, f);
+		// redeye
+		trap_FS_Write("greeting_sound = ", 17, f);
+		G_shrubbot_writeconfig_string(g_shrubbot_admins[i]->greeting_sound, f);
 		trap_FS_Write("\n", 1, f);
 	}
 	for(i=0; g_shrubbot_bans[i]; i++) {
@@ -518,6 +541,7 @@ void _shrubbot_default_levels() {
 		*l->name = '\0';
 		*l->flags = '\0';
 		*l->greeting = '\0';
+		*l->greeting_sound = '\0';
 		g_shrubbot_levels[i] = l;
 	}
 	Q_strcat(g_shrubbot_levels[0]->flags, 6, "iahCp");
@@ -870,6 +894,9 @@ void G_shrubbot_greeting(gentity_t *ent)
 
 				greeting = Q_StrReplace(g_shrubbot_admins[i]->greeting,
 					"[n]", ent->client->pers.netname);
+				if (g_shrubbot_admins[i]->greeting_sound){
+						G_globalSound(g_shrubbot_admins[i]->greeting_sound);
+				}
 
 				switch(g_greetingPos.integer) {
 					case MSGPOS_CENTER:
@@ -896,6 +923,9 @@ void G_shrubbot_greeting(gentity_t *ent)
 
 							greeting = Q_StrReplace(g_shrubbot_levels[i]->greeting,
 								"[n]", ent->client->pers.netname);
+							if (g_shrubbot_levels[i]->greeting_sound){
+									G_globalSound(g_shrubbot_levels[i]->greeting_sound);
+							}
 
 							switch(g_greetingPos.integer) {
 								case MSGPOS_CENTER:
@@ -924,6 +954,7 @@ void G_shrubbot_greeting(gentity_t *ent)
 	}
 	return;
 }
+
 
 qboolean G_shrubbot_cmd_check(gentity_t *ent)
 {
@@ -1221,6 +1252,11 @@ qboolean G_shrubbot_readconfig(gentity_t *ent, int skiparg)
 				G_shrubbot_readconfig_string(&cnf, 
 					l->greeting, sizeof(l->greeting)); 
 			}
+			// redeye
+			else if(!Q_stricmp(t, "greeting_sound")) {
+				G_shrubbot_readconfig_string(&cnf,
+					l->greeting_sound, sizeof(l->greeting_sound));
+			}
 			else {
 				SPC(va("^/readconfig: ^7[level] parse error near "
 					"%s on line %d", 
@@ -1247,6 +1283,11 @@ qboolean G_shrubbot_readconfig(gentity_t *ent, int skiparg)
 			else if(!Q_stricmp(t, "greeting")) {
 				G_shrubbot_readconfig_string(&cnf, 
 					a->greeting, sizeof(a->greeting)); 
+			}
+			// redeye
+			else if(!Q_stricmp(t, "greeting_sound")) {
+				G_shrubbot_readconfig_string(&cnf,
+					a->greeting_sound, sizeof(a->greeting_sound));
 			}
 			else {
 				SPC(va("^/readconfig: ^7[admin] parse error near "
@@ -1377,6 +1418,7 @@ qboolean G_shrubbot_readconfig(gentity_t *ent, int skiparg)
 			*l->name = '\0';
 			*l->flags = '\0';
 			*l->greeting = '\0';
+			*l->greeting_sound = '\0';
 			level_open = qtrue;
 		}
 		else if(!Q_stricmp(t, "[admin]")) {
@@ -1387,6 +1429,7 @@ qboolean G_shrubbot_readconfig(gentity_t *ent, int skiparg)
 			a->level = 0;
 			*a->flags = '\0';
 			*a->greeting = '\0';
+			*a->greeting_sound = '\0';
 			admin_open = qtrue;
 		}
 		else if(!Q_stricmp(t, "[ban]")) {
@@ -1530,6 +1573,7 @@ qboolean G_shrubbot_setlevel(gentity_t *ent, int skiparg)
 		Q_strncpyz(a->guid, vic->client->sess.guid, sizeof(a->guid));
 		*a->flags = '\0';
 		*a->greeting = '\0';
+		*a->greeting_sound = '\0';
 		g_shrubbot_admins[i] = a;
 	}
 
@@ -2491,7 +2535,7 @@ qboolean G_shrubbot_help(gentity_t *ent, int skiparg)
 					return qfalse;
 				}
 				SBP( va("^/help: ^7help for '%s':\n", g_shrubbot_cmds[i].keyword ) );
-				SBP( va("^/Funtion: ^7%s\n", g_shrubbot_cmds[i].function ) );
+				SBP( va("^/Function: ^7%s\n", g_shrubbot_cmds[i].function ) );
 				SBP( va("^/Syntax: ^7!%s %s\n", g_shrubbot_cmds[i].keyword, 
 					g_shrubbot_cmds[i].syntax ) );
 				SBP( va("^/Flag: ^7'%c'\n", g_shrubbot_cmds[i].flag) );
@@ -4130,3 +4174,187 @@ void G_shrubbot_cleanup()
 		g_shrubbot_warnings[i] = NULL;
 	}
 }
+
+qboolean G_shrubbot_spree(gentity_t *ent, int skiparg)
+{
+	gentity_t *vic = ent;
+
+	if(!ent) {
+		SPC("spree: you are on the console");
+		return qtrue;
+	}
+	if(Q_SayArgc() >= 2+skiparg) {
+		SPC("^/spree usage: ^7!spree");
+		return qfalse;
+	}
+/* redeye - code for viewing other's sprees but probably not very useful
+	int pids[MAX_CLIENTS];
+	char name[MAX_NAME_LENGTH], err[MAX_STRING_CHARS];
+	if(Q_SayArgc() < 2+skiparg) {
+		if(!ent) {
+			SPC("spree: you are on the console");
+			return qtrue;
+		}else{
+			vic = ent;
+		}
+	}else{
+		Q_SayArgv(1+skiparg, name, sizeof(name));
+		if(ClientNumbersFromString(name, pids) != 1) {
+			G_MatchOnePlayer(pids, err, sizeof(err));
+			SPC(va("^/spree: ^7%s", err));
+			return qfalse;
+		}
+		vic = &g_entities[pids[0]];
+		// Dens: if someone is incog, feel free to show level 0
+		if(!_shrubbot_admin_higher(ent, vic) &&
+			!G_shrubbot_permission(vic,	SBF_INCOGNITO)) {
+			SPC("^/spree: ^7sorry, but your intended victim has a higher admin"
+				" level than you do");
+			return qfalse;
+		}
+	}
+*/
+	if(!(vic->client->sess.sessionTeam == TEAM_AXIS ||
+			vic->client->sess.sessionTeam == TEAM_ALLIES)) {
+		SPC("^/spree: ^7you should be on a team");
+		return qfalse;
+	}
+
+	switch (vic->client->sess.kstreak)
+	{
+		case 0:
+		{
+			SPC(va("^7%s^3 didn't get any kills yet since last death!",
+				vic->client->pers.netname));
+			break;
+		}
+		case 1:
+		{
+			SPC(va("^7%s^3 is on a killing spree with ^11^3 kill!",
+				vic->client->pers.netname));
+			break;
+		}
+		default:
+		{
+			SPC(va("^7%s^3 is on a killing spree with ^1%d^3 kills!",
+				vic->client->pers.netname, vic->client->sess.kstreak));
+		}
+	}
+
+	return qtrue;
+}
+
+qboolean G_shrubbot_tspree(gentity_t *ent, int skiparg)
+{
+	int top, topmax = 5;
+	char name[MAX_NAME_LENGTH];
+	int streakers[MAX_CLIENTS];
+	int i, countConn = 0;
+	gclient_t *cl;
+	qboolean found = qfalse;
+
+	if(Q_SayArgc() > 2+skiparg) {
+		SPC("^/tspree usage: ^7!tspree [n]");
+		return qfalse;
+	}else{
+		Q_SayArgv(1+skiparg, name, sizeof(name));
+		topmax = atoi(name);
+		if (topmax == 0)
+			topmax = 5;
+	}
+
+	for ( i = 0; i < level.numConnectedClients; i++ ) {
+		cl = level.clients + level.sortedClients[i];
+		if( cl->sess.sessionTeam != TEAM_AXIS &&
+				cl->sess.sessionTeam != TEAM_ALLIES ) {
+			continue;
+		}
+		streakers[countConn++] = level.sortedClients[i];
+	}
+
+	qsort(streakers, countConn, sizeof(int), G_SortPlayersByStreak );
+
+	top = (countConn >= topmax) ? topmax : countConn;
+	SBP_begin();
+	SBP(va("^/Killing spree stats (top %d current sprees)\n", topmax));
+	for (i = 0; i < top; i++)
+	{
+		cl = level.clients + streakers[i];
+		if (cl->sess.kstreak == 0)
+			continue;
+		else
+			found = qtrue;
+		if (cl->sess.kstreak == 1)
+			SBP(va("^3%d. ^7%25s:^3 ^11^3 kill!\n", i+1, cl->pers.netname));
+		else
+			SBP(va("^3%d. ^7%25s:^3 ^1%d^3 kills!\n", i+1, cl->pers.netname, cl->sess.kstreak));
+	}
+	if (! found)
+	{
+		SBP("^/No active killing sprees found!\n");
+	}
+	SBP_end();
+
+	return qtrue;
+}
+
+/* qboolean G_shrubbot_smoke(gentity_t *ent, int skiparg)
+{
+	// put player spec, play a funny sound and prints a message
+	if (ent->client->sess.sessionTeam == TEAM_AXIS || ent->client->sess.sessionTeam == TEAM_ALLIES)
+		// that prevents spec'ing of spectators
+		SetTeam(ent, "s", qtrue, -1, -1, qfalse);
+
+	//G_globalSound("sound/misc/smoke.wav");
+	AP(va("chat \"^/%s^3 is taking a little break to have a ^1smoke\" -1",
+		ent->client->pers.netname));
+	return qtrue;
+} */
+
+
+qboolean G_shrubbot_bye(gentity_t *ent, int skiparg)
+{
+	AP(va("chat \"^/%s^3 waves his hand to say ^1GOOD BYE^3. We surely meet later!\" -1",
+		ent->client->pers.netname));
+	return qtrue;
+}
+
+/* qboolean G_shrubbot_sk(gentity_t *ent, int skiparg)
+{
+	int pids[MAX_CLIENTS];
+	char name[MAX_NAME_LENGTH], err[MAX_STRING_CHARS];
+	gentity_t *vic;
+
+	if(Q_SayArgc() < 2+skiparg) {
+		SPC("^/sk usage: ^7!sk [name|slot#]");
+		return qfalse;
+	}
+	Q_SayArgv(1+skiparg, name, sizeof(name));
+
+	if(ClientNumbersFromString(name, pids) != 1) {
+		G_MatchOnePlayer(pids, err, sizeof(err));
+		SPC(va("^/sk: ^7%s", err));
+		return qfalse;
+	}
+	vic = &g_entities[pids[0]];
+	if(!_shrubbot_admin_higher(ent, vic)) {
+		SPC("^/sk: ^/sorry, but your intended victim has a higher admin"
+			" level than you do");
+		return qfalse;
+	}
+	if(_shrubbot_immutable(ent, vic)) {
+        SPC("^/sk: ^7sorry, but your intended victim is immune to shrubbot commands");
+        return qfalse;
+    }
+	if(!(vic->client->sess.sessionTeam == TEAM_AXIS ||
+			vic->client->sess.sessionTeam == TEAM_ALLIES)) {
+		SPC("^/sk: ^7player must be on a team");
+		return qfalse;
+	}
+
+	G_globalSound("sound/misc/spawnkiller.wav");
+	AP(va("chat \"^7%s ^1stop ^7spawnkilling, ^1next ^7time ^1you ^7will ^1be ^7kicked!\" -1",
+			vic->client->pers.netname));
+
+	return qtrue;
+} */

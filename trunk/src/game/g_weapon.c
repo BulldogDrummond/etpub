@@ -717,6 +717,9 @@ void Weapon_Syringe(gentity_t *ent) {
 				te = G_TempEntity( traceEnt->r.currentOrigin, EV_GENERAL_SOUND );
 				te->s.eventParm = G_SoundIndex( "sound/misc/vo_revive.wav" );
 
+				// redeye - set lastrevive_client also when a player was healed with syringe
+				traceEnt->client->pers.lastrevive_client = ent->s.clientNum;  
+
 				ent->client->ps.ammoclip[BG_FindClipForWeapon(WP_MEDIC_SYRINGE)] -= 1;
 				// skill, stats and XP stuff
 				ent->client->sess.team_hits -= 2.f;

@@ -321,6 +321,8 @@ void Team_ResetFlag( gentity_t *ent )
 		if( ent->s.density == 1 )
 			RespawnItem(ent);
 
+// redeye - fix problems when built w/o BOT support
+#ifndef NO_BOT_SUPPORT
 		{
 			TriggerInfo ti;
 			ti.m_Entity = ent;
@@ -330,6 +332,7 @@ void Team_ResetFlag( gentity_t *ent )
 			Q_strncpyz(ti.m_Action, "returned", TriggerBufferSize);
 			Bot_Util_SendTrigger(&ti);
 		}
+#endif
 	}
 }
 

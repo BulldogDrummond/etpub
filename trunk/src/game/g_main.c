@@ -135,6 +135,10 @@ vmCvar_t		g_LTChargeTime;
 vmCvar_t		g_soldierChargeTime;
 // screen shakey magnitude multiplier
 
+// redeye
+vmCvar_t g_firstBloodSound;
+vmCvar_t g_knifeSound;
+
 // Gordon
 vmCvar_t		g_antilag;
 vmCvar_t		g_antilagDelay;
@@ -376,6 +380,7 @@ vmCvar_t g_throwKnifeWait;
 vmCvar_t g_unevenTeamFreq;
 vmCvar_t g_unevenTeamDiff;
 
+vmCvar_t team_maxSoldiers;
 vmCvar_t team_maxMedics;
 vmCvar_t team_maxEngineers;
 vmCvar_t team_maxFieldOps;
@@ -859,6 +864,10 @@ cvarTable_t		gameCvarTable[] = {
 	// gabriel: Warn user when XP will be reset
 	{ &g_maxXPResetWarn, "g_maxXPResetWarn", "0", 0 },
 
+	// redeye
+	{ &g_firstBloodSound, "g_firstBloodSound",  "", 0 },
+	{ &g_knifeSound, "g_knifeSound",  "", 0 },
+
 	// Josh
 	{ &g_tactics, "g_tactics", "0", 0 },
 	{ &g_logOptions, "g_logOptions", "0", 0 },
@@ -918,6 +927,7 @@ cvarTable_t		gameCvarTable[] = {
 	{ &g_unevenTeamFreq, "g_unevenTeamFreq", "30", 0 },
 	{ &g_unevenTeamDiff, "g_unevenTeamDiff", "0", 0 },
 
+	{ &team_maxSoldiers, "team_maxSoldiers", "-1", 0 },
 	{ &team_maxMedics, "team_maxMedics", "-1", 0 },
 	{ &team_maxEngineers, "team_maxEngineers", "-1", 0 },
 	{ &team_maxFieldOps, "team_maxFieldOps", "-1", 0 },

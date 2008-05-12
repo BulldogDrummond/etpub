@@ -12,6 +12,9 @@
 #define MAX_SHRUBBOT_CMD_LEN 17
 
 /*
+ * flags by redeye 
+ * spree, tspree E
+ *
  * 1 - cannot be vote kicked, vote muted, dropped 
  * due to high team damage ratio, or complained against
  * 2 - cannot be censored or flood protected
@@ -68,6 +71,7 @@ typedef struct g_shrubbot_level {
 	char name[MAX_NAME_LENGTH];
 	char flags[MAX_SHRUBBOT_FLAGS];
 	char greeting[MAX_STRING_CHARS];
+	char greeting_sound[MAX_STRING_CHARS];
 } g_shrubbot_level_t;
 
 typedef struct g_shrubbot_admin {
@@ -76,6 +80,7 @@ typedef struct g_shrubbot_admin {
 	int level;
 	char flags[MAX_SHRUBBOT_FLAGS];
 	char greeting[MAX_STRING_CHARS];
+	char greeting_sound[MAX_STRING_CHARS];
 } g_shrubbot_admin_t;
 
 typedef struct g_shrubbot_ban {
@@ -162,6 +167,12 @@ qboolean G_shrubbot_userinfo(gentity_t *ent, int skiparg);
 qboolean G_shrubbot_stats(gentity_t *ent, int skiparg);
 qboolean G_shrubbot_dewarn(gentity_t *ent, int skiparg);
 qboolean G_shrubbot_spreerecord(gentity_t *ent, int skiparg);
+
+//qboolean G_shrubbot_sk(gentity_t *ent, int skiparg);
+//qboolean G_shrubbot_smoke(gentity_t *ent, int skiparg);
+qboolean G_shrubbot_spree(gentity_t *ent, int skiparg);
+qboolean G_shrubbot_tspree(gentity_t *ent, int skiparg);
+qboolean G_shrubbot_bye(gentity_t *ent, int skiparg);
 
 void Cmd_Warning_f( gentity_t *ent );
 int _shrubbot_level(gentity_t *ent);

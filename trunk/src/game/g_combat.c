@@ -27,6 +27,9 @@ static void G_Obituary(int mod, int target, int attacker);
 
 extern vec3_t muzzleTrace;
 
+// redeye - firsblood message state
+qboolean firstblood;
+
 /*
 ============
 AddScore
@@ -922,6 +925,42 @@ void player_die( gentity_t *self, gentity_t *inflictor, gentity_t *attacker, int
 
 		// the body can still be gibbed
 		self->die = body_die;
+	}
+
+	// redeye - goat sound
+	if ((meansOfDeath == MOD_KNIFE || meansOfDeath == MOD_THROWN_KNIFE) &&
+		attacker && g_knifeSound.string)
+	{
+// FIXME plays the sound at least also for the victim 
+		// to play only for the attacker
+		gentity_t *te = G_TempEntity(attacker->r.currentOrigin, EV_GLOBAL_CLIENT_SOUND);
+		te->s.teamNum = attacker->s.teamNum;
+		te->s.eventParm = G_SoundIndex(g_knifeSound.string);
+		te->r.svFlags |= SVF_SINGLECLIENT;
+
+		// play knife sound globally for all player (personal preferred method, should not be used)
+		// G_globalSound(g_knifeSound.string); 
+	}
+
+	// redeye - firstblood message
+	if ( !firstblood &&
+		self &&
+		self->client &&
+		attacker &&
+		attacker->client &&
+		attacker->s.number != ENTITYNUM_NONE &&
+		attacker->s.number != ENTITYNUM_WORLD &&
+		attacker != self &&
+		g_gamestate.integer == GS_PLAYING &&
+		! OnSameTeam(attacker, self))
+	{
+		if (g_firstBloodSound.string[0])
+			G_globalSound(g_firstBloodSound.string);
+		
+		AP(va("cpm \"^7%s ^7drew ^1FIRST BLOOD ^7from ^7%s^7!\" -1",
+			attacker->client->pers.netname, self->client->pers.netname));
+
+		firstblood = qtrue;
 	}
 
 	if( meansOfDeath == MOD_MACHINEGUN ) {
