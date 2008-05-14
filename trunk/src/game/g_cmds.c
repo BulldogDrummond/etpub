@@ -3357,6 +3357,8 @@ void G_VoiceTo( gentity_t *ent, gentity_t *other, int mode, const char *id, qboo
 		char *shortcuts;
 		shortcuts = G_Shortcuts(ent, id);
 		Q_strncpyz(text, shortcuts, sizeof(text));
+	} else {
+		Q_strncpyz(text, id, sizeof(text));
 	}
 
 	if( mode == SAY_TEAM ) {
