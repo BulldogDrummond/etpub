@@ -1079,7 +1079,7 @@
 				</FileConfiguration>
 				<FileConfiguration
 					Name="Release|Win32"
-					>
+				>
 					<Tool
 						Name="VCCLCompilerTool"
 						Optimization="2"
@@ -1910,6 +1910,10 @@
 			</File>
 			<File
 				RelativePath="game.def"
+				>
+			</File>
+			<File
+				RelativePath=".\geoip.c"
 				>
 			</File>
 			<File

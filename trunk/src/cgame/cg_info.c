@@ -719,12 +719,6 @@ void CG_ObjectivesDraw()
 		float hScaleY		= 0.21f;
 		fontInfo_t *hFont	= FONT_HEADER;
 
-		// Sub header
-		int hStyle2			= 0;
-		float hScale2		= 0.16f;
-		float hScaleY2		= 0.20f;
-		fontInfo_t *hFont2	= FONT_SUBHEADER;
-
 		vec4_t hdrColor		= COLOR_HDR;	// text
 		vec4_t hdrColor2	= COLOR_HDR2;	// text
 
