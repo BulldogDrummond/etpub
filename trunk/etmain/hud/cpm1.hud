@@ -1,0 +1,29 @@
+elements {
+  "ammocount" 436 473 43
+  "chargebar" 19 121 12
+  "chattext" 0 401 20
+  "compass" 0 400 80
+  "cpmtext" 0 80 20
+  "upperright" 1
+  "fireteam" 436 352 100
+  "flagcov" 0 419
+  "head" 160 437 36 43
+  "healthbar" 37 121 12
+  "healthtext" 243 472 43
+  "lagometer" 596 232
+  "livesleft" -123 357 14
+  "overheat" 0 279 56 10
+  "skillbox1" -112 386 14
+  "skillbox2" -128 386 14
+  "skillbox3" -144 386 14
+  "skillpic1" -112 446 16
+  "skillpic2" -128 446 16
+  "skillpic3" -144 446 16
+  "skilltext1" -1 -1 -1
+  "skilltext2" -1 -1 -1
+  "skilltext3" -1 -1 -1
+  "staminabar" 3 121 12
+  "votefttext" 187 113
+  "weaponcard" 442 448 55
+  "xptext" 30 230 24
+}

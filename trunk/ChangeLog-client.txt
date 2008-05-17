@@ -398,3 +398,6 @@ current
 * quad:    show not-gibbed indicator in fireteam & show level time in warmup
 * quad:    added timerSet command for enemy spawntimer
            Note: stores data in temp cvar, it won't be lost on vid_restart.
+* quad:    added /loadhud ? for listing the available huds, added more huds,
+           include more stuff in the pk3, they should have been there anyway
+

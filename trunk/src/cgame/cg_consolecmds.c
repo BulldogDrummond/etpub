@@ -112,9 +112,9 @@ void CG_topshotsUp_f(void)
 void CG_objectivesDown_f(void)
 {
 	if(!cg.demoPlayback) {
-		if(cgs.objectives.show == SHOW_SHUTDOWN && cg.time < cgs.objectives.fadeTime) {
+		if (cgs.objectives.show == SHOW_SHUTDOWN && cg.time < cgs.objectives.fadeTime) {
 			cgs.objectives.fadeTime = 2 * cg.time + STATS_FADE_TIME - cgs.objectives.fadeTime;
-		} else if(cgs.objectives.show != SHOW_ON) {
+		} else if (cgs.objectives.show != SHOW_ON) {
 			cgs.objectives.fadeTime = cg.time + STATS_FADE_TIME;
 		}
 
@@ -124,9 +124,9 @@ void CG_objectivesDown_f(void)
 
 void CG_objectivesUp_f(void)
 {
-	if(cgs.objectives.show == SHOW_ON) {
+	if (cgs.objectives.show == SHOW_ON) {
 		cgs.objectives.show = SHOW_SHUTDOWN;
-		if(cg.time < cgs.objectives.fadeTime) {
+		if (cg.time < cgs.objectives.fadeTime) {
 			cgs.objectives.fadeTime = 2 * cg.time + STATS_FADE_TIME - cgs.objectives.fadeTime;
 		} else {
 			cgs.objectives.fadeTime = cg.time + STATS_FADE_TIME;
@@ -207,19 +207,59 @@ void CG_ScoresUp_f( void ) {
 	}
 }
 
+// quad - show list of huds
+// chaplja - fixed the function, it was printing some strange stuff
+char *CG_getHudList()
+{
+	static char hudText[0x2000] = "";
+	char hudList[0x2000];
+	char *hudName;
+	int numHuds, c = 0, len;
+
+	memset( hudList, 0, sizeof( hudList ) );
+	memset( hudText, 0, sizeof( hudText ) );
+	numHuds = trap_FS_GetFileList("hud", ".hud", hudList, sizeof(hudList));
+
+	hudName = &hudList[0];
+
+	if ( numHuds ) {
+		for ( ; c < numHuds ; c++ ) {
+			len = strlen( hudName );
+
+			// Sanity check
+			if ( len <= 4 ) {
+				hudName += (len + 1);
+				continue;
+			}
+
+			hudName[len-4] = ' ';
+			hudName[len-3] = '\0';
+
+			Q_strcat( hudText, sizeof( hudText ), hudName );
+
+			hudName += (len + 1);
+		}
+	}
+	
+	return hudText;
+}
+
 static void CG_LoadHud_f( void ) {
 	char filename[MAX_TOKEN_CHARS];
 
 	if ( trap_Argc() < 2 ) {
 		CG_LoadDefaultHud();
-		CG_Printf("^2Loaded default HUD\n");
+		CG_Printf("^2Loaded default HUD. Type ^3/loadhud ? ^2to show a list of available huds.\n");
 	} else {
 		trap_Argv(1, filename, sizeof(filename) );
-		trap_Cvar_Set("cg_hud", filename);
-		if (CG_LoadHud( filename )) {
-			CG_Printf("^2Loaded HUD settings from '%s'\n", filename);
+		if (filename[0] == '?') {
+			CG_Printf("^3Available HUDs are:^2 %s\n", CG_getHudList());
 		} else {
-			CG_Printf("^1Failed to load HUD settings from '%s', loaded default HUD\n", filename);
+			trap_Cvar_Set("cg_hud", filename);
+			if (CG_LoadHud( filename ))
+				CG_Printf("^2Loaded HUD settings from '%s'\n", filename);
+			else
+				CG_Printf("^1Failed ^2to load HUD settings from '%s', loaded default HUD\nType ^3/loadHud ?^2 to show a list.", filename);
 		}
 	}
 //	String_Init();
@@ -1095,7 +1135,7 @@ static void CG_LoadFont_f(void)
 	}
 }
 
-//quad: etpro style enemy spawntimer
+// quad: etpro style enemy spawntimer
 void CG_TimerSet_f( void )
 {
 	int spawnPeriod, msec;
@@ -1119,7 +1159,7 @@ void CG_TimerSet_f( void )
 			CG_Printf("Argument must be a number between 1 and 60.\n");
 		else
 		{
-			msec = ( cgs.timelimit * 60.f * 1000.f ) - ( cg.time - cgs.levelStartTime );
+			msec = (cgs.timelimit * 60.f * 1000.f) - (cg.time - cgs.levelStartTime);
 			trap_Cvar_Set("cg_spawnTimer_period", buff);
 			trap_Cvar_Set("cg_spawnTimer_set", va("%d", msec/1000));
 		}
@@ -1251,7 +1291,7 @@ static consoleCommand_t	commands[] =
 
 	//quad: spawntimer
 	{ "timerSet", CG_TimerSet_f },
-
+	
 };
 
 

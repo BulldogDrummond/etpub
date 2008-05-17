@@ -37,15 +37,16 @@ all: tmp $(SERVER) $(CLIENT)
 
 tmp:
 	-mkdir ../tmp
-	
+
 $(SERVER): 
 	$(MAKE) -C game
-	
+
 $(CLIENT): $(CLIENT_OBJECTS)
 	cp -L -r --copy-contents ../bundle/* ../tmp
 	-find ../tmp -name '.svn' -exec rm -rf '{}' \;
 	cd ../tmp; zip -r $(CLIENT) *; mv $(CLIENT) ../src
 	-rm -rf ../tmp
+	-$(MAKE) proper
 
 $(CLIENT_OBJECTS): build-cgame build-ui
 
@@ -54,11 +55,14 @@ build-ui: $(SERVER)
 
 build-cgame: build-ui
 	$(MAKE) -C cgame
-	
+
+proper:
+	ln -s etpub.pk3 etpubc-`python client_ver.py`.pk3
+
 clean:
 	$(MAKE) -C game clean
 	$(MAKE) -C ui clean
 	$(MAKE) -C cgame clean
-	-rm -f etpub.pk3
+	-rm -f etpub*.pk3
 	-rm -rf ../tmp
 
