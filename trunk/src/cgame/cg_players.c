@@ -182,6 +182,10 @@ void CG_NewClientInfo( int clientNum ) {
 	// quad: latched class
 	v = Info_ValueForKey( configstring, "lc" );
 	newInfo.latchClass = atoi( v );
+	
+	// foxX: the client ready state
+	v = Info_ValueForKey( configstring, "rd" ); 
+	newInfo.clientReady = (atoi(v) ? qtrue : qfalse); 
 
 	// rank
 	v = Info_ValueForKey( configstring, "r" );
@@ -221,7 +225,7 @@ void CG_NewClientInfo( int clientNum ) {
 		}
 	}
 
-	// diguiseName
+	// disguiseName
 	v = Info_ValueForKey( configstring, "dn" );
 	Q_strncpyz( newInfo.disguiseName, v, sizeof( newInfo.disguiseName ) );
 

@@ -402,3 +402,4 @@ current
 * quad:    added /loadhud ? for listing the available huds, added more huds,
            include more stuff in the pk3, they should have been there anyway
 * quad:    added latched class indicator in fireteam
+* quad:    added cg_tracers = 2 for drawing all but your own tracers

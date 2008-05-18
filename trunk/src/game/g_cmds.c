@@ -5328,6 +5328,8 @@ void G_MakeReady( gentity_t* ent ) {
 	ent->s.eFlags |= EF_READY;
 	// rain - #105 - moved this set here
 	ent->client->pers.ready = qtrue;
+	// foxX: now notify the other clients (see CG_NewClientInfo) that this client became ready 
+	ClientUserinfoChanged(ent - g_entities);
 }
 
 void G_MakeUnready( gentity_t* ent ) {
@@ -5335,6 +5337,8 @@ void G_MakeUnready( gentity_t* ent ) {
 	ent->s.eFlags &= ~EF_READY;
 	// rain - #105 - moved this set here
 	ent->client->pers.ready = qfalse;
+	// foxX: now notify the other clients (see CG_NewClientInfo) that this client became not ready 
+	ClientUserinfoChanged(ent - g_entities); 
 }
 
 void Cmd_IntermissionReady_f ( gentity_t* ent ) {

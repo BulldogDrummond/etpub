@@ -274,6 +274,15 @@ static void WM_DrawClientScore( int x, int y, score_t *score, float *color, floa
 			tempx += 14;
 			maxchars -= 2;
 		}
+		
+		// foxX: draw ready icon for appropriate players during warmup 
+		if ((GS_WARMUP == cgs.gamestate || GS_WARMUP_COUNTDOWN == cgs.gamestate) && ci->clientReady) { 
+			CG_DrawPic( tempx - 3, y + 1, 14, 14, 
+				cgs.media.hudSprintIcon ); 
+				offset += 14; 
+			tempx += 14; 
+			maxchars -= 2;   
+		} 
 
 		// forty - draw no shoot for cov-ops
 		if( 

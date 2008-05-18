@@ -5826,7 +5826,11 @@ void CG_SpawnTracer( int sourceEnt, vec3_t pstart, vec3_t pend ) {
 	orientation_t or;
 	vec3_t start, end;
 
-	if (!cg_tracers.integer) return;
+	if (cg_tracers.integer == 0) 
+		return;
+	else if (cg_tracers.integer == 2)
+		if (cg.clientNum == sourceEnt)
+			return;
 
 	VectorCopy( pstart, start );
 	VectorCopy( pend, end );

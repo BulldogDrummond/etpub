@@ -578,6 +578,9 @@ typedef struct clientInfo_s {
 	
 	// quad:
 	int				latchClass;
+	
+	// foxX:
+	qboolean		clientReady;
 } clientInfo_t;
 
 typedef enum {

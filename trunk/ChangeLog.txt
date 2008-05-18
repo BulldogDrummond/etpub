@@ -1973,3 +1973,5 @@
            some shrubbot commands, and others.
 * quad:    g_noSkillUpgrades, and the changes yada made to the /ref system
            renamed g_scoreboard_cf to g_countryFlags (and cg_countryFlags too)
+* quad:    added foxX's code for ready icon
+
