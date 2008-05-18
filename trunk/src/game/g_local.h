@@ -2326,6 +2326,9 @@ extern	vmCvar_t	sv_hostname;
 // dvl
 extern vmCvar_t g_slashKill;
 
+// quad
+extern vmCvar_t g_noSkillUpgrades;
+
 // Michael
 
 // for changing amount of xp needed to level up each skill
@@ -2507,7 +2510,7 @@ extern vmCvar_t g_healthSpeedBottom;
 extern vmCvar_t g_damageBonus;
 extern vmCvar_t g_damageBonusOpts;
 
-extern vmCvar_t g_scoreboard_cf; //mcwf GeoIP
+extern vmCvar_t g_countryFlags; //mcwf GeoIP
 
 void	trap_Printf( const char *fmt );
 void	trap_Error( const char *fmt );
@@ -3636,5 +3639,9 @@ void GeoIP_close(void);
 
 extern GeoIP * gidb;
 //mcwf GeoIP
+
+// yada
+void ConsolizeString(char *in, char *out);
+team_t TeamFromString(char *team);
 
 #endif

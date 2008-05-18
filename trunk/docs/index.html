@@ -41,8 +41,8 @@ dt {
 </tr>
 <tr>
 <td><a href="#g_customVoiceChats">g_customVoiceChats</a></td>
-<td><a href="#g_scoreBoard_cf">g_scoreBoard_cf</a></td>
-<td>&nbsp;</td>
+<td><a href="#g_countryFlags">g_countryFlags</a></td>
+<td><a href="#g_noSkillUpgrades">g_noSkillUpgrades</a></td>
 <td>&nbsp;</td>
 </tr>
 </table>
@@ -3122,15 +3122,22 @@ will write on the screen Hey, how are you doing, and also plays the voicechat 'h
 </p>
 <p>Default is 1</p>
 
-<a name="g_scoreBoard_cf"></a>
-<dt>g_scoreBoard_cf [integer]
+<a name="g_countryFlags"></a>
+<dt>g_countryFlags [integer]
 <dd>
-<p>Sets whether the players will see the GeoIP country flag in the scoreboard.
-<p>Players can enable/disable it with cg_scoreBoard_cf (default 1).</p>
-<p>Note: this requires ETPub client > 20070825. Also, you will need the flags.pk3 and 
+<p>Sets whether the players will see the GeoIP country flags in the scoreboard.
+<p>Players can enable/disable it with cg_countryFlags (default 1).</p>
+<p>Note: this requires ETPub client > 20080505. Also, you will need the flags.pk3 and 
 GeoIP.dat files in your server's etpub folder. See extra/GeoIP</p>
 </p>
 <p>Default is 1</p>
+
+<a name="g_noSkillUpgrades"></a>
+<dt>g_noSkillUpgrades [integer]
+<dd>
+<p>When set to 1, disables player skill upgrades.</p>
+</p>
+<p>Default is 0</p>
 
 <hr>
 <a name="mapvoting"></a>

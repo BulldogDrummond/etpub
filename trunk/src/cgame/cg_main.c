@@ -358,7 +358,7 @@ vmCvar_t	cg_weapaltReloads;
 // Dens: 0 = No, 1 = Full (default), 2 = Short
 vmCvar_t	cg_drawRanks;
 vmCvar_t	cg_drawClassIcons;
-vmCvar_t	cg_scoreboard_cf; //mcwf GeoIP
+vmCvar_t	cg_countryFlags; //mcwf GeoIP
 vmCvar_t	cg_drawCrosshairHP;
 
 // Dens: Dyno counter
@@ -666,7 +666,7 @@ cvarTable_t		cvarTable[] = {
 	{ &cg_maxTeamDynas, "cg_maxTeamDynas", "4", CVAR_ARCHIVE },
 	{ &cg_maxEnemyDynas, "cg_maxEnemyDynas", "4", CVAR_ARCHIVE },
 	{ &cg_drawClassIcons, "cg_drawClassIcons", "7", CVAR_ARCHIVE },
-	{ &cg_scoreboard_cf, "cg_scoreboard_cf", "1", CVAR_ARCHIVE }, //mcwf GeoIP
+	{ &cg_countryFlags, "cg_countryFlags", "1", CVAR_ARCHIVE }, //mcwf GeoIP
 	{ &cg_drawCrosshairHP, "cg_drawCrosshairHP", "0", CVAR_ARCHIVE },
 	{ &cg_fireTeamOptions, "cg_fireTeamOptions", "0", CVAR_ARCHIVE },
 	{ &cg_hitSounds, "cg_hitSounds", "1", CVAR_ARCHIVE | CVAR_USERINFO }, // Elf

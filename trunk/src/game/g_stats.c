@@ -153,6 +153,9 @@ extern qboolean AddWeaponToPlayer( gclient_t *client, weapon_t weapon, int ammo,
 //		Local func to actual do skill upgrade, used by both MP skill system, and SP scripted skill system
 static void G_UpgradeSkill( gentity_t *ent, skillType_t skill ) {
 	int i, cnt = 0;
+	if (g_noSkillUpgrades.integer)
+		return;
+
 	clientSession_t *ci = &ent->client->sess;
 	// See if this is the first time we've reached this skill level
 	for( i = 0; i < SK_NUM_SKILLS; i++ ) {

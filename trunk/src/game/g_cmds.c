@@ -901,19 +901,25 @@ int ClientNumberFromString( gentity_t *to, char *s ) {
 	if(fIsNumber) {
 		idnum = atoi( s );
 		if ( idnum < 0 || idnum >= level.maxclients ) {
-			CPx( to-g_entities, va("print \"Bad client slot: [lof]%i\n\"", idnum));
+			// yada - changed so console gets handled right
+			//CPx( to-g_entities, va("print \"Bad client slot: [lof]%i\n\"", idnum));
+			G_refPrintf(to,"Bad client slot: [lof]%i",idnum);
 			return -1;
 		}
 
 		cl = &level.clients[idnum];
 		if ( cl->pers.connected != CON_CONNECTED ) {
-			CPx( to-g_entities, va("print \"Client[lof] %i [lon]is not active\n\"", idnum));
+			// yada - changed so console gets handled right
+			//CPx( to-g_entities, va("print \"Client[lof] %i [lon]is not active\n\"", idnum));
+			G_refPrintf(to,"Client[lof] %i [lon]is not active",idnum);
 			return -1;
 		}
 		return(idnum);
 	}
 
-	CPx(to-g_entities, va("print \"User [lof]%s [lon]is not on the server\n\"", s));
+	// yada - changed so console gets handled right
+	//CPx(to-g_entities, va("print \"User [lof]%s [lon]is not on the server\n\"", s));
+	G_refPrintf(to,"User [lof]%s [lon]is not on the server",s);
 	return(-1);
 }
 
@@ -2310,10 +2316,10 @@ qboolean G_IsClassFull( gentity_t *ent, int playerType, team_t team)
 			if( team_maxSoldiers.integer == -1 ) break;
 			maxCount = team_maxSoldiers.integer;
 			if( strstr(team_maxSoldiers.string,"%-") ) {
-				maxCount = floor(team_maxSoldiers.integer
+				maxCount = floor(team_maxSoldiers.integer 
 						* tcount * 0.01f);
 			} else if( strstr(team_maxSoldiers.string,"%") ) {
-				maxCount = ceil(team_maxSoldiers.integer
+				maxCount = ceil(team_maxSoldiers.integer 
 						* tcount * 0.01f);
 			}
 			if( count >= maxCount )
@@ -2470,11 +2476,11 @@ void Cmd_Team_f( gentity_t *ent, unsigned int dwCommand, qboolean fValue ) {
 				weapon->pickup_name));
 		return;
 	}
-
+	
 	if(team == ent->client->sess.sessionTeam)
 	{
 		G_SetClientWeapons(ent, w, w2, qtrue);
-		ClientUserinfoChanged( (int)(ent->client - level.clients) );
+		ClientUserinfoChanged( (int)(ent->client - level.clients));
 	}
 	else
 		SetTeam(ent, s, qfalse, w, w2, qtrue);
@@ -2513,13 +2519,13 @@ void Cmd_Class_f( gentity_t* ent, unsigned int dwCommand, qboolean fValue ) {
 	team_t		pteam;
 	weapon_t	pweap;
 	weapon_t	pweap2;
-	int			clientNum;
+	int 		clientNum;
 	
 	if ( trap_Argc() < 2 ) {
 		CP( "print \"usage: /class <s|m|e|f|c> <primary weapon slot> <secundairy weapon slot>\n\"" );
 		return;
 	}
-	
+
 	clientNum = ent->client - level.clients;
 
 	// nextteam changes team

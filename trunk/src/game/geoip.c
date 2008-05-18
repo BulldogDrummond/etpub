@@ -82,7 +82,7 @@ void GeoIP_open(void) {
 	// redeye - basically not necessary but to get sure we close a maybe existing database
 	GeoIP_close();
 
-	if (!g_scoreboard_cf.integer) {
+	if (!g_countryFlags.integer) {
 		return;
 	}
 

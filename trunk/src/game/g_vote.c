@@ -176,7 +176,8 @@ qboolean G_voteDescription(gentity_t *ent, qboolean fRefereeCmd, int cmd)
 	char arg[MAX_TOKEN_CHARS];
 	char *ref_cmd = (fRefereeCmd) ? "\\ref" : "\\callvote";
 
-	if(!ent) return(qfalse);
+	// yada - give console some help!
+	//if(!ent) return(qfalse);
 
 	trap_Argv(2, arg, sizeof(arg));
 	if(!Q_stricmp(arg, "?") || trap_Argc() == 2) {
@@ -409,9 +410,10 @@ int G_Kick_v( gentity_t *ent, unsigned int dwVoteIndex, char *arg, char *arg2, q
 // *** Player Mute ***
 int G_Mute_v(gentity_t *ent, unsigned int dwVoteIndex, char *arg, char *arg2, qboolean fRefereeCmd)
 {
-	if( fRefereeCmd )
-		// handled elsewhere
-		return(G_NOTFOUND);
+	// yada - no its handled here now
+	//if( fRefereeCmd )
+	//	// handled elsewhere
+	//	return(G_NOTFOUND);
 
 	// Vote request (vote is being initiated)
 	if(arg) {
@@ -462,9 +464,10 @@ int G_Mute_v(gentity_t *ent, unsigned int dwVoteIndex, char *arg, char *arg2, qb
 // *** Player Un-Mute ***
 int G_UnMute_v(gentity_t *ent, unsigned int dwVoteIndex, char *arg, char *arg2, qboolean fRefereeCmd)
 {
-	if( fRefereeCmd )
-		// handled elsewhere
-		return(G_NOTFOUND);
+	// yada - no its handled here now
+	//if( fRefereeCmd )
+	//	// handled elsewhere
+	//	return(G_NOTFOUND);
 
 	// Vote request (vote is being initiated)
 	if(arg) {
@@ -512,10 +515,11 @@ int G_UnMute_v(gentity_t *ent, unsigned int dwVoteIndex, char *arg, char *arg2, 
 // *** Player PutSpec ***
 int G_PutSpec_v(gentity_t *ent, unsigned int dwVoteIndex, char *arg, char *arg2, qboolean fRefereeCmd)
 {
-	if( fRefereeCmd ){
-		// handled elsewhere
-		return(G_NOTFOUND);
-	}
+	// yada - my ass... this isnt handled elsewhere at all
+	//if( fRefereeCmd ){
+	//	// handled elsewhere
+	//	return(G_NOTFOUND);
+	//}
 
 	// Vote request (vote is being initiated)
 	if(arg) {
@@ -875,15 +879,16 @@ int G_Referee_v(gentity_t *ent, unsigned int dwVoteIndex, char *arg, char *arg2,
 			return(G_INVALID);
 		}
 
-		if(!ent->client->sess.referee && level.numPlayingClients < 3) {
+		if(ent && !ent->client->sess.referee && level.numPlayingClients < 3) { // yada - ent == NULL for console...
 			G_refPrintf(ent, "Sorry, not enough clients in the game to vote for a referee");
 			return(G_INVALID);
 		}
 
-		if(ent->client->sess.referee && trap_Argc() == 2) {
+		// yada - ent == NULL for console...
+		if(	(!ent || ent->client->sess.referee) && trap_Argc() == 2) {
 			G_playersMessage(ent);
 			return(G_INVALID);
-		} else if(trap_Argc() == 2) pid = ent - g_entities;
+		} else if(ent && trap_Argc() == 2) pid = ent - g_entities; // yada - ent == NULL for console...
 		else if(G_voteDescription(ent, fRefereeCmd, dwVoteIndex)) return(G_INVALID);
 		else if((pid = ClientNumberFromString(ent, arg2)) == -1) return(G_INVALID);
 
@@ -1080,15 +1085,38 @@ int G_BalancedTeams_v( gentity_t *ent, unsigned int dwVoteIndex, char *arg, char
 int G_Surrender_v( gentity_t *ent, unsigned int dwVoteIndex,
 		char *arg, char *arg2, qboolean fRefereeCmd )
 {
+	team_t team;
+	
 	// Vote request (vote is being initiated)
 	if(arg) {
-		if(!vote_allow_surrender.integer)
-			return G_INVALID;
 		if(g_gamestate.integer != GS_PLAYING) {
 			return G_INVALID;
 		}
+		if(!vote_allow_surrender.integer)
+			return G_INVALID;
+			
+		// yada - noone ever seemes to have thought of refs calling this
+		if(	!ent||
+				ent->client->sess.sessionTeam==TEAM_SPECTATOR
+		){
+			if(trap_Argc()==2){
+				G_refPrintf(ent,"Usage: \\%s surrender <team>",fRefereeCmd?"ref":"callvote");
+				return G_INVALID;
+			}
+			team=TeamFromString(arg2);
+			if(	team!=TEAM_AXIS&&
+					team!=TEAM_ALLIES
+			){
+				G_refPrintf(ent,"Invalid team specified.");
+				return G_INVALID;
+			}
+			level.voteInfo.voteTeam=team;
+		}else{
+			team=ent->client->sess.sessionTeam;
+		}
+		
 		Q_strncpyz(arg2,
-			(ent->client->sess.sessionTeam == TEAM_AXIS) ?
+			(team == TEAM_AXIS) ?
 				"[AXIS]" : "[ALLIES]",
 			VOTE_MAXSTRING);
 	}
@@ -1303,10 +1331,11 @@ int G_Unreferee_v(gentity_t *ent, unsigned int dwVoteIndex, char *arg, char *arg
 			return(G_INVALID);
 		}
 
-		if(ent->client->sess.referee && trap_Argc() == 2) {
+		// yada - ent==NULL for console... 
+		if( (!ent || ent->client->sess.referee) && trap_Argc() == 2) {
 			G_playersMessage(ent);
 			return(G_INVALID);
-		} else if(trap_Argc() == 2) pid = ent - g_entities;
+		} else if(ent && trap_Argc() == 2) pid = ent - g_entities; // yada - ent still NULL for console... 
 		else if(G_voteDescription(ent, fRefereeCmd, dwVoteIndex)) return(G_INVALID);
 		else if((pid = ClientNumberFromString(ent, arg2)) == -1) return(G_INVALID);
 

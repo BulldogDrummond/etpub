@@ -541,7 +541,10 @@ vmCvar_t g_healthSpeedBottom;
 vmCvar_t g_damageBonus;
 vmCvar_t g_damageBonusOpts;
 
-vmCvar_t g_scoreboard_cf; //mcwf GeoIP
+// quad
+vmCvar_t g_noSkillUpgrades;
+
+vmCvar_t g_countryFlags; //mcwf GeoIP
 
 cvarTable_t		gameCvarTable[] = {
 	// don't override the cheat state set by the system
@@ -1078,7 +1081,7 @@ cvarTable_t		gameCvarTable[] = {
 	{ &g_damageBonus, "g_damageBonus", "20.0", 0},
 	{ &g_damageBonusOpts, "g_damageBonusOpts", "0", 0},
 
-	{ &g_scoreboard_cf, "g_scoreboard_cf", "1", 0}, //mcwf GeoIP
+	{ &g_countryFlags, "g_countryFlags", "1", 0}, //mcwf GeoIP
 
 	{ NULL, "mod_version", ETPUB_VERSION, CVAR_SERVERINFO | CVAR_ROM },
 	{ NULL, "mod_url", "http://etpub.org", CVAR_SERVERINFO | CVAR_ROM },
@@ -1087,6 +1090,9 @@ cvarTable_t		gameCvarTable[] = {
 	{ &g_OmniBotEnable, "omnibot_enable", "1", CVAR_ARCHIVE | CVAR_SERVERINFO_NOUPDATE | CVAR_NORESTART, 0, qfalse },
 	{ &g_OmniBotPlaying, "omnibot_playing", "0", CVAR_SERVERINFO_NOUPDATE | CVAR_ROM, 0, qfalse },	
 	{ &g_OmniBotFlags, "omnibot_flags", "0", CVAR_ARCHIVE | CVAR_NORESTART, 0, qfalse },	
+	
+	//quad
+	{ &g_noSkillUpgrades, "g_noSkillUpgrades", "0", 0},
 
 };
 

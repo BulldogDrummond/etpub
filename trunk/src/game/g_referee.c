@@ -29,8 +29,9 @@ qboolean G_refCommandCheck(gentity_t *ent, char *cmd)
 	else if(!Q_stricmp(cmd, "unpause"))		G_refPause_cmd(ent, qfalse);
 	else if(!Q_stricmp(cmd, "warmup"))		G_refWarmup_cmd(ent);
 	else if(!Q_stricmp(cmd, "warn"))		G_refWarning_cmd(ent);
-	else if(!Q_stricmp(cmd, "mute"))		G_refMute_cmd(ent, qtrue);
-	else if(!Q_stricmp(cmd, "unmute"))		G_refMute_cmd(ent, qfalse);
+	// yada - handled by the vote functions now
+	//else if(!Q_stricmp(cmd, "mute"))		G_refMute_cmd(ent, qtrue); 
+	//else if(!Q_stricmp(cmd, "unmute"))		G_refMute_cmd(ent, qfalse);
 	else return(qfalse);
 
 	return(qtrue);
@@ -38,7 +39,7 @@ qboolean G_refCommandCheck(gentity_t *ent, char *cmd)
 
 
 // Lists ref commands.
-void G_refHelp_cmd(gentity_t *ent)
+/*void G_refHelp_cmd(gentity_t *ent)
 {
 	// List commands only for enabled refs.
 	if(ent) {
@@ -46,12 +47,12 @@ void G_refHelp_cmd(gentity_t *ent)
 		//          since the function is only called from the server
 		//          console or through G_ref_cmd (the function 
 		//          just below).
-		/*
-		if(!ent->client->sess.referee) {
-			CP("cpm \"Sorry, you are not a referee!\n");
-			return;
-		}
-		*/
+		//
+		//if(!ent->client->sess.referee) {
+		//	CP("cpm \"Sorry, you are not a referee!\n");
+		//	return;
+		//}
+		//
 
 		CP("print \"\n^3Referee commands:^7\n\"");
 		CP(    "print \"------------------------------------------\n\"");
@@ -78,8 +79,25 @@ void G_refHelp_cmd(gentity_t *ent)
 
 		G_Printf(  "Usage: <cmd> [params]\n\n");
 	}
-}
+}*/
 
+// yada - new version since sv and game cmd are equal now
+void G_refHelp_cmd(gentity_t *ent)
+{
+	G_refPrintf(ent,"^3Referee commands:");
+	G_refPrintf(ent,"------------------------------------------");
+
+	G_voteHelp(ent, qfalse);
+	// CHRUKER: b038 - Removed non-existing restart command
+	// CHRUKER: b039 - Added <pid> parameter to remove command
+	G_refPrintf(ent,"^5allready         putallies^7 <pid>  ^5speclock          warmup");
+	G_refPrintf(ent,"^5lock             putaxis^7 <pid>    ^5specunlock        warn ^7<pid>");
+	G_refPrintf(ent,"^5help             remove^7 <pid>     ^5unlock            pause");
+	G_refPrintf(ent,"^5unpause");
+
+	G_refPrintf(ent,"Usage: ^3\\ref <cmd> [params]\n");
+}
+		
 
 // Request for ref status or lists ref commands.
 void G_ref_cmd(gentity_t *ent, unsigned int dwCommand, qboolean fValue)
@@ -87,7 +105,8 @@ void G_ref_cmd(gentity_t *ent, unsigned int dwCommand, qboolean fValue)
 	char arg[MAX_TOKEN_CHARS];
 
 	// forty - in mod flood protection
-	if(ClientIsFlooding(ent)) {
+	// yada - dont check this on console
+	if(	ent && ClientIsFlooding(ent) ){
 		CP("print \"^1Spam Protection: ^7dropping ref\n\"");
 		return;
 	}
@@ -237,6 +256,14 @@ void G_refPlayerPut_cmd(gentity_t *ent, int team_id)
 		G_refPrintf(ent, "\"put[allies|axis]\" only for team-based games!");
 		return;
 	}
+	
+	// yada - yeah right not giving an arg will end up as slot 0...
+	// fixme: could maybe also be handled in ClientNumberFromString
+	// if(ent&&!*s) return ent-g_entities;
+	if(trap_Argc()!=3){
+		G_refPrintf(ent,"Usage: \\ref put[allies|axis] <pid>");
+		return;
+	}
 
 	// Find the player to place.
 	trap_Argv(2, arg, sizeof(arg));
@@ -281,6 +308,14 @@ void G_refRemove_cmd(gentity_t *ent)
 	// Works for teamplayish matches
 	if(g_gametype.integer < GT_WOLF) {
 		G_refPrintf(ent, "\"remove\" only for team-based games!");
+		return;
+	}
+	
+	// yada - yeah right not giving an arg will end up as slot 0...
+	// fixme: could maybe also be handled in ClientNumberFromString
+	// if(ent&&!*s) return ent-g_entities;
+	if(trap_Argc()!=3){
+		G_refPrintf(ent,"Usage: \\ref remove <pid>");
 		return;
 	}
 
@@ -375,7 +410,8 @@ void G_refWarning_cmd(gentity_t* ent)
 }
 
 // (Un)Mutes a player
-void G_refMute_cmd(gentity_t *ent, qboolean mute)
+// yada - just a less intelligent version of G_Mute_v... bye bye
+/*void G_refMute_cmd(gentity_t *ent, qboolean mute)
 {
 	int pid, isMuted = 0;
 	char arg[MAX_TOKEN_CHARS];
@@ -416,7 +452,7 @@ void G_refMute_cmd(gentity_t *ent, qboolean mute)
 		G_Printf( "\"%s^*\" has been unmuted\n",  player->client->pers.netname );
 		ClientUserinfoChanged( pid );
 	}
-}
+}*/
 
 //////////////////////////////
 //  Client authentication
@@ -603,7 +639,12 @@ void G_refPrintf( gentity_t* ent, const char *fmt, ... )
 	Q_vsnprintf (text, sizeof(text), fmt, argptr);
 	va_end (argptr);
 	// CHRUKER: b046 - Added the linebreak to the string.
-	if(ent == NULL) trap_Printf(va("%s\n", text, "\n"));
-	// CHRUKER: b046 - Was using the cpm command, but this is really just for the console.
-	else CP(va("print \"%s\n\"", text));
+	if(ent == NULL){
+		// yada - in server console color codes look stupid
+		ConsolizeString(text,text);
+		trap_Printf(va("%s\n",text));
+	}else{
+		// CHRUKER: b046 - Was using the cpm command, but this is really just for the console.
+		CP(va("print \"%s\n\"", text));
+	}
 }

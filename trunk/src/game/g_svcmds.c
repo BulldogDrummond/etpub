@@ -1354,10 +1354,13 @@ qboolean	ConsoleCommand( void ) {
 
 	// OSP - console also gets ref commands
 	if(!level.fLocalHost && !Q_stricmp(cmd, "ref") ) {
-		trap_Argv(1, cmd, sizeof(cmd));
+		/*trap_Argv(1, cmd, sizeof(cmd));
 		if(!G_refCommandCheck(NULL, cmd)) {
 			G_refHelp_cmd(NULL);
-		}
+		}*/
+		
+		// yada - use normal ref cmd
+		G_ref_cmd(NULL,0,qfalse);
 		return(qtrue);
 	}
 
@@ -1420,7 +1423,7 @@ qboolean	ConsoleCommand( void ) {
 		G_ClearXP();
 		return qtrue;
 	}
-
+	
 	if(!Q_stricmp(cmd, "forcecvar")) {
 		// tjw: what's the max for a cvar name?
 		char cvarName[MAX_CVAR_VALUE_STRING];

@@ -2547,7 +2547,7 @@ extern	vmCvar_t		cg_watermarkAlpha;
 extern	vmCvar_t		cg_weapaltReloads;
 extern	vmCvar_t		cg_drawRanks;
 extern	vmCvar_t		cg_drawClassIcons;
-extern	vmCvar_t		cg_scoreboard_cf; //mcwf GeoIP
+extern	vmCvar_t		cg_countryFlags; //mcwf GeoIP
 extern	vmCvar_t		cg_drawCrosshairHP;
 
 // Dens: dyno counter

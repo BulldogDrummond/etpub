@@ -1484,3 +1484,52 @@ gentity_t *FindRadius (gentity_t *from, vec3_t org, float rad2) {
 
 	return NULL;
 }
+
+// yada - strips colorcodes and localization stuff
+// fixme: write Q_memcmp?
+void ConsolizeString(char *in, char *out)
+{
+	char lon[]="[lon]";
+	char lof[]="[lof]";
+	
+	while(*in){
+		if(	*in==27||
+				*in=='^'
+		){
+			in++;
+			if(*in) in++;
+			continue;
+		}
+		if(	!memcmp(in,lon,sizeof(lon)-1)||
+				!memcmp(in,lof,sizeof(lof)-1)
+		){
+			in+=5;
+			continue;
+		}
+		*out++=*in++;
+	}
+	*out=0;
+}
+
+// yada
+team_t TeamFromString(char *team){
+	if( !Q_stricmp(team,"red")||
+			!Q_stricmp(team,"r")||
+			!Q_stricmp(team,"axis")
+	){
+		return TEAM_AXIS;
+	
+	}else if(	!Q_stricmp(team,"blue")||
+						!Q_stricmp(team,"b")||
+						!Q_stricmp(team,"allies")
+	){
+		return TEAM_ALLIES;
+	
+	}else if( !Q_stricmp(team,"spec")||
+						!Q_stricmp(team,"s")||
+						!Q_stricmp(team,"spectator")
+	){
+		return TEAM_SPECTATOR;
+	}
+	return TEAM_NUM_TEAMS;
+}
