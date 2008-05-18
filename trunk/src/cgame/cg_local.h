@@ -575,6 +575,9 @@ typedef struct clientInfo_s {
 	int				weapHeat;
 	int				weaponState;
 	int				weaponState_last;
+	
+	// quad:
+	int				latchClass;
 } clientInfo_t;
 
 typedef enum {

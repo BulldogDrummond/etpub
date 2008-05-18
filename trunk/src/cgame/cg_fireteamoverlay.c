@@ -386,15 +386,37 @@ void CG_DrawFireTeamOverlay( rectDef_t* rect ) {
 
 		x += 4;
 				
+		//draw class
 		if(cg_drawClassIcons.integer & CLASSICON_FIRETEAM){
 			trap_R_SetColor( colorWhite );
 			CG_DrawPic(x-2, y+2, FT_BAR_HEIGHT, FT_BAR_HEIGHT,
 				cgs.media.skillPics[BG_ClassSkillForClass( ci->cls )]);
 			trap_R_SetColor( NULL );
 		}else{
-			CG_Text_Paint_Ext( x, y + FT_BAR_HEIGHT, .2f, .2f, tclr, BG_ClassLetterForNumber( ci->cls ), 0, 0, ITEM_TEXTSTYLE_SHADOWED, &cgs.media.font3 );	
+			CG_Text_Paint_Ext( x, y + FT_BAR_HEIGHT, .2f, .2f, colorWhite, BG_ClassLetterForNumber( ci->cls ), 0, 0, ITEM_TEXTSTYLE_SHADOWED, &cgs.media.font3 );	
 		}
 		x += 10;
+		
+		// quad: draw latched class
+		if (ci->cls != ci->latchClass)
+		{
+			//draw separator
+			CG_Text_Paint_Ext( x, y + FT_BAR_HEIGHT, .2f, .2f, colorYellow, ">", 0, 0, ITEM_TEXTSTYLE_SHADOWED, &cgs.media.font3 );
+			x += 10;
+			
+			//draw class
+			if(cg_drawClassIcons.integer & CLASSICON_FIRETEAM) {
+				trap_R_SetColor( colorYellow );
+				CG_DrawPic(x - 2, y + 2, FT_BAR_HEIGHT, FT_BAR_HEIGHT,
+					cgs.media.skillPics[BG_ClassSkillForClass(ci->latchClass)]);
+				trap_R_SetColor(NULL);
+			} else {
+				CG_Text_Paint_Ext( x, y + FT_BAR_HEIGHT, .2f, .2f, colorYellow, BG_ClassLetterForNumber( ci->latchClass ), 0, 0, ITEM_TEXTSTYLE_SHADOWED, &cgs.media.font3 );
+			}
+			x += 10;
+		}
+		else
+			x += 20;
 		
 		CG_Text_Paint_Ext( x, y + FT_BAR_HEIGHT, .2f, .2f, tclr, ci->team == TEAM_AXIS ? miniRankNames_Axis[ci->rank] : miniRankNames_Allies[ci->rank], 0, 0, ITEM_TEXTSTYLE_SHADOWED, &cgs.media.font3 );	
 		x += 22;

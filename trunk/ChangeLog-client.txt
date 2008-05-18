@@ -391,7 +391,8 @@ current
            even more when used with etpub >= 0.9.0
 * tijmen:  added custom voicechats, which can also be disables clientside
            with cg_customVoiceChats
-* quad:    added cg_damageKick for controling the damage kick, check docs.           TODO: Should be limited by the server. by Terifire
+* quad:    added cg_damageKick for controling the damage kick, check docs.
+           TODO: Should be limited by the server. by Terifire
 * quad:    added cg_tracers by Elf Friend
 * quad:    added GeoIP country flags in scoreboard, made by mcwf.
 * quad:    added dropweapon command by Terifire
@@ -400,4 +401,4 @@ current
            Note: stores data in temp cvar, it won't be lost on vid_restart.
 * quad:    added /loadhud ? for listing the available huds, added more huds,
            include more stuff in the pk3, they should have been there anyway
-
+* quad:    added latched class indicator in fireteam

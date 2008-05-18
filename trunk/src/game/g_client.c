@@ -2133,7 +2133,7 @@ void ClientUserinfoChanged( int clientNum ) {
 		);
 	} else {
 #endif
-		s = va( "n\\%s\\t\\%i\\c\\%i\\r\\%i\\m\\%s\\s\\%s\\dn\\%s\\dr\\%i\\w\\%i\\lw\\%i\\sw\\%i\\mu\\%i\\ref\\%i\\uci\\%u", //mcwf GeoIP
+		s = va( "n\\%s\\t\\%i\\c\\%i\\r\\%i\\m\\%s\\s\\%s\\dn\\%s\\dr\\%i\\w\\%i\\lw\\%i\\sw\\%i\\mu\\%i\\ref\\%i\\uci\\%u\\lc\\%i", //mcwf GeoIP
 			client->pers.netname, 
 			client->sess.sessionTeam, 
 			client->sess.playerType, 
@@ -2147,7 +2147,8 @@ void ClientUserinfoChanged( int clientNum ) {
 			client->sess.latchPlayerWeapon2,
 			(client->sess.auto_unmute_time != 0) ? 1 : 0,
 			client->sess.referee,
-			client->sess.uci //mcwf GeoIP
+			client->sess.uci, //mcwf GeoIP
+			client->sess.latchPlayerType
 		);
 #ifndef NO_BOT_SUPPORT
 	}

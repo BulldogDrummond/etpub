@@ -596,7 +596,7 @@ void G_teamready_cmd(gentity_t *ent, unsigned int dwCommand, qboolean state)
 		}
 	}
 
-	G_printFull(va("The %s team is ready!", aTeams[tteam]), NULL);
+	G_printFull(va("%s readied the %s team!", ent->client->pers.netname, aTeams[tteam]), NULL);
 	G_readyMatchState();
 }
 

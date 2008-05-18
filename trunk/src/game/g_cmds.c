@@ -2472,7 +2472,10 @@ void Cmd_Team_f( gentity_t *ent, unsigned int dwCommand, qboolean fValue ) {
 	}
 
 	if(team == ent->client->sess.sessionTeam)
+	{
 		G_SetClientWeapons(ent, w, w2, qtrue);
+		ClientUserinfoChanged( (int)(ent->client - level.clients) );
+	}
 	else
 		SetTeam(ent, s, qfalse, w, w2, qtrue);
 }
@@ -2510,11 +2513,14 @@ void Cmd_Class_f( gentity_t* ent, unsigned int dwCommand, qboolean fValue ) {
 	team_t		pteam;
 	weapon_t	pweap;
 	weapon_t	pweap2;
+	int			clientNum;
 	
 	if ( trap_Argc() < 2 ) {
 		CP( "print \"usage: /class <s|m|e|f|c> <primary weapon slot> <secundairy weapon slot>\n\"" );
 		return;
 	}
+	
+	clientNum = ent->client - level.clients;
 
 	// nextteam changes team
 	if( ci->nextteam >= TEAM_AXIS && 
@@ -2589,6 +2595,7 @@ void Cmd_Class_f( gentity_t* ent, unsigned int dwCommand, qboolean fValue ) {
 	if(pteam == ci->sessionTeam) {
 		ci->nextteam = 0;
 		G_SetClientWeapons(ent, pweap, pweap2, qtrue);
+		ClientUserinfoChanged( clientNum );
 	} else {
 		char *s;
 		if( pteam == TEAM_AXIS ) {
