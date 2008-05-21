@@ -30,7 +30,7 @@ void G_WriteClientSessionData( gclient_t *client, qboolean restart )
 	//if(level.fResetStats) G_deleteStats(client - level.clients);
 	G_deleteStats(client - level.clients);
 
-	s = va("%i %i %i %i %i %i %i %i %i %i %i %i %i %i %f %f %f %f %i %i %i %i %i %i %i %i %i %i %i %i %i %s %s %u %d",
+	s = va("%i %i %i %i %i %i %i %i %i %i %i %i %i %i %f %f %f %f %i %i %i %i %i %i %i %i %i %i %i %i %i %s %s %u %d %i %i",
 		client->sess.sessionTeam,
 		client->sess.spectatorTime,
 		client->sess.spectatorState,
@@ -70,10 +70,15 @@ void G_WriteClientSessionData( gclient_t *client, qboolean restart )
 		restart ? client->sess.spawnObjectiveIndex : 0,
 		client->sess.ATB_count,
 		// Dens: Needs to be saved to prevent spoofing
-		client->sess.guid ? client->sess.guid : "NOGUID",
-		client->sess.ip ? client->sess.ip : "NOIP",
+		// quad: I think this solves ticket #5, will need to test it at large now
+		//       but at least ETTV clients don't get kicked anymore.
+		client->sess.guid && (*client->sess.guid) ? client->sess.guid : "NOGUID",
+		client->sess.ip && (*client->sess.ip) ? client->sess.ip : "NOIP",
 		client->sess.uci, //mcwf GeoIP
-		client->sess.need_greeting
+		client->sess.need_greeting,
+		// quad: shoutcaster and ettv
+		client->sess.shoutcaster,
+		client->sess.ettv
 		);
 
 	trap_Cvar_Set( va( "session%i", client - level.clients ), s );
@@ -187,7 +192,7 @@ void G_ReadSessionData( gclient_t *client )
 
 	trap_Cvar_VariableStringBuffer( va( "session%i", client - level.clients ), s, sizeof(s) );
 
-	sscanf( s, "%i %i %i %i %i %i %i %i %i %i %i %i %i %i %f %f %f %f %i %i %i %i %i %i %i %i %i %i %i %i %i %s %s %u %d", //mcwf GeoIP
+	sscanf( s, "%i %i %i %i %i %i %i %i %i %i %i %i %i %i %f %f %f %f %i %i %i %i %i %i %i %i %i %i %i %i %i %s %s %u %d %i %i", //mcwf GeoIP
 		(int *)&client->sess.sessionTeam,
 		&client->sess.spectatorTime,
 		(int *)&client->sess.spectatorState,
@@ -230,7 +235,10 @@ void G_ReadSessionData( gclient_t *client )
 		client->sess.guid,
 		client->sess.ip,
 		&client->sess.uci, //mcwf GeoIP
-		&client->sess.need_greeting
+		&client->sess.need_greeting,
+		// quad: shoutcaster and ettv
+		&client->sess.shoutcaster,
+		&client->sess.ettv
 		);
 
 	// OSP -- reinstate MV clients
@@ -388,6 +396,10 @@ void G_InitSessionData( gclient_t *client, char *userinfo ) {
 
 	sess->uci = 0;//mcwf GeoIP
 	sess->need_greeting = qtrue; // redeye - moved greeting message to ClientBegin
+	
+	// quad - shoutcaster & ettv
+	sess->ettv = (atoi(Info_ValueForKey(userinfo, "protocol")) == 284);
+	sess->shoutcaster = sess->ettv;
 
 	G_WriteClientSessionData( client, qfalse );
 }

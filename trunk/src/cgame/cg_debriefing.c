@@ -3266,6 +3266,7 @@ void CG_Debriefing2TeamSkillXP_Draw( panel_button_t* button ) {
 		default:
 			CG_Text_Paint_Ext( button->rect.x+3, button->rect.y + 11, scale, scale, clrTxtBck, "Allies", 0, 0, 0, &cgs.media.font3 );
 			break;
+		// foxX: TODO: check if this interferes with ETTV
 	}
 	
 	for( i = 0; i <= SK_NUM_SKILLS; i++ ) {

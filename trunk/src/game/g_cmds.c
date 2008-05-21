@@ -6099,6 +6099,13 @@ void ClientCommand( int clientNum ) {
 	else if (!Q_stricmp (cmd, "adrenother")) {
 		// josh: use revive needle to adren
 		G_AdrenOther(ent);
+	} else if (!Q_stricmp (cmd, "fu")) {
+		// quad - TODO: implement "full update"
+		// ETPro behaviour as discussed with zinx:
+		// zinx> sends score, team info, and resets deltas to baselines so they're fully resent
+		// zinx> i think, anyway
+		// zinx> hmm no nix on the last one
+		// zinx> some of the game state gets resent
 	}
 	else {
 		trap_SendServerCommand( clientNum, va("print \"unknown cmd[lof] %s\n\"", cmd ) );

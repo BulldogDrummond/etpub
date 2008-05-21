@@ -183,6 +183,14 @@ void CG_NewClientInfo( int clientNum ) {
 	v = Info_ValueForKey( configstring, "lc" );
 	newInfo.latchClass = atoi( v );
 	
+	// ettv
+	v = Info_ValueForKey( configstring, "tv" );
+	newInfo.ettv = atoi( v );
+	
+	// shoutcaster
+	v = Info_ValueForKey( configstring, "sc" );
+	newInfo.shoutcaster = atoi( v );
+	
 	// foxX: the client ready state
 	v = Info_ValueForKey( configstring, "rd" ); 
 	newInfo.clientReady = (atoi(v) ? qtrue : qfalse); 

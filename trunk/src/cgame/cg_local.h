@@ -578,6 +578,8 @@ typedef struct clientInfo_s {
 	
 	// quad:
 	int				latchClass;
+	int				ettv;
+	int				shoutcaster;
 	
 	// foxX:
 	qboolean		clientReady;

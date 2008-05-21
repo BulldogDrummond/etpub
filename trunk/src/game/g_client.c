@@ -2136,7 +2136,8 @@ void ClientUserinfoChanged( int clientNum ) {
 		// mcwf GeoIP
 		// quad: added support for latched classes
 		// foxX: added support for ready state
-		s = va( "n\\%s\\t\\%i\\c\\%i\\r\\%i\\m\\%s\\s\\%s\\dn\\%s\\dr\\%i\\w\\%i\\lw\\%i\\sw\\%i\\mu\\%i\\ref\\%i\\uci\\%u\\lc\\%i\\rd\\%i",
+		// quad: added support for ettv & shoutcaster
+		s = va( "n\\%s\\t\\%i\\c\\%i\\r\\%i\\m\\%s\\s\\%s\\dn\\%s\\dr\\%i\\w\\%i\\lw\\%i\\sw\\%i\\mu\\%i\\ref\\%i\\uci\\%u\\lc\\%i\\rd\\%i\\tv\\%i\\sc\\%i",
 			client->pers.netname, 
 			client->sess.sessionTeam, 
 			client->sess.playerType, 
@@ -2152,7 +2153,9 @@ void ClientUserinfoChanged( int clientNum ) {
 			client->sess.referee,
 			client->sess.uci, //mcwf GeoIP
 			client->sess.latchPlayerType,
-			(client->ps.eFlags & EF_READY) ? 1 : 0
+			(client->ps.eFlags & EF_READY) ? 1 : 0,
+			client->sess.ettv, 
+			client->sess.shoutcaster
 		);
 #ifndef NO_BOT_SUPPORT
 	}
@@ -2393,12 +2396,12 @@ char *ClientConnect( int clientNum, qboolean firstTime, qboolean isBot ) {
 			Q_strncpyz(client->sess.ip, "", sizeof(client->sess.ip));
 		}
 	
-		if(Q_stricmp(client->sess.guid, guid)){
+		if(Q_stricmp(client->sess.guid, guid)){ 
 			G_LogPrintf( "GUIDSPOOF: client %i Original guid %s"
-				"Secondary guid %s\n",
+				"Secondary guid %s\nettv %d",
 				clientNum,
 				client->sess.guid,
-				guid);
+				guid, client->sess.ettv);
 			if((g_spoofOptions.integer & SPOOFOPT_EMPTY_GUID) 
 				&& !Q_stricmp(client->sess.guid, "")){
 				Q_strncpyz(client->sess.guid, guid, sizeof(client->sess.guid));
@@ -2411,7 +2414,7 @@ char *ClientConnect( int clientNum, qboolean firstTime, qboolean isBot ) {
 		}
 
 		value = Info_ValueForKey (userinfo, "ip");
-		if(Q_stricmp(client->sess.ip, value)){
+		if(Q_stricmp(client->sess.ip, value)){ 
 			G_LogPrintf( "IPSPOOF: client %i Original ip %s"
 				"Secondary ip %s\n",
 				clientNum,

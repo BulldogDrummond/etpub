@@ -357,11 +357,10 @@ static void WM_DrawClientScore( int x, int y, score_t *score, float *color, floa
 	}
 
 	if ( ci->team == TEAM_SPECTATOR ) {
-		/*const char *s;
-		int w, totalwidth;
-
+		const char *s;
+		
+		/*int w, totalwidth;
 		totalwidth = INFO_CLASS_WIDTH + INFO_SCORE_WIDTH + INFO_LATENCY_WIDTH - 8;
-
 		// CHRUKER: b031 -  Show connecting people as connecting
 		if (score->ping == -1) {
 			s = CG_TranslateString( "^3CONNECTING" );
@@ -370,11 +369,19 @@ static void WM_DrawClientScore( int x, int y, score_t *score, float *color, floa
 		} else {
 			s = CG_TranslateString( "^3SPECTATOR" );
 		}
-		w = CG_DrawStrlen( s ) * SMALLCHAR_WIDTH;
-
-		CG_DrawSmallString( tempx + totalwidth - w, y, s, fade );
-		return;*/
-		CG_DrawSmallString( tempx, y, "^3SPECT", fade );
+		w = CG_DrawStrlen( s ) * SMALLCHAR_WIDTH;*/
+		
+		// quad 
+		if (ci->ettv)
+			s = CG_TranslateString("^5ETTV"); 
+		else if (ci->shoutcaster)
+			s = CG_TranslateString("^dSHOUTCASTER");
+		else if (score->ping >=0 && score->ping < 999) 
+			s = CG_TranslateString("^3SPECT");
+		else
+			s = "";
+		
+		CG_DrawSmallString( tempx, y, s, fade );
 	}
 	// OSP - allow MV clients see the class of its merged client's on the scoreboard
 	else if ( cg.snap->ps.persistant[PERS_TEAM] == ci->team || CG_mvMergedClientLocate(score->client) ) {
@@ -422,7 +429,7 @@ static void WM_DrawClientScore( int x, int y, score_t *score, float *color, floa
 	else if(cg_scoreboard.integer == SCOREBOARD_KR)
 		CG_DrawSmallString( tempx, y, 
 			va( "%.3f", score->killRating ), fade);
-	else
+	else if (!ci->shoutcaster)
 		CG_DrawSmallString( tempx, y, 
 			va( "%3i", score->score ), fade);
 

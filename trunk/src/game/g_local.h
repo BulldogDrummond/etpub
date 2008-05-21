@@ -718,6 +718,10 @@ typedef struct {
 
 	// redeye - moved greeting message to ClientBegin
 	qboolean need_greeting;
+	
+	// quad - ettv and shoutcaster
+	int shoutcaster;
+	int ettv;
 } clientSession_t;
 
 //
