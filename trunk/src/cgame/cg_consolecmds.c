@@ -191,7 +191,9 @@ void CG_ScoresDown_f( void ) {
 		// displayed, but if this is the first hit, clear them out
 		if ( !cg.showScores ) {
 			cg.showScores = qtrue;
-			if(!cg.demoPlayback && cg.mvTotalClients < 1) cg.numScores = 0;
+			// quad - do not clear the scores if we're a spectator connected on the ETTV
+			if(!cg.demoPlayback && cg.mvTotalClients < 1 && !cgs.clientinfo[cg.clientNum].ettv) 
+				cg.numScores = 0;
 		}
 	} else {
 		// show the cached contents even if they just pressed if it

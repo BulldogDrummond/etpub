@@ -463,7 +463,7 @@ static void G_SendKR(gentity_t *ent)
 
 	for(i=0; i < level.numConnectedClients; i++) {
 		cl = &level.clients[level.sortedClients[i]];
-		if(ent->client->pers.etpubc > 20060606) {
+		if(ent->client->pers.etpubc > 20060606 || ent->client->sess.ettv) {
 			kr_kills_per_death = G_GetAdjKillsPerDeath(
 				cl->sess.overall_killrating
 				,cl->sess.overall_killvariance
@@ -592,10 +592,10 @@ void G_SendScore( gentity_t *ent ) {
 	char		buffer[987];
 	char		startbuffer[32];
 
-	if(g_playerRating.integer && ent->client->pers.etpubc > 20060205) {
+	if((g_playerRating.integer && ent->client->pers.etpubc > 20060205) || ent->client->sess.ettv) {
 		G_SendPR(ent);
 	}
-	if(g_killRating.integer && ent->client->pers.etpubc > 20060205) {
+	if((g_killRating.integer && ent->client->pers.etpubc > 20060205) || ent->client->sess.ettv) {
 		G_SendKR(ent);
 	}
 
@@ -2450,6 +2450,13 @@ void Cmd_Team_f( gentity_t *ent, unsigned int dwCommand, qboolean fValue ) {
 		&team,
 		&specState, 
 		&specClient);
+		
+	// quad - don't allow shoutcasters to join teams
+	if (ent->client->sess.shoutcaster && (team == TEAM_ALLIES || team == TEAM_AXIS)) {
+		CP("print \"team: shoutcasters may not join a team\n\"");
+		CP("cp \"Shoutcasters may not join a team\n\"");
+		return;
+	}
 
 	playerType = -1;
 	if(*ptype) {
@@ -2472,8 +2479,7 @@ void Cmd_Team_f( gentity_t *ent, unsigned int dwCommand, qboolean fValue ) {
 	if(G_IsWeaponDisabled(ent, w, team, qfalse)) {
 		gitem_t *weapon = BG_FindItemForWeapon(w);
 		if(weapon)
-			CP(va("print \"team: %s is not available\n\"",
-				weapon->pickup_name));
+			CP(va("print \"team: %s is not available\n\"", weapon->pickup_name));
 		return;
 	}
 	
@@ -2534,6 +2540,13 @@ void Cmd_Class_f( gentity_t* ent, unsigned int dwCommand, qboolean fValue ) {
 		pteam =	ci->nextteam;
 	} else {
 		pteam = ci->sessionTeam;
+	}
+	
+	// quad - don't allow shoutcasters to join teams
+	if (ent->client->sess.shoutcaster && (pteam == TEAM_ALLIES || pteam == TEAM_AXIS)) {
+		CP("print \"class: shoutcasters may not join a team.\n\"");
+		CP("cp \"Shoutcasters may not join a team.\n\"");
+		return;
 	}
 
 	trap_Argv( 1, ptype,	sizeof( ptype	));
@@ -5329,7 +5342,8 @@ void G_MakeReady( gentity_t* ent ) {
 	// rain - #105 - moved this set here
 	ent->client->pers.ready = qtrue;
 	// foxX: now notify the other clients (see CG_NewClientInfo) that this client became ready 
-	ClientUserinfoChanged(ent - g_entities);
+	if (g_gamestate.integer == GS_WARMUP_COUNTDOWN || g_gamestate.integer == GS_WARMUP)
+		ClientUserinfoChanged(ent - g_entities);
 }
 
 void G_MakeUnready( gentity_t* ent ) {
@@ -5338,7 +5352,8 @@ void G_MakeUnready( gentity_t* ent ) {
 	// rain - #105 - moved this set here
 	ent->client->pers.ready = qfalse;
 	// foxX: now notify the other clients (see CG_NewClientInfo) that this client became not ready 
-	ClientUserinfoChanged(ent - g_entities); 
+	if (g_gamestate.integer == GS_WARMUP_COUNTDOWN || g_gamestate.integer == GS_WARMUP)
+		ClientUserinfoChanged(ent - g_entities); 
 }
 
 void Cmd_IntermissionReady_f ( gentity_t* ent ) {
@@ -5924,6 +5939,16 @@ void ClientCommand( int clientNum ) {
 	} else if (Q_stricmp (cmd, "score") == 0) {
 		Cmd_Score_f (ent);
 		return;
+	} else if (Q_stricmp (cmd, "fu") == 0) {
+		return;
+		// quad - TODO: implement "full update"
+		// Do we really need this? ETPub is sending the scores automatically...
+		//
+		// ETPro behaviour as discussed with zinx:
+		// zinx> sends score, team info, and resets deltas to baselines so they're fully resent
+		// zinx> i think, anyway
+		// zinx> hmm no nix on the last one
+		// zinx> some of the game state gets resent
 	} else if( Q_stricmp (cmd, "vote") == 0 ) {
 		Cmd_Vote_f (ent);
 		return;
@@ -6099,14 +6124,7 @@ void ClientCommand( int clientNum ) {
 	else if (!Q_stricmp (cmd, "adrenother")) {
 		// josh: use revive needle to adren
 		G_AdrenOther(ent);
-	} else if (!Q_stricmp (cmd, "fu")) {
-		// quad - TODO: implement "full update"
-		// ETPro behaviour as discussed with zinx:
-		// zinx> sends score, team info, and resets deltas to baselines so they're fully resent
-		// zinx> i think, anyway
-		// zinx> hmm no nix on the last one
-		// zinx> some of the game state gets resent
-	}
+	} 
 	else {
 		trap_SendServerCommand( clientNum, va("print \"unknown cmd[lof] %s\n\"", cmd ) );
 	}

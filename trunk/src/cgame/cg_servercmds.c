@@ -2894,6 +2894,12 @@ static void CG_ServerCommand( void ) {
 		return;
 	}
 	
+	// quad - ignore etpro reliable commands
+	// ETTV sends some in response to 'score'
+	if(cmd[0] == '*') {
+		return;
+	}
+	
 	CG_Printf( "Unknown client game command: %s\n", cmd );
 }
 

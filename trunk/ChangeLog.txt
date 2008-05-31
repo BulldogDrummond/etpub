@@ -1974,4 +1974,6 @@
 * quad:    g_noSkillUpgrades, and the changes yada made to the /ref system
            renamed g_scoreboard_cf to g_countryFlags (and cg_countryFlags too)
 * quad:    added foxX's code for ready icon
+* quad:    partial support for ETTV, also fix for Ticket #5
+           fix for Ticket #10 by RedEye
 
