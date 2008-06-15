@@ -253,6 +253,7 @@ clientInfo_t* CG_SortedFireTeamPlayerForPosition(int pos) {
 
 #define FT_BAR_YSPACING 2.f
 #define FT_BAR_HEIGHT 10.f
+#define FT_WIDTH 224
 void CG_DrawFakeFireTeamOverlay( rectDef_t* rect ) {
 	int x = rect->x;
 	int y = rect->y + 1;	// +1, jitter it into place in 1024 :)
@@ -272,13 +273,13 @@ void CG_DrawFakeFireTeamOverlay( rectDef_t* rect ) {
 		h += FT_BAR_HEIGHT + FT_BAR_YSPACING;
 	}
 
-	CG_DrawRect( x, y, 204, h, 1, borderColor);
-	CG_FillRect( x + 1, y + 1, 204 - 2, h - 2, bgColor);
+	CG_DrawRect( x, y, FT_WIDTH, h, 1, borderColor);
+	CG_FillRect( x + 1, y + 1, FT_WIDTH - 2, h - 2, bgColor);
 
 	x += 2;
 	y += 2;
 
-	CG_FillRect( x, y, 204 - 4, 12, clr1 );
+	CG_FillRect( x, y, FT_WIDTH - 4, 12, clr1 );
 
 	Com_sprintf( buffer, 64, "Fireteam: %s", "Sample" );
 	//sprintf( buffer, "Fireteam: %s", "Sample" );
@@ -291,7 +292,7 @@ void CG_DrawFakeFireTeamOverlay( rectDef_t* rect ) {
 		y += FT_BAR_HEIGHT + FT_BAR_YSPACING;
 		x = rect->x + 2;
 
-		CG_FillRect( x, y + FT_BAR_YSPACING, 204 - 4, FT_BAR_HEIGHT, clr2 );
+		CG_FillRect( x, y + FT_BAR_YSPACING, FT_WIDTH - 4, FT_BAR_HEIGHT, clr2 );
 
 		x += 4;
 
@@ -311,7 +312,7 @@ void CG_DrawFakeFireTeamOverlay( rectDef_t* rect ) {
 
 			s = va( "^3(%s)", "X,Y");
 
-			x = rect->x + ( 204 - 4 - CG_Text_Width_Ext( s, .2f, 0, &cgs.media.font3 ) );
+			x = rect->x + ( FT_WIDTH - 4 - CG_Text_Width_Ext( s, .2f, 0, &cgs.media.font3 ) );
 
 			CG_Text_Paint_Ext( x, y + FT_BAR_HEIGHT,  .2f, .2f, tclr, va( "^3(%s)", "X,Y" ), 0, 0, ITEM_TEXTSTYLE_SHADOWED, &cgs.media.font3 );
 		}
@@ -353,13 +354,13 @@ void CG_DrawFireTeamOverlay( rectDef_t* rect ) {
 		h += FT_BAR_HEIGHT + FT_BAR_YSPACING;
 	}
 
-	CG_DrawRect( x, y, 204, h, 1, borderColor);
-	CG_FillRect( x + 1, y + 1, 204 - 2, h - 2, bgColor);
+	CG_DrawRect( x, y, FT_WIDTH, h, 1, borderColor);
+	CG_FillRect( x + 1, y + 1, FT_WIDTH - 2, h - 2, bgColor);
 
 	x += 2;
 	y += 2;
 
-	CG_FillRect( x, y, 204 - 4, 12, clr1 );
+	CG_FillRect( x, y, FT_WIDTH - 4, 12, clr1 );
 
 	Com_sprintf( buffer, 64, "Fireteam: %s", bg_fireteamNames[f->ident] );
 	//sprintf( buffer, "Fireteam: %s", bg_fireteamNames[f->ident] );
@@ -379,9 +380,9 @@ void CG_DrawFireTeamOverlay( rectDef_t* rect ) {
 		}
 		
 		if( ci->selected ) {
-			CG_FillRect( x, y + FT_BAR_YSPACING, 204 - 4, FT_BAR_HEIGHT, clr3 );
+			CG_FillRect( x, y + FT_BAR_YSPACING, FT_WIDTH - 4, FT_BAR_HEIGHT, clr3 );
 		} else {
-			CG_FillRect( x, y + FT_BAR_YSPACING, 204 - 4, FT_BAR_HEIGHT, clr2 );
+			CG_FillRect( x, y + FT_BAR_YSPACING, FT_WIDTH - 4, FT_BAR_HEIGHT, clr2 );
 		}
 
 		x += 4;
@@ -454,7 +455,7 @@ void CG_DrawFireTeamOverlay( rectDef_t* rect ) {
 
 			s = va( "^3(%s)", BG_GetLocationString( loc ) );
 
-			x = rect->x + ( 204 - 4 - CG_Text_Width_Ext( s, .2f, 0, &cgs.media.font3 ) );
+			x = rect->x + ( FT_WIDTH - 4 - CG_Text_Width_Ext( s, .2f, 0, &cgs.media.font3 ) );
 
 			CG_Text_Paint_Ext( x, y + FT_BAR_HEIGHT,  .2f, .2f, tclr, va( "^3(%s)", BG_GetLocationString( loc ) ), 0, 0, ITEM_TEXTSTYLE_SHADOWED, &cgs.media.font3 );
 		}
