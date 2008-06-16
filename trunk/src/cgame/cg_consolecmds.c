@@ -1170,6 +1170,21 @@ void CG_TimerSet_f( void )
 		CG_Printf("Usage: timerSet [seconds]\n");
 }
 
+// flms: etpro style timer resetting
+void CG_ResetTimer_f(void)
+{
+	int msec;
+
+	if (cgs.gamestate != GS_PLAYING)
+	{
+		CG_Printf("You may only use this command during the match.\n");
+		return;
+	}
+
+	msec = (cgs.timelimit * 60.f * 1000.f) - (cg.time - cgs.levelStartTime);
+	trap_Cvar_Set("cg_spawnTimer_set", va("%d", msec/1000));
+}
+
 typedef struct {
 	char	*cmd;
 	void	(*function)(void);
@@ -1293,6 +1308,7 @@ static consoleCommand_t	commands[] =
 
 	//quad: spawntimer
 	{ "timerSet", CG_TimerSet_f },
+	{ "resetTimer", CG_ResetTimer_f },
 	
 };
 
@@ -1459,7 +1475,6 @@ void CG_InitConsoleCommands( void ) {
 	trap_AddCommand("nextteam");
 
 	trap_AddCommand("dropweapon"); // Terifire
-	trap_AddCommand("timerset");
 
 	// tjw: remove engine commands
 	trap_RemoveCommand("+lookup");

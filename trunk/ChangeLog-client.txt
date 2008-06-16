@@ -403,3 +403,5 @@ current
            include more stuff in the pk3, they should have been there anyway
 * quad:    added latched class indicator in fireteam
 * quad:    added cg_tracers = 2 for drawing all but your own tracers
+* flms:    fixed the fireteam layout which was bugged by latched classes
+* flms:    added resetTimer command to just reset the enemy spawn timer

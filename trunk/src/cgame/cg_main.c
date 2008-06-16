@@ -672,7 +672,7 @@ cvarTable_t		cvarTable[] = {
 	{ &cg_hitSounds, "cg_hitSounds", "1", CVAR_ARCHIVE | CVAR_USERINFO }, // Elf
 	{ &cg_damageKick, "cg_damageKick", "1", CVAR_ARCHIVE },	// Terifire
 	{ &cg_spawnTimer_set, "cg_spawnTimer_set", "-1", CVAR_TEMP }, //quad
-	{ &cg_spawnTimer_period, "cg_spawnTimer_period", "20", CVAR_TEMP }, //quad
+	{ &cg_spawnTimer_period, "cg_spawnTimer_period", "0", CVAR_TEMP }, //quad
 };
 
 int		cvarTableSize = sizeof( cvarTable ) / sizeof( cvarTable[0] );
