@@ -269,6 +269,7 @@ vmCvar_t g_XPSaveMaxAge;
 vmCvar_t g_weapons; // see WPF_ defines
 vmCvar_t g_goomba;
 vmCvar_t g_spawnInvul;
+vmCvar_t g_spawnInvulFair;
 vmCvar_t g_spinCorpse;
 vmCvar_t g_teamChangeKills;
 vmCvar_t g_ATB;
@@ -811,6 +812,7 @@ cvarTable_t		gameCvarTable[] = {
 	{ &g_weapons, "g_weapons", "0", 0 },
 	{ &g_goomba, "g_goomba", "0", 0 },
 	{ &g_spawnInvul, "g_spawnInvul", "3", 0 },
+	{ &g_spawnInvulFair, "g_spawnInvulFair", "0", 0 },
 	{ &g_spinCorpse, "g_spinCorpse", "0", 0 },
 	{ &g_teamChangeKills, "g_teamChangeKills", "1", 0 },
 	{ &g_ATB, "g_ATB", "0", 0 },

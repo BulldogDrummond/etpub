@@ -2230,6 +2230,7 @@ extern vmCvar_t	g_XPSaveMaxAge;
 extern vmCvar_t g_weapons; // see WPF_* defines
 extern vmCvar_t g_goomba;
 extern vmCvar_t g_spawnInvul;
+extern vmCvar_t g_spawnInvulFair;
 extern vmCvar_t g_spinCorpse;
 extern vmCvar_t g_teamChangeKills;
 extern vmCvar_t g_ATB;
