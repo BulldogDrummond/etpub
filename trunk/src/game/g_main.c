@@ -812,7 +812,7 @@ cvarTable_t		gameCvarTable[] = {
 	{ &g_weapons, "g_weapons", "0", 0 },
 	{ &g_goomba, "g_goomba", "0", 0 },
 	{ &g_spawnInvul, "g_spawnInvul", "3", 0 },
-	{ &g_spawnInvulFair, "g_spawnInvulFair", "0", 0 },
+	{ &g_spawnInvulFair, "g_spawnInvulFair", "1", 0 },
 	{ &g_spinCorpse, "g_spinCorpse", "0", 0 },
 	{ &g_teamChangeKills, "g_teamChangeKills", "1", 0 },
 	{ &g_ATB, "g_ATB", "0", 0 },

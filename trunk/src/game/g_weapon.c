@@ -4734,7 +4734,7 @@ void FireWeapon( gentity_t *ent ) {
 	}
 
 	// PCR: Remove spawn protection
-	if(ent->client->ps.powerups[PW_INVULNERABLE] >= level.time && g_spawnInvulFair.integer==1) {
+	if(ent->client->ps.powerups[PW_INVULNERABLE] >= level.time && g_spawnInvulFair.integer==1 && ent->s.weapon != WP_MEDKIT && ent->s.weapon != WP_AMMO) {
 		ent->client->ps.powerups[PW_INVULNERABLE] = level.time - 100;
 		// And tell the player
 		CP("cp \"You lost your spawn protection\"");
@@ -5214,7 +5214,7 @@ void G_throwKnife( gentity_t *ent )
 		//dead players
 		ent->client->ps.pm_flags & PMF_LIMBO ||
 		ent->client->ps.pm_type == PM_DEAD ||
-		//�n a tank/on a MG
+		//a tank/on a MG
 		BG_PlayerMounted(ent->client->ps.eFlags) ||
 		//leaning
 		ent->client->ps.leanf ||

@@ -43,6 +43,12 @@ dt {
 <td><a href="#g_customVoiceChats">g_customVoiceChats</a></td>
 <td><a href="#g_countryFlags">g_countryFlags</a></td>
 <td><a href="#g_noSkillUpgrades">g_noSkillUpgrades</a></td>
+<td><a href="#g_firstBloodSound">g_firstBloodSound</a></td>
+</tr>
+<tr>
+<td><a href="#g_spawnInvulFair">g_spawnInvulFair</a></td>
+<td>&nbsp;</td>
+<td>&nbsp;</td>
 <td>&nbsp;</td>
 </tr>
 </table>
@@ -177,6 +183,41 @@ is unpaused.
 <p>
 Example <pre>
 set g_fightSound "sound/world/rooster.wav"</pre>
+</p>
+<p>
+Set this to &quot;&quot; to disable it.
+</p>
+<p>
+Default is &quot;&quot;
+</p>
+
+<a name="g_knifeKillSound"></a>
+<dt>g_knifeKillSound [string]
+<dd>
+<p>
+If a client was killed with a knife, all players close to the killed player will hear this sound.
+Kills on teammates will be ignored and so this sound won't be played then
+</p>
+<p>
+Example <pre>
+set g_knifeKillSound "sound/osp/goat.wav"</pre>
+</p>
+<p>
+Set this to &quot;&quot; to disable it.
+</p>
+<p>
+Default is &quot;&quot;
+</p>
+
+<a name="g_firstBloodSound"></a>
+<dt>g_firstBloodSound [string]
+<dd>
+<p>
+The sound that will be played when the first kill of the map is made
+</p>
+<p>
+Example <pre>
+set g_firstBloodSound "sound/misc/firstblood.wav"</pre>
 </p>
 <p>
 Set this to &quot;&quot; to disable it.
@@ -608,7 +649,7 @@ This will override g_spawnInvul if not 0</p>
 <dd>
 <p>Removes the spawn protection when the player fires his first shot
 (note : the spawn protection will still be removed after the g_spawnInvul time)</p>
-<p>Default is 0</p>
+<p>Default is 1</p>
 
 <a name="g_spinCorpse"></a>
 <dt>g_spinCorpse [0|1]
@@ -3015,24 +3056,6 @@ is set greater than 0</p>
 but for laggers it will be a bit more uncomfortable. This CVAR overrides both
 g_maxWarp AND g_skipCorrection in order to keep things consistent</p>
 <p>Default is 1</p>
-
-<a name="g_knifeKillSound"></a>
-<dt>g_knifeKillSound [string]
-<dd>
-<p>
-If a client was killed with a knife, all players close to the killed player will hear this sound.
-Kills on teammates will be ignored and so this sound won't be played then
-</p>
-<p>
-Example <pre>
-set g_knifeKillSound "sound/osp/goat.wav"</pre>
-</p>
-<p>
-Set this to &quot;&quot; to disable it.
-</p>
-<p>
-Default is &quot;&quot;
-</p>
 
 <a name="g_healthSpeedStart"></a>
 <a name="g_healthSpeedBottom"></a>
