@@ -259,6 +259,11 @@ static qboolean weaponCharged(playerState_t* ps, team_t team, int weapon, int* s
 {
 	switch (weapon)
 	{
+#ifdef NOQUARTER	
+		// IRATA added BAZOCKA: TODO addjust NQ like afaik reload of bazooka is different from panzer
+case WP_BAZOOKA:
+	// break;
+#endif	
 	case WP_PANZERFAUST:
 		if ( ps->eFlags & EF_PRONE )
 			return qfalse;
@@ -2361,7 +2366,9 @@ public:
 
 				if(pEnt->health > GIB_HEALTH)
 				{
+					if ( !pEnt->client->ps.powerups[PW_INVULNERABLE] )
 					_category.SetFlag(ENT_CAT_SHOOTABLE);
+
 					_category.SetFlag(ENT_CAT_PLAYER);
 					break;
 				}
