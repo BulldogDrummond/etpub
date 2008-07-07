@@ -248,6 +248,11 @@ void PushBot( gentity_t *ent, gentity_t *other ) {
 	vec3_t dir, ang, f, r;
 	float oldspeed;
 	//
+
+	// dont push when mounted in certain stationary weapons
+	if(other->client && Bot_Util_AllowPush(other->client->ps.weapon) == qfalse)
+		return;
+
 	oldspeed = VectorLength( other->client->ps.velocity );
 	if (oldspeed < 200)
 		oldspeed = 200;
@@ -384,7 +389,8 @@ void ClientImpacts( gentity_t *ent, pmove_t *pm ) {
 #endif
 
 		// RF, bot should get pushed out the way
-		if ( (ent->client) /*&& !(ent->r.svFlags & SVF_BOT)*/ && (other->r.svFlags & SVF_BOT) ) {
+		if ( (ent->client) /*&& !(ent->r.svFlags & SVF_BOT)*/ && (other->r.svFlags & SVF_BOT) && 
+			!other->client->ps.powerups[PW_INVULNERABLE] ) {
 /*			vec3_t dir;
 			// if we are not heading for them, ignore
 			VectorSubtract( other->r.currentOrigin, ent->r.currentOrigin, dir );
@@ -397,7 +403,8 @@ void ClientImpacts( gentity_t *ent, pmove_t *pm ) {
 		}
 
 		// if we are standing on their head, then we should be pushed also
-		if ( (ent->r.svFlags & SVF_BOT) && ent->s.groundEntityNum == other->s.number && other->client) {
+		if ( (ent->r.svFlags & SVF_BOT) && (ent->s.groundEntityNum == other->s.number && other->client) &&
+			!other->client->ps.powerups[PW_INVULNERABLE]) {
 			PushBot( other, ent );
 		}
 
@@ -1741,6 +1748,9 @@ void ClientThink_real( gentity_t *ent ) {
 		ent->client->ps.identifyClient = -1;
 		ent->client->ps.identifyClientHealth = 0;
 	}
+
+	// Omni-bot: used for class changes, bot will /kill 2 seconds before spawn
+	Bot_Util_CheckForSuicide(ent);
 
 	// check for respawning
 	if( client->ps.stats[STAT_HEALTH] <= 0 && 

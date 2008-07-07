@@ -1,8 +1,8 @@
 ////////////////////////////////////////////////////////////////////////////////
 // 
-// $LastChangedBy: gabriel $
-// $LastChangedDate: 2007-06-05 00:46:18 +0300 (Tue, 05 Jun 2007) $
-// $LastChangedRevision: 1741 $
+// $LastChangedBy: DrEvil $
+// $LastChangedDate: 2007-05-16 16:53:29 -0700 (Wed, 16 May 2007) $
+// $LastChangedRevision: 1924 $
 //
 // Title: BotExports
 //		In order for the game to call functions from the bot, we must export
@@ -14,9 +14,9 @@
 #define __BOTEXPORTS_H__
 
 #include "Functions_Bot.h"
-#include "Functions_Engine.h"
 #include "Omni-Bot_Types.h"
 #include "Omni-Bot_Events.h"
+#include "IEngineInterface.h"
 
 //////////////////////////////////////////////////////////////////////////
 // Export the function on platforms that require it.
@@ -49,7 +49,7 @@ extern "C"
 // Interfaces
 
 extern Bot_EngineFuncs_t	g_BotFunctions;
-extern Game_EngineFuncs_t	g_InterfaceFunctions;
+extern IEngineInterface		*g_InterfaceFunctions;
 
 //////////////////////////////////////////////////////////////////////////
 // Utility Function

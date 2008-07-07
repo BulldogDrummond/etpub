@@ -1,8 +1,8 @@
 ////////////////////////////////////////////////////////////////////////////////
 // 
-// $LastChangedBy: gabriel $
-// $LastChangedDate: 2007-06-05 00:46:18 +0300 (Tue, 05 Jun 2007) $
-// $LastChangedRevision: 1741 $
+// $LastChangedBy: geekfeststarter $
+// $LastChangedDate: 2008-04-30 01:48:21 -0700 (Wed, 30 Apr 2008) $
+// $LastChangedRevision: 2741 $
 //
 // about: Exported function definitions
 //		In order for the game to call functions from the bot, we must export
@@ -14,44 +14,46 @@
 #define __OMNIBOT_H__
 
 #include "Functions_Bot.h"
-#include "Functions_Engine.h"
 #include "Omni-Bot_Types.h"
 #include "Omni-Bot_Events.h"
 #include "MessageHelper.h"
+#include "IEngineInterface.h"
 
-// function: Bot_Initialise
+// function: BotInitialise
 //		Initializes the bot library and sets the bot up with the callbacks to 
 //		the game in the form of function pointers to functions within the game.
-omnibot_error BotInitialise(const Game_EngineFuncs_t *_pEngineFuncs, int _version);
-// function: Bot_Shutdown
+omnibot_error BotInitialise(IEngineInterface *_pEngineFuncs, int _version);
+// function: BotShutdown
 //		Shuts down and frees memory from the bot system
 void BotShutdown();
-// function: Bot_Update
+// function: BotUpdate
 //		Called regularly by the game in order for the bots to perform their "thinking"
 void BotUpdate();
-// function: Bot_ConsoleCommand
+// function: BotConsoleCommand
 //		Any time commands from the game are executed, this will get called
 //		to allow the bot to process it and perform any necessary actions.
-int BotConsoleCommand(const char *_cmd, int _size);
-// function: Bot_AddGoal
+void BotConsoleCommand(const Arguments &_args);
+// function: BotAddGoal
 //		Allows the game to register a goal with the bot that the bots can use
-void BotAddGoal(const GameEntity _ent, int _goaltype, int _team, const char *_tag, obUserData *_bud);
-// function: Bot_AddBBRecord
+void BotAddGoal(const MapGoalDef &goaldef);
+// function: BotAddBBRecord
 //		Allows the game to enter blackboard records into the bots knowledge database.
 void BotAddBBRecord(BlackBoard_Key _type, int _posterID, int _targetID, obUserData *_data);
-// function: Bot_AddTargetEntity
-//		This adds the provided entity to the bots threat list. 
-//		This could be other bots/clients/projectiles
-void BotAddThreatEntity(GameEntity _ent, EntityInfo *_info);
-// function: Bot_SendTrigger
+// function: BotSendTrigger
 //		Allows the game to notify the bot of triggered events.
-void BotSendTrigger(TriggerInfo *_triggerInfo);
+void BotSendTrigger(const TriggerInfo &_triggerInfo);
 // function: BotSendEvent
 //		New Messagehelper based event handler.
 void BotSendEvent(int _dest, const MessageHelper &_message);
 // function: BotSendGlobalEvent
 //		New Messagehelper based event handler.
 void BotSendGlobalEvent(const MessageHelper &_message);
+// function: BotUpdateEntity
+//		Update map goal entity
+void BotUpdateEntity(GameEntity oldent,GameEntity newent);
+// function: BotDeleteMapGoal
+//		Delete map goal by name
+void BotDeleteMapGoal(char *goalname);
 
 //SubscriberHandle Message_SubscribeToMsg(int _msg, pfnMessageFunction _func);
 //void Message_Unsubscribe(const SubscriberHandle _handle);

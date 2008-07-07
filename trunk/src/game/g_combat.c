@@ -19,6 +19,7 @@
 #include "../botai/ai_team.h"
 #include "../botai/ai_dmq3.h"
 #include "etpro_mdx.h"
+#include "g_etbot_interface.h"
 
 extern void BotRecordKill( int client, int enemy );
 extern void BotRecordPain( int client, int enemy, int mod );
@@ -585,6 +586,12 @@ void player_die( gentity_t *self, gentity_t *inflictor, gentity_t *attacker, int
 			obit = modNames[meansOfDeath];
 		}
 
+		//////////////////////////////////////////////////////////////////////////
+		// send the events
+
+		Bot_Event_Death(self-g_entities, &g_entities[attacker-g_entities], obit);
+		Bot_Event_KilledSomeone(attacker-g_entities, &g_entities[self-g_entities], obit);
+
 		G_LogPrintf("Kill: %i %i %i: %s killed %s by %s\n", killer, self->s.number, meansOfDeath, killerName, self->client->pers.netname, obit );
 		//if (attacker && 
 		//	attacker->client && 
@@ -622,24 +629,6 @@ void player_die( gentity_t *self, gentity_t *inflictor, gentity_t *attacker, int
 		BotRecordKill( attacker->s.number, self->s.number );
 	}
 #endif
-
-	//////////////////////////////////////////////////////////////////////////
-	// If the victim is a bot, send a death event.
-	if(self->r.svFlags & SVF_BOT)
-	{
-		const int numMods = sizeof(modNames) / sizeof(modNames[0]);
-		const char *pMod = (meansOfDeath >= 0 && meansOfDeath < numMods) ? modNames[meansOfDeath] : 0;
-		Bot_Event_Death(self-g_entities, (GameEntity)(&g_entities[attacker-g_entities]), pMod);
-	}
-
-	// If the attacker is a bot, send a kill event.
-	if(attacker->r.svFlags & SVF_BOT)
-	{
-		const int numMods = sizeof(modNames) / sizeof(modNames[0]);
-		const char *pMod = (meansOfDeath >= 0 && meansOfDeath < numMods) ? modNames[meansOfDeath] : 0;
-		Bot_Event_KilledSomeone(attacker-g_entities, (GameEntity)(&g_entities[self-g_entities]), pMod);
-	}
-	//////////////////////////////////////////////////////////////////////////
 
 	if(
 		g_logOptions.integer & LOGOPTS_REPORT_GIBS && 
@@ -730,7 +719,7 @@ void player_die( gentity_t *self, gentity_t *inflictor, gentity_t *attacker, int
 				!G_shrubbot_permission(attacker, SBF_IMMUNITY) &&
 				!attacker->client->sess.referee) {
 
-				if( attacker->client->pers.localClient ) {
+				if( attacker->client->pers.localClient && !(attacker->r.svFlags & SVF_BOT) ) {
 					trap_SendServerCommand( self-g_entities, "complaint -4" );
 				} else {
 					if( meansOfDeath != MOD_CRUSH_CONSTRUCTION && meansOfDeath != MOD_CRUSH_CONSTRUCTIONDEATH && meansOfDeath != MOD_CRUSH_CONSTRUCTIONDEATH_NOATTACKER ) {
@@ -823,10 +812,7 @@ void player_die( gentity_t *self, gentity_t *inflictor, gentity_t *attacker, int
 			// ATM: only register the goal if the target isn't in water.
 			if(self->waterlevel <= 1)
 			{
-				if (self->client->sess.sessionTeam == TEAM_AXIS)
-					Bot_Util_AddGoal((GameEntity)self, ET_GOAL_FALLENTEAMMATE, (1 << ET_TEAM_AXIS), NULL, NULL);
-				else if (self->client->sess.sessionTeam == TEAM_ALLIES)
-					Bot_Util_AddGoal((GameEntity)self, ET_GOAL_FALLENTEAMMATE, (1 << ET_TEAM_ALLIES), NULL, NULL);
+				Bot_AddFallenTeammateGoals(self, self->client->sess.sessionTeam);
 			}			
 		}
 	}
@@ -2373,13 +2359,13 @@ void G_Damage( gentity_t *targ, gentity_t *inflictor, gentity_t *attacker,  vec3
 #endif
 
 		// RF, record bot pain
-		if (targ->s.number < level.maxclients && targ->r.svFlags & SVF_BOT)
+		if (targ->s.number < level.maxclients)
 		{
 #ifndef NO_BOT_SUPPORT
 			BotRecordPain( targ->s.number, attacker->s.number, mod );
 #endif
 			// notify omni-bot framework
-			Bot_Event_TakeDamage(targ-g_entities, (GameEntity)attacker);
+			Bot_Event_TakeDamage(targ-g_entities, attacker);
 		}
 
 		// Ridah, this needs to be done last, incase the health is altered in one of the event calls

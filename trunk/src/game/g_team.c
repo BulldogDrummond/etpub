@@ -2,6 +2,7 @@
 #include <limits.h>
 
 #include "g_local.h"
+#include "g_etbot_interface.h"
 
 typedef struct teamgame_s
 {
@@ -321,18 +322,9 @@ void Team_ResetFlag( gentity_t *ent )
 		if( ent->s.density == 1 )
 			RespawnItem(ent);
 
-// redeye - fix problems when built w/o BOT support
-#ifndef NO_BOT_SUPPORT
 		{
-			TriggerInfo ti;
-			ti.m_Entity = ent;
-			strcpy( ti.m_TagName, "Flag returned " );
-			strcat( ti.m_TagName, _GetEntityName(ent) );
-			strcat( ti.m_TagName, "!" );
-			Q_strncpyz(ti.m_Action, "returned", TriggerBufferSize);
-			Bot_Util_SendTrigger(&ti);
+			Bot_Util_SendTrigger(ent, NULL, va("Flag returned %s!", _GetEntityName(ent)), "returned");
 		}
-#endif
 	}
 }
 
@@ -478,14 +470,10 @@ int Team_TouchOurFlag( gentity_t *ent, gentity_t *other, int team ) {
 				G_Script_ScriptEvent( level.gameManager, "trigger", "axis_object_returned" );
 			}
 			G_Script_ScriptEvent( &g_entities[ent->s.otherEntityNum], "trigger", "returned" );
+			
 			{
-				TriggerInfo ti;
-				ti.m_Entity = ent;
-				strcpy( ti.m_TagName, "Axis have returned " );
-				strcat( ti.m_TagName, ent->message ? ent->message : "" );
-				strcat( ti.m_TagName, "!" );
-				Q_strncpyz(ti.m_Action, "returned", TriggerBufferSize);
-				Bot_Util_SendTrigger(&ti);
+				const char *pName = ent->message?ent->message:_GetEntityName(ent);
+				Bot_Util_SendTrigger(ent, NULL, va("Axis have returned %s!", pName ? pName : ""), "returned");
 			}
 		} else {
 //			te->s.eventParm = G_SoundIndex( "sound/chat/allies/a-objective_secure.wav" );
@@ -496,14 +484,10 @@ int Team_TouchOurFlag( gentity_t *ent, gentity_t *other, int team ) {
 				G_Script_ScriptEvent( level.gameManager, "trigger", "allied_object_returned" );
 			}
 			G_Script_ScriptEvent( &g_entities[ent->s.otherEntityNum], "trigger", "returned" );
+			
 			{
-				TriggerInfo ti;
-				ti.m_Entity = ent;
-				strcpy( ti.m_TagName, "Allies have returned " );
-				strcat( ti.m_TagName, ent->message ? ent->message : "" );
-				strcat( ti.m_TagName, "!" );
-				Q_strncpyz(ti.m_Action, "returned", TriggerBufferSize);
-				Bot_Util_SendTrigger(&ti);
+				const char *pName = ent->message?ent->message:_GetEntityName(ent);
+				Bot_Util_SendTrigger(ent, NULL, va("Allies have returned %s!", pName ? pName : ""), "returned");
 			}
 		}
 		// dhm
@@ -553,14 +537,9 @@ int Team_TouchEnemyFlag( gentity_t *ent, gentity_t *other, int team ) {
 		}
 		G_Script_ScriptEvent( ent, "trigger", "stolen" );
 		Bot_TeamScriptEvent( TEAM_ALLIES, "objective", "stolen" );
+
 		{
-			TriggerInfo ti;
-			ti.m_Entity = ent;
-			strcpy( ti.m_TagName, "Axis have stolen " );
-			strcat( ti.m_TagName, ent->message ? ent->message : "" );
-			strcat( ti.m_TagName, "!" );
-			Q_strncpyz(ti.m_Action, "stolen", TriggerBufferSize);
-			Bot_Util_SendTrigger(&ti);
+			Bot_Util_SendTrigger(ent, NULL, va("Axis have stolen %s!", ent->message), "stolen");
 		}
 	} else {
 		gentity_t* pm = G_PopupMessage( PM_OBJECTIVE );
@@ -577,14 +556,9 @@ int Team_TouchEnemyFlag( gentity_t *ent, gentity_t *other, int team ) {
 		}
 		G_Script_ScriptEvent( ent, "trigger", "stolen" );
 		Bot_TeamScriptEvent( TEAM_AXIS, "objective", "stolen" );
+
 		{
-			TriggerInfo ti;
-			ti.m_Entity = ent;
-			strcpy( ti.m_TagName, "Allies have stolen " );
-			strcat( ti.m_TagName, ent->message ? ent->message : "" );
-			strcat( ti.m_TagName, "!" );
-			Q_strncpyz(ti.m_Action, "stolen", TriggerBufferSize);
-			Bot_Util_SendTrigger(&ti);
+			Bot_Util_SendTrigger(ent, NULL, va("Allies have stolen %s!", ent->message), "stolen");
 		}
 	}
 	// dhm
@@ -1401,6 +1375,7 @@ void checkpoint_spawntouch (gentity_t *self, gentity_t *other, trace_t *trace) {
 	gentity_t	*ent = NULL;
 	qboolean	playsound = qtrue;
 	qboolean	firsttime = qfalse;
+	char		*flagAction = "touch";
 
 	// forty - dead guys don't capture spawns.
 	if(other->health <= 0)
@@ -1433,28 +1408,48 @@ void checkpoint_spawntouch (gentity_t *self, gentity_t *other, trace_t *trace) {
 	// Set animation
 	if ( self->count == TEAM_AXIS ) {
 		if ( self->s.frame == WCP_ANIM_NOFLAG && !(self->spawnflags & ALLIED_ONLY) )
+		{
 			self->s.frame = WCP_ANIM_RAISE_AXIS;
-		else if ( self->s.frame == WCP_ANIM_NOFLAG ) {
+			flagAction = "capture";
+		}
+		else if ( self->s.frame == WCP_ANIM_NOFLAG ) 
+		{
 			self->s.frame = WCP_ANIM_NOFLAG;
 			playsound = qfalse;
 		}
 		else if ( self->s.frame == WCP_ANIM_AMERICAN_RAISED && !(self->spawnflags & ALLIED_ONLY) )
+		{
 			self->s.frame = WCP_ANIM_AMERICAN_TO_AXIS;
+			flagAction = "reclaims";
+		}
 		else if ( self->s.frame == WCP_ANIM_AMERICAN_RAISED )
+		{
 			self->s.frame = WCP_ANIM_AMERICAN_FALLING;
+			flagAction = "neutralized";
+		}
 		else
 			self->s.frame = WCP_ANIM_AXIS_RAISED;
 	} else {
 		if ( self->s.frame == WCP_ANIM_NOFLAG && !(self->spawnflags & AXIS_ONLY) )
+		{
 			self->s.frame = WCP_ANIM_RAISE_AMERICAN;
-		else if ( self->s.frame == WCP_ANIM_NOFLAG ) {
+			flagAction = "capture";
+		}
+		else if ( self->s.frame == WCP_ANIM_NOFLAG ) 
+		{
 			self->s.frame = WCP_ANIM_NOFLAG;
 			playsound = qfalse;
 		}
 		else if ( self->s.frame == WCP_ANIM_AXIS_RAISED && !(self->spawnflags & AXIS_ONLY) )
+		{
 			self->s.frame = WCP_ANIM_AXIS_TO_AMERICAN;
+			flagAction = "reclaims";
+		}
 		else if ( self->s.frame == WCP_ANIM_AXIS_RAISED )
+		{
 			self->s.frame = WCP_ANIM_AXIS_FALLING;
+			flagAction = "neutralized";
+		}
 		else
 			self->s.frame = WCP_ANIM_AMERICAN_RAISED;
 	}
@@ -1474,9 +1469,15 @@ void checkpoint_spawntouch (gentity_t *self, gentity_t *other, trace_t *trace) {
 	other->client->ps.powerups[PW_OPS_DISGUISED] = 0;
 	// Run script trigger
 	if ( self->count == TEAM_AXIS )
+	{
 		G_Script_ScriptEvent( self, "trigger", "axis_capture" );
+		Bot_Util_SendTrigger(self, NULL, va("axis_%s_%s", flagAction, _GetEntityName(self)), flagAction);
+	}
 	else
+	{
 		G_Script_ScriptEvent( self, "trigger", "allied_capture" );
+		Bot_Util_SendTrigger(self, NULL, va("allies_%s_%s", flagAction, _GetEntityName(self)), flagAction);
+	}
 
 	// Don't allow touch again until animation is finished
 	self->touch = NULL;

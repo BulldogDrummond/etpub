@@ -8,6 +8,8 @@
 
 #include "g_local.h"
 
+#include "g_etbot_interface.h"
+
 vec3_t	forward, right, up;
 vec3_t	muzzleEffect;
 vec3_t	muzzleTrace;
@@ -297,6 +299,9 @@ void Weapon_Medic_Ext(gentity_t *ent,
 
 	ent2->parent = ent; // JPW NERVE so we can score properly later
 	//ent2->count = 20;
+
+	// Omni-bot - Send a fire event.
+	Bot_Event_FireWeapon(ent-g_entities, Bot_WeaponGameToBot(ent->s.weapon), ent2);
 }
 
 /*
@@ -482,6 +487,9 @@ void Weapon_MagicAmmo_Ext(gentity_t *ent,
 		ent2->count = 1;
 		ent2->s.density = 1;
 	}
+
+	// Omni-bot - Send a fire event.
+	Bot_Event_FireWeapon(ent-g_entities, Bot_WeaponGameToBot(ent->s.weapon), ent2);
 }
 // jpw
 
@@ -2153,8 +2161,9 @@ evilbanigoto:
 
 						// rain - spawnflags 128 = disabled (#309)
 						if (!(hit->spawnflags & 128) && (((hit->spawnflags & AXIS_OBJECTIVE) && (ent->client->sess.sessionTeam == TEAM_ALLIES)) ||
-							 ((hit->spawnflags & ALLIED_OBJECTIVE) && (ent->client->sess.sessionTeam == TEAM_AXIS))) ) {
-
+							 ((hit->spawnflags & ALLIED_OBJECTIVE) && (ent->client->sess.sessionTeam == TEAM_AXIS))) ) 
+						{
+							const char *Goalname = _GetEntityName( hit );
 							gentity_t* pm = G_PopupMessage( PM_DYNAMITE );
 							pm->s.effect2Time = 0;
 							pm->s.effect3Time = hit->s.teamNum;
@@ -2167,10 +2176,8 @@ evilbanigoto:
 							G_Script_ScriptEvent( hit, "dynamited", "" );
 
 							// notify omni-bot framework of planted dynamite
-							if (traceEnt->s.teamNum == TEAM_AXIS)
-								Bot_Util_AddGoal((GameEntity)traceEnt, ET_GOAL_DYNAMITE, (1 << ET_TEAM_ALLIES), NULL, NULL);
-							else
-								Bot_Util_AddGoal((GameEntity)traceEnt, ET_GOAL_DYNAMITE, (1 << ET_TEAM_AXIS), NULL, NULL);
+							hit->numPlanted += 1;							
+							Bot_AddDynamiteGoal(traceEnt, traceEnt->s.teamNum, va("%s_%i", Goalname, hit->numPlanted));
 
 							if ( !(hit->spawnflags & OBJECTIVE_DESTROYED) ) {
 								AddScore(traceEnt->parent, WOLF_DYNAMITE_PLANT); // give drop score to guy who dropped it
@@ -2239,6 +2246,7 @@ evilbanigoto:
 						}
 
 						if( hit->parent ) {
+							const char *Goalname = _GetEntityName( hit->parent );
 							gentity_t* pm = G_PopupMessage( PM_DYNAMITE );
 							pm->s.effect2Time = 0; // 0 = planted
 							pm->s.effect3Time = hit->parent->s.teamNum;
@@ -2251,10 +2259,8 @@ evilbanigoto:
 							G_Script_ScriptEvent( hit, "dynamited", "" );
 
 							// notify omni-bot framework of planted dynamite
-							if (traceEnt->s.teamNum == TEAM_AXIS)
-								Bot_Util_AddGoal((GameEntity)traceEnt, ET_GOAL_DYNAMITE, (1 << ET_TEAM_ALLIES), NULL, NULL);
-							else
-								Bot_Util_AddGoal((GameEntity)traceEnt, ET_GOAL_DYNAMITE, (1 << ET_TEAM_AXIS), NULL, NULL);
+							hit->numPlanted += 1;							
+							Bot_AddDynamiteGoal(traceEnt, traceEnt->s.teamNum, va("%s_%i", Goalname, hit->numPlanted));
 	
 							if( (!(hit->parent->spawnflags & OBJECTIVE_DESTROYED)) && 
 								hit->s.teamNum && (hit->s.teamNum == ent->client->sess.sessionTeam) ) {	// ==, as it's inverse
@@ -3312,6 +3318,8 @@ void Weapon_Artillery(gentity_t *ent) {
 #endif
 		ent->client->sess.aWeaponStats[WS_ARTILLERY].atts++;
 
+	// Omni-bot - Send a fire event.
+	Bot_Event_FireWeapon(ent-g_entities, Bot_WeaponGameToBot(WP_ARTY), 0);
 }
 
 
@@ -4716,6 +4724,7 @@ void FireWeapon( gentity_t *ent ) {
 	float	aimSpreadScale;
 	int		shots = 1;
 	gentity_t *pFiredShot = 0; // Omni-bot To tell bots about projectiles	
+	qboolean callEvent = qtrue;
 
 	// tjw: protect agains gentities[] overflow	
 	if(G_GentitiesAvailable() < MIN_SPARE_GENTITIES) {
@@ -4816,6 +4825,7 @@ void FireWeapon( gentity_t *ent ) {
 		break;
 	// NERVE - SMF
 	case WP_MEDKIT:
+		callEvent = qfalse;
 		Weapon_Medic( ent, qfalse );
 		break;
 	case WP_PLIERS:
@@ -4843,6 +4853,7 @@ void FireWeapon( gentity_t *ent ) {
 		Weapon_AdrenalineSyringe(ent);
 		break;
 	case WP_AMMO:
+		callEvent = qfalse;
 		Weapon_MagicAmmo( ent );
 		break;
 	case WP_LUGER:
@@ -5051,10 +5062,8 @@ void FireWeapon( gentity_t *ent ) {
 	}
 
 	// Omni-bot - Send a fire event.
-	if(ent->r.svFlags & SVF_BOT)
-	{
+	if(callEvent)
 		Bot_Event_FireWeapon(ent-g_entities, Bot_WeaponGameToBot(ent->s.weapon), pFiredShot);
-	}
 
 	// OSP
 #ifndef DEBUG_STATS
@@ -5214,7 +5223,7 @@ void G_throwKnife( gentity_t *ent )
 		//dead players
 		ent->client->ps.pm_flags & PMF_LIMBO ||
 		ent->client->ps.pm_type == PM_DEAD ||
-		//a tank/on a MG
+		//ìn a tank/on a MG
 		BG_PlayerMounted(ent->client->ps.eFlags) ||
 		//leaning
 		ent->client->ps.leanf ||

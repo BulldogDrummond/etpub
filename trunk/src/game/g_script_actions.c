@@ -8,6 +8,7 @@
 
 #include "../game/g_local.h"
 #include "../game/q_shared.h"
+#include "g_etbot_interface.h"
 
 /*
 Contains the code to handle the various commands available with an event script.
@@ -1260,16 +1261,10 @@ qboolean G_ScriptAction_GotoMarker( gentity_t *ent, char *params )
 			// Send a trigger to omni-bot
 			{
 				const char *pName = _GetEntityName(ent);
-				TriggerInfo ti;
-				Com_sprintf(ti.m_TagName, TriggerBufferSize, "%s_goto", pName ? pName : "<unknown>");
-				Com_sprintf(ti.m_Action, TriggerBufferSize, "%.2f %.2f %.2f", 
-					ent->s.pos.trDelta[0],
-					ent->s.pos.trDelta[1],
-					ent->s.pos.trDelta[2]);
-
-				ti.m_Activator = NULL;
-				ti.m_Entity = ent;
-				Bot_Util_SendTrigger(&ti);
+				Bot_Util_SendTrigger(ent, 
+					NULL,
+					va("%s_goto", pName ? pName : "<unknown>"),
+					va("%.2f %.2f %.2f", ent->s.pos.trDelta[0], ent->s.pos.trDelta[1], ent->s.pos.trDelta[2]));
 			}
 
 			if (turntotarget && !pPathCorner) {
@@ -2558,6 +2553,12 @@ qboolean G_ScriptAction_FaceAngles( gentity_t *ent, char *params )
 			ent->s.apos.trType = trType;
 		}
 
+		{
+			const char *pName = _GetEntityName(ent);
+			Bot_Util_SendTrigger(ent, NULL, va("%s_start", pName ? pName : "<unknown>"),
+				va("%.2f %.2f %.2f", ent->s.apos.trDelta[0], ent->s.apos.trDelta[1], ent->s.apos.trDelta[2]));
+		}
+
 	} else if (ent->s.apos.trTime + ent->s.apos.trDuration <= level.time) {
 		// finished turning
 		BG_EvaluateTrajectory( &ent->s.apos, ent->s.apos.trTime + ent->s.apos.trDuration, ent->s.angles, qtrue, ent->s.effect2Time  );
@@ -2567,6 +2568,12 @@ qboolean G_ScriptAction_FaceAngles( gentity_t *ent, char *params )
 		ent->s.apos.trDuration = 0;
 		ent->s.apos.trType = TR_STATIONARY;
 		VectorClear( ent->s.apos.trDelta );
+
+		{
+			const char *pName = _GetEntityName(ent);
+			Bot_Util_SendTrigger(ent, NULL, va("%s_stop", pName ? pName : "<unknown>"),
+				va("%.2f %.2f %.2f", ent->s.apos.trDelta[0], ent->s.apos.trDelta[1], ent->s.apos.trDelta[2]));
+		}
 
 		script_linkentity( ent );
 
@@ -2916,23 +2923,19 @@ qboolean G_ScriptAction_ObjectiveStatus( gentity_t *ent, char *params ) {
 	trap_SetConfigstring( CS_MULTI_OBJECTIVE, cs );
 
 	{
-		TriggerInfo ti;
-		ti.m_Activator = NULL;
-		ti.m_Entity = ent;
-		Q_strncpyz(ti.m_TagName, _GetEntityName(ent), TriggerBufferSize);
+		const char *pTagName = _GetEntityName(ent);		
 		switch(atoi(token)) 
 		{
 		case 0:
-			Q_strncpyz(ti.m_Action, parm[0] == 'x' ? "axis_default" : "allied_default" , TriggerBufferSize);
+			Bot_Util_SendTrigger(ent, NULL, pTagName, parm[0] == 'x' ? "axis_default" : "allied_default");
 			break;
 		case 1:
-			Q_strncpyz(ti.m_Action, parm[0] == 'x' ? "axis_complete" : "allied_complete" , TriggerBufferSize);
+			Bot_Util_SendTrigger(ent, NULL, pTagName, parm[0] == 'x' ? "axis_complete" : "allied_complete");
 			break;
 		case 2:
-			Q_strncpyz(ti.m_Action, parm[0] == 'x' ? "axis_failed" : "allied_failed" , TriggerBufferSize);
+			Bot_Util_SendTrigger(ent, NULL, pTagName, parm[0] == 'x' ? "axis_failed" : "allied_failed");
 			break;
 		}
-		Bot_Util_SendTrigger(&ti);
 	}
 
 	return qtrue;
@@ -3223,12 +3226,7 @@ qboolean G_ScriptAction_TeamVoiceAnnounce( gentity_t *ent, char *params ) {
 	tent->r.svFlags = SVF_BROADCAST;
 	
 	{
-		TriggerInfo ti;
-		Q_strncpyz(ti.m_TagName, token, TriggerBufferSize);
-		Q_strncpyz(ti.m_Action, "team_announce", TriggerBufferSize);
-		ti.m_Activator = NULL;
-		ti.m_Entity = ent;
-		Bot_Util_SendTrigger(&ti);
+		Bot_Util_SendTrigger(ent, NULL, token, "team_announce");
 	}
 
 	return qtrue;
@@ -3270,12 +3268,7 @@ qboolean G_ScriptAction_Announce_Icon( gentity_t *ent, char *params ) {
 	trap_SendServerCommand( -1, va("cpmi %i \"%s\"", iconnumber, token ));
 
 	{
-		TriggerInfo ti;
-		Q_strncpyz(ti.m_TagName, token, TriggerBufferSize);
-		Q_strncpyz(ti.m_Action, "announce_icon", TriggerBufferSize);
-		ti.m_Activator = NULL;
-		ti.m_Entity = ent;
-		Bot_Util_SendTrigger(&ti);
+		Bot_Util_SendTrigger(ent, NULL, token, "announce_icon");
 	}
 
 	return qtrue;
@@ -3308,12 +3301,7 @@ qboolean G_ScriptAction_Announce( gentity_t *ent, char *params )
 //	trap_SendServerCommand( -1, va("cp \"%s\" 2", token ));
 
 	{
-		TriggerInfo ti;
-		Q_strncpyz(ti.m_TagName, token, TriggerBufferSize);
-		Q_strncpyz(ti.m_Action, "announce", TriggerBufferSize);
-		ti.m_Activator = NULL;
-		ti.m_Entity = ent;
-		Bot_Util_SendTrigger(&ti);
+		Bot_Util_SendTrigger(ent, NULL, token, "announce");
 	}
 
 	return qtrue;
@@ -3640,12 +3628,7 @@ qboolean G_ScriptAction_RepairMG42( gentity_t *ent, char *params ) {
 		target->s.eFlags &= ~EF_SMOKING;
 
 		{
-			TriggerInfo ti;
-			Q_strncpyz(ti.m_TagName, name, TriggerBufferSize);
-			Q_strncpyz(ti.m_Action, "repair_mg42", TriggerBufferSize);
-			ti.m_Activator = NULL;
-			ti.m_Entity = ent;
-			Bot_Util_SendTrigger(&ti);
+			Bot_Util_SendTrigger(ent, NULL, name, "repair_mg42");
 		}
 	}
 

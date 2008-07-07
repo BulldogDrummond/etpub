@@ -1,4 +1,5 @@
 #include "g_local.h"
+#include "g_etbot_interface.h"
 
 g_xpsave_t *g_xpsaves[MAX_XPSAVES];
 g_mapstat_t *g_mapstats[MAX_MAPSTATS];

@@ -7,6 +7,7 @@
 */
 
 #include "g_local.h"
+#include "g_etbot_interface.h"
 
 char *hintStrings[HINT_NUM_HINTS] = {
 	"",					// HINT_NONE
@@ -700,6 +701,7 @@ Pos1 is "at rest", pos2 is "activated"
 SetMoverState
 ===============
 */
+
 void SetMoverState( gentity_t *ent, moverState_t moverState, int time ) {
 	vec3_t			delta;
 	float			f;
@@ -771,10 +773,12 @@ void SetMoverState( gentity_t *ent, moverState_t moverState, int time ) {
 		case MOVER_POS1ROTATE:	// at close
 			VectorCopy( ent->r.currentAngles , ent->s.apos.trBase);
 			ent->s.apos.trType = TR_STATIONARY;
+			Bot_Util_SendTrigger(ent, NULL, va("%s_Closed", _GetEntityName(ent)), "closed");
 			break;
 		case MOVER_POS2ROTATE:	// at open
 			VectorCopy( ent->r.currentAngles , ent->s.apos.trBase);
 			ent->s.apos.trType = TR_STATIONARY;
+			Bot_Util_SendTrigger(ent, NULL, va("%s_Opened", _GetEntityName(ent)), "opened");
 			break;
 		case MOVER_1TO2ROTATE:	// opening
 			VectorClear(ent->s.apos.trBase);			// set base to start position {0,0,0}
@@ -3938,6 +3942,11 @@ void func_explosive_explode(gentity_t *self, gentity_t *inflictor, gentity_t *at
 	}
 
 	G_AddEvent( self, EV_EXPLODE, DirToByte( dir ));
+
+	// Omnibot trigger support
+	if  ( self->constructibleStats.constructxpbonus == 5 ) {
+		G_Script_ScriptEvent( self, "exploded", "" );
+	}
 
 	// Skills stuff
 

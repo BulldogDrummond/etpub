@@ -1,8 +1,8 @@
 ////////////////////////////////////////////////////////////////////////////////
 // 
-// $LastChangedBy: gabriel $
-// $LastChangedDate: 2007-06-05 05:59:22 +0300 (Tue, 05 Jun 2007) $
-// $LastChangedRevision: 1744 $
+// $LastChangedBy: drevil $
+// $LastChangedDate: 2008-05-31 18:38:33 -0700 (Sat, 31 May 2008) $
+// $LastChangedRevision: 2901 $
 //
 // Title: ET Config
 //
@@ -26,6 +26,9 @@ typedef enum eET_Version
 	ET_VERSION_0_53_beta2,
 	ET_VERSION_0_6,
 	ET_VERSION_0_65,
+	ET_VERSION_0_7_alpha1,
+	ET_VERSION_0_7_alpha2,
+	ET_VERSION_0_7,
 	ET_VERSION_LAST,
 	ET_VERSION_LATEST = ET_VERSION_LAST - 1
 } ET_Version;
@@ -36,6 +39,15 @@ typedef enum eET_Events
 	ET_EVENT_PRETRIGGER_MINE,
 	ET_EVENT_POSTTRIGGER_MINE,
 	ET_EVENT_MORTAR_IMPACT,
+
+	ET_EVENT_FIRETEAM_CREATED,
+	ET_EVENT_FIRETEAM_DISBANDED,
+	ET_EVENT_FIRETEAM_JOINED,
+	ET_EVENT_FIRETEAM_LEFT,
+	ET_EVENT_FIRETEAM_INVITED,
+	ET_EVENT_FIRETEAM_PROPOSAL,
+	ET_EVENT_FIRETEAM_WARNED,
+
 	ET_EVENT_END
 } ET_Event;
 
@@ -68,7 +80,6 @@ typedef enum eET_Msgs
 	ET_MSG_CHECKPOINTTEAM,
 	ET_MSG_CHANGESPAWNPOINT,
 
-	// goal query stuff
 	ET_MSG_GHASFLAG,
 	ET_MSG_GCONSTRUCTABLE,		// check if goal is constructible at the moment
 	ET_MSG_GDYNDESTROYABLE,		// check if goal can be destroyed by dynamite
@@ -78,6 +89,20 @@ typedef enum eET_Msgs
 	ET_MSG_GNUMTEAMMINES,		// check the number of team mines
 	ET_MSG_CABINETDATA,			// stats from a health/ammo cabinet
 	ET_MSG_SKILLLEVEL,			// skill level for all the skills of the bot.
+
+	ET_MSG_FIRETEAM_CREATE,
+	ET_MSG_FIRETEAM_DISBAND,
+	ET_MSG_FIRETEAM_LEAVE,
+	ET_MSG_FIRETEAM_APPLY,
+	ET_MSG_FIRETEAM_INVITE,
+	ET_MSG_FIRETEAM_WARN,
+	ET_MSG_FIRETEAM_KICK,
+	ET_MSG_FIRETEAM_PROPOSE,
+	ET_MSG_FIRETEAM_INFO,
+
+	ET_MSG_GETGAMETYPE,
+	ET_MSG_SETCVAR,
+	ET_MSG_GETCVAR,
 
 	ET_MSG_END
 } ET_Msg;
@@ -105,7 +130,7 @@ typedef enum eET_PlayerClass
 	ET_CLASSEX_VEHICLE_HVY,
 	ET_CLASSEX_VEHICLE_NODAMAGE,
 	ET_CLASSEX_BREAKABLE,
-	ET_CLASSEX_INJUREDPLAYER,
+	//ET_CLASSEX_INJUREDPLAYER,
 	ET_CLASSEX_CORPSE,
 	ET_CLASSEX_TREASURE,
 	ET_CLASSEX_GRENADE,
@@ -118,6 +143,7 @@ typedef enum eET_PlayerClass
 	ET_CLASSEX_GPG40_GRENADE,
 	ET_CLASSEX_HEALTHCABINET,
 	ET_CLASSEX_AMMOCABINET,
+	ET_CLASSEX_BROKENCHAIR,
 
 	ET_NUM_CLASSES
 } ET_PlayerClass;
@@ -198,7 +224,7 @@ typedef enum eET_Weapons
 //		The available teams for this gametype.
 typedef enum eET_Team
 {
-	ET_TEAM_NONE = 0,
+	ET_TEAM_NONE = OB_TEAM_NONE,
 	ET_TEAM_AXIS,
 	ET_TEAM_ALLIES,
 	ET_TEAM_MAX
@@ -213,7 +239,6 @@ typedef enum eET_GoalType
 	ET_GOAL_DYNTARGET,		// dyno targets
 	ET_GOAL_DYNAMITE,		// a dynomite ;-)
 	ET_GOAL_FALLENTEAMMATE,	// a teammate that needs to be revived
-	ET_GOAL_HURTTEAMMATE,	// a teammate that needs to be healed
 	ET_GOAL_MOVER,			// a mover, could be vehicle or other shit
 	ET_GOAL_MG42MOUNT,		// a mountable mg42
 	ET_GOAL_MG42REPAIR,		// repair a mountable mg42
@@ -227,6 +252,10 @@ typedef enum eET_GoalType
 	ET_GOAL_HEALTH_CAB,		// health cabinet
 	ET_GOAL_AMMO_CAB,		// ammo cabinet
 	ET_GOAL_CHECKPOINT,		// capturable checkpoint
+	ET_GOAL_EXPLOSIVE,	    // func_explosives
+	ET_GOAL_FLAMETHROWER,		// flamethrower camp
+	ET_GOAL_PANZER,			// panzer camp
+
 	// THIS MUST STAY LAST
 	ET_GOAL_END
 } ET_GoalType;
@@ -244,33 +273,6 @@ typedef enum eET_Skills
 	// THIS MUST STAY LAST
 	ET_SKILLS_NUM_SKILLS,
 } ET_Skills;
-
-// typedef: ET_Goal
-//		Enumerations for ET specific goals.
-typedef enum eET_Goal
-{
-	goal_et_begin = goal_base_num,
-	goal_et_buildconstruction,
-	goal_et_plantdynamite,
-	goal_et_defusedynamite,
-	goal_et_reviveteammate,
-	goal_et_givehealth,
-	goal_et_giveammo,
-	goal_et_setmg42,
-	goal_et_mountmg42,
-	goal_et_repairmg42,
-	goal_et_mountvehicle,
-	goal_et_setmortar,
-	goal_et_callarty,
-	goal_et_plantmine,
-	goal_et_disarm_mine,
-	goal_et_arm_explosive,
-	goal_et_plantexplosive,
-	goal_et_healthcabinet,
-	goal_et_ammocabinet,
-	goal_et_takecheckpoint,
-	goal_et_end
-} ET_Goal;
 
 typedef enum eET_EntityFlags
 {

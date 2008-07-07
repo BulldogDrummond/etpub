@@ -5,8 +5,6 @@
 #ifndef __G_LOCAL_H__
 #define __G_LOCAL_H__
 
-#include "g_etbot_interface.h"
-
 #include "q_shared.h"
 #include "bg_public.h"
 #include "g_public.h"
@@ -550,6 +548,9 @@ struct gentity_s {
 
 	// forty - dynamite chaining
 	gentity_t	*onobjective;
+
+	//Omni-bot increment dyno count
+	int numPlanted;
 };
 
 // Ridah
@@ -656,6 +657,9 @@ typedef struct {
 	int			team_damage_given;
 	int			team_damage_received;
 	int			team_kills;
+
+	//bot /kill 2 seconds before next spawn
+	qboolean	botSuicide;
 
 	// matt
 	float team_hits;
@@ -1393,6 +1397,10 @@ typedef struct {
 
 	int sniperDamage;
 
+	//Omni-bot time triggers
+	qboolean	twoMinute;
+	qboolean	thirtySecond;
+
 } level_locals_t;
 
 typedef struct {
@@ -2004,6 +2012,7 @@ extern	vmCvar_t	g_OmniBotPath;
 extern	vmCvar_t	g_OmniBotEnable;
 extern	vmCvar_t	g_OmniBotFlags;
 extern	vmCvar_t	g_OmniBotPlaying;
+extern	vmCvar_t	g_OmniBotGib; 
 
 extern	vmCvar_t	g_gametype;
 
@@ -3558,14 +3567,6 @@ void G_IntermissionVoteTally( gentity_t *ent );
 #define XPDF_NO_BS_DECAY 64
 // don't decay light weapons
 #define XPDF_NO_LW_DECAY 128
-
-// gabriel - bot flags (16 most significant bits (MSB) of g_OmniBotflags)
-
-enum etpubBotFlags
-{
-	BOT_FLAGS_SHRUBBOT_IMMUTABLE = OBF_NEXT_FLAG,	// Bit 17 - 2^16 = 65536
-	BOT_FLAGS_NO_KICKBAN = (OBF_NEXT_FLAG << 1)		// Bit 18 - 2^17 = 131072
-};
 
 // Dens: g_spreeOptions
 #define SPREE_SHOW_SPREES 1 // Fast enabling/disabling of killingsprees

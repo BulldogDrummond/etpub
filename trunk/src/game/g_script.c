@@ -8,7 +8,7 @@
 
 #include "../game/g_local.h"
 #include "../game/q_shared.h"
-
+#include "../game/g_etbot_interface.h"
 /*
 Scripting that allows the designers to control the behaviour of entities
 according to each different scenario.
@@ -253,6 +253,7 @@ g_script_event_define_t	gScriptEvents[] =
 	{"defused",			NULL},
 	{"mg42",			G_Script_EventMatch_StringEqual},
 	{"message",			G_Script_EventMatch_StringEqual},	// contains a sequence of VO in a message
+	{"exploded",		NULL}, 
 	{NULL,				NULL}
 };
 
@@ -821,6 +822,7 @@ void G_Script_ScriptEvent( gentity_t *ent, char *eventStr, char *params )
 	if (i>=0)
 		G_Script_ScriptChange( ent, i );
 
+	//////////////////////////////////////////////////////////////////////////
 	// skip these
 	if(!Q_stricmp(eventStr, "trigger") ||
 		!Q_stricmp(eventStr, "activate") ||
@@ -832,23 +834,26 @@ void G_Script_ScriptEvent( gentity_t *ent, char *eventStr, char *params )
 
 	if(!Q_stricmp(eventStr, "defused"))
 	{
-		TriggerInfo ti;
-		ti.m_Entity = ent;
-		strcpy( ti.m_TagName, "Defused at " );
-		strcat( ti.m_TagName, ent->parent ? ent->parent->track : ent->track );
-		strcat( ti.m_TagName, "." );
-		Q_strncpyz(ti.m_Action, eventStr, TriggerBufferSize);
-		Bot_Util_SendTrigger(&ti);
+		Bot_Util_SendTrigger(ent, NULL,
+			va("Defused at %s.", ent->parent ? ent->parent->track : ent->track), 
+			eventStr);
 	}
-	if(!Q_stricmp(eventStr, "dynamited"))
+	else if(!Q_stricmp(eventStr, "dynamited"))
 	{
-		TriggerInfo ti;
-		ti.m_Entity = ent;
-		strcpy( ti.m_TagName, "Planted at " );
-		strcat( ti.m_TagName, ent->parent ? ent->parent->track : ent->track );
-		strcat( ti.m_TagName, "." );
-		Q_strncpyz(ti.m_Action, eventStr, TriggerBufferSize);
-		Bot_Util_SendTrigger(&ti);
+		Bot_Util_SendTrigger(ent, NULL,
+			va("Planted at %s.", ent->parent ? ent->parent->track : ent->track), 
+			eventStr);
+	}
+	else if(!Q_stricmp(eventStr, "destroyed"))
+	{
+		Bot_Util_SendTrigger(ent, NULL,
+			va("%s Destroyed.", ent->parent ? ent->parent->track : ent->track), 
+			eventStr);
+	}
+	else if(!Q_stricmp(eventStr, "exploded"))
+	{ 
+		Bot_Util_SendTrigger(ent, NULL,
+			va("Explode_%s Exploded.", _GetEntityName(ent) ),eventStr);
 	}
 }
 

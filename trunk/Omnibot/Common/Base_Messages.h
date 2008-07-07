@@ -1,8 +1,8 @@
 ////////////////////////////////////////////////////////////////////////////////
 // 
-// $LastChangedBy: DrEvil $
-// $LastChangedDate: 2007-04-26 19:19:31 -0700 (Thu, 26 Apr 2007) $
-// $LastChangedRevision: 1859 $
+// $LastChangedBy: drevil $
+// $LastChangedDate: 2008-04-07 19:57:21 -0700 (Mon, 07 Apr 2008) $
+// $LastChangedRevision: 2549 $
 //
 ////////////////////////////////////////////////////////////////////////////////
 
@@ -16,116 +16,251 @@
 
 //////////////////////////////////////////////////////////////////////////
 
-typedef struct  
+struct Msg_Addbot
 {
 	int			m_Team;
 	int			m_Class;
-	char		m_Name[32];
-	int			m_ModelId;
-	int			m_SkinId;
-} Msg_Addbot;
+	char		m_Name[64];
+	char		m_Model[64];
+	char		m_Skin[64];
+	char		m_SpawnPointName[64];
+	char		m_Profile[64];
 
-typedef struct  
+	Msg_Addbot()
+		: m_Team(RANDOM_TEAM_IF_NO_TEAM)
+		, m_Class(RANDOM_CLASS_IF_NO_CLASS)
+	{
+		m_Name[0] = m_Model[0] = m_Skin[0] = m_SpawnPointName[0] = m_Profile[0] = 0;
+	}
+};
+
+struct Msg_Kickbot
+{
+	enum { BufferSize = 64, InvalidGameId = -1 };
+	char		m_Name[BufferSize];
+	int			m_GameId;
+
+	Msg_Kickbot()
+		: m_GameId(InvalidGameId)
+	{
+		m_Name[0] =  0;
+	}
+};
+
+struct Msg_ChangeName
+{
+	char	m_NewName[64];
+};
+
+struct Msg_PlayerChooseEquipment
 {
 	enum { NumItems = 16 };
 	int			m_WeaponChoice[NumItems];
 	int			m_ItemChoice[NumItems];
-} Msg_PlayerChooseEquipment;
 
-typedef struct 
+	Msg_PlayerChooseEquipment()
+	{
+		for(int i = 0; i < NumItems; ++i)
+		{
+			m_WeaponChoice[i] = 0;
+			m_ItemChoice[i] = 0;
+		}
+	}
+};
+
+struct Msg_HealthArmor
 {
 	int			m_CurrentHealth;
 	int			m_MaxHealth;
 	int			m_CurrentArmor;
 	int			m_MaxArmor;
-} Msg_PlayerHealthArmor;
 
-typedef struct 
+	Msg_HealthArmor()
+		: m_CurrentHealth(0)
+		, m_MaxHealth(0)
+		, m_CurrentArmor(0)
+		, m_MaxArmor(0)
+	{
+	}
+};
+
+struct Msg_PlayerMaxSpeed
 {
 	float		m_MaxSpeed;
-} Msg_PlayerMaxSpeed;
 
-typedef struct 
+	Msg_PlayerMaxSpeed() : m_MaxSpeed(0.f) {}
+};
+
+struct Msg_IsAlive
 {	
 	obBool		m_IsAlive;
-} Msg_IsAlive;
 
-typedef struct 
+	Msg_IsAlive() : m_IsAlive(False) {}
+};
+
+struct Msg_IsAllied
 {
 	GameEntity	m_TargetEntity;
 	obBool		m_IsAllied;
-} Msg_IsAllied;
 
-typedef struct 
+	Msg_IsAllied(GameEntity e) : m_TargetEntity(e), m_IsAllied(True) {}
+};
+
+struct Msg_IsOutside
 {
 	float		m_Position[3];
 	obBool		m_IsOutside;
-} Msg_IsOutside;
 
-typedef struct  
-{
-	char	m_NewName[32];
-} Msg_ChangeName;
+	Msg_IsOutside()
+		: m_IsOutside(False)
+	{
+		m_Position[0] = m_Position[1] = m_Position[2] = 0.f;
+	}
+};
 
-typedef struct 
+struct Msg_PointContents
 {
 	int			m_Contents;
 	float		x,y,z;
-} Msg_PointContents;
 
-typedef struct 
+	Msg_PointContents()
+		: m_Contents(0)
+		, x(0.f)
+		, y(0.f)
+		, z(0.f)
+	{
+	}
+};
+
+struct Msg_ReadyToFire
 {
 	obBool		m_Ready;
-} Msg_ReadyToFire;
+	
+	Msg_ReadyToFire() : m_Ready(False) {}
+};
 
-typedef struct 
+struct Msg_Reloading
 {
 	obBool		m_Reloading;
-} Msg_Reloading;
 
-typedef struct 
+	Msg_Reloading() : m_Reloading(False) {}
+};
+
+struct Msg_FlagState
 {
 	FlagState	m_FlagState;
 	GameEntity	m_Owner;
-} Msg_FlagState;
 
-typedef struct 
+	Msg_FlagState()
+		: m_FlagState(S_FLAG_NOT_A_FLAG)
+	{
+	}
+};
+
+struct Msg_GameState
 {
 	GameState	m_GameState;
 	float		m_TimeLeft;
-} Msg_GameState;
 
-typedef struct 
+	Msg_GameState()
+		: m_GameState(GAME_STATE_INVALID)
+		, m_TimeLeft(0.f)
+	{
+	}
+};
+
+struct Msg_EntityStat
 {
 	char		m_StatName[64];
-	obUserData m_Result;
-} Msg_EntityStat;
+	obUserData	m_Result;
 
-typedef struct 
+	Msg_EntityStat()
+	{
+		m_StatName[0] = 0;
+	}
+};
+
+struct Msg_TeamStat
 {
 	int			m_Team;
 	char		m_StatName[64];
-	obUserData m_Result;
-} Msg_TeamStat;
+	obUserData	m_Result;
 
-typedef struct 
+	Msg_TeamStat()
+		: m_Team(0)
+	{
+		m_StatName[0] = 0;
+	}
+};
+
+struct Msg_ServerCommand
 {
 	char		m_Command[256];
-} Msg_ServerCommand;
 
-typedef struct 
+	Msg_ServerCommand()
+	{
+		m_Command[0] = 0;
+	}
+};
+
+struct WeaponCharged
 {
 	int			m_Weapon;
 	FireMode	m_FireMode;
 	obBool		m_IsCharged;
-} WeaponCharged;
+	obBool		m_IsCharging;
 
-typedef struct 
+	WeaponCharged(int w = 0, FireMode m = Primary)
+		: m_Weapon(w)
+		, m_FireMode(m)
+		, m_IsCharged(False)
+		, m_IsCharging(False)
+	{
+	}
+};
+
+struct WeaponHeatLevel
 {
 	FireMode	m_FireMode;
 	float		m_CurrentHeat;
 	float		m_MaxHeat;
-} WeaponHeatLevel;
+
+	WeaponHeatLevel(FireMode m = Primary)
+		: m_FireMode(m)
+		, m_CurrentHeat(0.f)
+		, m_MaxHeat(0.f)
+	{
+	}
+};
+
+struct VehicleInfo
+{
+	int			m_Type;
+	GameEntity	m_Entity;
+	GameEntity	m_Weapon;
+	GameEntity	m_Driver;
+	int			m_VehicleHealth;
+	int			m_VehicleMaxHealth;
+	float		m_Armor;
+
+	VehicleInfo()
+	{
+		m_Type = 0;
+		m_Entity = GameEntity();
+		m_Weapon = GameEntity();
+		m_Driver = GameEntity();
+		m_VehicleHealth = 0;
+		m_VehicleMaxHealth = 0;
+		m_Armor = 0.f;
+	}
+};
+
+struct ControllingTeam
+{
+	int		m_ControllingTeam;
+
+	ControllingTeam() : m_ControllingTeam(0) {}
+};
 
 struct WeaponStatus
 {
@@ -144,149 +279,261 @@ struct WeaponStatus
 	}
 };
 
-typedef struct 
+struct WeaponLimits
 {
 	float		m_CenterFacing[3];
-	float		m_MinHorizontalArc, m_MaxHorizontalArc;
-	float		m_MinVerticalArc, m_MaxVerticalArc;
+	float		m_MinYaw;
+	float		m_MaxYaw;
+	float		m_MinPitch;
+	float		m_MaxPitch;
 	int			m_WeaponId;
 	obBool		m_Limited;
-} WeaponLimits;
 
-typedef struct  
+	WeaponLimits()
+		: m_MinYaw(-45.f)
+		, m_MaxYaw( 45.f)
+		, m_MinPitch(-20.f)
+		, m_MaxPitch( 20.f)
+		, m_WeaponId(0)
+		, m_Limited(False)
+	{
+		m_CenterFacing[0] = 0.f;
+		m_CenterFacing[1] = 0.f;
+		m_CenterFacing[2] = 0.f;
+	}
+};
+
+struct Msg_KillEntity
 {
 	GameEntity	m_WhoToKill;
-} Msg_KillEntity;
+};
+
+struct Event_PlaySound
+{
+	char		m_SoundName[128];
+};
+
+struct Event_StopSound
+{
+	char		m_SoundName[128];
+};
+
+struct Event_ScriptEvent
+{
+	char		m_FunctionName[64];
+	char		m_EntityName[64];
+	char		m_Param1[64];
+	char		m_Param2[64];
+	char		m_Param3[64];
+};
+
+struct Msg_GotoWaypoint
+{
+	char		m_WaypointName[64];
+	float		m_Origin[3];
+};
+
+struct Msg_MoverAt
+{
+	float		m_Position[3];
+	float		m_Under[3];
+
+	GameEntity	m_Entity;
+
+	Msg_MoverAt()
+	{
+	}
+};
 
 //////////////////////////////////////////////////////////////////////////
 // Events
 
-typedef struct  
+struct Event_SystemThreadCreated
 {
 	int			m_ThreadId;
-} Event_SystemThreadCreated;
+};
 
-typedef struct  
+struct Event_SystemThreadDestroyed
 {
 	int			m_ThreadId;
-} Event_SystemThreadDestroyed;
+};
 
-typedef struct  
+struct Event_SystemClientConnected
 {
 	int			m_GameId;
 	obBool		m_IsBot;
-} Event_SystemClientConnected;
+	int			m_DesiredClass;
+	int			m_DesiredTeam;
 
-typedef struct  
+	Event_SystemClientConnected() 
+		: m_GameId(-1)
+		, m_IsBot(False)
+		, m_DesiredClass(RANDOM_CLASS_IF_NO_CLASS)
+		, m_DesiredTeam(RANDOM_TEAM_IF_NO_TEAM)
+	{
+	}
+};
+
+struct Event_SystemClientDisConnected
 {
 	int			m_GameId;
-} Event_SystemClientDisConnected;
+};
 
-typedef struct  
+struct Event_SystemGravity
 {
 	float		m_Gravity;
-} Event_SystemGravity;
+};
 
-typedef struct  
+struct Event_SystemCheats
 {
 	obBool		m_Enabled;
-} Event_SystemCheats;
+};
+
+struct Event_EntityCreated
+{
+	GameEntity		m_Entity;
+	BitFlag32		m_EntityCategory;
+	int				m_EntityClass;	
+};
+
+struct EntityInstance
+{
+	GameEntity		m_Entity;
+	BitFlag32		m_EntityCategory;
+	int				m_EntityClass;	
+};
+
+struct Event_EntityDeleted
+{
+	GameEntity		m_Entity;
+};
 
 //////////////////////////////////////////////////////////////////////////
 
-typedef struct  
+struct Event_Death
 {
 	GameEntity	m_WhoKilledMe;
 	char		m_MeansOfDeath[32];
-} Event_Death;
+};
 
-typedef struct  
+struct Event_KilledSomeone
 {
 	GameEntity	m_WhoIKilled;
 	char		m_MeansOfDeath[32];
-} Event_KilledSomeone;
+};
 
-typedef struct  
+struct Event_TakeDamage
 {
 	GameEntity	m_Inflictor;
-} Event_TakeDamage;
+};
 
-typedef struct  
+struct Event_Healed
 {
 	GameEntity	m_WhoHealedMe;
-} Event_Healed;
+};
 
-typedef struct  
+struct Event_Revived
 {
 	GameEntity	m_WhoRevivedMe;
-} Event_Revived;
+};
 
-typedef struct  
+struct Event_ChangeTeam
 {
 	int			m_NewTeam;
-} Event_ChangeTeam;
+};
 
-typedef struct  
+struct Event_WeaponChanged
 {
 	int			m_WeaponId;
-} Event_WeaponChanged;
+};
 
-typedef struct  
+struct Event_ChangeClass
 {
 	int			m_NewClass;
-} Event_ChangeClass;
+};
 
-typedef struct  
+struct Event_Spectated
 {
 	int			m_WhoSpectatingMe;
-} Event_Spectated;
+};
 
-typedef struct  
+struct Event_AddWeapon
 {
 	int			m_WeaponId;
-} Event_AddWeapon;
+};
 
-typedef struct  
+struct Event_RemoveWeapon
 {
 	int			m_WeaponId;
-} Event_RemoveWeapon;
+};
 
-typedef struct  
+struct Event_WeaponFire
 {
 	int			m_WeaponId;
 	FireMode	m_FireMode;
 	GameEntity	m_Projectile;
-} Event_WeaponFire;
+};
 
-typedef struct  
+struct Event_WeaponChange
 {
 	int			m_WeaponId;
-} Event_WeaponChange;
+};
 
-typedef struct  
+struct Event_ChatMessage
 {
 	GameEntity	m_WhoSaidIt;
 	char		m_Message[512];
-} Event_ChatMessage;
+};
 
-typedef struct  
+struct Event_VoiceMacro
 {
 	GameEntity	m_WhoSaidIt;
 	char		m_MacroString[64];
-} Event_VoiceMacro;
+};
 
-typedef struct  
+struct Event_PlayerUsed
 {
 	GameEntity	m_WhoDidIt;
-} Event_PlayerUsed;
+};
 
-typedef struct  
+struct Event_Sound
 {
-	char		m_SoundName[32];
+	char		m_SoundName[64];
 	float		m_Origin[3];
 	GameEntity	m_Source;
 	int			m_SoundType;
-} Event_HearSound;
+};
+
+struct Event_EntitySensed
+{
+	int			m_EntityClass;
+	GameEntity	m_Entity;
+};
+
+struct Event_DynamicPathsChanged
+{
+	int			m_TeamMask;
+	int			m_NavId;
+
+	Event_DynamicPathsChanged(int _team, int _navid = 0)
+		: m_TeamMask(_team)
+		, m_NavId(_navid)
+	{
+	}
+};
+
+struct Event_ScriptMessage
+{
+	char		m_MessageName[64];
+	char		m_MessageData1[64];
+	char		m_MessageData2[64];
+	char		m_MessageData3[64];
+};
+
+struct Event_ScriptSignal
+{
+	char		m_SignalName[64];
+};
 
 #pragma pack(pop)
 

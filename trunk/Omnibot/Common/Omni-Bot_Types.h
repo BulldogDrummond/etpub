@@ -1,8 +1,8 @@
 ////////////////////////////////////////////////////////////////////////////////
 // 
-// $LastChangedBy: gabriel $
-// $LastChangedDate: 2007-06-05 00:46:18 +0300 (Tue, 05 Jun 2007) $
-// $LastChangedRevision: 1741 $
+// $LastChangedBy: drevil $
+// $LastChangedDate: 2008-05-19 21:01:05 -0700 (Mon, 19 May 2008) $
+// $LastChangedRevision: 2862 $
 //
 ////////////////////////////////////////////////////////////////////////////////
 
@@ -38,20 +38,65 @@ typedef enum eMessageType
 	kInfo,
 	kWarning,
 	kError,
-	kDebug
+	kDebug,
+	kScript
 } MessageType;
 
 // typedef: GameEntity
 //		Represents an entity to the bot for every game.
-typedef obvoidp GameEntity;
+class GameEntity
+{
+public:
+	obint16 GetIndex() const { return udata.m_Short[0]; }
+	obint16 GetSerial() const { return udata.m_Short[1]; }
+
+	obint32 AsInt() const { return udata.m_Int; }
+	void FromInt(obint32 _n) { udata.m_Int = _n; }
+
+	void Reset()
+	{
+		*this = GameEntity();
+	}
+
+	bool IsValid() const
+	{
+		return udata.m_Short[0] >= 0;
+	}
+
+	bool operator!=(const GameEntity& _2) const
+	{
+		return udata.m_Int != _2.udata.m_Int;
+	}
+	bool operator==(const GameEntity& _2) const
+	{
+		return udata.m_Int == _2.udata.m_Int;
+	}
+
+	explicit GameEntity(obint16 _index, obint16 _serial)
+	{
+		udata.m_Short[0] = _index;
+		udata.m_Short[1] = _serial;
+	}
+	GameEntity()
+	{
+		udata.m_Short[0] = -1;
+		udata.m_Short[1] = 0;
+	}
+private:
+	union udatatype
+	{
+		obint32			m_Int;
+		obint16			m_Short[2];
+	} udata;
+};
 
 // typedef: GameId
 //		A numeric value for an entities game id. Usually an array index of some sort.
 typedef int GameId;
 
-// typedef: NavigationFlags
+// typedef: NavFlags
 //		This is the type waypoint flags, and should be a 64 bit type
-typedef obuint64 NavigationFlags;
+typedef obuint64 NavFlags;
 
 // enum: obBool
 //		Since theres no promise that we're running in C or C++, and therefor no
@@ -114,6 +159,16 @@ typedef enum eFireMode
 	InvalidFireMode
 } FireMode;
 
+typedef enum eStance
+{
+	StanceStand,
+	StanceCrouch,
+	StanceProne,
+
+	// last
+	StanceNum,
+} Stance;
+
 // enumerations: WeaponType
 //		INVALID_WEAPON - Used for invalid weapon id.
 typedef enum eWeaponType
@@ -131,31 +186,33 @@ typedef enum eAmmoType
 // enumerations: BotDebugFlag
 //		BOT_DEBUG_LOG - Debug log for this bot.
 //		BOT_DEBUG_MOVEVEC - Draw the move vector.
-//		BOT_DEBUG_AIMPOINT - Draw a line to the aim point.
-//		BOT_DEBUG_GOALS - Output info about the bot goals.
-//		BOT_DEBUG_SENSORY - Draw lines to sensed entities.
-//		BOT_DEBUG_BRAIN - Output info from the bot brain.
-//		BOT_DEBUG_WEAPON - Output info about weapon system.
 //		BOT_DEBUG_SCRIPT - Output info about bot script events/signals.
-//		BOT_DEBUG_EVENTS - Output Event info.
 //		BOT_DEBUG_FPINFO - Output first person info.
+//		BOT_DEBUG_EVENTS - Print out events bot recieves.
 typedef enum eBotDebugFlag
 {
 	BOT_DEBUG_LOG = 0,
 	BOT_DEBUG_MOVEVEC,
-	BOT_DEBUG_AIMPOINT,
-	BOT_DEBUG_GOALS,
-	BOT_DEBUG_SENSORY,
-	BOT_DEBUG_BRAIN,
-	BOT_DEBUG_WEAPON,
 	BOT_DEBUG_SCRIPT,
-	BOT_DEBUG_EVENTS,
 	BOT_DEBUG_FPINFO,
 	BOT_DEBUG_PLANNER,
+	BOT_DEBUG_EVENTS,
+	BOT_DEBUG_LOG_FAILED_PATHS,
 
 	// THIS MUST STAY LAST
 	NUM_BOT_DEBUG_FLAGS = 16,
 } BotDebugFlag;
+
+typedef enum eTeamBase
+{
+	OB_TEAM_ALL = -2,
+	OB_TEAM_SPECTATOR = -1,
+	OB_TEAM_NONE,
+	OB_TEAM_1,
+	OB_TEAM_2,
+	OB_TEAM_3,
+	OB_TEAM_4,
+} TeamBase;
 
 // enumerations: Helpers
 //		RANDOM_CLASS - Pick a random class.
@@ -213,8 +270,10 @@ typedef struct AABB_t
 	{
 		for(int i = 0; i < 3; ++i)
 		{
-			m_Mins[i] = _min[i];
-			m_Maxs[i] = _max[i];
+			m_Mins[i] = _min[i] < _max[i] ? _min[i] : _max[i];
+			m_Maxs[i] = _min[i] > _max[i] ? _min[i] : _max[i];
+			/*m_Mins[i] = _min[i];
+			m_Maxs[i] = _max[i];*/
 		}
 	}
 	void CenterPoint(float _out[3]) const
@@ -253,6 +312,11 @@ typedef struct AABB_t
 			if(_pt[i] > m_Maxs[i])
 				m_Maxs[i] = _pt[i];
 		}
+	}
+	void Expand(const AABB_t &_bbox)
+	{
+		Expand(_bbox.m_Mins);
+		Expand(_bbox.m_Maxs);
 	}
 	bool Intersects(const AABB_t &_bbox) const
 	{
@@ -296,6 +360,10 @@ typedef struct AABB_t
 	{
 		return m_Maxs[_axis] - m_Mins[_axis];
 	}
+	float GetArea() const
+	{
+		return GetAxisLength(0) * GetAxisLength(1) * GetAxisLength(2);
+	}
 	float DistanceFromBottom(const float _pt[3]) const
 	{
 		return -(m_Mins[2] - _pt[2]);
@@ -320,23 +388,37 @@ typedef struct AABB_t
 			m_Maxs[i] += _expand;
 		}
 	}
+	void ExpandAxis(int _axis, float _expand)
+	{
+		m_Mins[_axis] -= _expand;
+		m_Maxs[_axis] += _expand;
+	}
+	void FlipHorizontalAxis()
+	{
+		for(int i = 0; i < 2; ++i)
+		{
+			float tmp = m_Mins[i];
+			m_Mins[i] = m_Maxs[i];
+			m_Maxs[i] = tmp;
+		}
+	}
 	void GetBottomCorners(float _bl[3], float _tl[3], float _tr[3], float _br[3])
 	{
 		_bl[0] = m_Mins[0];
 		_bl[1] = m_Mins[1];
-		_bl[2] = m_Mins[2];
+		_bl[2] = m_Mins[0];
 
 		_tl[0] = m_Mins[0];
 		_tl[1] = m_Maxs[1];
-		_tl[2] = m_Mins[2];
+		_tl[2] = m_Mins[0];
 
 		_tr[0] = m_Maxs[0];
 		_tr[1] = m_Maxs[1];
-		_tr[2] = m_Mins[2];
+		_tr[2] = m_Mins[0];
 
 		_br[0] = m_Maxs[0];
 		_br[1] = m_Mins[1];
-		_br[2] = m_Mins[2];
+		_br[2] = m_Mins[0];
 	}
 	void GetTopCorners(float _bl[3], float _tl[3], float _tr[3], float _br[3])
 	{
@@ -403,6 +485,8 @@ typedef struct AABB_t
 //		BOT_BUTTON_BACK - If the bot is pressing the backward key.
 //		BOT_BUTTON_RSTRAFE - If the bot is pressing right strafe.
 //		BOT_BUTTON_LSTRAFE - If the bot is pressing left strafe.
+//		BOT_BUTTON_MOVEUP - Move up, typically a ladder
+//		BOT_BUTTON_MOVEDN - Move down, typically a ladder
 //		BOT_BUTTON_RELOAD - If the bot is pressing reload.
 //		BOT_BUTTON_SPRINT - If the bot wants to sprint.
 //		BOT_BUTTON_DROP - If the bot wants to drop current item.
@@ -423,6 +507,8 @@ typedef enum eButtonFlags
 	BOT_BUTTON_BACK,
 	BOT_BUTTON_RSTRAFE,
 	BOT_BUTTON_LSTRAFE,
+	BOT_BUTTON_MOVEUP,
+	BOT_BUTTON_MOVEDN,
 	BOT_BUTTON_RELOAD,
 	BOT_BUTTON_SPRINT,
 	BOT_BUTTON_DROP,
@@ -432,7 +518,7 @@ typedef enum eButtonFlags
 	BOT_BUTTON_RESPAWN,
 
 	// THIS MUST BE LAST
-	BOT_BUTTUN_FIRSTUSER
+	BOT_BUTTON_FIRSTUSER
 } ButtonFlags;
 
 // enumerations: GoalType
@@ -460,64 +546,24 @@ typedef enum eGoalType
 	GOAL_SNIPE,
 	GOAL_CTF_FLAG,
 	GOAL_CTF_FLAGCAP,
+	GOAL_CTF_HOLDCAP,
 	GOAL_CTF_RETURN_FLAG,
 	GOAL_SCRIPT,
 	GOAL_ROUTEPT,
+	GOAL_TRAININGSPAWN,
 
-	// THIS MUST BE LAST
-	BASE_GOAL_NUM = 1000
+	// Mod specific goals start at this
+	BASE_GOAL_NUM = 1000,
+	// Script goals
+	BASE_GOAL_SCRIPT = 2000,
 } GoalType;
-
-// A basic list of goals. There should be one of these for any base Goal class.
-typedef enum eBasicGoals
-{
-	goal_none,
-	goal_goto,
-	goal_explore,
-	goal_getflag,
-	goal_capflag,
-	goal_returnflag,
-	goal_gotonode,
-	goal_gethealth,
-	goal_getarmor,
-	goal_getammo,
-	goal_snipe,
-	goal_usedoor,
-	goal_jumpgap,
-	goal_negotiate_lift,
-	goal_teleport,
-	goal_script,
-	goal_defend,
-	goal_attack,
-	goal_ride_movable,
-	goal_hunt_target,
-	/*goal_think,
-	goal_explore,
-	goal_arrive_at_position,
-	goal_seek_to_position,
-	goal_follow_path,
-	goal_traverse_edge,
-	goal_move_to_position,
-	goal_get_shotgun,
-	goal_get_rocket_launcher,
-	goal_get_railgun,
-	goal_wander,
-
-	goal_attack_target,
-	
-	goal_strafe,
-	goal_adjust_range,
-	goal_say_phrase*/
-
-	// THIS MUST BE LAST
-	goal_base_num = 1000
-} Goals_Base;
 
 // enumerations: EntityFlags
 //		ENT_FLAG_TEAM1 - This entity is only available/visible for team 1
 //		ENT_FLAG_TEAM2 - This entity is only available/visible for team 2
 //		ENT_FLAG_TEAM3 - This entity is only available/visible for team 3
 //		ENT_FLAG_TEAM4 - This entity is only available/visible for team 4
+//		ENT_FLAG_VISTEST - The entity should be vis tested. Otherwise uses disabled flag.
 //		ENT_FLAG_DISABLED - Entity is disabled
 //		ENT_FLAG_PRONED - This entity is prone
 //		ENT_FLAG_CROUCHED - This entity is crouched
@@ -531,13 +577,16 @@ typedef enum eBasicGoals
 //		ENT_FLAG_RELOADING - Entity is currently reloading
 //		ENT_FLAG_ON_ICE - Entity on slippery surface.
 //		ENT_FLAG_HUMANCONTROLLED - Human player controls this entity.
+//		ENT_FLAG_IRONSIGHT - Entity is aiming down their weapon.
+//		ENT_FLAG_INVEHICLE - Entity is inside a vehicle
 typedef enum eEntityFlag
 {
 	ENT_FLAG_TEAM1,
 	ENT_FLAG_TEAM2,
 	ENT_FLAG_TEAM3,
 	ENT_FLAG_TEAM4,	
-	ENT_FLAG_DISABLED,	
+	ENT_FLAG_VISTEST,
+	ENT_FLAG_DISABLED,
 	ENT_FLAG_PRONED,	
 	ENT_FLAG_CROUCHED,	
     ENT_FLAG_CARRYABLE,	
@@ -550,6 +599,8 @@ typedef enum eEntityFlag
 	ENT_FLAG_RELOADING,
 	ENT_FLAG_ON_ICE,
 	ENT_FLAG_HUMANCONTROLLED,
+	ENT_FLAG_IRONSIGHT,
+	ENT_FLAG_INVEHICLE,
 
 	// THIS MUST BE LAST
 	ENT_FLAG_FIRST_USER	= 32
@@ -563,7 +614,7 @@ typedef enum ePowerups
 	PWR_INVINCIBLE,
 
 	// THIS MUST BE LAST	
-	PWR_FIRST_USER		= 16,
+	PWR_FIRST_USER		= 8,
 } Powerups;
 
 // enumerations: EntityCategory
@@ -592,6 +643,7 @@ typedef enum eEntityCategory
 	ENT_CAT_MISC,
 	ENT_CAT_STATIC,
 	ENT_CAT_AUTODEFENSE,
+	ENT_CAT_INTERNAL,
 
 	// THIS MUST BE LAST
 	ENT_CAT_MAX,
@@ -602,6 +654,7 @@ typedef enum eEntityCategory
 typedef enum eEntityClassGeneric
 {
 	ENT_CLASS_GENERIC_START = 10000,
+	ENT_CLASS_GENERIC_SPECTATOR,
 	ENT_CLASS_GENERIC_PLAYERSTART,
 	ENT_CLASS_GENERIC_PLAYERSTART_TEAM1,
 	ENT_CLASS_GENERIC_PLAYERSTART_TEAM2,
@@ -612,9 +665,15 @@ typedef enum eEntityClassGeneric
 	ENT_CLASS_GENERIC_AMMO,
 	ENT_CLASS_GENERIC_ARMOR,
 	ENT_CLASS_GENERIC_LADDER,
+	ENT_CLASS_GENERIC_FLAG,
+	ENT_CLASS_GENERIC_FLAGCAPPOINT,
 	ENT_CLASS_GENERIC_TELEPORTER,
 	ENT_CLASS_GENERIC_LIFT,
 	ENT_CLASS_GENERIC_MOVER,
+	ENT_CLASS_GENERIC_JUMPPAD,
+	ENT_CLASS_GENERIC_JUMPPAD_TARGET,
+	ENT_CLASS_GENERIC_GOAL,
+	ENT_CLASS_EXPLODING_BARREL,
 } EntityClassGeneric;
 
 // enumerations: SoundType
@@ -638,8 +697,8 @@ typedef enum eSoundType
 	SND_TAKEDAMAGE,
 	SND_POWERUP_SPAWN,
 	SND_POWERUP_PICKUP,
-	SND_WEAPON_FIRE,
-	SND_WEAPON_RELOAD,
+	SND_WEAPON_FIRE_OMNIBOT,
+	SND_WEAPON_RELOAD_OMNIBOT,
 	SND_WEAPON_EMPTY,
 	SND_WEAPON_STARTFIRE,
 	SND_VOICE_TAUNT,
@@ -763,7 +822,7 @@ typedef struct obUserData_t
 	//		that send BotUserData parameters. It is a good idea to use the
 	//		m_DataType parameter so signal which element of the union
 	//		is currently being used.
-	enum { dtNone = 0, dtVector, dtString, dtInt, dtFloat, dtEntity,
+	enum { dtNone = 0, dtVector, dtString, dtInt, /*dtInt64,*/ dtFloat, dtEntity,
 		dt3_4byteFlags, dt3_Strings, dt6_2byteFlags, dt12_1byteFlags } DataType;
 	union udatatype
 	{
@@ -772,8 +831,9 @@ typedef struct obUserData_t
 		char *			m_CharPtrs[3];
 		const char *	m_String;
 		int				m_Int;
+		//obint64			m_Int64;
 		float			m_Float;
-		GameEntity		m_Entity;
+		int				m_Entity;
 		int				m_4ByteFlags[3];
 		short			m_2ByteFlags[6];
 		char			m_1ByteFlags[12];
@@ -783,14 +843,22 @@ typedef struct obUserData_t
 	obUserData_t() : DataType(dtNone) {};
 	obUserData_t(const char * _str) : DataType(dtString) { udata.m_String = _str; };
 	obUserData_t(int _int) : DataType(dtInt) { udata.m_Int = _int; };
+	//obUserData_t(obint64 _int) : DataType(dtInt64) { udata.m_Int64 = _int; };
 	obUserData_t(float _float) : DataType(dtFloat) { udata.m_Float = _float; };
-	obUserData_t(const GameEntity &_ent) : DataType(dtEntity) { udata.m_Entity = _ent; };
+	obUserData_t(const GameEntity &_ent) : DataType(dtEntity) { udata.m_Entity = _ent.AsInt(); };
 	obUserData_t(float _x, float _y, float _z) : 
 		DataType(dtVector) 
 	{
 		udata.m_Vector[0] = _x; 
 		udata.m_Vector[1] = _y; 
 		udata.m_Vector[2] = _z;
+	};
+	obUserData_t(float *_v) : 
+		DataType(dtVector) 
+	{
+		udata.m_Vector[0] = _v[0]; 
+		udata.m_Vector[1] = _v[1]; 
+		udata.m_Vector[2] = _v[2]; 
 	};
 	obUserData_t(int _0, int _1, int _2) : DataType(dt3_4byteFlags)
 	{
@@ -842,6 +910,9 @@ typedef struct obUserData_t
 	// Function: IsInt
 	// This <BotUserData> is an int type
 	inline bool IsInt() const { return (DataType == dtInt); };
+	// Function: IsInt64
+	// This <BotUserData> is an int type
+	//inline bool IsInt64() const { return (DataType == dtInt64); };
 	// Function: IsFloat
 	// This <BotUserData> is an float type
 	inline bool IsFloat() const { return (DataType == dtFloat); };
@@ -866,8 +937,10 @@ typedef struct obUserData_t
 
 	inline const char *GetString() const { return udata.m_String; };
 	inline int GetInt() const { return udata.m_Int; };
+	//inline obint64 GetInt64() const { return udata.m_Int64; };
 	inline float GetFloat() const { return udata.m_Float; };
-	inline GameEntity GetEntity() const { return udata.m_Entity; };
+	inline GameEntity GetEntity() const { GameEntity e; e.FromInt(udata.m_Entity); return e; };
+	inline void SetEntity(GameEntity e) { udata.m_Entity = e.AsInt(); };
 	inline const char *GetStrings(int _index) const { return udata.m_CharPtrs[_index]; };
 	inline const float *GetVector() const { return udata.m_Vector; };
 	inline const int *Get4ByteFlags() const { return udata.m_4ByteFlags; };
@@ -890,7 +963,46 @@ typedef struct obUserData_t
 		return 0;
 	};
 
-	
+	//////////////////////////////////////////////////////////////////////////
+	bool Get(float &_val)
+	{
+		if(IsFloat())
+		{
+			_val = GetFloat();
+			return true;
+		}
+		return false;
+	}
+	bool Get(int &_val)
+	{
+		if(IsInt())
+		{
+			_val = GetInt();
+			return true;
+		}
+		return false;
+	}
+	bool Get(float *_val)
+	{
+		if(IsVector())
+		{
+			_val[0] = GetVector()[0];
+			_val[1] = GetVector()[1];
+			_val[2] = GetVector()[2];
+			return true;
+		}
+		return false;
+	}
+	bool Get(bool &_val)
+	{
+		if(IsInt())
+		{
+			_val = GetInt()!=0;
+			return true;
+		}
+		return false;
+	}
+	//////////////////////////////////////////////////////////////////////////
 #endif
 } obUserData;
 
@@ -906,24 +1018,24 @@ typedef struct TriggerInfo_t
 	char m_Action[TriggerBufferSize];
 	// ptr: m_Entity
 	//		The entity of this trigger, if available
-	GameEntity	m_Entity;
+	GameEntity m_Entity;
 	// ptr: m_Activator
 	//		The entity that activated this trigger
-	GameEntity	m_Activator;
+	GameEntity m_Activator;
 #ifdef __cplusplus
-	TriggerInfo_t() : m_Entity(0), m_Activator(0) 
+	TriggerInfo_t()
 	{
 		for(int i = 0; i < TriggerBufferSize; ++i)
 			m_TagName[i] = m_Action[i] = 0;
 	}
-	TriggerInfo_t(TriggerInfo_t *_ti) : m_Entity(0), m_Activator(0) 
+	TriggerInfo_t(const TriggerInfo_t &_ti)
 	{
-		m_Entity = _ti->m_Entity;
-		m_Activator = _ti->m_Activator;
+		m_Entity = _ti.m_Entity;
+		m_Activator = _ti.m_Activator;
 		for(int i = 0; i < TriggerBufferSize; ++i)
 		{
-			m_TagName[i] = _ti->m_TagName[i];
-			m_Action[i] = _ti->m_Action[i];
+			m_TagName[i] = _ti.m_TagName[i];
+			m_Action[i] = _ti.m_Action[i];
 		}
 	}
 	TriggerInfo_t(GameEntity _ent, GameEntity _activator) : 
@@ -933,6 +1045,42 @@ typedef struct TriggerInfo_t
 	}
 #endif
 } TriggerInfo;
+
+// struct: MapGoalDef
+typedef struct MapGoalDef_t
+{
+	enum { BufferSize = 64 };
+
+	GameEntity		m_Entity;
+	int				m_GoalType;
+	int				m_Team;
+	char			m_TagName[BufferSize];
+	obUserData		m_UserData;
+#ifdef __cplusplus
+	
+	void Reset()
+	{
+		m_Entity.Reset();
+		m_GoalType = 0;
+		m_Team = 0;
+		m_TagName[0] = 0;
+		m_UserData = obUserData();
+	}
+	MapGoalDef_t() { Reset(); }
+#endif
+} MapGoalDef;
+
+// struct: AutoNavFeature
+typedef struct AutoNavFeature_t
+{
+	int			m_Type;
+	float		m_Position[3];
+	float		m_Facing[3];
+	float		m_TargetPosition[3];
+	AABB		m_TargetBounds;
+	float		m_TravelTime;
+	AABB		m_Bounds;
+} AutoNavFeature;
 
 // Generic Enumerations
 
@@ -992,11 +1140,32 @@ typedef enum eGameState
 } GameState;
 
 //////////////////////////////////////////////////////////////////////////
+
+class Arguments
+{
+public:
+	enum { MaxArgs = 64, MaxArgLength = 128, };
+	
+	Arguments() : m_NumArgs(0) 
+	{
+		for(int i = 0; i < MaxArgs; ++i)
+			m_Args[i][0] = 0;
+	}
+
+	char	m_Args[MaxArgs][MaxArgLength];
+	int		m_NumArgs;
+};
+
+//////////////////////////////////////////////////////////////////////////
+
+struct obVec3 { float x,y,z; };
+
 typedef enum
 {
 	DRAW_LINE,
 	DRAW_RADIUS,
 	DRAW_BOUNDS,
+	DRAW_POLYGON,
 } DebugMsgType;
 
 typedef float vector_t;
@@ -1004,23 +1173,31 @@ typedef vector_t vector3_t[3];
 
 typedef struct
 {
-	vector3_t		m_Start, m_End;	
+	obVec3			m_Start, m_End;	
 	int				m_Color;
 } IPC_DebugLineMessage;
 
 typedef struct
 {
-	vector3_t		m_Pos;
+	obVec3			m_Pos;
 	float			m_Radius;
 	int				m_Color;
 } IPC_DebugRadiusMessage;
 
 typedef struct
 {
-	vector3_t		m_Mins, m_Maxs;	
+	obVec3			m_Mins, m_Maxs;	
 	int				m_Color;
 	int				m_Sides;
 } IPC_DebugAABBMessage;
+
+typedef struct
+{
+	enum { MaxPolyVerts=32 };
+	obVec3			m_Verts[MaxPolyVerts];	
+	int				m_NumVerts;
+	int				m_Color;	
+} IPC_DebugPolygonMessage;
 
 typedef struct
 {
@@ -1029,6 +1206,7 @@ typedef struct
 		IPC_DebugLineMessage	m_Line;
 		IPC_DebugRadiusMessage	m_Radius;
 		IPC_DebugAABBMessage	m_AABB;
+		IPC_DebugPolygonMessage m_Polygon;
 	} data;
 
 	int				m_Duration;

@@ -3159,25 +3159,9 @@ void G_SayTo( gentity_t *ent, gentity_t *other, int mode, int color, const char 
 			(ent - g_entities))) {
 
 			Q_strncpyz(cmd, "print", sizeof(cmd));
+
 			// Omni-bot: Tell the bot about the chat message
-			if(other->r.svFlags & SVF_BOT)
-			{
-				int iMsg = PERCEPT_HEAR_GLOBALCHATMSG;			
-				switch(mode)
-				{
-				case SAY_ALL:
-					iMsg = PERCEPT_HEAR_GLOBALCHATMSG;
-					break;
-				case SAY_TEAM:
-				case SAY_TEAMNL:
-					iMsg = PERCEPT_HEAR_TEAMCHATMSG;
-					break;
-				case SAY_BUDDY:
-					iMsg = PERCEPT_HEAR_PRIVCHATMSG;
-					break;
-				}
-				Bot_Event_ChatMessage(other-g_entities, (GameEntity)ent, iMsg, message);
-			}
+			Bot_Event_ChatMessage(other-g_entities, ent, mode, message);
 		}
 		else if(mode == SAY_TEAM || mode == SAY_BUDDY) {
 			Q_strncpyz(cmd, "tchat", sizeof(cmd));
@@ -3405,15 +3389,7 @@ void G_VoiceTo( gentity_t *ent, gentity_t *other, int mode, const char *id, qboo
 #endif
 
 	// Omni-bot Send this voice macro to the bot as an event.
-	if(other->r.svFlags & SVF_BOT)
-	{
-		int iMessageId = PERCEPT_HEAR_GLOBALVOICEMACRO;
-		if(mode == SAY_TEAM)
-			iMessageId = PERCEPT_HEAR_TEAMVOICEMACRO;
-		else if(mode == SAY_BUDDY)
-			iMessageId = PERCEPT_HEAR_PRIVATEVOICEMACRO;
-		Bot_Event_VoiceMacro(other-g_entities, (GameEntity)ent, iMessageId, id);
-	}
+	Bot_Event_VoiceMacro(other-g_entities, ent, mode, id);
 
 	if (voiceonly == 2) {
 		voiceonly = qfalse;

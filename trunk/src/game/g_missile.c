@@ -1,4 +1,5 @@
 #include "g_local.h"
+#include "g_etbot_interface.h"
 
 #define	MISSILE_PRESTEP_TIME	50
 
@@ -438,6 +439,8 @@ void G_ExplodeMissile( gentity_t *ent ) {
 					G_UseTargets( hit, ent );
 					hit->think = G_FreeEntity;
 					hit->nextthink = level.time + FRAMETIME;
+
+					G_Script_ScriptEvent( hit, "destroyed", "" );
 				}
 			}
 		}
@@ -1639,10 +1642,7 @@ void G_LandmineThink( gentity_t *self ) {
 	if( trigger ) 
 	{
 		// Omni-bot
-		if(ent->r.svFlags & SVF_BOT)
-		{
-			Bot_Event_PreTriggerMine(ent-g_entities, (GameEntity)(self-g_entities));
-		}
+		Bot_Event_PreTriggerMine(ent-g_entities, self);
 
 		LandMineTrigger( self );
 	}
@@ -1682,10 +1682,7 @@ void LandminePostThink( gentity_t *self ) {
 	if(!trigger) 
 	{
 		// Omni-bot
-		if(ent->r.svFlags & SVF_BOT)
-		{
-			Bot_Event_PostTriggerMine(ent-g_entities, (GameEntity)(self-g_entities));
-		}
+		Bot_Event_PostTriggerMine(ent-g_entities, self);
 		LandMinePostTrigger(self);
 	}
 }

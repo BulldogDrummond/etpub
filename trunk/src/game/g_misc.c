@@ -1857,7 +1857,8 @@ void mg42_use (gentity_t *ent, gentity_t *other, gentity_t *activator ) {
 	trap_LinkEntity (ent);
 }
 
-const char *_GetEntityName(gentity_t *_ent);
+void AddDeferredGoal(gentity_t *ent);
+void UpdateGoalEntity(gentity_t *oldent, gentity_t *newent);
 void mg42_spawn (gentity_t *ent) {
 	gentity_t *base, *gun;
 	vec3_t	offset;
@@ -1975,14 +1976,8 @@ void mg42_spawn (gentity_t *ent) {
 
 		trap_LinkEntity (gun);
 
-		{
-			int team = 0;
-			const char *pGoalName = 0;
-			team |= (1 << ET_TEAM_ALLIES);
-			team |= (1 << ET_TEAM_AXIS);
-			pGoalName = _GetEntityName(gun);
-			Bot_Util_AddGoal((GameEntity)gun, ET_GOAL_MG42MOUNT, team, pGoalName, NULL);
-		}
+		UpdateGoalEntity( ent, gun );
+		//AddDeferredGoal(gun);
 	} 
 
 	G_FreeEntity (ent);

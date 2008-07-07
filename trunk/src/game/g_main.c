@@ -6,6 +6,8 @@
 // Include the "External"/"Public" components of AI_Team
 #include "../botai/ai_teamX.h"
 
+#include "g_etbot_interface.h"
+
 wordDictionary censorDictionary;
 wordDictionary censorNamesDictionary;
 
@@ -34,6 +36,7 @@ vmCvar_t	g_OmniBotPath;
 vmCvar_t	g_OmniBotEnable;
 vmCvar_t	g_OmniBotPlaying;
 vmCvar_t	g_OmniBotFlags;
+vmCvar_t	g_OmniBotGib;
 
 vmCvar_t  g_panzerwar;
 vmCvar_t  g_sniperwar;
@@ -1092,6 +1095,7 @@ cvarTable_t		gameCvarTable[] = {
 	{ &g_OmniBotEnable, "omnibot_enable", "1", CVAR_ARCHIVE | CVAR_SERVERINFO_NOUPDATE | CVAR_NORESTART, 0, qfalse },
 	{ &g_OmniBotPlaying, "omnibot_playing", "0", CVAR_SERVERINFO_NOUPDATE | CVAR_ROM, 0, qfalse },	
 	{ &g_OmniBotFlags, "omnibot_flags", "0", CVAR_ARCHIVE | CVAR_NORESTART, 0, qfalse },	
+	{ &g_OmniBotGib, "g_botGib", "0", CVAR_ARCHIVE, 0, qtrue},
 	
 	//quad
 	{ &g_noSkillUpgrades, "g_noSkillUpgrades", "0", 0},
@@ -1143,6 +1147,7 @@ int vmMain( int command, int arg0, int arg1, int arg2, int arg3, int arg4, int a
 	case GAME_INIT:
 		EnableStackTrace();
 		//G_InitThreads();
+		Bot_Interface_InitHandles();
 		G_InitGame( arg0, arg1, arg2 );
 		if (!Bot_Interface_Init())
 			G_Printf(S_COLOR_RED "Unable to Initialize Omni-Bot.\n");
@@ -4135,6 +4140,8 @@ void LogExit( const char *string ) {
 		//bani - #113
 		bani_storemapxp();
 	}
+
+	Bot_Util_SendTrigger(NULL, NULL, "Round End.", "roundend");
 
 	G_BuildEndgameStats();
 

@@ -1,13 +1,15 @@
 ////////////////////////////////////////////////////////////////////////////////
 // 
-// $LastChangedBy: DrEvil $
-// $LastChangedDate: 2007-03-07 08:28:59 -0800 (Wed, 07 Mar 2007) $
-// $LastChangedRevision: 1697 $
+// $LastChangedBy: drevil $
+// $LastChangedDate: 2008-01-16 09:41:57 -0800 (Wed, 16 Jan 2008) $
+// $LastChangedRevision: 2334 $
 //
 ////////////////////////////////////////////////////////////////////////////////
 
 #ifndef __MESSAGEHELPER_H__
 #define __MESSAGEHELPER_H__
+
+#include <assert.h>
 
 //////////////////////////////////////////////////////////////////////////
 
@@ -66,6 +68,8 @@ private:
 
 	MessageHelper();
 };
+
+#define OB_GETMSG(msgtype) msgtype *pMsg = 0; _data.Get2(pMsg);
 
 //////////////////////////////////////////////////////////////////////////
 

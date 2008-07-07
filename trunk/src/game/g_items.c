@@ -11,7 +11,7 @@
 */
 
 #include "g_local.h"
-
+#include "g_etbot_interface.h"
 
 
 #define RESPAWN_SP			-1
@@ -807,6 +807,9 @@ int Pickup_Health (gentity_t *ent, gentity_t *other) {
 	}
 	other->client->ps.stats[STAT_HEALTH] = other->health;
 
+	//omni-bot event
+	Bot_Event_Healed(other-g_entities, ent->parent);
+
 	return -1;
 }
 
@@ -1109,9 +1112,6 @@ gentity_t *LaunchItem( gitem_t *item, vec3_t origin, vec3_t velocity, int ownerN
 	dropped->flags = FL_DROPPED_ITEM;
 
 	trap_LinkEntity (dropped);
-
-	// Notify the bot of this new object.
-	Bot_Util_EntityCreated(dropped);
 
 	return dropped;
 }

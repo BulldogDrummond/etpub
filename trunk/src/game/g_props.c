@@ -1455,7 +1455,8 @@ void Props_Chair_Die (gentity_t *ent, gentity_t *inflictor, gentity_t *attacker,
 	ent->think = Props_Chair_Animate;
 	ent->nextthink = level.time + FRAMETIME;
 
-	ent->health = ent->duration;
+	//	ent->health = ent->duration;
+	ent->health = 0;
 	ent->delay = damage;
 	ent->takedamage = qfalse;
 //	ent->enemy = inflictor;

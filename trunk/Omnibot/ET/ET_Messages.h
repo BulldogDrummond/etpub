@@ -1,8 +1,8 @@
 ////////////////////////////////////////////////////////////////////////////////
 // 
-// $LastChangedBy: DrEvil $
-// $LastChangedDate: 2007-02-20 22:25:19 -0800 (Tue, 20 Feb 2007) $
-// $LastChangedRevision: 1661 $
+// $LastChangedBy: crapshoot $
+// $LastChangedDate: 2008-05-29 20:13:21 -0700 (Thu, 29 May 2008) $
+// $LastChangedRevision: 2894 $
 //
 // Title: TF Message Structure Definitions
 //
@@ -18,144 +18,224 @@
 
 //////////////////////////////////////////////////////////////////////////
 
-typedef struct 
+struct ET_WeaponOverheated
 {
 	ET_Weapon	m_Weapon;
 	obBool		m_IsOverheated;
-} ET_WeaponOverheated;
+};
 
-typedef struct 
+struct ET_WeaponHeatLevel
 {
 	GameEntity	m_Entity;
 	int			m_Current;
 	int			m_Max;
-} ET_WeaponHeatLevel;
+};
 
-typedef struct 
+struct ET_ExplosiveState
 {
 	GameEntity		m_Explosive;
 	ExplosiveState	m_State;
-} ET_ExplosiveState;
+};
 
-typedef struct 
+struct ET_ConstructionState
 {
 	GameEntity			m_Constructable;
 	ConstructableState	m_State;
-} ET_ConstructionState;
+};
 
-typedef struct 
+struct ET_Destroyable
 {
 	GameEntity			m_Entity;
 	ConstructableState	m_State;
-} ET_Destroyable;
+};
 
-typedef struct 
+struct ET_HasFlag
 {
 	obBool		m_HasFlag;
-} ET_HasFlag;
+};
 
-typedef struct 
+struct ET_CanBeGrabbed
 {
 	GameEntity	m_Entity;
 	obBool		m_CanBeGrabbed;
-} ET_CanBeGrabbed;
+};
 
-typedef struct 
+struct ET_TeamMines
 {
 	int			m_Current;
 	int			m_Max;
-} ET_TeamMines;
+};
 
-typedef struct 
+struct ET_WaitingForMedic
 {
 	obBool		m_WaitingForMedic;
-} ET_WaitingForMedic;
+};
 
-typedef struct 
+struct ET_SelectWeapon
 {
 	ET_Weapon	m_Selection;
 	obBool		m_Good;
-} ET_SelectWeapon;
+};
 
-typedef struct 
+struct ET_ReinforceTime
 {
 	int			m_ReinforceTime;
-} ET_ReinforceTime;
+};
 
-typedef struct 
+struct ET_MedicNear
 {
 	obBool		m_MedicNear;
-} ET_MedicNear;
+};
 
-typedef struct 
+struct ET_GoLimbo
 {
 	obBool		m_GoLimbo;
-} ET_GoLimbo;
+};
 
-typedef struct 
+struct ET_MG42MountedPlayer
 {
 	GameEntity	m_MG42Entity;
 	GameEntity	m_MountedEntity;
-} ET_MG42MountedPlayer;
+};
 
-typedef struct 
+struct ET_MG42MountedRepairable
 {
 	GameEntity	m_MG42Entity;
 	obBool		m_Repairable;
-} ET_MG42MountedRepairable;
+};
 
-typedef struct 
+struct ET_MG42Health
 {
 	GameEntity	m_MG42Entity;
 	int			m_Health;
-} ET_MG42Health;
+};
 
-typedef struct 
+struct ET_CursorHint
 {
 	int			m_Type;
 	int			m_Value;
-} ET_CursorHint;
+};
 
-typedef struct 
+struct ET_CheckpointTeam
 {
 	int			m_OwningTeam;
-} ET_CheckpointTeam;
+};
 
-typedef struct 
+struct ET_SpawnPoint
 {
 	int			m_SpawnPoint;
-} ET_SpawnPoint;
+};
 
-typedef struct 
+struct ET_MG42Info
 {
 	float		m_CenterFacing[3];
 	float		m_MinHorizontalArc, m_MaxHorizontalArc;
 	float		m_MinVerticalArc, m_MaxVerticalArc;
-} ET_MG42Info;
+};
 
-typedef struct  
+struct ET_CabinetData
 {
 	int			m_CurrentAmount;
 	int			m_MaxAmount;
 	int			m_Rate;
-} ET_CabinetData;
+};
 
-typedef struct  
+struct ET_PlayerSkills
 {
 	int		m_Skill[ET_SKILLS_NUM_SKILLS];
-} ET_PlayerSkills;
+};
+
+struct ET_FireTeamApply
+{
+	int		m_FireTeamNum;
+};
+
+//struct ET_FireTeamJoin
+//{
+//	int		m_FireTeamNum;
+//};
+
+struct ET_FireTeam
+{
+	GameEntity	m_Target;
+};
+
+struct ET_FireTeamInfo
+{
+	enum { MaxMembers=64 };
+	obBool		m_InFireTeam;
+	GameEntity	m_Leader;
+	GameEntity	m_Members[MaxMembers];
+	int			m_FireTeamNum;
+
+	ET_FireTeamInfo()
+		: m_InFireTeam(False)
+		, m_FireTeamNum(0)
+	{
+	}
+};
 
 //////////////////////////////////////////////////////////////////////////
 
-typedef struct  
+struct Event_MortarImpact_ET
 {
 	float	m_Position[3];
-} Event_MortarImpact_ET;
+};
 
-typedef struct  
+struct Event_TriggerMine_ET
 {
 	GameEntity	m_MineEntity;
-} Event_TriggerMine_ET;
+};
+
+struct Event_FireTeamCreated
+{
+	int			m_FireTeamNum;
+};
+
+struct Event_FireTeamDisbanded
+{	
+};
+
+struct Event_FireTeamJoined
+{
+	GameEntity	m_TeamLeader;
+};
+
+struct Event_FireTeamLeft
+{
+};
+
+struct Event_FireTeamInvited
+{
+	GameEntity	m_TeamLeader;
+};
+
+struct Event_FireTeamProposal
+{
+	GameEntity	m_Invitee;
+};
+
+struct Event_FireTeamWarning
+{
+	GameEntity	m_WarnedBy;
+};
+
+struct ET_GameType
+{
+	int			m_GameType;
+};
+
+struct ET_CvarSet
+{
+	char *		m_Cvar;
+	char *		m_Value;
+};
+
+struct ET_CvarGet
+{
+	char *		m_Cvar;
+	int			m_Value;
+};
 
 #pragma pack(pop)
 

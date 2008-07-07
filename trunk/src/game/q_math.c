@@ -394,7 +394,7 @@ void RotatePointAroundVertex ( vec3_t pnt, float rot_x, float rot_y, float rot_z
 	tmp[10] = pnt[2] * tmp[3];
 
 	// rotate point
-	pnt[0] = ( tmp[3] * ( tmp[8] - tmp[9] ) + pnt[3] * tmp[2] );
+	pnt[0] = ( tmp[3] * ( tmp[8] - tmp[9] ) + tmp[3] * tmp[2] );
 	pnt[1] = ( tmp[0] * ( tmp[2] * tmp[8] - tmp[2] * tmp[9] - tmp[10] ) + tmp[1] * ( tmp[7] + tmp[6] ) );
 	pnt[2] = ( tmp[1] * ( -tmp[2] * tmp[8] + tmp[2] * tmp[9] + tmp[10] ) + tmp[0] * ( tmp[7] + tmp[6] ) );
 

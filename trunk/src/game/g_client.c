@@ -2784,6 +2784,9 @@ void ClientBegin( int clientNum )
 	client->pers.complaintClient = -1;
 	client->pers.complaintEndTime = -1;
 
+	//Omni-bot: make sure this isn't set
+	client->sess.botSuicide = qfalse;
+
 	// tjw: even if g_teamChangeKills is 0, kill them if they try to
 	//      change teams twice in one round to prevent team change
 	//      spamming.
@@ -3291,15 +3294,12 @@ void ClientSpawn(
 	G_UpdateCharacter( client );
 
 	// important to do this before weapons are added to the bot
-	if (ent->r.svFlags & SVF_BOT)
-	{
-		// Send the respawn event.
-		if(!revived)
-			Bot_Event_Spawn(client->ps.clientNum);
-
-		Bot_Event_ChangeClass(client->ps.clientNum, Bot_PlayerClassGameToBot(ent->client->sess.playerType));
-		Bot_Event_ChangeTeam(client->ps.clientNum, Bot_TeamGameToBot(ent->client->sess.sessionTeam));
-	}
+	//if (ent->r.svFlags & SVF_BOT)
+	//{
+	//	// Send the respawn event.
+	//	if(!revived)
+	//		Bot_Event_Spawn(client->ps.clientNum);
+	//}
 
 	SetWolfSpawnWeapons( client ); 
 	

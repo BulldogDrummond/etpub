@@ -1,19 +1,23 @@
 ////////////////////////////////////////////////////////////////////////////////
 // 
-// $LastChangedBy: DrEvil $
-// $LastChangedDate: 2007-02-14 09:28:05 -0800 (Wed, 14 Feb 2007) $
-// $LastChangedRevision: 1635 $
+// $LastChangedBy: drevil $
+// $LastChangedDate: 2008-01-25 08:23:37 -0800 (Fri, 25 Jan 2008) $
+// $LastChangedRevision: 2370 $
 //
 ////////////////////////////////////////////////////////////////////////////////
 
 #include "BotExports.h"
+
+#pragma warning(disable:4530) //C++ exception handler used, but unwind semantics are not enabled. Specify /EHsc
+#pragma warning(disable:4706) //assignment within conditional expression
+
 #include <string>
 
 //////////////////////////////////////////////////////////////////////////
 
 bool					g_IsOmnibotLoaded = false;
 Bot_EngineFuncs_t		g_BotFunctions = {0};
-Game_EngineFuncs_t		g_InterfaceFunctions = {0};
+IEngineInterface		*g_InterfaceFunctions = 0;
 std::string				g_OmnibotLibPath;
 
 void Omnibot_Load_PrintMsg(const char *_msg);
@@ -42,6 +46,18 @@ static const char *BOTERRORS[BOT_NUM_ERRORS] =
 	"Error Initializing File System",
 };
 
+void Omnibot_strncpy(char *dest, const char *source, int count)
+{
+	// Only doing this because some engines(HL2), think it a good idea to fuck up the 
+	// defines of all basic string functions throughout the entire project.
+	while (count && (*dest++ = *source++)) /* copy string */
+		count--;
+
+	if (count) /* pad out with zeroes */
+		while (--count)
+			*dest++ = '\0';
+}
+
 const char *Omnibot_ErrorString(eomnibot_error err)
 {
 	return ((err >= BOT_ERROR_NONE) && (err < BOT_NUM_ERRORS)) ? BOTERRORS[err] : "";
@@ -50,8 +66,8 @@ const char *Omnibot_ErrorString(eomnibot_error err)
 const char *Omnibot_FixPath(const char *_path)
 {
 	const int iBufferSize = 512;
-	static char pathstr[iBufferSize] = {};
-	strncpy(pathstr, _path, iBufferSize);
+	static char pathstr[iBufferSize] = {0};
+	Omnibot_strncpy(pathstr, _path, iBufferSize);
 
 	// unixify the path slashes
 	char *pC = pathstr;
@@ -102,12 +118,24 @@ const char *Omnibot_FixPath(const char *_path)
 
 const char *OB_VA(const char* _msg, ...)
 {
-	static char buffer[1024] = {0};
+	static int iCurrentBuffer = 0;
+	const int iNumBuffers = 3;
+	const int BUF_SIZE = 1024;
+	struct BufferInstance
+	{
+		char buffer[BUF_SIZE];
+	};
+	static BufferInstance buffers[iNumBuffers];
+	
+	char *pNextBuffer = buffers[iCurrentBuffer].buffer;
+
 	va_list list;
 	va_start(list, _msg);
-	_vsnprintf(buffer, 8192, _msg, list);	
+	_vsnprintf(pNextBuffer, sizeof(buffers[iCurrentBuffer].buffer), _msg, list);	
 	va_end(list);
-	return buffer;
+
+	iCurrentBuffer = (iCurrentBuffer+1)%iNumBuffers;
+	return pNextBuffer;
 }
 
 //////////////////////////////////////////////////////////////////////////	
@@ -145,7 +173,7 @@ HINSTANCE Omnibot_LL(const char *file)
 	// Parse Variables
 	// $(ProgramFiles)
 	// $(OMNIBOT)
-
+	
 	//////////////////////////////////////////////////////////////////////////
 	g_OmnibotLibPath = file;
 	HINSTANCE hndl = LoadLibrary(g_OmnibotLibPath.c_str());
@@ -165,11 +193,7 @@ eomnibot_error Omnibot_LoadLibrary(int version, const char *lib, const char *pat
 		g_BotLibrary = Omnibot_LL( OB_VA("%s.dll", lib) );
 	if(g_BotLibrary == 0)
 	{
-		// tjw: support older gcc
-		//g_OmnibotLibPath.clear();
-		g_OmnibotLibPath.erase( g_OmnibotLibPath.begin(),
-					g_OmnibotLibPath.end());
-
+		g_OmnibotLibPath.clear();
 		r = BOT_ERROR_CANTLOADDLL;
 	}
 	else
@@ -188,7 +212,7 @@ eomnibot_error Omnibot_LoadLibrary(int version, const char *lib, const char *pat
 			if(r == BOT_ERROR_NONE)
 			{
 				Omnibot_Load_PrintMsg("Omni-bot Loaded Successfully");
-				r = g_BotFunctions.pfnBotInitialise(&g_InterfaceFunctions, version);
+				r = g_BotFunctions.pfnBotInitialise(g_InterfaceFunctions, version);
 				g_IsOmnibotLoaded = (r == BOT_ERROR_NONE);
 			}
 			else
@@ -209,7 +233,10 @@ void Omnibot_FreeLibrary()
 		g_BotLibrary = 0;
 	}
 	memset(&g_BotFunctions, 0, sizeof(g_BotFunctions));
-	memset(&g_InterfaceFunctions, 0, sizeof(g_InterfaceFunctions));
+	
+	delete g_InterfaceFunctions;
+	g_InterfaceFunctions = 0;
+	
 	g_IsOmnibotLoaded = false;
 }
 
@@ -222,12 +249,24 @@ void Omnibot_FreeLibrary()
 
 const char *OB_VA(const char* _msg, ...)
 {
-	static char buffer[1024] = {0};
+	static int iCurrentBuffer = 0;
+	const int iNumBuffers = 3;
+	const int BUF_SIZE = 1024;
+	struct BufferInstance
+	{
+		char buffer[BUF_SIZE];
+	};
+	static BufferInstance buffers[iNumBuffers];
+
+	char *pNextBuffer = buffers[iCurrentBuffer].buffer;
+
 	va_list list;
 	va_start(list, _msg);
-	vsnprintf(buffer, 8192, _msg, list);	
+	vsnprintf(pNextBuffer, sizeof(buffers[iCurrentBuffer].buffer), _msg, list);	
 	va_end(list);
-	return buffer;
+
+	iCurrentBuffer = (iCurrentBuffer+1)%iNumBuffers;
+	return pNextBuffer;
 }
 
 #include <dlfcn.h>
@@ -271,18 +310,13 @@ eomnibot_error Omnibot_LoadLibrary(int version, const char *lib, const char *pat
 	}
 	if(!g_BotLibrary)
 	{
-		g_BotLibrary = Omnibot_LL(OB_VA("%s.so", lib));
+		char *homeDir = getenv("HOME");
+		if(homeDir)
+			g_BotLibrary = Omnibot_LL(OB_VA("%s.so", lib));
 	}
 	if(!g_BotLibrary)
 	{
-		g_BotLibrary = Omnibot_LL(OB_VA("./omni-bot/%s.so", lib));
-	}
-	if(!g_BotLibrary)
-	{
-		// tjw: support older gcc
-		//g_OmnibotLibPath.clear();
-		g_OmnibotLibPath.erase( g_OmnibotLibPath.begin(),
-					g_OmnibotLibPath.end());
+		g_OmnibotLibPath.clear();
 		r = BOT_ERROR_CANTLOADDLL;
 	}
 	else
@@ -302,7 +336,7 @@ eomnibot_error Omnibot_LoadLibrary(int version, const char *lib, const char *pat
 			if(r == BOT_ERROR_NONE)
 			{
 				Omnibot_Load_PrintMsg("Omni-bot Loaded Successfully");
-				r = g_BotFunctions.pfnBotInitialise(&g_InterfaceFunctions, version);
+				r = g_BotFunctions.pfnBotInitialise(g_InterfaceFunctions, version);
 				g_IsOmnibotLoaded = (r == BOT_ERROR_NONE);
 			}
 		}
@@ -326,16 +360,6 @@ void Omnibot_FreeLibrary()
 
 #else
 
-#warning "Unsupported Platform or Missing platform #defines";
-void *g_BotLibrary = NULL;
-
-void Omnibot_FreeLibrary()
-{
-}
-
-eomnibot_error Omnibot_LoadLibrary(int version, const char *lib, const char *path)
-{
-  return BOT_ERROR_CANTLOADDLL;
-}
+#error "Unsupported Platform or Missing platform #defines";
 
 #endif
