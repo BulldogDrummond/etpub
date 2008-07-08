@@ -1114,7 +1114,7 @@ static int _choosePriWeap(gentity_t *bot, int playerClass, int team)
 			break;
 		}
 
-	} while(!G_IsWeaponDisabled(bot,(weapon_t)_weaponBotToGame(iSelected),bot->client->sess.sessionTeam,qtrue));
+	} while(G_IsWeaponDisabled(bot,(weapon_t)_weaponBotToGame(iSelected),bot->client->sess.sessionTeam,qtrue));
 
 	return iSelected;
 }
@@ -1249,7 +1249,7 @@ static int _chooseSecWeap(gentity_t *bot, int playerClass, int team)
 		default:
 			return ET_WP_NONE;
 		}
-	} while(!G_IsWeaponDisabled(bot,(weapon_t)_weaponBotToGame(iSelected),bot->client->sess.sessionTeam,qtrue));
+	} while(G_IsWeaponDisabled(bot,(weapon_t)_weaponBotToGame(iSelected),bot->client->sess.sessionTeam,qtrue));
 
 	return iSelected;	
 }
