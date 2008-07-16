@@ -14,6 +14,7 @@
  */
 
 #include "g_local.h"
+#include "g_etbot_interface.h"
 #include "../ui/menudef.h"
 
 char *G_Shortcuts(gentity_t *ent, char *text);
