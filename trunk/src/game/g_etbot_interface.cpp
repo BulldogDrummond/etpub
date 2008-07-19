@@ -3789,8 +3789,8 @@ public:
 						pMsg->m_Result = obUserData(pEnt->client->sess.kills);
 					else if(pEnt && pEnt->client && !strcmp(pMsg->m_StatName, "deaths"))
 						pMsg->m_Result = obUserData(pEnt->client->sess.deaths);
-					//else if(pEnt && pEnt->client && !Q_strcmp(pMsg->m_StatName, "score"))
-					//	pMsg->m_Result = obUserData(0); // TODO:
+					else if(pEnt && pEnt->client && !strcmp(pMsg->m_StatName, "xp"))
+						pMsg->m_Result = obUserData(pEnt->client->ps.stats[STAT_XP]);
 				}
 				break;
 			}
