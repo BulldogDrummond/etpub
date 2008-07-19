@@ -1955,6 +1955,26 @@ public:
 		return Success;
 	}
 
+	bool DebugLine(const float _start[3], const float _end[3], const obColor &_color, float _time)
+	{
+		// for dedicated servers we tell the bot we can handle this function, so it doesn't open
+		// an IPC channel. 
+		if(g_dedicated.integer)
+			return true; 
+
+		return false;
+	}
+
+	bool DebugRadius(const float _pos[3], const float _radius, const obColor &_color, float _time)
+	{
+		// for dedicated servers we tell the bot we can handle this function, so it doesn't open
+		// an IPC channel. 
+		if(g_dedicated.integer)
+			return true; 
+
+		return false;
+	}
+
 	void UpdateBotInput(int _client, const ClientInput &_input)
 	{
 		static usercmd_t cmd;
