@@ -3436,6 +3436,8 @@ public:
 		info.m_AvailableTeams |= (1<<ET_TEAM_ALLIES);
 		info.m_AvailableTeams |= (1<<ET_TEAM_AXIS);
 
+		info.m_MaxPlayers = level.maxclients;
+
 		for( int i = 0; i < MAX_CLIENTS; i++ )
 		{
 			if(!g_entities[i].inuse)
@@ -3445,8 +3447,7 @@ public:
 			if(g_entities[i].client->pers.connected != CON_CONNECTED)
 				continue;
 
-			GameEntity ge = HandleFromEntity(&g_entities[i]);			
-			info.m_MaxPlayers = level.maxclients;
+			GameEntity ge = HandleFromEntity(&g_entities[i]);
 			info.m_Players[i].m_Team = GetEntityTeam(ge);
 			info.m_Players[i].m_Class = GetEntityClass(ge);
 			info.m_Players[i].m_Controller = IsBot(&g_entities[i])?
