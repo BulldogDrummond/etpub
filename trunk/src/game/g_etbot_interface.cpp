@@ -418,6 +418,8 @@ int Bot_TeamGameToBot(int team)
 		return ET_TEAM_AXIS;
 	case TEAM_ALLIES:
 		return ET_TEAM_ALLIES;
+	case TEAM_SPECTATOR:
+		return OB_TEAM_SPECTATOR;
 	default:
 		return ET_TEAM_NONE;
 	}
