@@ -5,10 +5,10 @@
  *
  * The functionality of this code mimics the behaviour of the currently
  * inactive project shrubmod (http://www.etstats.com/shrubet/index.php?ver=2)
- * by Ryan Mannion.   However, shrubmod was a closed-source project and 
+ * by Ryan Mannion.   However, shrubmod was a closed-source project and
  * none of it's code has been copied, only it's functionality.
  *
- * You are free to use this implementation of shrubbot in you're 
+ * You are free to use this implementation of shrubbot in you're
  * own mod project if you wish.
  *
  */
@@ -26,8 +26,8 @@ extern vmCvar_t g_panzerwar, g_sniperwar, g_riflewar;
 #define WARCOMMAND(TYPE)\
 	{#TYPE "war", G_shrubbot_ ## TYPE ## war, 'G', 0,\
 		"enables/disables " #TYPE "war", "on|off"}
-	
-// note: list ordered alphabetically 
+
+// note: list ordered alphabetically
 static const struct g_shrubbot_cmd g_shrubbot_cmds[] = {
 	{"admintest",	G_shrubbot_admintest,	'a', 0,
 		"display your current admin level", "(^3name|slot#^7)"},
@@ -37,7 +37,7 @@ static const struct g_shrubbot_cmd g_shrubbot_cmds[] = {
 		"ban a player by IP and GUID with an optional expiration time "
 		"(seconds) and reason", "[^3name|slot#^7] (^htime^7) (^hreason^7)"},
 	{"burn",	G_shrubbot_burn,	'U', SCMDF_TYRANNY,
-		"burns a player taking some of his health", 
+		"burns a player taking some of his health",
 		"[^3name|slot#^7] (^hreason^7)"},
 	// redeye
 	{"bye",	G_shrubbot_bye,	'D', 0,
@@ -74,10 +74,10 @@ static const struct g_shrubbot_cmd g_shrubbot_cmds[] = {
 	{"listteams",	G_shrubbot_listteams,	'I', 0,
 		"displays info about the teams", ""},
 	{"lock",	G_shrubbot_lock,	'K', 0,
-		"lock one or all teams from new players joining", 
+		"lock one or all teams from new players joining",
 		"[^3r|b|s|all^7]"},
 	{"lol",		G_shrubbot_lol,		'x', SCMDF_TYRANNY,
-		"grenades drop from a specified player or all players", 
+		"grenades drop from a specified player or all players",
 		"(^hname|slot#^7)"},
 	{"mute",	G_shrubbot_mute,	'm', 0,
 		"mute a player", "[^3name|slot#^7] (^htime^7) (^hreason^7)"},
@@ -94,7 +94,7 @@ static const struct g_shrubbot_cmd g_shrubbot_cmds[] = {
 	{"pause",	G_shrubbot_pause,	'Z', 0,
 		"pauses the game for all players", ""},
 	{"pip",		G_shrubbot_pip,		'z', SCMDF_TYRANNY,
-		"show sparks around a specified player or all players", 
+		"show sparks around a specified player or all players",
 		"(^hname|slot#^7)"},
 	{"pop",		G_shrubbot_pop,		'z', SCMDF_TYRANNY,
 		"pops the helmets off from a specified player or all players",
@@ -122,11 +122,11 @@ static const struct g_shrubbot_cmd g_shrubbot_cmds[] = {
 	{"shuffle",	G_shrubbot_shuffle,	'S', 0,
 		"shuffle the teams to even them out", ""},
 	// redeye
-	// {"sk",	G_shrubbot_sk,	'F', 0, 
+	// {"sk",	G_shrubbot_sk,	'F', 0,
 	//	"call a player a spawnkiller and warn him to be kicked next time",
 	//	"[^3name|slot#^7]"},
 	{"slap",	G_shrubbot_slap,	'A', SCMDF_TYRANNY,
-		"give a player a specified amount of damage for a specified reason", 
+		"give a player a specified amount of damage for a specified reason",
 		"[^3name|slot#^7] (^hdamage^7) (^hreason^7)"},
 	// redeye
 	// {"smoke",	G_shrubbot_smoke,	'E', 0,
@@ -158,21 +158,21 @@ static const struct g_shrubbot_cmd g_shrubbot_cmds[] = {
 	{"tspree",	G_shrubbot_tspree,	'E', 0,
 		"show the top n current killing spree (default top 5)", "[n]"},
 	{"unban",	G_shrubbot_unban,	'b', 0,
-		"unbans a player specified by the slot as seen in !showbans", 
+		"unbans a player specified by the slot as seen in !showbans",
 		"[^3ban slot#^7]"},
 	{"unlock",	G_shrubbot_unlock,	'K', 0,
-		"unlock one or all locked teams", 
+		"unlock one or all locked teams",
 		"[^3r|b|s|all^7]"},
 	{"unmute",	G_shrubbot_mute,	'm', 0,
-		"unmute a muted player", "[^3name|slot#^7]"}, 
+		"unmute a muted player", "[^3name|slot#^7]"},
 	{"unpause",	G_shrubbot_unpause,	'Z', 0,
-		"unpauses the game", ""}, 
+		"unpauses the game", ""},
 	{"uptime",	G_shrubbot_uptime,	'u', 0,
 		"displays the uptime of the server", ""},
 	{"userinfo",	G_shrubbot_userinfo,	'e', 0,
 		"displays basic userinfo of a user", ""},
 	{"warn",	G_shrubbot_warn,	'R', 0,
-		"warns a player by displaying the reason text", 
+		"warns a player by displaying the reason text",
 		"[^3name|slot#^7] [^3reason^7]"},
 	{"", NULL, '\0', 0, "", ""}
 };
@@ -183,7 +183,7 @@ g_shrubbot_ban_t *g_shrubbot_bans[MAX_SHRUBBOT_BANS];
 g_shrubbot_command_t *g_shrubbot_commands[MAX_SHRUBBOT_COMMANDS];
 g_shrubbot_warning_t *g_shrubbot_warnings[MAX_SHRUBBOT_WARNINGS];
 
-qboolean G_shrubbot_permission(gentity_t *ent, char flag) 
+qboolean G_shrubbot_permission(gentity_t *ent, char flag)
 {
 	int i;
 	int l = 0;
@@ -192,7 +192,7 @@ qboolean G_shrubbot_permission(gentity_t *ent, char flag)
 	// console always wins
 	if(!ent)
 		return qtrue;
-	
+
 	for(i=0; g_shrubbot_admins[i]; i++) {
 		if(!Q_stricmp(ent->client->sess.guid,
 			g_shrubbot_admins[i]->guid)) {
@@ -203,7 +203,7 @@ qboolean G_shrubbot_permission(gentity_t *ent, char flag)
 					return qtrue;
 				else if(*flags == '-') {
 					while(*flags++) {
-						if(*flags == flag) 
+						if(*flags == flag)
 							return qfalse;
 						else if(*flags == '+')
 							break;
@@ -224,7 +224,7 @@ qboolean G_shrubbot_permission(gentity_t *ent, char flag)
 					}
 				}
 				*flags++;
-			}	
+			}
 			l = g_shrubbot_admins[i]->level;
 		}
 	}
@@ -258,7 +258,7 @@ qboolean G_shrubbot_permission(gentity_t *ent, char flag)
 /*
  * Returns qtrue if *admin has a higher shrubbot level than *victim
  */
-qboolean _shrubbot_admin_higher(gentity_t *admin, gentity_t *victim) 
+qboolean _shrubbot_admin_higher(gentity_t *admin, gentity_t *victim)
 {
 	int i;
 	int alevel = 0;
@@ -298,7 +298,7 @@ qboolean _shrubbot_immutable(gentity_t *admin, gentity_t *victim)
 {
     if (!admin ) return qfalse;
     if (!victim ) return qfalse;
-	
+
 	if ((g_OmniBotFlags.integer & BOT_FLAGS_SHRUBBOT_IMMUTABLE) &&
 		(victim->r.svFlags & SVF_BOT))
 
@@ -311,7 +311,7 @@ qboolean _shrubbot_immutable(gentity_t *admin, gentity_t *victim)
     return qfalse;
 }
 
-void G_shrubbot_writeconfig_string(char *s, fileHandle_t f) 
+void G_shrubbot_writeconfig_string(char *s, fileHandle_t f)
 {
 	char buf[MAX_STRING_CHARS];
 
@@ -324,7 +324,7 @@ void G_shrubbot_writeconfig_string(char *s, fileHandle_t f)
 	trap_FS_Write("\n", 1, f);
 }
 
-void G_shrubbot_writeconfig_int(int v, fileHandle_t f) 
+void G_shrubbot_writeconfig_int(int v, fileHandle_t f)
 {
 	char buf[32];
 
@@ -334,7 +334,7 @@ void G_shrubbot_writeconfig_int(int v, fileHandle_t f)
 	trap_FS_Write("\n", 1, f);
 }
 
-void G_shrubbot_writeconfig_float(float v, fileHandle_t f) 
+void G_shrubbot_writeconfig_float(float v, fileHandle_t f)
 {
 	char buf[32];
 
@@ -344,7 +344,7 @@ void G_shrubbot_writeconfig_float(float v, fileHandle_t f)
 	trap_FS_Write("\n", 1, f);
 }
 
-void _shrubbot_writeconfig() 
+void _shrubbot_writeconfig()
 {
 	fileHandle_t f;
 	int len, i, j;
@@ -376,7 +376,7 @@ void _shrubbot_writeconfig()
 	}
 	for(i=0; g_shrubbot_admins[i]; i++) {
 		// don't write level 0 users
-		if(g_shrubbot_admins[i]->level < 1) continue;
+		if(g_shrubbot_admins[i]->level == 0) continue;
 
 		trap_FS_Write("[admin]\n", 8, f);
 		trap_FS_Write("name     = ", 11, f);
@@ -457,7 +457,7 @@ void _shrubbot_writeconfig()
 	trap_FS_FCloseFile(f);
 }
 
-void G_shrubbot_readconfig_string(char **cnf, char *s, int size) 
+void G_shrubbot_readconfig_string(char **cnf, char *s, int size)
 {
 	char *t;
 
@@ -468,8 +468,8 @@ void G_shrubbot_readconfig_string(char **cnf, char *s, int size)
 	}
 	else {
 		G_Printf("readconfig: warning missing = before "
-			"\"%s\" on line %d\n", 
-			t, 
+			"\"%s\" on line %d\n",
+			t,
 			COM_GetCurrentParseLine());
 	}
 	s[0] = '\0';
@@ -483,11 +483,11 @@ void G_shrubbot_readconfig_string(char **cnf, char *s, int size)
 		t = COM_ParseExt(cnf, qfalse);
 	}
 	// trim the trailing space
-	if(strlen(s) > 0 && s[strlen(s)-1] == ' ') 
+	if(strlen(s) > 0 && s[strlen(s)-1] == ' ')
 		s[strlen(s)-1] = '\0';
 }
 
-void G_shrubbot_readconfig_int(char **cnf, int *v) 
+void G_shrubbot_readconfig_int(char **cnf, int *v)
 {
 	char *t;
 
@@ -498,14 +498,14 @@ void G_shrubbot_readconfig_int(char **cnf, int *v)
 	}
 	else {
 		G_Printf("readconfig: warning missing = before "
-			"\"%s\" on line %d\n", 
-			t, 
+			"\"%s\" on line %d\n",
+			t,
 			COM_GetCurrentParseLine());
 	}
 	*v = atoi(t);
 }
 
-void G_shrubbot_readconfig_float(char **cnf, float *v) 
+void G_shrubbot_readconfig_float(char **cnf, float *v)
 {
 	char *t;
 
@@ -516,8 +516,8 @@ void G_shrubbot_readconfig_float(char **cnf, float *v)
 	}
 	else {
 		G_Printf("readconfig: warning missing = before "
-			"\"%s\" on line %d\n", 
-			t, 
+			"\"%s\" on line %d\n",
+			t,
 			COM_GetCurrentParseLine());
 	}
 	*v = atof(t);
@@ -556,12 +556,12 @@ void _shrubbot_default_levels() {
 /*
 	return a level for a player entity.
 */
-int _shrubbot_level(gentity_t *ent) 
+int _shrubbot_level(gentity_t *ent)
 {
 	int i;
 	qboolean found = qfalse;
 
-	if(!ent) {	
+	if(!ent) {
 		// forty - we are on the console, return something high for now.
 		return MAX_SHRUBBOT_LEVELS;
 	}
@@ -571,7 +571,7 @@ int _shrubbot_level(gentity_t *ent)
 			ent->client->sess.guid)) {
 
 			found = qtrue;
-			break;	
+			break;
 		}
 	}
 
@@ -586,7 +586,7 @@ static qboolean _shrubbot_command_permission(gentity_t *ent, char *command)
 {
 	int i, j;
 	int level = _shrubbot_level(ent);
-	
+
 	if(!ent)
 		return qtrue;
 	for(i = 0; g_shrubbot_commands[i]; i++) {
@@ -638,7 +638,7 @@ void _shrubbot_log(gentity_t *admin, char *cmd, int skiparg)
 	*flags = '\0';
 	if(admin) {
 		for(i=0; g_shrubbot_admins[i]; i++) {
-			if(!Q_stricmp(g_shrubbot_admins[i]->guid , 
+			if(!Q_stricmp(g_shrubbot_admins[i]->guid ,
 				admin->client->sess.guid)) {
 
 				a = g_shrubbot_admins[i];
@@ -663,13 +663,13 @@ void _shrubbot_log(gentity_t *admin, char *cmd, int skiparg)
 	}
 
 	if(victim && Q_stricmp(cmd, "attempted")) {
-		Com_sprintf(string, sizeof(string), 
-			"%3i:%i%i: %i: %s: %s: %s: %s: %s: %s: \"%s\"\n", 
+		Com_sprintf(string, sizeof(string),
+			"%3i:%i%i: %i: %s: %s: %s: %s: %s: %s: \"%s\"\n",
 			min,
 			tens,
 			sec,
 			(admin) ? admin->s.clientNum : -1,
-			(admin) ? admin->client->sess.guid 
+			(admin) ? admin->client->sess.guid
 				: "XXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXX",
 			(admin) ? admin->client->pers.netname : "console",
 			flags,
@@ -679,8 +679,8 @@ void _shrubbot_log(gentity_t *admin, char *cmd, int skiparg)
 			Q_SayConcatArgs(2+skiparg));
 	}
 	else {
-		Com_sprintf(string, sizeof(string), 
-			"%3i:%i%i: %i: %s: %s: %s: %s: \"%s\"\n", 
+		Com_sprintf(string, sizeof(string),
+			"%3i:%i%i: %i: %s: %s: %s: %s: \"%s\"\n",
 			min,
 			tens,
 			sec,
@@ -696,7 +696,7 @@ void _shrubbot_log(gentity_t *admin, char *cmd, int skiparg)
 	trap_FS_FCloseFile(f);
 }
 
-void G_shrubbot_duration(int secs, char *duration, int dursize) 
+void G_shrubbot_duration(int secs, char *duration, int dursize)
 {
 
 	if(secs > (60*60*24*365*50) || secs < 0) {
@@ -742,7 +742,7 @@ void G_shrubbot_duration(int secs, char *duration, int dursize)
 	}
 }
 
-qboolean G_shrubbot_ban_check(char *userinfo, char *reason) 
+qboolean G_shrubbot_ban_check(char *userinfo, char *reason)
 {
 	char *guid, *ip;
 	int i;
@@ -761,7 +761,7 @@ qboolean G_shrubbot_ban_check(char *userinfo, char *reason)
 		if(g_shrubbot_bans[i]->expires != 0 &&
 			(g_shrubbot_bans[i]->expires - t) < 1)
 			continue;
-		// Dens: lets find out seconds now, we need that later	
+		// Dens: lets find out seconds now, we need that later
 		if(g_shrubbot_bans[i]->expires != 0){
 			seconds = g_shrubbot_bans[i]->expires - t;
 		}
@@ -770,32 +770,32 @@ qboolean G_shrubbot_ban_check(char *userinfo, char *reason)
 			if(*g_shrubbot_bans[i]->reason) {
 				if(seconds == 0){
 					Com_sprintf(
-						reason, 
-						MAX_STRING_CHARS, 
-						"Reason: %s\nExpires: NEVER.\n", 
+						reason,
+						MAX_STRING_CHARS,
+						"Reason: %s\nExpires: NEVER.\n",
 						g_shrubbot_bans[i]->reason
 					);
 				}else{
 					Com_sprintf(
-					reason, 
-					MAX_STRING_CHARS, 
-					"Reason: %s\nExpires in: %i seconds.\n", 
-					g_shrubbot_bans[i]->reason, 
+					reason,
+					MAX_STRING_CHARS,
+					"Reason: %s\nExpires in: %i seconds.\n",
+					g_shrubbot_bans[i]->reason,
 					seconds
 					);
 				}
 			}else{
 				if(seconds == 0){
 					Com_sprintf(
-						reason, 
-						MAX_STRING_CHARS, 
+						reason,
+						MAX_STRING_CHARS,
 						"Expires: NEVER.\n"
 					);
 				}else{
 					Com_sprintf(
-					reason, 
+					reason,
 					MAX_STRING_CHARS,
-					"Expires in: %i seconds.\n", 
+					"Expires in: %i seconds.\n",
 					seconds
 					);
 				}
@@ -807,32 +807,32 @@ qboolean G_shrubbot_ban_check(char *userinfo, char *reason)
 			if(*g_shrubbot_bans[i]->reason) {
 				if(seconds == 0){
 					Com_sprintf(
-						reason, 
-						MAX_STRING_CHARS, 
-						"Reason: %s\nExpires: NEVER.\n", 
+						reason,
+						MAX_STRING_CHARS,
+						"Reason: %s\nExpires: NEVER.\n",
 						g_shrubbot_bans[i]->reason
 					);
 				}else{
 					Com_sprintf(
-					reason, 
-					MAX_STRING_CHARS, 
-					"Reason: %s\nExpires in: %i seconds.\n", 
-					g_shrubbot_bans[i]->reason, 
+					reason,
+					MAX_STRING_CHARS,
+					"Reason: %s\nExpires in: %i seconds.\n",
+					g_shrubbot_bans[i]->reason,
 					seconds
 					);
 				}
 			}else{
 				if(seconds == 0){
 					Com_sprintf(
-						reason, 
-						MAX_STRING_CHARS, 
+						reason,
+						MAX_STRING_CHARS,
 						"Expires: NEVER.\n"
 					);
 				}else{
 					Com_sprintf(
-					reason, 
+					reason,
 					MAX_STRING_CHARS,
-					"Expires in: %i seconds.\n", 
+					"Expires in: %i seconds.\n",
 					seconds
 					);
 				}
@@ -843,14 +843,14 @@ qboolean G_shrubbot_ban_check(char *userinfo, char *reason)
 	return qfalse;
 }
 
-qboolean G_shrubbot_levelconnect_check(char *userinfo, char *reason) 
+qboolean G_shrubbot_levelconnect_check(char *userinfo, char *reason)
 {
 	char *guid;
 	int i;
 
 	if(*userinfo){
 		guid = Info_ValueForKey(userinfo, "cl_guid");
-			
+
 		if(*guid){
 			for(i=0; g_shrubbot_admins[i]; i++) {
 				if(!Q_stricmp(g_shrubbot_admins[i]->guid, guid)) {
@@ -865,9 +865,9 @@ qboolean G_shrubbot_levelconnect_check(char *userinfo, char *reason)
 	}
 
 	Com_sprintf(
-		reason, 
+		reason,
 		MAX_STRING_CHARS,
-		"This server is closed for users that don't have adminlevel %i or higher.\n", 
+		"This server is closed for users that don't have adminlevel %i or higher.\n",
 		g_minConnectLevel.integer
 		);
 	return qtrue;
@@ -980,19 +980,19 @@ qboolean G_shrubbot_cmd_check(gentity_t *ent)
 		millisecs = qfalse;
 	}
 
-	if(g_shrubbot.string[0] == '\0') 
+	if(g_shrubbot.string[0] == '\0')
 		return qfalse;
 
 	command[0] = '\0';
 	Q_SayArgv(0, command, sizeof(command));
-	if(!Q_stricmp(command, "say") || 
-		(G_shrubbot_permission(ent, SBF_TEAMFTSHRUBCMD) && 
-			(!Q_stricmp(command, "say_team") || 
+	if(!Q_stricmp(command, "say") ||
+		(G_shrubbot_permission(ent, SBF_TEAMFTSHRUBCMD) &&
+			(!Q_stricmp(command, "say_team") ||
 			!Q_stricmp(command, "say_buddy")))) {
 				skip = 1;
 				Q_SayArgv(1, command, sizeof(command));
 	}
-	if(!command[0]) 
+	if(!command[0])
 		return qfalse;
 
 	if(command[0] == '!') {
@@ -1021,7 +1021,7 @@ qboolean G_shrubbot_cmd_check(gentity_t *ent)
 				char arg[MAX_NAME_LENGTH];
 				Q_SayArgv(skip + argIx, arg, sizeof(arg));
 				cmdLine = Q_StrReplace(cmdLine, va("[%i]", argIx), arg);
-			} 
+			}
 
 			if( ent && level.time - ent->client->pers.lastCommandTime < g_minCommandWaitTime.integer ) {
 				SPC(va("^/%s: ^7you have to wait %d %s between using commands",
@@ -1032,14 +1032,14 @@ qboolean G_shrubbot_cmd_check(gentity_t *ent)
 				return qfalse;
 			} else {
 				trap_SendConsoleCommand(EXEC_APPEND, cmdLine);
-				if( ent ) 
+				if( ent )
 					ent->client->pers.lastCommandTime = level.time;
 				_shrubbot_log(ent, cmd, skip);
 			}
 			return qtrue;
 		}
 		else {
-			SPC(va("^/%s: ^7permission denied", 
+			SPC(va("^/%s: ^7permission denied",
 				g_shrubbot_commands[i]->command));
 			_shrubbot_log(ent, "attempted", skip-1);
 			return qfalse;
@@ -1047,7 +1047,7 @@ qboolean G_shrubbot_cmd_check(gentity_t *ent)
 	}
 
 	for (i=0; g_shrubbot_cmds[i].keyword[0]; i++) {
-		if(Q_stricmp(cmd, g_shrubbot_cmds[i].keyword)) 
+		if(Q_stricmp(cmd, g_shrubbot_cmds[i].keyword))
 			continue;
 		if((g_shrubbot_cmds[i].cmdFlags & SCMDF_TYRANNY) &&
 			!g_tyranny.integer) {
@@ -1070,7 +1070,7 @@ qboolean G_shrubbot_cmd_check(gentity_t *ent)
 				if( ent )
 					ent->client->pers.lastCommandTime = level.time;
 			}
-			return qtrue; 
+			return qtrue;
 		}
 		else {
 			SPC(va("^/%s: ^7permission denied",
@@ -1089,7 +1089,7 @@ int G_shrubbot_user_tot_warnings(gentity_t *ent)
 	if(!time(&t)){
 		return -1;
 	}
-	
+
 	if(!ent || !ent->client){
 		return -1;
 	}
@@ -1099,7 +1099,7 @@ int G_shrubbot_user_tot_warnings(gentity_t *ent)
 			3600*g_warningDecay.integer ){
 				continue;
 		}
-		if((g_warningOptions.integer & WARNOP_LINK_GUID) && 
+		if((g_warningOptions.integer & WARNOP_LINK_GUID) &&
 			!Q_stricmp(ent->client->sess.guid,g_shrubbot_warnings[i]->guid)){
 			count++;
 			continue;
@@ -1120,7 +1120,7 @@ int G_shrubbot_user_warning(gentity_t *ent, int number)
 	if(!time(&t)){
 		return -1;
 	}
-	
+
 	if(!ent || !ent->client){
 		return -1;
 	}
@@ -1134,7 +1134,7 @@ int G_shrubbot_user_warning(gentity_t *ent, int number)
 			3600*g_warningDecay.integer ){
 				continue;
 		}
-		if((g_warningOptions.integer & WARNOP_LINK_GUID) && 
+		if((g_warningOptions.integer & WARNOP_LINK_GUID) &&
 			!Q_stricmp(ent->client->sess.guid,g_shrubbot_warnings[i]->guid)){
 			count++;
 			if(count == number){
@@ -1188,7 +1188,7 @@ void Cmd_Warning_f( gentity_t *ent )
 	return;
 }
 
-qboolean G_shrubbot_readconfig(gentity_t *ent, int skiparg) 
+qboolean G_shrubbot_readconfig(gentity_t *ent, int skiparg)
 {
 	g_shrubbot_level_t *l = NULL;
 	g_shrubbot_admin_t *a = NULL;
@@ -1204,7 +1204,7 @@ qboolean G_shrubbot_readconfig(gentity_t *ent, int skiparg)
 	char levels[MAX_STRING_CHARS] = {""};
 
 	if(!g_shrubbot.string[0]) return qfalse;
-	len = trap_FS_FOpenFile(g_shrubbot.string, &f, FS_READ) ; 
+	len = trap_FS_FOpenFile(g_shrubbot.string, &f, FS_READ) ;
 	if(len < 0) {
 		SPC(va("^/readconfig: ^7could not open shrubbot config file %s",
 			g_shrubbot.string));
@@ -1217,23 +1217,23 @@ qboolean G_shrubbot_readconfig(gentity_t *ent, int skiparg)
 	*(cnf + len) = '\0';
 	trap_FS_FCloseFile(f);
 
-	G_shrubbot_cleanup();	
-	
+	G_shrubbot_cleanup();
+
 	t = COM_Parse(&cnf);
 	level_open = admin_open = ban_open = command_open = warning_open = qfalse;
 	while(*t) {
-		if(!Q_stricmp(t, "[level]") || 
+		if(!Q_stricmp(t, "[level]") ||
 			!Q_stricmp(t, "[admin]") ||
 			!Q_stricmp(t, "[ban]") ||
 			!Q_stricmp(t, "[command]") ||
 			!Q_stricmp(t, "[warning]")) {
-			
+
 			if(level_open) g_shrubbot_levels[lc++] = l;
 			else if(admin_open) g_shrubbot_admins[ac++] = a;
 			else if(ban_open) g_shrubbot_bans[bc++] = b;
 			else if(command_open) g_shrubbot_commands[cc++] = c;
 			else if(warning_open) g_shrubbot_warnings[wc++] = w;
-			level_open = admin_open = ban_open = 
+			level_open = admin_open = ban_open =
 				command_open = warning_open = qfalse;
 		}
 
@@ -1242,16 +1242,16 @@ qboolean G_shrubbot_readconfig(gentity_t *ent, int skiparg)
 				G_shrubbot_readconfig_int(&cnf, &l->level);
 			}
 			else if(!Q_stricmp(t, "name")) {
-				G_shrubbot_readconfig_string(&cnf, 
-					l->name, sizeof(l->name)); 
+				G_shrubbot_readconfig_string(&cnf,
+					l->name, sizeof(l->name));
 			}
 			else if(!Q_stricmp(t, "flags")) {
-				G_shrubbot_readconfig_string(&cnf, 
-					l->flags, sizeof(l->flags)); 
+				G_shrubbot_readconfig_string(&cnf,
+					l->flags, sizeof(l->flags));
 			}
 			else if(!Q_stricmp(t, "greeting")) {
-				G_shrubbot_readconfig_string(&cnf, 
-					l->greeting, sizeof(l->greeting)); 
+				G_shrubbot_readconfig_string(&cnf,
+					l->greeting, sizeof(l->greeting));
 			}
 			// redeye
 			else if(!Q_stricmp(t, "greeting_sound")) {
@@ -1260,30 +1260,30 @@ qboolean G_shrubbot_readconfig(gentity_t *ent, int skiparg)
 			}
 			else {
 				SPC(va("^/readconfig: ^7[level] parse error near "
-					"%s on line %d", 
-					t, 
+					"%s on line %d",
+					t,
 					COM_GetCurrentParseLine()));
 			}
 		}
 		else if(admin_open) {
 			if(!Q_stricmp(t, "name")) {
-				G_shrubbot_readconfig_string(&cnf, 
-					a->name, sizeof(a->name)); 
+				G_shrubbot_readconfig_string(&cnf,
+					a->name, sizeof(a->name));
 			}
 			else if(!Q_stricmp(t, "guid")) {
-				G_shrubbot_readconfig_string(&cnf, 
-					a->guid, sizeof(a->guid)); 
+				G_shrubbot_readconfig_string(&cnf,
+					a->guid, sizeof(a->guid));
 			}
 			else if(!Q_stricmp(t, "level")) {
-				G_shrubbot_readconfig_int(&cnf, &a->level); 
+				G_shrubbot_readconfig_int(&cnf, &a->level);
 			}
 			else if(!Q_stricmp(t, "flags")) {
-				G_shrubbot_readconfig_string(&cnf, 
-					a->flags, sizeof(a->flags)); 
+				G_shrubbot_readconfig_string(&cnf,
+					a->flags, sizeof(a->flags));
 			}
 			else if(!Q_stricmp(t, "greeting")) {
-				G_shrubbot_readconfig_string(&cnf, 
-					a->greeting, sizeof(a->greeting)); 
+				G_shrubbot_readconfig_string(&cnf,
+					a->greeting, sizeof(a->greeting));
 			}
 			// redeye
 			else if(!Q_stricmp(t, "greeting_sound")) {
@@ -1292,70 +1292,70 @@ qboolean G_shrubbot_readconfig(gentity_t *ent, int skiparg)
 			}
 			else {
 				SPC(va("^/readconfig: ^7[admin] parse error near "
-					"%s on line %d", 
-					t, 
+					"%s on line %d",
+					t,
 					COM_GetCurrentParseLine()));
 			}
 
 		}
 		else if(ban_open) {
 			if(!Q_stricmp(t, "name")) {
-				G_shrubbot_readconfig_string(&cnf, 
-					b->name, sizeof(b->name)); 
+				G_shrubbot_readconfig_string(&cnf,
+					b->name, sizeof(b->name));
 			}
 			else if(!Q_stricmp(t, "guid")) {
-				G_shrubbot_readconfig_string(&cnf, 
-					b->guid, sizeof(b->guid)); 
+				G_shrubbot_readconfig_string(&cnf,
+					b->guid, sizeof(b->guid));
 			}
 			else if(!Q_stricmp(t, "ip")) {
-				G_shrubbot_readconfig_string(&cnf, 
-					b->ip, sizeof(b->ip)); 
+				G_shrubbot_readconfig_string(&cnf,
+					b->ip, sizeof(b->ip));
 			}
 			else if(!Q_stricmp(t, "reason")) {
-				G_shrubbot_readconfig_string(&cnf, 
-					b->reason, sizeof(b->reason)); 
+				G_shrubbot_readconfig_string(&cnf,
+					b->reason, sizeof(b->reason));
 			}
 			else if(!Q_stricmp(t, "made")) {
-				G_shrubbot_readconfig_string(&cnf, 
-					b->made, sizeof(b->made)); 
+				G_shrubbot_readconfig_string(&cnf,
+					b->made, sizeof(b->made));
 			}
 			else if(!Q_stricmp(t, "expires")) {
 				G_shrubbot_readconfig_int(&cnf, &b->expires);
 			}
 			else if(!Q_stricmp(t, "banner")) {
-				G_shrubbot_readconfig_string(&cnf, 
-					b->banner, sizeof(b->banner)); 
+				G_shrubbot_readconfig_string(&cnf,
+					b->banner, sizeof(b->banner));
 			}
 			else {
 				SPC(va("^/readconfig: ^7[ban] parse error near "
 					"%s on line %d",
-					t, 
+					t,
 					COM_GetCurrentParseLine()));
 			}
 		}
 		else if(command_open) {
 			if(!Q_stricmp(t, "command")) {
-				G_shrubbot_readconfig_string(&cnf, 
-					c->command, sizeof(c->command)); 
+				G_shrubbot_readconfig_string(&cnf,
+					c->command, sizeof(c->command));
 			}
 			else if(!Q_stricmp(t, "exec")) {
-				G_shrubbot_readconfig_string(&cnf, 
-					c->exec, sizeof(c->exec)); 
+				G_shrubbot_readconfig_string(&cnf,
+					c->exec, sizeof(c->exec));
 			}
 			else if(!Q_stricmp(t, "desc")) {
-				G_shrubbot_readconfig_string(&cnf, 
-					c->desc, sizeof(c->desc)); 
+				G_shrubbot_readconfig_string(&cnf,
+					c->desc, sizeof(c->desc));
 			}
 			else if(!Q_stricmp(t, "levels")) {
 				char level[6] = {""};
 				char *lp = levels;
 				int cmdlevel = 0;
 
-				G_shrubbot_readconfig_string(&cnf, 
+				G_shrubbot_readconfig_string(&cnf,
 					levels, sizeof(levels));
 				while(*lp) {
 					if(*lp == ' ') {
-						c->levels[cmdlevel++] = 
+						c->levels[cmdlevel++] =
 							atoi(level);
 						level[0] = '\0';
 						*lp++;
@@ -1375,39 +1375,39 @@ qboolean G_shrubbot_readconfig(gentity_t *ent, int skiparg)
 			}
 			else {
 				SPC(va("^/readconfig: ^7[command] parse error near "
-					"%s on line %d", 
-					t, 
+					"%s on line %d",
+					t,
 					COM_GetCurrentParseLine()));
 			}
 		}
 		else if(warning_open) {
 			if(!Q_stricmp(t, "name")) {
-				G_shrubbot_readconfig_string(&cnf, 
-					w->name, sizeof(w->name)); 
+				G_shrubbot_readconfig_string(&cnf,
+					w->name, sizeof(w->name));
 			}
 			else if(!Q_stricmp(t, "guid")) {
-				G_shrubbot_readconfig_string(&cnf, 
-					w->guid, sizeof(w->guid)); 
+				G_shrubbot_readconfig_string(&cnf,
+					w->guid, sizeof(w->guid));
 			}
 			else if(!Q_stricmp(t, "ip")) {
-				G_shrubbot_readconfig_string(&cnf, 
-					w->ip, sizeof(w->ip)); 
+				G_shrubbot_readconfig_string(&cnf,
+					w->ip, sizeof(w->ip));
 			}
 			else if(!Q_stricmp(t, "warning")) {
-				G_shrubbot_readconfig_string(&cnf, 
-					w->warning, sizeof(w->warning)); 
+				G_shrubbot_readconfig_string(&cnf,
+					w->warning, sizeof(w->warning));
 			}
 			else if(!Q_stricmp(t, "made")) {
 				G_shrubbot_readconfig_int(&cnf, &w->made);
 			}
 			else if(!Q_stricmp(t, "warner")) {
-				G_shrubbot_readconfig_string(&cnf, 
-					w->warner, sizeof(w->warner)); 
+				G_shrubbot_readconfig_string(&cnf,
+					w->warner, sizeof(w->warner));
 			}
 			else {
 				SPC(va("^/readconfig: ^7[warning] parse error near "
 					"%s on line %d",
-					t, 
+					t,
 					COM_GetCurrentParseLine()));
 			}
 		}
@@ -1482,7 +1482,7 @@ qboolean G_shrubbot_readconfig(gentity_t *ent, int skiparg)
 	return qtrue;
 }
 
-qboolean G_shrubbot_time(gentity_t *ent, int skiparg) 
+qboolean G_shrubbot_time(gentity_t *ent, int skiparg)
 {
 	time_t t;
 	struct tm *lt;
@@ -1495,7 +1495,7 @@ qboolean G_shrubbot_time(gentity_t *ent, int skiparg)
 	return qtrue;
 }
 
-qboolean G_shrubbot_setlevel(gentity_t *ent, int skiparg) 
+qboolean G_shrubbot_setlevel(gentity_t *ent, int skiparg)
 {
 	int pids[MAX_CLIENTS];
 	char name[MAX_NAME_LENGTH], err[MAX_STRING_CHARS];
@@ -1558,7 +1558,7 @@ qboolean G_shrubbot_setlevel(gentity_t *ent, int skiparg)
 			vic->client->sess.guid)) {
 
 			g_shrubbot_admins[i]->level = l;
-			Q_strncpyz(g_shrubbot_admins[i]->name, n2, 
+			Q_strncpyz(g_shrubbot_admins[i]->name, n2,
 				sizeof(g_shrubbot_admins[i]->name));
 			updated = qtrue;
 		}
@@ -1585,14 +1585,14 @@ qboolean G_shrubbot_setlevel(gentity_t *ent, int skiparg)
 	return qtrue;
 }
 
-qboolean G_shrubbot_kick(gentity_t *ent, int skiparg) 
+qboolean G_shrubbot_kick(gentity_t *ent, int skiparg)
 {
 	int pids[MAX_CLIENTS];
 	char name[MAX_NAME_LENGTH], *reason, err[MAX_STRING_CHARS];
 	int minargc, banTime = SHRUBBOT_KICK_LENGTH;
 
 	minargc = 3+skiparg;
-	if(G_shrubbot_permission(ent, SBF_UNACCOUNTABLE)) 
+	if(G_shrubbot_permission(ent, SBF_UNACCOUNTABLE))
 		minargc = 2+skiparg;
 
 	if(Q_SayArgc() < minargc) {
@@ -1622,17 +1622,17 @@ qboolean G_shrubbot_kick(gentity_t *ent, int skiparg)
         return qfalse;
 	}
 
-	// forty - enforce the temp ban consistently using shrubbot. 
+	// forty - enforce the temp ban consistently using shrubbot.
 	if ( (g_autoTempBan.integer & TEMPBAN_SHRUB_KICK)
 		&& g_autoTempBanTime.integer > 0 ) {
 		banTime = g_autoTempBanTime.integer;
-		G_shrubbot_tempban(pids[0],	
+		G_shrubbot_tempban(pids[0],
 			va("You have been kicked, Reason: %s",
-			(*reason) ? reason : "kicked by admin"), 
+			(*reason) ? reason : "kicked by admin"),
 			banTime);
 	}
 
-	//josh: 2.60 won't kick from the engine. This will call 
+	//josh: 2.60 won't kick from the engine. This will call
 	//      ClientDisconnect
 	trap_DropClient(pids[0],
 		va("You have been kicked, Reason: %s\n%s",
@@ -1641,7 +1641,7 @@ qboolean G_shrubbot_kick(gentity_t *ent, int skiparg)
 	return qtrue;
 }
 
-qboolean G_shrubbot_tempban(int clientnum, char *reason, int length) 
+qboolean G_shrubbot_tempban(int clientnum, char *reason, int length)
 {
 
 	char userinfo[MAX_INFO_STRING];
@@ -1670,7 +1670,7 @@ qboolean G_shrubbot_tempban(int clientnum, char *reason, int length)
 
 	b = malloc(sizeof(g_shrubbot_ban_t));
 
-	if(!b) 
+	if(!b)
 		return qfalse;
 
 	Q_strncpyz(b->name, vic->client->pers.netname, sizeof(b->name));
@@ -1679,7 +1679,7 @@ qboolean G_shrubbot_tempban(int clientnum, char *reason, int length)
 	// strip port off of ip
 	for(i=0; *ip; *ip++) {
 		if(i >= sizeof(tmp) || *ip == ':') break;
-		tmp[i++] = *ip; 
+		tmp[i++] = *ip;
 	}
 	tmp[i] = '\0';
 	Q_strncpyz(b->ip, tmp, sizeof(b->ip));
@@ -1707,7 +1707,7 @@ qboolean G_shrubbot_tempban(int clientnum, char *reason, int length)
 	return qtrue;
 }
 
-qboolean G_shrubbot_ban(gentity_t *ent, int skiparg) 
+qboolean G_shrubbot_ban(gentity_t *ent, int skiparg)
 {
 	int pids[MAX_CLIENTS];
 	int seconds;
@@ -1750,13 +1750,13 @@ qboolean G_shrubbot_ban(gentity_t *ent, int skiparg)
 	if(secs[0]) {
 		int lastchar = strlen(secs) - 1;
 
-		if(secs[lastchar] == 'w') 
+		if(secs[lastchar] == 'w')
 			modifier = 60*60*24*7;
-		else if(secs[lastchar] == 'd') 
+		else if(secs[lastchar] == 'd')
 			modifier = 60*60*24;
-		else if(secs[lastchar] == 'h') 
+		else if(secs[lastchar] == 'h')
 			modifier = 60*60;
-		else if(secs[lastchar] == 'm') 
+		else if(secs[lastchar] == 'm')
 			modifier = 60;
 
 		if (modifier != 1)
@@ -1817,7 +1817,7 @@ qboolean G_shrubbot_ban(gentity_t *ent, int skiparg)
 	}
 	b = malloc(sizeof(g_shrubbot_ban_t));
 
-	if(!b) 
+	if(!b)
 		return qfalse;
 
 	//SanitizeString(vic->client->pers.netname, tmp, qtrue);
@@ -1829,7 +1829,7 @@ qboolean G_shrubbot_ban(gentity_t *ent, int skiparg)
 	// strip port off of ip
 	for(i=0; *ip; *ip++) {
 		if(i >= sizeof(tmp) || *ip == ':') break;
-		tmp[i++] = *ip; 
+		tmp[i++] = *ip;
 	}
 	tmp[i] = '\0';
 	Q_strncpyz(b->ip, tmp, sizeof(b->ip));
@@ -1844,9 +1844,9 @@ qboolean G_shrubbot_ban(gentity_t *ent, int skiparg)
 			sizeof(b->banner));
 	}
 	else Q_strncpyz(b->banner, "console", sizeof(b->banner));
-	if(!seconds) 
+	if(!seconds)
 		b->expires = 0;
-	else 
+	else
 		b->expires = t - SHRUBBOT_BAN_EXPIRE_OFFSET + seconds;
 	if(!*reason) {
 		Q_strncpyz(b->reason,
@@ -1884,12 +1884,12 @@ qboolean G_shrubbot_ban(gentity_t *ent, int skiparg)
 	return qtrue;
 }
 
-qboolean G_shrubbot_unban(gentity_t *ent, int skiparg) 
+qboolean G_shrubbot_unban(gentity_t *ent, int skiparg)
 {
 	int bnum;
 	char bs[5];
 	time_t t;
-	
+
 	if(!time(&t)) return qfalse;
 	if(Q_SayArgc() < 2+skiparg) {
 		SPC("^/unban usage: ^7!unban [ban #]");
@@ -1911,7 +1911,7 @@ qboolean G_shrubbot_unban(gentity_t *ent, int skiparg)
 	return qtrue;
 }
 
-qboolean G_shrubbot_putteam(gentity_t *ent, int skiparg) 
+qboolean G_shrubbot_putteam(gentity_t *ent, int skiparg)
 {
 	int pids[MAX_CLIENTS];
 	char name[MAX_NAME_LENGTH], team[7], err[MAX_STRING_CHARS];
@@ -1945,21 +1945,21 @@ qboolean G_shrubbot_putteam(gentity_t *ent, int skiparg)
 		SPC("^/putteam: ^7SetTeam failed");
 		return qfalse;
 	}
-	
-	if ( !Q_stricmp( team, "red" ) 
-		|| !Q_stricmp( team, "r" ) 
+
+	if ( !Q_stricmp( team, "red" )
+		|| !Q_stricmp( team, "r" )
 		|| !Q_stricmp( team, "axis" )
-        	|| !Q_stricmp( team, "blue" ) 
-		|| !Q_stricmp( team, "b" ) 
+        	|| !Q_stricmp( team, "blue" )
+		|| !Q_stricmp( team, "b" )
 		|| !Q_stricmp( team, "allies" ) ) {
 
 		// josh: mute ATB if someone is putteamed. to axis or allies
 		level.atb_has_run = qtrue;
-	} 
+	}
 	return qtrue;
 }
 
-qboolean G_shrubbot_mute(gentity_t *ent, int skiparg) 
+qboolean G_shrubbot_mute(gentity_t *ent, int skiparg)
 {
 	int pids[MAX_CLIENTS], seconds, modifier = 1;
 	char *reason, secs[8];
@@ -1982,7 +1982,7 @@ qboolean G_shrubbot_mute(gentity_t *ent, int skiparg)
 		return qfalse;
 	}
 
-	Q_SayArgv(1+skiparg, name, sizeof(name)); 
+	Q_SayArgv(1+skiparg, name, sizeof(name));
 	if(ClientNumbersFromString(name, pids) != 1) {
 		G_MatchOnePlayer(pids, err, sizeof(err));
 		SPC(va("^/%smute: ^7%s",
@@ -1990,18 +1990,18 @@ qboolean G_shrubbot_mute(gentity_t *ent, int skiparg)
 			err));
 		return qfalse;
 	}
-	
+
 	Q_SayArgv(2+skiparg, secs, sizeof(secs));
 	if(secs[0]) {
 		int lastchar = strlen(secs) - 1;
 
-		if(secs[lastchar] == 'w') 
+		if(secs[lastchar] == 'w')
 			modifier = 60*60*24*7;
-		else if(secs[lastchar] == 'd') 
+		else if(secs[lastchar] == 'd')
 			modifier = 60*60*24;
-		else if(secs[lastchar] == 'h') 
+		else if(secs[lastchar] == 'h')
 			modifier = 60*60;
-		else if(secs[lastchar] == 'm') 
+		else if(secs[lastchar] == 'm')
 			modifier = 60;
 
 		if (modifier != 1)
@@ -2042,7 +2042,7 @@ qboolean G_shrubbot_mute(gentity_t *ent, int skiparg)
 		}
 		vic->client->sess.auto_unmute_time = 0;
 		CPx(pids[0], "cp \"^5You've been unmuted\n\"" );
-		AP(va("chat \"%s^7 has been unmuted\" -1",  
+		AP(va("chat \"%s^7 has been unmuted\" -1",
 			vic->client->pers.netname ));
 	}else{
 		if(!Q_stricmp(cmd, "unmute")) {
@@ -2066,19 +2066,19 @@ qboolean G_shrubbot_mute(gentity_t *ent, int skiparg)
 }
 
 
-qboolean G_shrubbot_pause(gentity_t *ent, int skiparg) 
+qboolean G_shrubbot_pause(gentity_t *ent, int skiparg)
 {
 	G_refPause_cmd(ent, qtrue);
 	return qtrue;
 }
 
-qboolean G_shrubbot_unpause(gentity_t *ent, int skiparg) 
+qboolean G_shrubbot_unpause(gentity_t *ent, int skiparg)
 {
 	G_refPause_cmd(ent, qfalse);
 	return qtrue;
 }
 
-qboolean G_shrubbot_listplayers(gentity_t *ent, int skiparg) 
+qboolean G_shrubbot_listplayers(gentity_t *ent, int skiparg)
 {
 	int i,j;
 	gclient_t *p;
@@ -2111,7 +2111,7 @@ qboolean G_shrubbot_listplayers(gentity_t *ent, int skiparg)
 	}
 
 	SBP_begin();
-	SBP(va("^/listplayers: ^7%d players connected:\n", 
+	SBP(va("^/listplayers: ^7%d players connected:\n",
 		level.numConnectedClients));
 	for(i=0; i < level.maxclients; i++) {
 		p = &level.clients[i];
@@ -2137,13 +2137,13 @@ qboolean G_shrubbot_listplayers(gentity_t *ent, int skiparg)
 		if (g_entities[p->ps.clientNum].r.svFlags & SVF_BOT) {
 			Q_strncpyz(guid_stub, "OMNIBOT*", sizeof(guid_stub));
 		} else {
-			for(j=0; j<=8; j++) 
+			for(j=0; j<=8; j++)
 				guid_stub[j] = p->sess.guid[j+24];
 		}
 
 		fireteam[0] = '\0';
 		if(G_IsOnFireteam(i, &ft)) {
-			Q_strncpyz(fireteam, 
+			Q_strncpyz(fireteam,
 				bg_fireteamNames[ft->ident - 1],
 				sizeof(fireteam));
 		}
@@ -2157,12 +2157,12 @@ qboolean G_shrubbot_listplayers(gentity_t *ent, int skiparg)
 		if(G_shrubbot_user_tot_warnings(&g_entities[i]) > 0) {
 			Q_strncpyz(warned,"W",sizeof(warned));
 		}
-	
+
 		l = 0;
 		SanitizeString(p->pers.netname, n2, qtrue);
 		n[0] = '\0';
 		for(j=0; g_shrubbot_admins[j]; j++) {
-			if(!Q_stricmp(g_shrubbot_admins[j]->guid, 
+			if(!Q_stricmp(g_shrubbot_admins[j]->guid,
 				p->sess.guid)) {
 
 				// tjw: don't gather aka or level info if
@@ -2187,7 +2187,7 @@ qboolean G_shrubbot_listplayers(gentity_t *ent, int skiparg)
 			if(g_shrubbot_levels[j]->level == l)
 				Q_strncpyz(lname,
 					g_shrubbot_levels[j]->name,
-					sizeof(lname));	
+					sizeof(lname));
 		}
 		if(!*lname)  {
 			Com_sprintf(lname,
@@ -2202,7 +2202,7 @@ qboolean G_shrubbot_listplayers(gentity_t *ent, int skiparg)
 		spaces = lname_max - strlen(cleanLevelName);
 		Com_sprintf(lname_fmt, sizeof(lname_fmt), "%%%is", spaces + strlen(lname));
 		Com_sprintf(lname2, sizeof(lname2), lname_fmt, lname);
-		SBP(va("%2i %s%s^3%1s^7 %-2i '%s^7' (*%s) ^1%1s^8%1s ^7%s^7 %s%s^7%s\n", 
+		SBP(va("%2i %s%s^3%1s^7 %-2i '%s^7' (*%s) ^1%1s^8%1s ^7%s^7 %s%s^7%s\n",
 			i,
 			c,
 			t,
@@ -2325,7 +2325,7 @@ qboolean G_shrubbot_howfair(gentity_t *ent, int skiparg) {
 		howfair = "^8UNEVEN";
 	else
 		howfair = "^1UNFAIR: ^3FIX THE TEAMS!!";
-	
+
 	AP(va("chat \"^/howfair: %s ^f(Allies: ^3%.2f ^fAxis ^3%.2f^f)\" -1",
 		howfair,
 		alliesProb,
@@ -2341,7 +2341,7 @@ qboolean G_shrubbot_howfair(gentity_t *ent, int skiparg) {
 	return qtrue;
 }
 
-qboolean G_shrubbot_showbans(gentity_t *ent, int skiparg) 
+qboolean G_shrubbot_showbans(gentity_t *ent, int skiparg)
 {
 	int i, found = 0;
 	time_t t;
@@ -2363,11 +2363,11 @@ qboolean G_shrubbot_showbans(gentity_t *ent, int skiparg)
 	if(!time(&t))
 		return qfalse;
 	t = t - SHRUBBOT_BAN_EXPIRE_OFFSET;
-	
+
 	for(i=0; g_shrubbot_bans[i]; i++) {
 		if(g_shrubbot_bans[i]->expires != 0 &&
 			(g_shrubbot_bans[i]->expires - t) < 1) {
-			
+
 			continue;
 		}
 		found++;
@@ -2377,7 +2377,7 @@ qboolean G_shrubbot_showbans(gentity_t *ent, int skiparg)
 		Q_SayArgv(1+skiparg, skip, sizeof(skip));
 		start = atoi(skip);
 		// tjw: !showbans 1 means start with ban 0
-		if(start > 0) 
+		if(start > 0)
 			start -= 1;
 		else if(start < 0)
 			start = found + start;
@@ -2412,7 +2412,7 @@ qboolean G_shrubbot_showbans(gentity_t *ent, int skiparg)
 
 		if(g_shrubbot_bans[i]->expires != 0 &&
 			(g_shrubbot_bans[i]->expires - t) < 1) {
-			
+
 			continue;
 		}
 
@@ -2420,7 +2420,7 @@ qboolean G_shrubbot_showbans(gentity_t *ent, int skiparg)
 		date[0] = '\0';
 		made = g_shrubbot_bans[i]->made;
 		for(j=0; *made; j++) {
-			if((j+1) >= sizeof(date)) 
+			if((j+1) >= sizeof(date))
 				break;
 			if(*made == ' ')
 				break;
@@ -2442,7 +2442,7 @@ qboolean G_shrubbot_showbans(gentity_t *ent, int skiparg)
 			spacesName + strlen(g_shrubbot_bans[i]->name),
 			spacesBanner + strlen(g_shrubbot_bans[i]->banner));
 
-		SBP(va(fmt, 
+		SBP(va(fmt,
 			(i+1),
 			g_shrubbot_bans[i]->name,
 			date,
@@ -2465,7 +2465,7 @@ qboolean G_shrubbot_showbans(gentity_t *ent, int skiparg)
 	return qtrue;
 }
 
-qboolean G_shrubbot_help(gentity_t *ent, int skiparg) 
+qboolean G_shrubbot_help(gentity_t *ent, int skiparg)
 {
 	int i;
 
@@ -2475,7 +2475,7 @@ qboolean G_shrubbot_help(gentity_t *ent, int skiparg)
 		int count = 0;
 		char *str = "";
 
-		
+
 		for (i=0; g_shrubbot_cmds[i].keyword[0]; i++) {
 
 			if(G_shrubbot_permission(ent, g_shrubbot_cmds[i].flag)) {
@@ -2516,7 +2516,7 @@ qboolean G_shrubbot_help(gentity_t *ent, int skiparg)
 		if(count)
 			str = va("%s\n",str);
 		SPC(va("^/help: ^7%i available commands", count));
-		
+
 		SBP( str );
 		SBP("^7Type !help [^3command^7] for help with a specific command.\n");
 		SBP_end();
@@ -2525,19 +2525,19 @@ qboolean G_shrubbot_help(gentity_t *ent, int skiparg)
 	} else {
 		//!help param
 		char param[20];
-		
+
 		Q_SayArgv(1+skiparg, param, sizeof(param));
 		SBP_begin();
 		for( i=0; g_shrubbot_cmds[i].keyword[0]; i++ ){
 			if(	!Q_stricmp(param, g_shrubbot_cmds[i].keyword ) ) {
 				if(!G_shrubbot_permission(ent, g_shrubbot_cmds[i].flag)) {
-					SBP(va("^/help: ^7you have no permission to use '%s'\n", 
+					SBP(va("^/help: ^7you have no permission to use '%s'\n",
 						g_shrubbot_cmds[i].keyword ) );
 					return qfalse;
 				}
 				SBP( va("^/help: ^7help for '%s':\n", g_shrubbot_cmds[i].keyword ) );
 				SBP( va("^/Function: ^7%s\n", g_shrubbot_cmds[i].function ) );
-				SBP( va("^/Syntax: ^7!%s %s\n", g_shrubbot_cmds[i].keyword, 
+				SBP( va("^/Syntax: ^7!%s %s\n", g_shrubbot_cmds[i].keyword,
 					g_shrubbot_cmds[i].syntax ) );
 				SBP( va("^/Flag: ^7'%c'\n", g_shrubbot_cmds[i].flag) );
 				SBP_end();
@@ -2549,7 +2549,7 @@ qboolean G_shrubbot_help(gentity_t *ent, int skiparg)
 				if(!_shrubbot_command_permission(ent,
 					g_shrubbot_commands[i]->command)) {
 
-					SBP(va("^/help: ^7you have no permission to use '%s'\n", 
+					SBP(va("^/help: ^7you have no permission to use '%s'\n",
 						g_shrubbot_commands[i]->command ) );
 					SBP_end();
 					return qfalse;
@@ -2570,7 +2570,7 @@ qboolean G_shrubbot_help(gentity_t *ent, int skiparg)
 	}
 }
 
-qboolean G_shrubbot_admintest(gentity_t *ent, int skiparg) 
+qboolean G_shrubbot_admintest(gentity_t *ent, int skiparg)
 {
 	int i, l = 0;
 	char *lname = NULL;
@@ -2579,7 +2579,7 @@ qboolean G_shrubbot_admintest(gentity_t *ent, int skiparg)
 	gentity_t *vic;
 
 	if(Q_SayArgc() < 2+skiparg) {
-		if(!ent) {    
+		if(!ent) {
 			SPC("admintest: you are on the console");
 			return qtrue;
 		}else{
@@ -2590,7 +2590,7 @@ qboolean G_shrubbot_admintest(gentity_t *ent, int skiparg)
 			SPC("^/admintest: ^7you don't have permission to use !admintest on other players");
 			return qfalse;
 		}
-		Q_SayArgv(1+skiparg, name, sizeof(name)); 
+		Q_SayArgv(1+skiparg, name, sizeof(name));
 		if(ClientNumbersFromString(name, pids) != 1) {
 			G_MatchOnePlayer(pids, err, sizeof(err));
 			SPC(va("^/admintest: ^7%s", err));
@@ -2622,7 +2622,7 @@ qboolean G_shrubbot_admintest(gentity_t *ent, int skiparg)
 			}
 
 			l = g_shrubbot_admins[i]->level;
-			break;    
+			break;
 		}
 	}
 
@@ -2643,7 +2643,7 @@ qboolean G_shrubbot_admintest(gentity_t *ent, int skiparg)
 	return qtrue;
 }
 
-qboolean G_shrubbot_cancelvote(gentity_t *ent, int skiparg) 
+qboolean G_shrubbot_cancelvote(gentity_t *ent, int skiparg)
 {
 
 	if( level.voteInfo.voteTime ){
@@ -2657,7 +2657,7 @@ qboolean G_shrubbot_cancelvote(gentity_t *ent, int skiparg)
 	return qtrue;
 }
 
-qboolean G_shrubbot_passvote(gentity_t *ent, int skiparg) 
+qboolean G_shrubbot_passvote(gentity_t *ent, int skiparg)
 {
 	if( level.voteInfo.voteTime ){
 		level.voteInfo.voteYes = level.numConnectedClients;
@@ -2677,14 +2677,14 @@ qboolean G_shrubbot_uptime(gentity_t *ent, int skiparg)
 	int hours = (secs / 3600) % 24;
 	int days = (secs / (3600 * 24));
 
-	SPC( va("%s ^/uptime: ^2%d ^7day%s ^2%d ^7hours ^2%d ^7minutes", 
-		sv_hostname.string, days, 
+	SPC( va("%s ^/uptime: ^2%d ^7day%s ^2%d ^7hours ^2%d ^7minutes",
+		sv_hostname.string, days,
 		(days != 1 ? "s" : ""),
 		hours, mins) );
 	return qtrue;
 }
 
-qboolean G_shrubbot_spec999(gentity_t *ent, int skiparg) 
+qboolean G_shrubbot_spec999(gentity_t *ent, int skiparg)
 {
 	int i, movedtospec = 0;
 	gentity_t *vic;
@@ -2706,13 +2706,13 @@ qboolean G_shrubbot_spec999(gentity_t *ent, int skiparg)
 	return qtrue;
 }
 
-qboolean G_shrubbot_shuffle(gentity_t *ent, int skiparg) 
+qboolean G_shrubbot_shuffle(gentity_t *ent, int skiparg)
 {
 	G_shuffleTeams();
 	return qtrue;
 }
 
-qboolean G_shrubbot_rename(gentity_t *ent, int skiparg) 
+qboolean G_shrubbot_rename(gentity_t *ent, int skiparg)
 {
 	int pids[MAX_CLIENTS];
 	char name[MAX_NAME_LENGTH], *newname, *oldname,err[MAX_STRING_CHARS];
@@ -2799,7 +2799,7 @@ qboolean G_shrubbot_gib(gentity_t *ent, int skiparg)
 		SPC("^/gib: ^7player must be on a team to be gibbed");
 		return qfalse;
 	}
-	
+
 	G_Damage(vic, NULL, NULL, NULL, NULL, 500, 0, MOD_UNKNOWN);
 	AP(va("chat \"^/gib: ^7%s ^7was gibbed\" -1", vic->client->pers.netname));
 	return qtrue;
@@ -2816,7 +2816,7 @@ qboolean G_shrubbot_slap(gentity_t *ent, int skiparg)
 		SPC("^/slap usage: ^7!slap [name|slot#] [damage] [reason]");
 		return qfalse;
 	}
-	Q_SayArgv(1+skiparg, name, sizeof(name)); 
+	Q_SayArgv(1+skiparg, name, sizeof(name));
 	Q_SayArgv(2+skiparg, damage, sizeof(damage));
 
 	dmg = atoi(damage);
@@ -2852,7 +2852,7 @@ qboolean G_shrubbot_slap(gentity_t *ent, int skiparg)
 		SPC(va("^/slap: ^7%s ^7is not alive",vic->client->pers.netname));
 		return qfalse;
 	}
-	
+
 	if ( vic->health > dmg ) {
 		vic->health -= dmg;
 	}
@@ -2860,13 +2860,13 @@ qboolean G_shrubbot_slap(gentity_t *ent, int skiparg)
 		vic->health = 1;
 	}
 
-	G_AddEvent(vic, EV_GENERAL_SOUND, 
+	G_AddEvent(vic, EV_GENERAL_SOUND,
 		G_SoundIndex("sound/player/hurt_barbwire.wav"));
-	
+
 	AP(va("chat \"^/slap: ^7%s ^7was slapped\" -1",
 		vic->client->pers.netname));
 
-	CPx(pids[0], va("cp \"%s ^7slapped you%s%s\"", 
+	CPx(pids[0], va("cp \"%s ^7slapped you%s%s\"",
 		(ent?ent->client->pers.netname:"^3SERVER CONSOLE"),
 		(*reason) ? " because:\n" : "",
 		(*reason) ? reason : ""));
@@ -2907,12 +2907,12 @@ qboolean G_shrubbot_burn(gentity_t *ent, int skiparg)
 		SPC("^/burn: ^7player must be on a team");
 		return qfalse;
 	}
-	
+
 	G_BurnMeGood(vic, vic, NULL);
 	AP(va("chat \"^/burn: ^7%s ^7was set ablaze\" -1",
 			vic->client->pers.netname));
 
-	CPx(pids[0], va("cp \"%s ^7burned you%s%s\"", 
+	CPx(pids[0], va("cp \"%s ^7burned you%s%s\"",
 			(ent?ent->client->pers.netname:"^3SERVER CONSOLE"),
 			(*reason) ? " because:\n" : "",
 			(*reason) ? reason : ""));
@@ -2935,7 +2935,7 @@ qboolean G_shrubbot_warn(gentity_t *ent, int skiparg)
 		SPC("^/warn usage: ^7!warn [name|slot#] [reason]");
 		return qfalse;
 	}
-	Q_SayArgv(1+skiparg, name, sizeof(name)); 
+	Q_SayArgv(1+skiparg, name, sizeof(name));
 	reason = Q_SayConcatArgs(2+skiparg);
 
 	if(ClientNumbersFromString(name, pids) != 1) {
@@ -2961,8 +2961,8 @@ qboolean G_shrubbot_warn(gentity_t *ent, int skiparg)
 				if ( (g_autoTempBan.integer & TEMPBAN_SHRUB_WARN)
 					&& g_autoTempBanTime.integer > 0 ) {
 					banTime = g_autoTempBanTime.integer;
-					G_shrubbot_tempban(pids[0],	
-						"You have been temporarily banned because you received too many warnings", 
+					G_shrubbot_tempban(pids[0],
+						"You have been temporarily banned because you received too many warnings",
 						banTime);
 				}
 				trap_DropClient(pids[0],
@@ -2983,7 +2983,7 @@ qboolean G_shrubbot_warn(gentity_t *ent, int skiparg)
 			store = qfalse;
 			SPC("^/warn: ^7error (warning not stored)");
 		}
-		
+
 		if(!time(&t)){
 			store = qfalse;
 		}
@@ -2994,7 +2994,7 @@ qboolean G_shrubbot_warn(gentity_t *ent, int skiparg)
 			ip = vic->client->sess.ip;
 			for(i=0; *ip; *ip++) {
 				if(i >= sizeof(tmp) || *vic->client->sess.ip == ':') break;
-				tmp[i++] = *ip; 
+				tmp[i++] = *ip;
 			}
 			tmp[i] = '\0';
 			Q_strncpyz(w->ip, tmp, sizeof(w->ip));
@@ -3006,7 +3006,7 @@ qboolean G_shrubbot_warn(gentity_t *ent, int skiparg)
 			}else{
 				Q_strncpyz(w->warner, "^/SERVER CONSOLE", sizeof(w->warner));
 			}
-			
+
 			for(i=0;g_shrubbot_warnings[i];i++){
 				if(g_shrubbot_warnings[i]->made < oldest || oldest == 0){
 					oldest = g_shrubbot_warnings[i]->made;
@@ -3032,29 +3032,29 @@ qboolean G_shrubbot_warn(gentity_t *ent, int skiparg)
 
 	AP(va("chat \"^/warn: ^7%s ^7was warned\" -1",
 			vic->client->pers.netname));
-	// tjw: can't do color code for the reason because the 
+	// tjw: can't do color code for the reason because the
 	//      client likes to start new lines and lose the
 	//      color with long cp strings
 	if(g_gamestate.integer != GS_INTERMISSION){
-		CPx(pids[0], va("cp \"%s ^3warned ^7you because:\n%s\"", 
+		CPx(pids[0], va("cp \"%s ^3warned ^7you because:\n%s\"",
 			(ent?ent->client->pers.netname:"^3SERVER CONSOLE"),
 			reason));
 	}else{
-		CPx(pids[0], va("chat \"%s ^3warned ^7you because: %s\"", 
+		CPx(pids[0], va("chat \"%s ^3warned ^7you because: %s\"",
 			(ent?ent->client->pers.netname:"^3SERVER CONSOLE"),
 			reason));
 	}
 	return qtrue;
 }
 
-qboolean G_shrubbot_dewarn(gentity_t *ent, int skiparg) 
+qboolean G_shrubbot_dewarn(gentity_t *ent, int skiparg)
 {
 	int wnum = 0, number, warning,pids[MAX_CLIENTS];
 	char numChar[5], name[MAX_NAME_LENGTH], err[MAX_STRING_CHARS];
 	time_t t;
 	gentity_t *vic;
 	qboolean showAll = qfalse;
-	
+
 	if(!(g_warningOptions.integer & WARNOP_LINK_GUID ||
 		g_warningOptions.integer & WARNOP_LINK_IP)){
 		SPC("^/dewarn:^7 warning storage is not enabled on this server");
@@ -3112,7 +3112,7 @@ qboolean G_shrubbot_dewarn(gentity_t *ent, int skiparg)
 				if(warning != -1){
 					SPC(va("^/%i.^7 %s%s", number,
 						g_shrubbot_warnings[warning]->warning,
-						g_shrubbot_warnings[warning]->warner[0] ? 
+						g_shrubbot_warnings[warning]->warner[0] ?
 						va(" ^/(By: ^7%s^/)",g_shrubbot_warnings[warning]->warner):
 						""));
 				}
@@ -3124,7 +3124,7 @@ qboolean G_shrubbot_dewarn(gentity_t *ent, int skiparg)
 				if(warning != -1){
 					SBP(va("^/%i.^7 %s%s\n",number,
 						g_shrubbot_warnings[warning]->warning,
-						g_shrubbot_warnings[warning]->warner[0] ? 
+						g_shrubbot_warnings[warning]->warner[0] ?
 						va(" ^/(By: ^7%s^/)",g_shrubbot_warnings[warning]->warner):
 						""));
 				}
@@ -3133,7 +3133,7 @@ qboolean G_shrubbot_dewarn(gentity_t *ent, int skiparg)
 		SBP_end();
 		return qtrue;
 	}
-				
+
 	number = G_shrubbot_user_warning(vic, wnum);
 	if(number == -1) {
 		SPC("^/dewarn: ^7invalid warning #");
@@ -3182,7 +3182,7 @@ qboolean G_shrubbot_lockteams(gentity_t *ent, int skiparg, qboolean toLock)
 	cmd = command;
 	if(*cmd == '!')
 		*cmd++;
-	
+
 	if(Q_SayArgc() < 2+skiparg) {
 		SPC(va("^/%s usage: ^7!%s r|b|s|all",cmd,cmd));
 		return qfalse;
@@ -3190,13 +3190,13 @@ qboolean G_shrubbot_lockteams(gentity_t *ent, int skiparg, qboolean toLock)
 	Q_SayArgv(1+skiparg, team, sizeof(team));
 
 	if ( !Q_stricmp(team, "all") ) {
-		teamInfo[TEAM_AXIS].team_lock = 
+		teamInfo[TEAM_AXIS].team_lock =
 			(TeamCount(-1, TEAM_AXIS)) ? toLock : qfalse;
-		teamInfo[TEAM_ALLIES].team_lock = 
+		teamInfo[TEAM_ALLIES].team_lock =
 			(TeamCount(-1, TEAM_ALLIES)) ? toLock : qfalse;
-		G_updateSpecLock(TEAM_AXIS, 
+		G_updateSpecLock(TEAM_AXIS,
 			(TeamCount(-1, TEAM_AXIS)) ? toLock : qfalse);
-		G_updateSpecLock(TEAM_ALLIES, 
+		G_updateSpecLock(TEAM_ALLIES,
 			(TeamCount(-1, TEAM_ALLIES)) ? toLock : qfalse);
 		if( toLock ) {
 			level.server_settings |= CV_SVS_LOCKSPECS;
@@ -3205,17 +3205,17 @@ qboolean G_shrubbot_lockteams(gentity_t *ent, int skiparg, qboolean toLock)
 		}
 		AP(va("chat \"^/%s: ^7All teams %sed\" -1", cmd, cmd));
 	} else if ( !Q_stricmp(team, "r") ) {
-		teamInfo[TEAM_AXIS].team_lock = 
+		teamInfo[TEAM_AXIS].team_lock =
 			(TeamCount(-1, TEAM_AXIS)) ? toLock : qfalse;
 		AP(va("chat \"^/%s: ^7Axis team %sed\" -1", cmd, cmd));
 	} else if ( !Q_stricmp(team, "b") ) {
-		teamInfo[TEAM_ALLIES].team_lock = 
+		teamInfo[TEAM_ALLIES].team_lock =
 			(TeamCount(-1, TEAM_ALLIES)) ? toLock : qfalse;
 		AP(va("chat \"^/%s: ^7Allied team %sed\" -1", cmd, cmd));
 	} else if ( !Q_stricmp(team, "s") ) {
-		G_updateSpecLock(TEAM_AXIS, 
+		G_updateSpecLock(TEAM_AXIS,
 			(TeamCount(-1, TEAM_AXIS)) ? toLock : qfalse);
-		G_updateSpecLock(TEAM_ALLIES, 
+		G_updateSpecLock(TEAM_ALLIES,
 			(TeamCount(-1, TEAM_ALLIES)) ? toLock : qfalse);
 		if( toLock ) {
 			level.server_settings |= CV_SVS_LOCKSPECS;
@@ -3233,7 +3233,7 @@ qboolean G_shrubbot_lockteams(gentity_t *ent, int skiparg, qboolean toLock)
 	} else {
 		level.server_settings &= ~CV_SVS_LOCKTEAMS;
 	}
-	trap_SetConfigstring(CS_SERVERTOGGLES, 
+	trap_SetConfigstring(CS_SERVERTOGGLES,
 			va("%d", level.server_settings));
 
 	return qtrue;
@@ -3252,9 +3252,9 @@ qboolean G_shrubbot_lol(gentity_t *ent, int skiparg)
 	else if(Q_SayArgc() >= 3+skiparg) {
 		Q_SayArgv( 2+skiparg, numNades, sizeof( numNades ) );
 		nades = atoi( numNades );
-		if( nades < 1 ) 
+		if( nades < 1 )
 			nades = 1;
-		else if( nades > SHRUBBOT_MAX_LOL_NADES ) 
+		else if( nades > SHRUBBOT_MAX_LOL_NADES )
 			nades = SHRUBBOT_MAX_LOL_NADES;
 	}
 	Q_SayArgv( 1+skiparg, name, sizeof( name ) );
@@ -3275,7 +3275,7 @@ qboolean G_shrubbot_lol(gentity_t *ent, int skiparg)
 		}
 		AP(va("chat \"^/lol: ^7%d players lol\'d\" -1", count));
 		return qtrue;
-	} 
+	}
 	pcount = ClientNumbersFromString(name, pids);
 	if(pcount > 1) {
 		int it;
@@ -3294,7 +3294,7 @@ qboolean G_shrubbot_lol(gentity_t *ent, int skiparg)
 			if(!(vic->client->sess.sessionTeam == TEAM_AXIS ||
 					vic->client->sess.sessionTeam == TEAM_ALLIES)) {
 				SPC(va("^/lol: ^7%s^7 must be on a "
-						"team to be lol\'d", 
+						"team to be lol\'d",
 						vic->client->pers.netname));
 				continue;
 			}
@@ -3302,7 +3302,7 @@ qboolean G_shrubbot_lol(gentity_t *ent, int skiparg)
 				G_createClusterNade( vic, nades );
 			else
 				G_createClusterNade( vic, 8 );
-			AP(va("chat \"^/lol: ^7%s\" -1", 
+			AP(va("chat \"^/lol: ^7%s\" -1",
 					vic->client->pers.netname));
 		}
 		return qtrue;
@@ -3326,7 +3326,7 @@ qboolean G_shrubbot_lol(gentity_t *ent, int skiparg)
 		SPC("^/lol: ^7player must be on a team to be lol'd");
 		return qfalse;
 	}
-	
+
 	if( nades )
 		G_createClusterNade( vic, nades );
 	else
@@ -3335,7 +3335,7 @@ qboolean G_shrubbot_lol(gentity_t *ent, int skiparg)
 	return qtrue;
 
 }
-													
+
 // Created by: dvl
 qboolean G_shrubbot_pop( gentity_t *ent, int skiparg )
 {
@@ -3360,7 +3360,7 @@ qboolean G_shrubbot_pop( gentity_t *ent, int skiparg )
 				 (vic->client->ps.eFlags & EF_HEADSHOT))
 				continue;
 			// tjw: actually take of the players helmet instead of
-			//      giving all players an unlimited supply of 
+			//      giving all players an unlimited supply of
 			//      helmets.
 			vic->client->ps.eFlags |= EF_HEADSHOT;
 			G_AddEvent( vic, EV_LOSE_HAT, DirToByte(dir) );
@@ -3394,7 +3394,7 @@ qboolean G_shrubbot_pop( gentity_t *ent, int skiparg )
 				continue;
 			}
 			G_AddEvent( vic, EV_LOSE_HAT, DirToByte(dir) );
-			AP(va("chat \"^/pop: ^7%s ^7lost his hat\" -1", 
+			AP(va("chat \"^/pop: ^7%s ^7lost his hat\" -1",
 				vic->client->pers.netname));
 		}
 		return qtrue;
@@ -3414,9 +3414,9 @@ qboolean G_shrubbot_pop( gentity_t *ent, int skiparg )
 		SPC("^/pop: ^7player must be on a team to be popped");
 		return qfalse;
 	}
-	
+
 	G_AddEvent( vic, EV_LOSE_HAT, DirToByte(dir) );
-	AP(va("chat \"^/pop: ^7%s ^7lost his hat\" -1", 
+	AP(va("chat \"^/pop: ^7%s ^7lost his hat\" -1",
 			vic->client->pers.netname));
 	return qtrue;
 }
@@ -3468,12 +3468,12 @@ qboolean G_shrubbot_pip( gentity_t *ent, int skiparg )
 			if(!(vic->client->sess.sessionTeam == TEAM_AXIS ||
 		 		vic->client->sess.sessionTeam == TEAM_ALLIES)) {
 				SPC(va("^/pip: ^7%s^7 must be on a team"
-					" to be pipped", 
+					" to be pipped",
 					vic->client->pers.netname));
 				continue;
 			}
 			G_MakePip( vic );
-			AP(va("chat \"^/pip: ^7%s ^7was pipped\" -1", 
+			AP(va("chat \"^/pip: ^7%s ^7was pipped\" -1",
 					vic->client->pers.netname));
 		}
 		return qtrue;
@@ -3493,7 +3493,7 @@ qboolean G_shrubbot_pip( gentity_t *ent, int skiparg )
 		SPC("^/pip: ^7player must be on a team to be pipped");
 		return qfalse;
 	}
-	
+
 	G_MakePip( vic );
 	AP(va("chat \"^/pip: ^7%s ^7was pipped\" -1", vic->client->pers.netname));
 	return qtrue;
@@ -3565,7 +3565,7 @@ qboolean G_shrubbot_fling(gentity_t *ent, int skiparg)
 		SPC(va("^/%s usage: ^7!%s [name|slot#]", flingCmd, flingCmd));
 		return qfalse;
 	}
-	Q_SayArgv(1+skiparg, name, sizeof(name)); 
+	Q_SayArgv(1+skiparg, name, sizeof(name));
 
 	if( doAll ) {
 		for( i = 0; i < level.numConnectedClients; i++ ) {
@@ -3575,7 +3575,7 @@ qboolean G_shrubbot_fling(gentity_t *ent, int skiparg)
 				continue;
 			count += G_FlingClient( vic, flingType );
 		}
-		AP(va("chat \"^/%s: ^7%d players %s\" -1", 
+		AP(va("chat \"^/%s: ^7%d players %s\" -1",
 					flingCmd, count, pastTense));
 		return qtrue;
 	}
@@ -3588,7 +3588,7 @@ qboolean G_shrubbot_fling(gentity_t *ent, int skiparg)
 				continue;
 			count += G_FlingClient( vic, flingType );
 		}
-		AP(va("chat \"^/%s: ^7%d players %s\" -1", 
+		AP(va("chat \"^/%s: ^7%d players %s\" -1",
 					flingCmd, count, pastTense));
 		return qtrue;
 	} else if(pcount < 1) {
@@ -3607,11 +3607,11 @@ qboolean G_shrubbot_fling(gentity_t *ent, int skiparg)
 			" commands",flingCmd));
         return qfalse;
     }
-	
+
 	if(G_FlingClient( vic, flingType ))
-		AP(va("chat \"^/%s: ^7%s ^7was %s\" -1", 
+		AP(va("chat \"^/%s: ^7%s ^7was %s\" -1",
 				flingCmd,
-				vic->client->pers.netname, 
+				vic->client->pers.netname,
 				pastTense));
 	return qtrue;
 }
@@ -3660,7 +3660,7 @@ qboolean G_shrubbot_disorient(gentity_t *ent, int skiparg)
 	AP(va("chat \"^/disorient: ^7%s ^7is disoriented\" -1",
 			vic->client->pers.netname));
 
-	CPx(pids[0], va("cp \"%s ^7disoriented you%s%s\"", 
+	CPx(pids[0], va("cp \"%s ^7disoriented you%s%s\"",
 			(ent?ent->client->pers.netname:"^3SERVER CONSOLE"),
 			(*reason) ? " because:\n" : "",
 			(*reason) ? reason : ""));
@@ -3700,12 +3700,12 @@ qboolean G_shrubbot_orient(gentity_t *ent, int skiparg)
 	AP(va("chat \"^/orient: ^7%s ^7is no longer disoriented\" -1",
 			vic->client->pers.netname));
 
-	CPx(pids[0], va("cp \"%s ^7oriented you\"", 
+	CPx(pids[0], va("cp \"%s ^7oriented you\"",
 			(ent?ent->client->pers.netname:"^3SERVER CONSOLE")));
 	return qtrue;
 }
 
-qboolean G_shrubbot_resetxp(gentity_t *ent, int skiparg) 
+qboolean G_shrubbot_resetxp(gentity_t *ent, int skiparg)
 {
 	int pids[MAX_CLIENTS];
 	char name[MAX_NAME_LENGTH], err[MAX_STRING_CHARS];
@@ -3743,7 +3743,7 @@ qboolean G_shrubbot_resetxp(gentity_t *ent, int skiparg)
 	if(ent && (ent - g_entities) == pids[0])
 		return qtrue;
 
-	CPx(pids[0], va("cp \"%s^7 has reset your XP %s%s\"", 
+	CPx(pids[0], va("cp \"%s^7 has reset your XP %s%s\"",
 			(ent?ent->client->pers.netname:"^3SERVER CONSOLE"),
 			(*reason) ? " because:\n" : "",
 			(*reason) ? reason : ""));
@@ -3773,7 +3773,7 @@ qboolean G_shrubbot_nextmap(gentity_t *ent, int skiparg)
 			G_xpsave_readconfig();
 			G_AddSpreeRecord();
 			G_xpsave_writeconfig();
-		}	
+		}
 	}
 	G_reset_disconnects();
 
@@ -3788,7 +3788,7 @@ qboolean G_shrubbot_nextmap(gentity_t *ent, int skiparg)
 			AP("cp \"^3*** Loading next map in campaign! ***\n\"");
 		} else {
 			// Load in the nextcampaign
-			trap_SendConsoleCommand(EXEC_APPEND, 
+			trap_SendConsoleCommand(EXEC_APPEND,
 					"vstr nextcampaign\n");
 			AP("cp \"^3*** Loading nextcampaign! ***\n\"");
 		}
@@ -3860,7 +3860,7 @@ WAR(sniper)
 // riflewar command
 WAR(rifle)
 
-qboolean G_shrubbot_resetmyxp(gentity_t *ent, int skiparg) 
+qboolean G_shrubbot_resetmyxp(gentity_t *ent, int skiparg)
 {
 	int chargebar;
 
@@ -3889,7 +3889,7 @@ qboolean G_shrubbot_userinfo(gentity_t *ent, int skiparg)
 		SPC("^/userinfo usage: ^7!userinfo [name|slot#]");
 		return qfalse;
 	}
-	Q_SayArgv(1+skiparg, name, sizeof(name)); 
+	Q_SayArgv(1+skiparg, name, sizeof(name));
 
 	if(ClientNumbersFromString(name, pids) != 1) {
 		G_MatchOnePlayer(pids, err, sizeof(err));
@@ -3910,11 +3910,11 @@ qboolean G_shrubbot_userinfo(gentity_t *ent, int skiparg)
 	SPC(va("^/Userinfo of user ^7%s", vic->client->pers.netname));
 	SPC(va("^/Slot Number: ^d%i    ^/ETPub Client: ^d%s",vic-g_entities, (vic->r.svFlags & SVF_BOT)?
 		"Bot" : (vic->client->pers.etpubc > 0)? va("%i",vic->client->pers.etpubc):"No"));
-	
+
 	trap_GetUserinfo( vic-g_entities, userinfo, sizeof( userinfo ) );
 	temp = Info_ValueForKey(userinfo, "cl_guid");
 	Q_strncpyz(guid, temp, sizeof(guid));
-	
+
 	if(!Q_stricmp(vic->client->sess.guid, guid)){
 		for(i=0; i<=8; i++){
 			guid_short[i] = guid[i+24] ? guid[i+24] : '\0';
@@ -3935,7 +3935,7 @@ qboolean G_shrubbot_userinfo(gentity_t *ent, int skiparg)
 	}
 
 	temp = Info_ValueForKey(userinfo, "ip");
-	
+
 	if(!Q_stricmp(vic->client->sess.ip, temp)){
 		SPC(va("^/IP: ^d%s",temp ? temp : "Unknown"));
 	}else{
@@ -3947,7 +3947,7 @@ qboolean G_shrubbot_userinfo(gentity_t *ent, int skiparg)
 	return qtrue;
 }
 
-qboolean G_shrubbot_stats(gentity_t *ent, int skiparg) 
+qboolean G_shrubbot_stats(gentity_t *ent, int skiparg)
 {
 	int i, length = 4, spaces = 0;
 	gclient_t *p;
@@ -3962,7 +3962,7 @@ qboolean G_shrubbot_stats(gentity_t *ent, int skiparg)
 
 	SBP_begin();
 	SBP("^fstats: showing ^5Thompson ^fand ^5MP40 ^fstats of all connected players\n");
-	
+
 	// Dens: first find the longest name
 	for(i=0; i < level.maxclients; i++) {
 		p = &level.clients[i];
@@ -3970,19 +3970,19 @@ qboolean G_shrubbot_stats(gentity_t *ent, int skiparg)
 			p->pers.connected != CON_CONNECTED) {
 			continue;
 		}
-	
+
 		DecolorString(p->pers.netname, tmp);
 		if(strlen(tmp) > length){
 			length = strlen(tmp);
 		}
 	}
-	
+
 	Com_sprintf(fmt, sizeof(fmt),
 		"^5%%%is SHOTS  HITS   ACC  HEAD    HR    DIST\n",
 		length);
-	
+
 	SBP(va(fmt, "NAME"));
-	
+
 	for(i=0; i < level.maxclients; i++) {
 		p = &level.clients[i];
 		if(p->pers.connected == CON_CONNECTING ||
@@ -4021,7 +4021,7 @@ qboolean G_shrubbot_stats(gentity_t *ent, int skiparg)
 		if(headshots > 0){
 			distance = (float) (p->pers.headshotDistance / headshots);
 		}
-		
+
 		// Dens: Now check if we have a good player (or a cheater of course)
 		if(accuracy >= 40.0){
 			colorAcc = '1';
@@ -4043,7 +4043,7 @@ qboolean G_shrubbot_stats(gentity_t *ent, int skiparg)
 		spaces = length - strlen(tmp);
 		Com_sprintf(name_fmt, sizeof(name_fmt), "%%%is", spaces + strlen(p->pers.netname));
 		Com_sprintf(name, sizeof(name), name_fmt, p->pers.netname);
-		
+
 		SBP(va("^7%s ^2%5i %5i ^%c%5.1f ^2%5i ^%c%5.1f ^2%7.1f\n",
 			name,
 			shots,
@@ -4069,7 +4069,7 @@ qboolean G_shrubbot_spreerecord(gentity_t *ent, int skiparg)
  * This function facilitates the SP define.  SP() is similar to CP except that
  * it prints the message to the server console if ent is not defined.
  */
-void G_shrubbot_print(gentity_t *ent, char *m) 
+void G_shrubbot_print(gentity_t *ent, char *m)
 {
 
 	if(ent) CP(va("print \"%s\"", m));
@@ -4086,7 +4086,7 @@ chat and console area of the client instead of console only. (If you want to
 switch from SP to SPC, you need to remove the \n at the end, otherwise the text
 isn't displayed right).
 */
-void G_shrubbot_print_chat(gentity_t *ent, char *m) 
+void G_shrubbot_print_chat(gentity_t *ent, char *m)
 {
 	char temp[MAX_STRING_CHARS], *p, *s;
 
@@ -4099,7 +4099,7 @@ void G_shrubbot_print_chat(gentity_t *ent, char *m)
 				CP(va("chat \"%s\" -1", s));
 				s = p;
 			} else {
-				p++; 
+				p++;
 			}
 		}
 		CP(va("chat \"%s\" -1", s));
@@ -4110,14 +4110,14 @@ void G_shrubbot_print_chat(gentity_t *ent, char *m)
 	}
 }
 
-void G_shrubbot_buffer_begin() 
+void G_shrubbot_buffer_begin()
 {
 	bigTextBuffer[0] = '\0';
 }
 
-void G_shrubbot_buffer_end(gentity_t *ent) 
+void G_shrubbot_buffer_end(gentity_t *ent)
 {
-	SP(bigTextBuffer);	
+	SP(bigTextBuffer);
 }
 
 void G_shrubbot_buffer_print(gentity_t *ent, char *m)
@@ -4140,7 +4140,7 @@ void G_shrubbot_buffer_print(gentity_t *ent, char *m)
 		}
 		Q_strcat(bigTextBuffer, sizeof(bigTextBuffer), m2);
 	} else {
-		// tjw: 1022 - strlen("print 64 \"\"") - 1 
+		// tjw: 1022 - strlen("print 64 \"\"") - 1
 		if(strlen(m) + strlen(bigTextBuffer) >= 1009) {
 			SP(bigTextBuffer);
 			bigTextBuffer[0] = '\0';
