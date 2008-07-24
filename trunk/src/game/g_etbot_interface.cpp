@@ -2045,10 +2045,17 @@ public:
 		else if(_input.m_ButtonFlags.CheckFlag(BOT_BUTTON_LEANRIGHT))
 			cmd.wbuttons |= WBUTTON_LEANRIGHT;
 
-		if(_input.m_ButtonFlags.CheckFlag(BOT_BUTTON_RELOAD))
+		if(bot->client->ps.weaponstate == WEAPON_DROPPING_TORELOAD ||
+			bot->client->ps.weaponstate == WEAPON_RELOADING ||
+			bot->client->ps.weaponstate == WEAPON_RAISING_TORELOAD)
+		{
+			// keep the same weapon while reloading
+			cmd.weapon = bot->client->ps.weapon;
+		}
+		else if(_input.m_ButtonFlags.CheckFlag(BOT_BUTTON_RELOAD))
 		{
 			// watch for gpg40 and m7 as these need to be switched for reloading
-			switch(_input.m_CurrentWeapon)
+			/*switch(_input.m_CurrentWeapon)
 			{
 			case ET_WP_GPG40:
 				cmd.weapon = _weaponBotToGame(ET_WP_KAR98);
@@ -2066,9 +2073,10 @@ public:
 				cmd.weapon = _weaponBotToGame(ET_WP_K43);
 				break;
 			default:
+				break;
+			}*/
 				cmd.wbuttons |= WBUTTON_RELOAD;
 			}
-		}
 
 		// don't process view angles and moving stuff when dead
 		if(bot->client->ps.pm_type >= PM_DEAD || bot->client->ps.pm_flags & (PMF_LIMBO|PMF_TIME_LOCKPLAYER))
@@ -2876,8 +2884,8 @@ public:
 
 			if(pEnt->s.eType == ET_CONSTRUCTIBLE)
 			{
-				gentity_t *pAxis = G_ConstructionForTeam(pEnt->parent, TEAM_AXIS);
-				gentity_t *pAlly = G_ConstructionForTeam(pEnt->parent, TEAM_ALLIES);
+				gentity_t *pAxis = G_ConstructionForTeam(pEnt->parent?pEnt->parent:pEnt, TEAM_AXIS);
+				gentity_t *pAlly = G_ConstructionForTeam(pEnt->parent?pEnt->parent:pEnt, TEAM_ALLIES);
 				if(pAxis /*&& pAxis->entstate == STATE_DEFAULT*/)
 					pEnt = pAxis;
 				else if(pAlly /*&& pAlly->entstate == STATE_DEFAULT*/)
@@ -3450,6 +3458,7 @@ public:
 				continue;
 
 			GameEntity ge = HandleFromEntity(&g_entities[i]);
+			
 			info.m_Players[i].m_Team = GetEntityTeam(ge);
 			info.m_Players[i].m_Class = GetEntityClass(ge);
 			info.m_Players[i].m_Controller = IsBot(&g_entities[i])?
