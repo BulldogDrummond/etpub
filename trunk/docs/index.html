@@ -48,7 +48,7 @@ dt {
 <tr>
 <td><a href="#g_spawnInvulFair">g_spawnInvulFair</a></td>
 <td><a href="#g_chargeType">g_chargeType</a></td>
-<td>&nbsp;</td>
+<td><a href="#g_flushItems">g_flushItems</a></td>
 <td>&nbsp;</td>
 </tr>
 </table>
@@ -106,7 +106,7 @@ have punkbuster enabled on your server.</p>
 <a name="g_logAdmin"></a>
 <dt>g_logAdmin [filename]
 <dd>
-<p>The name of the file that all shrubbot commands will be logged to.  For example, 
+<p>The name of the file that all shrubbot commands will be logged to.  For example,
 <pre>g_logAdmin "admin.log"</pre></p>
 <p>Default is "" (no log file)</p>
 
@@ -417,10 +417,10 @@ bitflags are supported:</p>
 
 	<dt>64
 	<dd>Do not decay a player's <b>Battle Sense</b> XP when he/she is
-            playing. 
+            playing.
 	<dt>128
 	<dd>Do not decay a player's <b>Light Weapons</b> XP when he/she is
-            playing.  
+            playing.
 	</dl>
 <p>See also <a href="#g_XPDecayRate">g_XPDecayRate</a>.</p>
 <p>This feature was created in response to the g_XPSave 4 flag which allows
@@ -430,10 +430,10 @@ XP to continue building forever.</p>
 <a name="g_XPDecayRate">
 <dt>g_XPDecayRate [float]
 <dd>
-<p>This is the rate (in skillpoints per second) that XP skill points for each 
+<p>This is the rate (in skillpoints per second) that XP skill points for each
 skill will decay when <a href="#g_XPDecay">g_XPDecay</a> is enabled.</p>
 
-<p>Setting this to 0.1 would result in a player losing 6 points per minute IN ALL 
+<p>Setting this to 0.1 would result in a player losing 6 points per minute IN ALL
 SKILLS, so up to 42XP per minute if the player has skill points for each skill.</p>
 
 <p>Starting with 0.8.1, you can use a modifier for this value.  Here are some examples:</p>
@@ -444,7 +444,7 @@ set g_xpDecayRate "500/d" - Decay 500xp per skill per day<br />
 set g_xpDecayRate "40/h" - Decay 40xp per skill per hour<br />
 set g_xpDecayRate "2/m" - Decay 2xp per skill per minute
 </p>
- 
+
 <p>Default is 0.0</p>
 
 <a name="g_XPDecayFloor">
@@ -503,12 +503,12 @@ a player has done to the opposing team.</p>
 	<dt>1
 	<dd>1 point of XP is awarded per g_damageXPLevel points of damage done.
 	The XP is placed in the skill category of the weapon used.
-	When this mode is enabled, kills (regardless of method) are awarded 
+	When this mode is enabled, kills (regardless of method) are awarded
 	a fixed value of 1 point of XP.
 
 	<dt>2
 	<dd>1 point of XP is awarded per g_damageXPLevel points of damage done.
-	The XP is placed in the Battle Sense category.  
+	The XP is placed in the Battle Sense category.
 	Normal XP amounts are awarded for kills (typically 3-5 XP).
 	</dl>
 <p>Default is 0</p>
@@ -550,9 +550,9 @@ Sense)
 <dd>balance the clip size between the allies and axis rifles. allied rifles
 get same clip sizes and max ammo as the k43.
 <dt> 1024
-<dd>creates a hitbox for mortar shells.  This reduces (or eliminates   
-in some cases) the ability to fire mortars through smaller   
-windows and bunker slits. 
+<dd>creates a hitbox for mortar shells.  This reduces (or eliminates
+in some cases) the ability to fire mortars through smaller
+windows and bunker slits.
 <dt> 2048
 <dd> Knifes will always gib a body (not a player, use
 <a href="#g_dmgKnife">g_dmgKnife</a> instead if you want that)
@@ -741,7 +741,7 @@ which player to move.
 	stack team numbers on purpose to even out the teams unless g_ATB_swap is
 	set.
 	<p>
-	Note: Read 
+	Note: Read
 	<a href="#g_teamForceBalance_playerrating">g_teamForceBalance_playerrating</a>
 	carefully also. You probably don't want to turn option 2 on until after
 	running your server long enough to learn map and player stats.
@@ -877,11 +877,11 @@ have their second flamethrower when there are 20 players on the team.</p>
 <p>When a new map starts, load the map specific config file named [mapname].cfg in the folder [string].  For example if you set g_mapConfigs to 'mapcfg', when the map fueldump starts, the server will try to exec 'mapcfg/fueldump.cfg'.</p>
 <p>Set this to "" to disable it.</p>
 <p>Set this to "." to look for the cfg file in the current directory (fs_home_path).</p>
-<p>When in g_gametype 6 mode (Map Voting) and 
+<p>When in g_gametype 6 mode (Map Voting) and
 <a href="#g_resetXPMapCount">g_resetXPMapCount</a> is set, an additional
 file named vote_<em>X</em>.cfg is also exec'ed. <em>X</em> indicates the
 position of the next map in the campaign.  For example, vote_2.cfg will exec'ed
-such that when map 1 ends, any cvars in vote_2.cfg will affect map voting for 
+such that when map 1 ends, any cvars in vote_2.cfg will affect map voting for
 map 2.</p>
 <p>Default is ""</p>
 
@@ -1005,7 +1005,7 @@ player names.</p>
 	<dt>8
 	<dd>Auto-mute for g_censorMuteTime [60] seconds.
 	<dt>16
-	<dd>Lose the amount of xp specified in g_censorXP 
+	<dd>Lose the amount of xp specified in g_censorXP
 	<dt>32
 	<dd>Burn
 	</dl>
@@ -1018,7 +1018,7 @@ player names.</p>
 <p>Use Neil Toronto's censor filter. It'll catch some symbol and number replacements,
 and spaces now. It also adds some common words and common words with "swears" in them
 that should really be OK. For example, it will not censor "assassin" but it will
-censor "ass".  
+censor "ass".
 </p>
 <p>Default is 0</p>
 
@@ -1105,7 +1105,7 @@ to use the unmodified hitboxes from etmain.
     Requires <a href="#g_weapons">g_weapons 64</a> to be set.
     (etpubclient >= 20050927 required)
 <dt>4
-<dd>When a player is killed he'll see the HP the killer has left (as a centerprint) 
+<dd>When a player is killed he'll see the HP the killer has left (as a centerprint)
 <dt>8
 <dd>Disable self damage
 <dt>16
@@ -1129,7 +1129,7 @@ to use the unmodified hitboxes from etmain.
 
 <p><b>Imporant note:</b> in etpub 0.8.1 the flags 256, 512 and 1024 were added, because some
 server admins had problems with the collision boxes. Enabling 256 and 1024 might bring
-back some old prone bugs, so use them at own risk. See <a 
+back some old prone bugs, so use them at own risk. See <a
 href="http://etpub.org/e107_plugins/forum/forum_viewtopic.php?11646"> this topic</a> for
 more information.<p>
 
@@ -1309,7 +1309,7 @@ g_maxSelfkills</a>
 <dd>
 <p>Amount of times a player can use /kill per map.</p>
 <p>Setting this to -1 will result in normal behaviour (infinite selfkills).</p>
-<p>Setting this to 0 will disable /kill.</p> 
+<p>Setting this to 0 will disable /kill.</p>
 <p>Default is -1</p>
 
 <a name="g_ammoCabinetTime"></a>
@@ -1364,8 +1364,8 @@ their behavior.  Currently supported flags include:</p>
             weapons skill
 	<dt>32
 	<dd>Medics spawn with pistol only, and can't pick up SMG of either team
-            However, any class can steal a medics uni, if g_classChange is 
-            set to 1, and receive the medic benefits while retaining their 
+            However, any class can steal a medics uni, if g_classChange is
+            set to 1, and receive the medic benefits while retaining their
             current weapons, including akimbos and SMG
 	<dt>64
 	<dd>Medics can use syringes to heal living teammates as an alternative
@@ -1607,7 +1607,7 @@ Here are the bitflag options:</p>
 	    overall.
 	<dt>4
 	<dd>Log files will include the GUIDs of the players involved in kills. This makes
-            kill tracking a lot easier. 
+            kill tracking a lot easier.
 	</dl>
 <p>
 NOTE: in 0.5.x there was a 4 flag that allowed killRating to be used for
@@ -2037,7 +2037,7 @@ how much the engineer built.</p>
 <dd>
 <p>The pattern of the drawn panzers.  This is a string of &quot;bits&quot; that represents where  the
 panzers shots are aimed.  The default value of &quot;10001,01010,00100,01010,10001&quot; means there
-are five rows of panzers fired (rows are separated by the comma (,) character), and an X pattern 
+are five rows of panzers fired (rows are separated by the comma (,) character), and an X pattern
 is drawn as &quot;1&quot; represents a panzer and &quot;0&quot; represents a space without a panzer.</p>
 <p>There is no limit to the number of panzers that can be shot, although too many panzers will cause
 extreme lag on the server.</p>
@@ -2099,7 +2099,7 @@ party panzers).</p>
 </p>
 <p>
 This code was originally from ETPro (b_realhead).  It was contributed by zinx
-and added to etpub by forty. 
+and added to etpub by forty.
 </p>
 <p>Default is 1</p>
 
@@ -2112,7 +2112,7 @@ and added to etpub by forty.
 	<dt>1
 	<dd>Sudden Death Dynamites enabled. If there is 30 seconds or less on the clock and dynamite is planted on an objective,
 		the clock will continue to run past zero. The match will not end until the dynamite either explodes, or is disarmed.
-		You are not allowed to plant additional dynamite during sudden death. 
+		You are not allowed to plant additional dynamite during sudden death.
 	<dt>2
 	<dd>Dynamite chaining enabled. Dynamite will cause other similar dynamites to explode when exploding. Dynamites not
 		planted on an objective will blow any other dynamite not on an objective. Dynamite planted on an objective will
@@ -2362,15 +2362,15 @@ will follow normal ET behavior (can do damage, but to a
 	<dd>Use bullet fall-off approximations when computing shot trajectory.
 
 	<dt>16
-	<dd>Improve accuracy of non-scoped single-shot rifles  
+	<dd>Improve accuracy of non-scoped single-shot rifles
 
 	<dt>32
-	<dd>Use alternate bullet-spread characteristics for   
-		automatic or rapid-fire weapons.  
-	
+	<dd>Use alternate bullet-spread characteristics for
+		automatic or rapid-fire weapons.
+
 	<dt>64
-	<dd>Damage from players who are spectators or have disconnected   
-		is ignored, and XP is not awarded.  
+	<dd>Damage from players who are spectators or have disconnected
+		is ignored, and XP is not awarded.
 
 	</dl>
 <p>Default is 0</p>
@@ -2378,13 +2378,13 @@ will follow normal ET behavior (can do damage, but to a
 <a name="g_dmgHeadShotMin"></a>
 <dt>g_dmgHeadShotMin [Integer]
 <dd>
-<p>This represents the minimum damage done by a headshot  
+<p>This represents the minimum damage done by a headshot
 regardless of the weapon used to make the shot.</p>
-<p>Headshots that would do damage below this value will be  
+<p>Headshots that would do damage below this value will be
 adjusted upward to equal g_dmgHeadshotMin.</p>
-<p>Headshots from a weapon with damage at or above this value   
+<p>Headshots from a weapon with damage at or above this value
 will do a multiple of their damage, as specified by g_dmgHeadShotRatio.</p>
-<p>(The actual damage may undergo additional modification  
+<p>(The actual damage may undergo additional modification
 due to range and other conditions)</p>
 <p>Default is 50</p>
 
@@ -2396,12 +2396,12 @@ damage ABOVE g_dmgHeadShotMin.</p>
 <p>Default is 2.0</p>
 
 <a name="g_reflectFriendlyFire"></a>
-<dt>g_reflectFriendlyFire [float]  
+<dt>g_reflectFriendlyFire [float]
 <dd>
-<p>Similar to Shrub's g_friendlyfire 2 cvar.</p>  
-<p>A multiplier value that determines how much friendly-fire damage,   
-if any, is reflected back to the player that caused the damage.  
-This setting is independent of g_friendlyfire, so damage can be   
+<p>Similar to Shrub's g_friendlyfire 2 cvar.</p>
+<p>A multiplier value that determines how much friendly-fire damage,
+if any, is reflected back to the player that caused the damage.
+This setting is independent of g_friendlyfire, so damage can be
 set to reflect on both FF and non-FF servers.</p>
 <p>A value of 1.0 would reflect full damage.<br />
 A value of 0.5 would reflect half damage.<br />
@@ -2466,8 +2466,8 @@ team_maxCovertOps [string]</dt>
 <dd>
 <p>Restricts the number of players that can play a specific class / team.
 You can either set it to a whole number to set a hard limit, or you can set
-it to a percentage value using the % symbol to limit based on the number of 
-players on the team. When using percentage values, any partial values are 
+it to a percentage value using the % symbol to limit based on the number of
+players on the team. When using percentage values, any partial values are
 rounded <strong>up</strong></p>
 <p>Starting with etpub 0.8.1, you can use a number such as "20%-" for this setting,
 in which case partial values will be rounded <strong>down</strong></p>
@@ -2619,9 +2619,9 @@ when g_floodprotect is turned on.</p>
 <a name="g_floodWait"></a>
 <dt>g_floodWait [integer]
 <dd>
-<p>The minimum number of milliseconds between two messages when g_floodprotect is enabled. 
-This is a hard limit so admins aren't allowed to override it. 1000 milliseconds copies 
-sv_floodprotect behaviour. This CVAR should not have a value below 500 in order to keep 
+<p>The minimum number of milliseconds between two messages when g_floodprotect is enabled.
+This is a hard limit so admins aren't allowed to override it. 1000 milliseconds copies
+sv_floodprotect behaviour. This CVAR should not have a value below 500 in order to keep
 a public server playable.</p>
 <p>Default is 1000</p>
 </dd>
@@ -2642,7 +2642,7 @@ a public server playable.</p>
             spectators connected and not voting, the next map will not load until
             those spectators either vote, disconnect, or get kicked by the system)
 	<dt>4
-	<dd>Multi vote:  Allows everybody to vote for 3 maps instead of one, first 
+	<dd>Multi vote:  Allows everybody to vote for 3 maps instead of one, first
             choice map gets 3 votes, second choice gets 2, third choice gets one
 	<dt>8
 	<dd>Don't randomize the maps, so they will always appear in the same order
@@ -2672,8 +2672,8 @@ a public server playable.</p>
 <a name="g_resetXPMapCount"></a>
 <dt>g_resetXPMapCount [integer]
 <dd>
-<p>How many maps occur before XP is reset. If g_XPSave flag 4 is set, 
-g_resetXPMapCount is ignored.  Similarly, if g_resetXPMapCount is 
+<p>How many maps occur before XP is reset. If g_XPSave flag 4 is set,
+g_resetXPMapCount is ignored.  Similarly, if g_resetXPMapCount is
 set to 0, it is the same as setting g_XPSave flag 4
 <br>Only valid when g_gametype is 6 (see <a href="#mapvoting">Map Voting</a>)</p>
 <p>Default is 0</p>
@@ -2697,7 +2697,7 @@ When set to 0 everyone can connect.</p>
 <p>Default is 0</p>
 
 <a name="omnibot_enable"></a>
-<dt>omnibot_enable [1|0]
+<dt>omnibot_enable [0|1]
 <dd>
 <p>When set to 1, OmniBot functionality is enabled.  You still need to have
 OmniBots installed correctly in order for OmniBots to work.</p>
@@ -2739,7 +2739,7 @@ Once there are g_bot_minPlayers human players playing on the server there will b
 <p>Default is -1</p>
 
 <a name="omnibot_flags"></a>
-<dt>omnibot_flags [bitmap]
+<dt>omnibot_flags [bitmask]
 <dd>
 <p><font color="RED">This CVAR replaces the old g_bot_flags CVAR</font></p>
 <p>Customizes bot management/behavior</p>
@@ -2775,7 +2775,7 @@ players when team numbers are off by g_unevenTeamDiff or more.  See also
 <a name="g_unevenTeamFreq"></a>
 <dt>g_unevenTeamFreq [integer]
 <dd>
-<p>How often the team disparity notification occurs.  Only valid when 
+<p>How often the team disparity notification occurs.  Only valid when
 g_unevenTeamDiff is set to a positive value.  Value is in seconds.</p>
 <p>See also <a href="#g_unevenTeamDiff">g_unevenTeamDiff</a></p>
 <p>Default is 30</p>
@@ -2811,7 +2811,7 @@ g_unevenTeamDiff is set to a positive value.  Value is in seconds.</p>
 <dt>g_spreeOptions [bitmask]
 <dd>
 <p>A few options to control the display of killingsprees. Note that the flags
-1, 2 and 4 are just made for fast enabling / disabling and still require a 
+1, 2 and 4 are just made for fast enabling / disabling and still require a
 <a href="#g_settings">g_settings</a> file.</p>
 	<dl>
 	<dt>1
@@ -2822,7 +2822,7 @@ g_unevenTeamDiff is set to a positive value.  Value is in seconds.</p>
 	<dd>Enable multikills ([kill] blocks)
 	<dt>8
 	<dd>When set, a top 3 current killing sprees message will be printed every minute,
-		similar to binoc masters, and a map's longest killing spree will be 
+		similar to binoc masters, and a map's longest killing spree will be
 		printed every two minutes
 	<dt>16
 	<dd>At the beginning of the intermission the highest spree and the 3 highest sprees
@@ -2849,7 +2849,7 @@ g_unevenTeamDiff is set to a positive value.  Value is in seconds.</p>
 		flag as it takes some extra resources. When XPSave flag 16 is set this doesn't matter (it
 		actually takes much less resources then). When only g_spreeOptions flag 512 or shrubbot
 		flag t is set it won't do much harm anyway (your server won't explode)
-		
+
 	</dl>
 <p>Default is 0</p>
 </dd>
@@ -2952,7 +2952,7 @@ own risk</p>
 <p>Default is 0</p>
 
 <a name="g_fixedphysics"></a>
-<dt>g_fixedphysics [integer]
+<dt>g_fixedphysics [0|1]
 <dd>
 <p>Creates a smoother movement when enabled</p>
 <p>Default is 0</p>
@@ -3015,7 +3015,7 @@ panzerfaust when g_maxPanzerSuicides is enabled</p>
 <a name="g_watermark"></a>
 <dt>g_watermark [string]
 <dd>
-<p>Set a watermark that will be displayed to all clients. This requires an 
+<p>Set a watermark that will be displayed to all clients. This requires an
 ETPubClient >= 20070213. The watermark must be put in a folder named
 "watermark" and then this whole folder needs to be zipped into a .pk3 file</p>
 <p>Default is "" (Disabled)</p>
@@ -3125,25 +3125,25 @@ every map requires an engi for example</p>
 <p>Default is 0</p>
 
 <a name="g_panzerwar"></a>
-<dt>g_panzerwar [integer]
+<dt>g_panzerwar [0|1]
 <dd>
 <p>Enables/Disables Panzerwar. 1 is enabled, 0 is disabled</p>
 <p>Default is 0</p>
 
 <a name="g_sniperwar"></a>
-<dt>g_sniperwar [integer]
+<dt>g_sniperwar [0|1]
 <dd>
 <p>Enables/Disables Sniperwar. 1 is enabled, 0 is disabled</p>
 <p>Default is 0</p>
 
 <a name="g_riflewar"></a>
-<dt>g_riflewar [integer]
+<dt>g_riflewar [0|1]
 <dd>
 <p>Enables/Disables Riflewar. 1 is enabled, 0 is disabled</p>
 <p>Default is 0</p>
 
 <a name="g_customVoiceChats"></a>
-<dt>g_customVoiceChats [integer]
+<dt>g_customVoiceChats [0|1]
 <dd>
 <p>Sets the ability to use custom voice chats
 example: vsay hi Hey, how are you doing
@@ -3152,13 +3152,14 @@ will write on the screen Hey, how are you doing, and also plays the voicechat 'h
 <p>Default is 1</p>
 
 <a name="g_countryFlags"></a>
-<dt>g_countryFlags [integer]
+<dt>g_countryFlags [0|1]
 <dd>
 <p>Sets whether the players will see the GeoIP country flags in the scoreboard.
 <p>Players can enable/disable it with cg_countryFlags (default 1).</p>
 <p>Note: this requires ETPub client > 20080505. Also, you will need the
 GeoIP.dat file in your server's etpub folder. You can get the latest one at
-http://www.maxmind.com/download/geoip/database/GeoIP.dat.gz</p>
+http://www.maxmind.com/download/geoip/database/GeoIP.dat.gz</p>
+
 <p>Default is 1</p>
 
 <a name="g_noSkillUpgrades"></a>
@@ -3170,7 +3171,7 @@ http://www.maxmind.com/download/geoip/database/GeoIP.dat.gz</p>
 <a name="g_chargeType"></a>
 <dt>g_chargeType [0|1|2]
 <dd>
-<p>Changes the way the charge bar works. Using g_slashKill will take precedence 
+<p>Changes the way the charge bar works. Using g_slashKill will take precedence
 over this setting</p>
 <dl>
 	<dt>0
@@ -3182,6 +3183,12 @@ over this setting</p>
 	independently.
 </dl>
 <p>Default is 2</p>
+
+<a name="g_flushItems"></a>
+<dt>g_flushItems [0|1]
+<dd>
+<p>Evens the dropped items out with the surface.</p>
+<p>Default is 1</p>
 
 <hr>
 <a name="mapvoting"></a>
@@ -3214,7 +3221,7 @@ Miscellaneous notes about mapvoting:
     set d2 "set g_gametype 6 ; map battery ; set nextmap vstr d3"<br>
     set d3 "set g_gametype 6 ; map goldrush ; set nextmap vstr d1"<br>
     vstr d1<br></em>
-    This means that the default map, upon server start, will be oasis.  From there, 
+    This means that the default map, upon server start, will be oasis.  From there,
     map voting will be used.  If at any point, no map is voted for, battery will
     be played, etc
 </ul>
@@ -4292,7 +4299,7 @@ levels   = 5
 [command]
 command  = havefun
 exec     = exec fun.cfg
-desc     = Load up some crazy settings/commands  
+desc     = Load up some crazy settings/commands
 levels   = 5
 
 [command]
@@ -4615,7 +4622,7 @@ their name after they switch teams.
 <li>added vote_allow_maprestart cvar to control the existing maprestart vote.
     etmain client will still show the button in the menu even if it is
     disabled though.
-<li>added <a href="obituaries.html">Custom Obituaries</a>. 
+<li>added <a href="obituaries.html">Custom Obituaries</a>.
 </ul>
 
 </body>

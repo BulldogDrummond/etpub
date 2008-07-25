@@ -1715,7 +1715,7 @@
 * forty:   bacon's dyno counters
 * forty:   #601 - jaguboss's client-side hitbox prediction
 * forty:   #528 - constructible xp sharing - repairing an em placed mg42
-* matt:    g_asblock option (32) added to give 2 XP Battle Sense for blocking 
+* matt:    g_asblock option (32) added to give 2 XP Battle Sense for blocking
            an airstrike.  No XP given for blocking a teammate's or your own
            airstrike
 * forty:   #258 - !spec999 -> notification when 0 users moved to spec
@@ -1796,13 +1796,13 @@
            kicked for 120 secs
 * stephan: changed g_auoTempBan into a bitflag, so teamdamage, !kick and !warn
            tempbans are separated
-* stephan: added g_spreeOptions flag 256: killing bots doesn't count in 
+* stephan: added g_spreeOptions flag 256: killing bots doesn't count in
            sprees/multikills
 * josh:    Turned off threads. They're a pain and not used.
 * josh:    Changed g_teamForceBalance_playerrating to override and allow
            players to enter unfair teams if the numbers are imbalanced.
 * josh:    Made g_ATB 2 event driven so it only runs once per team change, and
-           will not run after a !putteam command. 
+           will not run after a !putteam command.
 * josh:    Made it so ATB will allow unfair teams when numbers balancing if
            numbers are off by more than 2.
 * stephan: added an orange W to !listplayers output, that appears when someone
@@ -1870,7 +1870,7 @@
            way as Reyalp's lua script. Also changed the default g_spoofOptions
            value to 323 because just too many innocent people were getting
            kicked for guidspoofing
-* stephan: added g_dyno flag 16: enable dynamite ID. With ETPubclient >= 
+* stephan: added g_dyno flag 16: enable dynamite ID. With ETPubclient >=
            20070719 you can see the owner of a dynamite when you point at it
 * stephan: added adminchat "/ma". All users with the shrubbot flag ~ and all
            referees can type and read this chat. When a new adminchat message
@@ -1890,7 +1890,7 @@
            enabled
 * stephan: added g_maxPanzerSuicides option -2: always enabled
 * tijmen:  added g_showVoteResults: show the amount of votes per team to
-	   admins (and optionally other clients) 
+	   admins (and optionally other clients)
 	   as requested by ticket #482
 * tijmen:  bugfix: xp now writes when someone uses !nextmap, !restart,
            /callvote maprestart, /callvote nextmap, /callvote map *
@@ -1950,7 +1950,7 @@
            distance to target.
 * josh:    Updated the xpsave.cfg php viewers to reflect KR change.
 * josh:    Major bugfix to new kill rating system. Anyone who started using it
-           already may want to delete distance_rating, distance_variance, and 
+           already may want to delete distance_rating, distance_variance, and
 	   kill_* from their xpsave .cfg.
 * josh:    Fixed etpub_stats.pl to work with new kill rating.
 * stephan: added healthdepending speed cvars g_healthSpeedStart and
@@ -1969,7 +1969,7 @@
 * quad:    backstab works on wounded players (instant gib) by Elf
 * quad:    added panzer/rifle/sniper war by Elf (was missing from the sources)
            also !panzer, !sniper, !riflewar, and !giba, !splat, !splata
-* quad:    added a patch from redeye, with some fixes, greeting sound, 
+* quad:    added a patch from redeye, with some fixes, greeting sound,
            some shrubbot commands, and others.
 * quad:    g_noSkillUpgrades, and the changes yada made to the /ref system
            renamed g_scoreboard_cf to g_countryFlags (and cg_countryFlags too)
@@ -1978,5 +1978,7 @@
            fix for Ticket #10 by RedEye
 * flms:    added g_spawnInvulFair by PCR
 * drevil:  added support for Omni-bot 0.7
+* flms:    allow negative shrubbot levels
 * quad:    added more control over "energy" ( class weapon time ) via cvar
            g_chargeType
+* flms:    added g_flushItems (NQ)

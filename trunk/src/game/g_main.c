@@ -398,7 +398,7 @@ vmCvar_t g_resetXPMapCount;
 
 // forty - min air strike and arty intervals
 vmCvar_t g_minAirstrikeTime;
-vmCvar_t g_minArtyTime; 
+vmCvar_t g_minArtyTime;
 
 // forty - constructible xp sharing
 vmCvar_t g_constructiblexpsharing;
@@ -549,6 +549,9 @@ vmCvar_t g_damageBonusOpts;
 vmCvar_t g_noSkillUpgrades;
 vmCvar_t g_chargeType;
 
+// flms
+vmCvar_t g_flushItems;
+
 vmCvar_t g_countryFlags; //mcwf GeoIP
 
 cvarTable_t		gameCvarTable[] = {
@@ -609,7 +612,7 @@ cvarTable_t		gameCvarTable[] = {
 	{ &g_userTimeLimit, "g_userTimeLimit", "0", 0, 0, qfalse, qtrue },
 	{ &g_userAlliedRespawnTime, "g_userAlliedRespawnTime", "0", 0, 0, qfalse, qtrue },
 	{ &g_userAxisRespawnTime, "g_userAxisRespawnTime", "0", 0, 0, qfalse, qtrue },
-	
+
 	{ &g_swapteams, "g_swapteams", "0", CVAR_ROM, 0, qfalse, qtrue },
 	// -NERVE - SMF
 
@@ -632,7 +635,7 @@ cvarTable_t		gameCvarTable[] = {
 	{ &g_gravity, "g_gravity", "800", 0, 0, qtrue, qtrue },
 	{ &g_knockback, "g_knockback", "1000", 0, 0, qtrue, qtrue },
 	{ &g_quadfactor, "g_quadfactor", "3", 0, 0, qtrue },
-	
+
 	{ &g_needpass, "g_needpass", "0", CVAR_SERVERINFO | CVAR_ROM, 0, qtrue },
 	{ &g_balancedteams, "g_balancedteams", "0", CVAR_SERVERINFO | CVAR_ROM, 0, qtrue },
 	{ &g_forcerespawn, "g_forcerespawn", "0", 0, 0, qtrue },
@@ -752,7 +755,7 @@ cvarTable_t		gameCvarTable[] = {
 //	{ &g_movespeed, "g_movespeed", "127", CVAR_CHEAT, 0, qfalse },
 	{ &g_movespeed, "g_movespeed", "76", CVAR_CHEAT, 0, qfalse },
 
-	// Arnout: LMS	
+	// Arnout: LMS
 	{ &g_lms_teamForceBalance,	"g_lms_teamForceBalance",	"1",	CVAR_ARCHIVE },
 	{ &g_lms_roundlimit,		"g_lms_roundlimit",			"3",	CVAR_ARCHIVE },
 	{ &g_lms_matchlimit,		"g_lms_matchlimit",			"2",	CVAR_ARCHIVE },
@@ -767,7 +770,7 @@ cvarTable_t		gameCvarTable[] = {
 	{ &g_oldCampaign,			"g_oldCampaign",			"",		CVAR_ROM, 0, },
 	{ &g_currentCampaign,		"g_currentCampaign",		"",		CVAR_WOLFINFO | CVAR_ROM, 0, },
 	{ &g_currentCampaignMap,	"g_currentCampaignMap",		"0",	CVAR_WOLFINFO | CVAR_ROM, 0, },
-	
+
 
 #ifdef SAVEGAME_SUPPORT
 	{ &g_reloading, "g_reloading", "0", CVAR_ROM },
@@ -919,7 +922,7 @@ cvarTable_t		gameCvarTable[] = {
 
 	{ &sv_privateClients, "sv_privateClients", "0", CVAR_SYSTEMINFO, 0, qfalse },
 	{ &sv_hostname, "sv_hostname", "0", CVAR_SYSTEMINFO, 0, qfalse },
-	
+
 	// matt
 	{ &g_teamDamageRestriction, "g_teamDamageRestriction", "0", 0 },
 	{ &g_minHits, "g_minHits", "6", 0 },
@@ -954,7 +957,7 @@ cvarTable_t		gameCvarTable[] = {
 
 	// forty - constructible xp sharing
 	{ &g_constructiblexpsharing, "g_constructiblexpsharing", "0", 0},
-	
+
 	// forty - airstrike block
 	{ &g_asblock, "g_asblock", "0", 0 },
 
@@ -973,7 +976,7 @@ cvarTable_t		gameCvarTable[] = {
 	{ &g_panzersVulnerable, "g_panzersVulnerable", "0", 0},
 	{ &g_panzersSpeed, "g_panzersSpeed", "2500", 0},
 	{ &g_panzersGravity, "g_panzersGravity", "0", 0},
-	
+
 	// gabriel - bot admin
 	{ &g_bot_maxXP, "g_bot_maxXP", "-1", 0},
 	{ &g_bot_minPlayers, "g_bot_minPlayers", "-1", 0},
@@ -984,7 +987,7 @@ cvarTable_t		gameCvarTable[] = {
 	// forty - canister kicking
 	{ &g_canisterKick, "g_canisterKick", "0", 0 },
 	{ &g_canisterKickOwner, "g_canisterKickOwner", "0", 0 },
-	
+
 	// perro - tunable weapons
 	{ &g_dmg, "g_dmg", "0", 0 },
 	{ &g_dmgKnife, "g_dmgKnife", "10", 0 },
@@ -1058,10 +1061,10 @@ cvarTable_t		gameCvarTable[] = {
 
 	// Dens: position of greetings
 	{ &g_greetingPos, "g_greetingPos", "0", 0 },
-	
+
 	// Dens: time between two votes
 	{ &g_noVoteTime, "g_noVoteTime", "0", 0 },
-	
+
 	// Dens: settings file
 	{ &g_settings, "g_settings", "", 0, 0 },
 
@@ -1094,13 +1097,16 @@ cvarTable_t		gameCvarTable[] = {
 	// Omni-bot user defined path to load bot library from.
 	{ &g_OmniBotPath, "omnibot_path", "", CVAR_ARCHIVE | CVAR_NORESTART, 0, qfalse },
 	{ &g_OmniBotEnable, "omnibot_enable", "1", CVAR_ARCHIVE | CVAR_SERVERINFO_NOUPDATE | CVAR_NORESTART, 0, qfalse },
-	{ &g_OmniBotPlaying, "omnibot_playing", "0", CVAR_SERVERINFO_NOUPDATE | CVAR_ROM, 0, qfalse },	
-	{ &g_OmniBotFlags, "omnibot_flags", "0", CVAR_ARCHIVE | CVAR_NORESTART, 0, qfalse },	
+	{ &g_OmniBotPlaying, "omnibot_playing", "0", CVAR_SERVERINFO_NOUPDATE | CVAR_ROM, 0, qfalse },
+	{ &g_OmniBotFlags, "omnibot_flags", "0", CVAR_ARCHIVE | CVAR_NORESTART, 0, qfalse },
 	{ &g_OmniBotGib, "g_botGib", "0", CVAR_ARCHIVE, 0, qtrue},
-	
+
 	//quad
 	{ &g_noSkillUpgrades, "g_noSkillUpgrades", "0", 0},
 	{ &g_chargeType, "g_chargeType", "2", 0},
+
+	//flms
+	{ &g_chargeType, "g_flushItems", "1", 0},
 
 };
 
@@ -1254,7 +1260,7 @@ void QDECL G_Error( const char *fmt, ... )_attribute((format(printf,1,2)));
 
 /*
 ==============
-G_CursorHintIgnoreEnt: returns whether the ent should be ignored 
+G_CursorHintIgnoreEnt: returns whether the ent should be ignored
 for cursor hint purpose (because the ent may have the designed content type
 but nevertheless should not display any cursor hint)
 ==============
@@ -1273,7 +1279,7 @@ G_CheckForCursorHints
 
 	traceEnt is the ent hit by the trace, checkEnt is the ent that is being
 	checked against (in case the traceent was an invisible_user or something)
-	
+
 ==============
 */
 
@@ -1301,7 +1307,7 @@ qboolean G_EmplacedGunIsMountable( gentity_t* ent, gentity_t* other ) {
 	if( ent->r.currentOrigin[2] - other->r.currentOrigin[2] >= 40 ) {
 		return qfalse;
 	}
-	
+
 	if( ent->r.currentOrigin[2] - other->r.currentOrigin[2] < 0 ) {
 		return qfalse;
 	}
@@ -1410,7 +1416,7 @@ void G_CheckForCursorHints( gentity_t *ent ) {
 	// reset all
 	hintType	= ps->serverCursorHint		= HINT_NONE;
 	hintVal		= ps->serverCursorHintVal	= 0;
-	
+
 	dist = VectorDistanceSquared( offset, tr->endpos );
 
 	if( zooming ) {
@@ -1473,15 +1479,15 @@ void G_CheckForCursorHints( gentity_t *ent ) {
 		// Show medics a syringe if they can revive someone
 
 		if ( traceEnt->client && traceEnt->client->sess.sessionTeam == ent->client->sess.sessionTeam) {
-			if(ps->stats[ STAT_PLAYER_CLASS ] == PC_MEDIC && 
-				traceEnt->client->ps.pm_type == PM_DEAD && 
-				!(traceEnt->client->ps.pm_flags & PMF_LIMBO) && 
+			if(ps->stats[ STAT_PLAYER_CLASS ] == PC_MEDIC &&
+				traceEnt->client->ps.pm_type == PM_DEAD &&
+				!(traceEnt->client->ps.pm_flags & PMF_LIMBO) &&
 				!(traceEnt->client->ps.eFlags & EF_PLAYDEAD)) {
-					hintDist	= CH_REVIVE_DIST; 
+					hintDist	= CH_REVIVE_DIST;
 					hintType	= HINT_REVIVE;
 			}
 		} else if(traceEnt->client && traceEnt->client->isCivilian) {
-			// xkan, 1/6/2003 - check for civilian, show neutral cursor (no matter which team)		
+			// xkan, 1/6/2003 - check for civilian, show neutral cursor (no matter which team)
 			hintType = HINT_PLYR_NEUTRAL;
 			hintDist = CH_FRIENDLY_DIST;	// far, since this will be used to determine whether to shoot bullet weaps or not
 		}
@@ -1530,17 +1536,17 @@ void G_CheckForCursorHints( gentity_t *ent ) {
 			// I'm making this into a switch in a vain attempt to make this readable so I can find which
 			// brackets don't match!!!
 			//
-			// tjw: OO programming won't help those who refuse to use 
+			// tjw: OO programming won't help those who refuse to use
 			// procedures and insist on stretching lines and tab depth
-			// into oblivion.  It amazes me how people think that using 
-			// objects are going to magically enable them write readable 
+			// into oblivion.  It amazes me how people think that using
+			// objects are going to magically enable them write readable
 			// code.
 
 			switch (checkEnt->s.eType) {
 				case ET_CORPSE:
 					if( !ent->client->ps.powerups[PW_BLUEFLAG] && !ent->client->ps.powerups[PW_REDFLAG] &&
 						(!ent->client->ps.powerups[PW_OPS_DISGUISED] || g_coverts.integer & COVERT_STEAL_OTHER_UNIFORM)) {
-						if( BODY_TEAM(traceEnt) < 4 && BODY_TEAM(traceEnt) != ent->client->sess.sessionTeam 
+						if( BODY_TEAM(traceEnt) < 4 && BODY_TEAM(traceEnt) != ent->client->sess.sessionTeam
 							&& traceEnt->nextthink == traceEnt->timestamp + BODY_TIME(BODY_TEAM(traceEnt))) {
 							if( ent->client->ps.stats[STAT_PLAYER_CLASS] == PC_COVERTOPS ) {
 								hintDist	= 48;
@@ -1571,7 +1577,7 @@ void G_CheckForCursorHints( gentity_t *ent ) {
 
 					if( G_EmplacedGunIsMountable( traceEnt, ent) ) {
 						hintDist = CH_ACTIVATE_DIST;
-						hintType = HINT_MG42;	
+						hintType = HINT_MG42;
 						hintVal = 0;
 					} else {
 						if( ps->stats[ STAT_PLAYER_CLASS ] == PC_ENGINEER && G_EmplacedGunIsRepairable( traceEnt, ent)) {
@@ -1642,7 +1648,7 @@ void G_CheckForCursorHints( gentity_t *ent ) {
 
 					break;
 				}
-				case ET_CONSTRUCTIBLE:					
+				case ET_CONSTRUCTIBLE:
 					if( G_ConstructionIsPartlyBuilt( checkEnt ) && !(checkEnt->spawnflags & CONSTRUCTIBLE_INVULNERABLE) ) {
 						// only show hint for players who can blow it up
 						if( checkEnt->s.teamNum != ent->client->sess.sessionTeam ) {
@@ -1686,7 +1692,7 @@ void G_CheckForCursorHints( gentity_t *ent ) {
 					}
 					break;
 
-				case ET_ITEM: 
+				case ET_ITEM:
 				{
 					gitem_t* it = &bg_itemlist[checkEnt->item - bg_itemlist];
 
@@ -1717,10 +1723,10 @@ void G_CheckForCursorHints( gentity_t *ent ) {
 								}
 								break;
 							}
-						case IT_AMMO:	
+						case IT_AMMO:
 							hintType = HINT_AMMO;
 							break;
-						case IT_ARMOR:	
+						case IT_ARMOR:
 							hintType = HINT_ARMOR;
 							break;
 						case IT_HOLDABLE:
@@ -1775,11 +1781,11 @@ void G_CheckForCursorHints( gentity_t *ent ) {
 						hintDist = CH_BREAKABLE_DIST*2;
 						hintType = HINT_BREAKABLE;
 					}
-					
+
 					break;
 				case ET_MISSILE:
 				case ET_BOMB:
-					if ( ps->stats[ STAT_PLAYER_CLASS ] == PC_ENGINEER ) 
+					if ( ps->stats[ STAT_PLAYER_CLASS ] == PC_ENGINEER )
 					{
 						hintDist	= CH_BREAKABLE_DIST;
 						hintType	= HINT_DISARM;
@@ -1787,7 +1793,7 @@ void G_CheckForCursorHints( gentity_t *ent ) {
 						if ( hintVal > 255 )
 							hintVal = 255;
 					}
-					
+
 
 					// hint icon specified in entity (and proper contact was made, so hintType was set)
 					// first try the checkent...
@@ -1828,7 +1834,7 @@ void G_CheckForCursorHints( gentity_t *ent ) {
 				}
 			}
 		}
-	} 
+	}
 
 	if( dist <= Square( hintDist )) {
 		ps->serverCursorHint = hintType;
@@ -1867,25 +1873,25 @@ void G_FindTeams( void ) {
 	for ( i=1, e=g_entities+i ; i < level.num_entities ; i++,e++ ){
 		if (!e->inuse)
 			continue;
-		
+
 		if (!e->team)
 			continue;
 
 		if (e->flags & FL_TEAMSLAVE)
 			continue;
-		
+
 		if (!Q_stricmp (e->classname, "func_tramcar"))
 		{
 			if (e->spawnflags & 8) // leader
 			{
 				e->teammaster = e;
 			}
-			else 
+			else
 			{
 				continue;
 			}
 		}
-		
+
 		c++;
 		c2++;
 		for (j=i+1, e2=e+1 ; j < level.num_entities ; j++,e2++)
@@ -1909,11 +1915,11 @@ void G_FindTeams( void ) {
 				{
 					trap_UnlinkEntity (e2);
 				}
-		
+
 				// make sure that targets only point at the master
 				if ( e2->targetname ) {
 					G_SetTargetName( e, e2->targetname );
-					
+
 					// Rafael
 					// note to self: added this because of problems
 					// pertaining to keys and double doors
@@ -1957,10 +1963,10 @@ void G_RegisterCvars( void )
 	for (i=0, cv=gameCvarTable; i<gameCvarTableSize; i++, cv++) {
 
 		if((g_serverInfo.integer & SIF_CHARGE) &&
-			(!Q_stricmp(cv->cvarName, "g_medicChargeTime") ||	
-			!Q_stricmp(cv->cvarName, "g_LTChargeTime") ||	
-			!Q_stricmp(cv->cvarName, "g_engineerChargeTime") ||	
-			!Q_stricmp(cv->cvarName, "g_soldierChargeTime") ||	
+			(!Q_stricmp(cv->cvarName, "g_medicChargeTime") ||
+			!Q_stricmp(cv->cvarName, "g_LTChargeTime") ||
+			!Q_stricmp(cv->cvarName, "g_engineerChargeTime") ||
+			!Q_stricmp(cv->cvarName, "g_soldierChargeTime") ||
 			!Q_stricmp(cv->cvarName, "g_covertopsChargeTime"))) {
 
 			cv->cvarFlags |= CVAR_SERVERINFO;
@@ -1999,8 +2005,8 @@ void G_RegisterCvars( void )
 		trap_Cvar_Register(NULL, "campaign_maps", "",
 			CVAR_SERVERINFO_NOUPDATE);
 	}
-	
-	if((g_gametype.integer == GT_WOLF_CAMPAIGN || 
+
+	if((g_gametype.integer == GT_WOLF_CAMPAIGN ||
 			(g_gametype.integer == GT_WOLF_MAPVOTE &&
 				!(g_XPSave.integer & XPSF_NR_EVER))) &&
 			(g_serverInfo.integer & SIF_C) ) {
@@ -2032,7 +2038,7 @@ void G_RegisterCvars( void )
 	}
 
 	// forty - fixed physics
-	if(g_fixedphysicsfps.integer < 60) 
+	if(g_fixedphysicsfps.integer < 60)
 		trap_Cvar_Set("g_fixedphysicsfps", "60");
 	else if(g_fixedphysicsfps.integer > 333)
 		trap_Cvar_Set("g_fixedphysicsfps", "333");
@@ -2088,17 +2094,17 @@ qboolean G_IsEtpubinfoCvar(vmCvar_t *c)
 		c == &team_maxMortars ||
 		c == &team_maxFlamers ||
 		c == &team_maxMG42s ||
-		c == &team_maxGrenLaunchers || 
+		c == &team_maxGrenLaunchers ||
 		c == &g_hitboxes ||
 		c == &g_skillSoldier ||
-		c == &g_skillMedic || 
+		c == &g_skillMedic ||
 		c == &g_skillEngineer ||
-		c == &g_skillFieldOps|| 
+		c == &g_skillFieldOps||
 		c == &g_skillCovertOps ||
 		c == &g_skillBattleSense ||
 		c == &g_skillLightWeapons
 		);
-		
+
 }
 
 void G_UpdateEtpubinfo(void)
@@ -2107,7 +2113,7 @@ void G_UpdateEtpubinfo(void)
 	cs[0] = '\0';
 
 	Info_SetValueForKey(cs, "etpub", ETPUB_VERSION);
-	Info_SetValueForKey(cs, "g_misc", 
+	Info_SetValueForKey(cs, "g_misc",
 		va("%i", g_misc.integer));
 	Info_SetValueForKey(cs, "g_doubleJumpHeight",
 		va("%f", g_doubleJumpHeight.value));
@@ -2126,8 +2132,8 @@ void G_UpdateEtpubinfo(void)
 	Info_SetValueForKey(cs, "g_killRating",
 		va("%i", g_killRating.integer));
 	Info_SetValueForKey(cs, "mapX",
-		va("%i", 
-			(level.mapsSinceLastXPReset >= g_resetXPMapCount.integer) ? 
+		va("%i",
+			(level.mapsSinceLastXPReset >= g_resetXPMapCount.integer) ?
 			0 : level.mapsSinceLastXPReset));
 	Info_SetValueForKey(cs, "mapY",
 		((g_XPSave.integer & XPSF_NR_EVER) ? "0" :
@@ -2205,7 +2211,7 @@ void G_SniperWar()
     trap_Cvar_Set("g_dmg_garand_scope", "70");
     trap_Cvar_Set("g_dmg_k43_scope", "70");
   } else {
-  	// TODO: Make sure this fits with the g_weapons flag for equalising 
+  	// TODO: Make sure this fits with the g_weapons flag for equalising
   	// the weapon constants.  (quad)
     garand->maxammo = 24;
     k43->maxammo = 30;
@@ -2261,7 +2267,7 @@ void G_UpdateCvars( void )
 	          if(cv->vmCvar == &g_panzerwar) {
             	G_PanzerWar();
           	} else if(cv->vmCvar == &g_sniperwar) {
-            	G_SniperWar();						
+            	G_SniperWar();
           	} else if(cv->vmCvar == &g_riflewar) {
 							G_RifleWar();
 						}
@@ -2302,8 +2308,8 @@ void G_UpdateCvars( void )
 					else if(match_readypercent.integer > 100) trap_Cvar_Set(cv->cvarName, "100");
 				}
 				else if(cv->vmCvar == &g_warmup) {
-					if((g_gamestate.integer == GS_WARMUP_COUNTDOWN || 
-							g_gamestate.integer == GS_WARMUP) 
+					if((g_gamestate.integer == GS_WARMUP_COUNTDOWN ||
+							g_gamestate.integer == GS_WARMUP)
 							&& !G_IsSinglePlayerGame()) {
 						level.warmupTime = level.time + (((g_warmup.integer < 10) ? 11 : g_warmup.integer + 1) * 1000);
 						trap_SetConfigstring(CS_WARMUP, va("%i", level.warmupTime));
@@ -2336,11 +2342,11 @@ void G_UpdateCvars( void )
 						continue;
 					}
 
-					if(!level.latchGametype && g_gamestate.integer == GS_PLAYING && 
-					  ( ( ( g_gametype.integer == GT_WOLF || 
-					  		g_gametype.integer == GT_WOLF_CAMPAIGN || 
-					  		g_gametype.integer == GT_WOLF_MAPVOTE ) 
-					  && (worldspawnflags & NO_GT_WOLF)) ||	
+					if(!level.latchGametype && g_gamestate.integer == GS_PLAYING &&
+					  ( ( ( g_gametype.integer == GT_WOLF ||
+					  		g_gametype.integer == GT_WOLF_CAMPAIGN ||
+					  		g_gametype.integer == GT_WOLF_MAPVOTE )
+					  && (worldspawnflags & NO_GT_WOLF)) ||
 					  (g_gametype.integer == GT_WOLF_STOPWATCH && (worldspawnflags & NO_STOPWATCH)) ||
 					  (g_gametype.integer == GT_WOLF_LMS && (worldspawnflags & NO_LMS)) )
 					  ) {
@@ -2437,7 +2443,7 @@ char *strcut( char *dest, char *src, int num ) {
 			*dest = *src;
 			dest++;
 			src++;
-		} else { 
+		} else {
 			break;
 		}
 	}
@@ -2557,16 +2563,16 @@ void G_InitGame( int levelTime, int randomSeed, int restart ) {
 		win_probability_model_t model;
 
 		memcpy( &votedata, &level.voteInfo, sizeof( voteInfo_t ) );
-		memcpy( &model, &level.win_probability_model, 
+		memcpy( &model, &level.win_probability_model,
 				sizeof( win_probability_model_t ) );
 
 		memset( &level, 0, sizeof( level ) );
 
 		memcpy( &level.voteInfo, &votedata, sizeof( voteInfo_t ) );
-		memcpy( &level.win_probability_model, &model, 
+		memcpy( &level.win_probability_model, &model,
 				sizeof( win_probability_model_t ) );
 
-		
+
 
 		level.spawning = oldspawning;
 	}
@@ -2575,12 +2581,12 @@ void G_InitGame( int levelTime, int randomSeed, int restart ) {
 	level.server_settings = i;
 
 	G_RegisterCvars();
-	
+
 	if(g_weapons.integer & WPF_GARAND_EQUALITY) {
 
 		// forty - allows admins to balance the clip size between the allies and axis
 		// rifles. allied rifles get same clip sizes and max ammo as the k43.
-	
+
 		// maxclip
 		GetAmmoTableData(WP_GARAND)->maxclip		= GetAmmoTableData(WP_K43)->maxclip;
 		GetAmmoTableData(WP_GARAND_SCOPE)->maxclip	= GetAmmoTableData(WP_K43)->maxclip;
@@ -2595,25 +2601,25 @@ void G_InitGame( int levelTime, int randomSeed, int restart ) {
 		GetAmmoTableData(WP_GARAND)->defaultStartingClip		= GetAmmoTableData(WP_K43)->defaultStartingClip;
 		GetAmmoTableData(WP_GARAND_SCOPE)->defaultStartingClip	= GetAmmoTableData(WP_K43)->defaultStartingClip;
 		GetAmmoTableData(WP_CARBINE)->defaultStartingClip 		= GetAmmoTableData(WP_K43)->defaultStartingClip;
-	
+
 		//starting ammoreserve....
 		GetAmmoTableData(WP_GARAND)->defaultStartingAmmo		= GetAmmoTableData(WP_K43)->defaultStartingAmmo;
 		GetAmmoTableData(WP_GARAND_SCOPE)->defaultStartingAmmo	= GetAmmoTableData(WP_K43)->defaultStartingAmmo;
 		GetAmmoTableData(WP_CARBINE)->defaultStartingAmmo 		= GetAmmoTableData(WP_K43)->defaultStartingAmmo;
 
 	}
-	
-	// Xian enforcemaxlives stuff	
+
+	// Xian enforcemaxlives stuff
 	/*
 	we need to clear the list even if enforce maxlives is not active
 	in case the g_maxlives was changed, and a map_restart happened
 	*/
 	ClearMaxLivesBans();
-	
+
 	// just for verbosity
 	if( g_gametype.integer != GT_WOLF_LMS ) {
 		if( g_enforcemaxlives.integer &&
-			( g_maxlives.integer > 0 || g_axismaxlives.integer > 0 || g_alliedmaxlives.integer > 0 ) ) { 
+			( g_maxlives.integer > 0 || g_axismaxlives.integer > 0 || g_alliedmaxlives.integer > 0 ) ) {
 			G_Printf ( "EnforceMaxLives-Cleared GUID List\n" );
 		}
 	}
@@ -2690,7 +2696,7 @@ void G_InitGame( int levelTime, int randomSeed, int restart ) {
 		trap_SetConfigstring( CS_ROUNDSCORES2, va("%i", g_alliedwins.integer ) );
 	}
 
-	if( g_gametype.integer == GT_WOLF || 
+	if( g_gametype.integer == GT_WOLF ||
 			g_gametype.integer == GT_WOLF_MAPVOTE ) {
 		//bani - #113
 		bani_clearmapxp();
@@ -2735,7 +2741,7 @@ void G_InitGame( int levelTime, int randomSeed, int restart ) {
 				Q_strcat(maps, sizeof(maps), ",");
 			}
 		}
-		if(maps[0]) 
+		if(maps[0])
 			maps[strlen(maps)-1] = '\0';
 		trap_Cvar_Set("campaign_maps", maps);
 
@@ -2743,7 +2749,7 @@ void G_InitGame( int levelTime, int randomSeed, int restart ) {
 				g_campaigns[level.currentCampaign].current+1,
 				g_campaigns[level.currentCampaign].mapCount));
 	}
-	
+
 	trap_SetConfigstring( CS_SCRIPT_MOVER_NAMES, "" );	// clear out
 
 	G_DebugOpenSkillLog();
@@ -2773,7 +2779,7 @@ void G_InitGame( int levelTime, int randomSeed, int restart ) {
 	}
 
 	if(g_mapConfigs.string[0]) {
-		
+
 		Q_strncpyz(mapConfig, "exec ", sizeof(mapConfig));
 		Q_strcat(mapConfig, sizeof(mapConfig), g_mapConfigs.string);
 		Q_strcat(mapConfig, sizeof(mapConfig), "/default.cfg\n");
@@ -2842,7 +2848,7 @@ void G_InitGame( int levelTime, int randomSeed, int restart ) {
 	level.num_entities = MAX_CLIENTS;
 
 	// let the server system know where the entites are
-	trap_LocateGameData( level.gentities, level.num_entities, sizeof( gentity_t ), 
+	trap_LocateGameData( level.gentities, level.num_entities, sizeof( gentity_t ),
 		&level.clients[0].ps, sizeof( level.clients[0] ) );
 
 	if (g_gametype.integer == GT_SINGLE_PLAYER) {
@@ -2883,7 +2889,7 @@ void G_InitGame( int levelTime, int randomSeed, int restart ) {
 		case GT_WOLF_LMS:
 			// tjw: reset when it's the first round
 			if(!g_currentRound.integer)
-				G_xpsave_resetxp();	
+				G_xpsave_resetxp();
 			break;
 		case GT_WOLF_MAPVOTE:
 			if ( g_resetXPMapCount.integer &&
@@ -2905,7 +2911,7 @@ void G_InitGame( int levelTime, int randomSeed, int restart ) {
 	G_UpdateEtpubinfo();
 
 	// START	Mad Doctor I changes, 8/21/2002
-	// This needs to be called before G_SpawnEntitiesFromString, or the 
+	// This needs to be called before G_SpawnEntitiesFromString, or the
 	// bot entities get trashed.
 	//initialize the bot game entities
 //	BotInitBotGameEntities();
@@ -3013,11 +3019,11 @@ G_ShutdownGame
 void G_ShutdownGame( int restart ) {
 
 	// Arnout: gametype latching
-	if	( 
-		( ( g_gametype.integer == GT_WOLF || g_gametype.integer == GT_WOLF_CAMPAIGN || g_gametype.integer == GT_WOLF_MAPVOTE) 
+	if	(
+		( ( g_gametype.integer == GT_WOLF || g_gametype.integer == GT_WOLF_CAMPAIGN || g_gametype.integer == GT_WOLF_MAPVOTE)
 			&& (g_entities[ENTITYNUM_WORLD].r.worldflags & NO_GT_WOLF)) ||
 		(g_gametype.integer == GT_WOLF_STOPWATCH && (g_entities[ENTITYNUM_WORLD].r.worldflags & NO_STOPWATCH)) ||
-		(g_gametype.integer == GT_WOLF_LMS && (g_entities[ENTITYNUM_WORLD].r.worldflags & NO_LMS))		
+		(g_gametype.integer == GT_WOLF_LMS && (g_entities[ENTITYNUM_WORLD].r.worldflags & NO_LMS))
 		) {
 
 		if ( !(g_entities[ENTITYNUM_WORLD].r.worldflags & NO_GT_WOLF) )
@@ -3088,7 +3094,7 @@ void QDECL Com_Printf( const char *msg, ... ) {
 
 	G_Printf ("%s", text);
 }
-//bani  
+//bani
 void QDECL Com_Printf( const char *msg, ... )_attribute((format(printf,1,2)));
 
 #endif
@@ -3162,7 +3168,7 @@ int QDECL SortRanks( const void *a, const void *b ) {
 		float totalXP[2];
 
 		// josh: I don't think this will hurt anything. The only thing
-		// that cares about the order of level.sortedClients is the 
+		// that cares about the order of level.sortedClients is the
 		// scoreboard itself, which is what I'm changing.
 		if (g_playerRating.integer & PLAYER_RATING_SCOREBOARD) {
 			totalXP[0] =
@@ -3173,7 +3179,7 @@ int QDECL SortRanks( const void *a, const void *b ) {
 				1.0/(1.0+exp(-cb->sess.rating
 				/ sqrt(1.0+3.0*cb->sess.rating_variance
 				* 20.0 / (M_PI*M_PI))));
-		} else { 
+		} else {
 			for( totalXP[0] = totalXP[1] = 0, i = 0;
 			    i < SK_NUM_SKILLS; i++ ) {
 				totalXP[0] += ca->sess.skillpoints[i];
@@ -3278,10 +3284,10 @@ void CalculateRanks( void ) {
 
 			if ( team != TEAM_SPECTATOR ) {
 				level.numNonSpectatorClients++;
-			
+
 				// OSP
 				Q_strcat(teaminfo[team], sizeof(teaminfo[team])-1, va("%d ", level.numConnectedClients));
-			
+
 				// decide if this should be auto-followed
 				if ( level.clients[i].pers.connected == CON_CONNECTED ) {
 					int teamIndex = level.clients[i].sess.sessionTeam == TEAM_AXIS ? 0 : 1;
@@ -3323,7 +3329,7 @@ void CalculateRanks( void ) {
 		if(0 == teaminfo[i][0]) Q_strncpyz(teaminfo[i], "(None)", sizeof(teaminfo[i]));
 	}
 
-	qsort( level.sortedClients, level.numConnectedClients, 
+	qsort( level.sortedClients, level.numConnectedClients,
 		sizeof(level.sortedClients[0]), SortRanks );
 
 	// set the rank value for all clients that are connected and not spectators
@@ -3408,7 +3414,7 @@ void MoveClientToIntermission( gentity_t *ent ) {
 
 	/*if ( ent->client->sess.sessionTeam == TEAM_AXIS || ent->client->sess.sessionTeam == TEAM_ALLIES ) {
 		timeLived = (level.time - ent->client->pers.lastSpawnTime) * 0.001f;
-	
+
 		G_AddExperience( ent, min((timeLived * timeLived) * 0.00005f, 5) );
 	}*/
 
@@ -3521,14 +3527,14 @@ void BeginIntermission( void ) {
 	char bspNames[MAX_STRING_CHARS];
 	int len, maxMaps;
 	char* bspptr;
-	
+
 	if( g_gamestate.integer == GS_INTERMISSION ) {
 		return;		// already active
 	}
 
 	// initialize and populate the map struct for map voting
 	if ( g_gametype.integer == GT_WOLF_MAPVOTE ) {
-		level.mapVoteNumMaps = trap_FS_GetFileList("maps", ".bsp", 
+		level.mapVoteNumMaps = trap_FS_GetFileList("maps", ".bsp",
 					bspNames, sizeof(bspNames));
 		bspptr = bspNames;
 		if ( level.mapVoteNumMaps > MAX_VOTE_MAPS ) {
@@ -3537,8 +3543,8 @@ void BeginIntermission( void ) {
 
 		for ( i = 0; i < level.mapVoteNumMaps; i++, bspptr += len + 1 ) {
 			len = strlen(bspptr);
-			Q_strncpyz(level.mapvoteinfo[i].bspName, 
-					Q_StrReplace(bspptr,".bsp",""), 
+			Q_strncpyz(level.mapvoteinfo[i].bspName,
+					Q_StrReplace(bspptr,".bsp",""),
 					sizeof(level.mapvoteinfo[0].bspName));
 			level.mapvoteinfo[i].zOrder = rand();
 			level.mapvoteinfo[i].lastPlayed = -1;
@@ -3558,16 +3564,16 @@ void BeginIntermission( void ) {
 				level.mapvoteinfo[i].lastPlayed = 0;
 				level.mapvoteinfo[i].timesPlayed++;
 			}
-			
+
 			// played too recently
-			if ( level.mapvoteinfo[i].lastPlayed <= 
-						g_minMapAge.integer && 
+			if ( level.mapvoteinfo[i].lastPlayed <=
+						g_minMapAge.integer &&
 						level.mapvoteinfo[i].lastPlayed != -1 ) {
 				level.sortedMaps[i] = -1;
 				level.mapvoteinfo[i].zOrder = 0;
 				level.mapVoteNumMaps--;
 				level.mapvoteinfo[i].lastPlayed++;
-			} else if ( strstr(g_excludedMaps.string, 
+			} else if ( strstr(g_excludedMaps.string,
 						va(":%s:",level.mapvoteinfo[i].bspName)) ) {
 				level.sortedMaps[i] = -1;
 				level.mapvoteinfo[i].zOrder = 0;
@@ -3578,13 +3584,13 @@ void BeginIntermission( void ) {
 			}
 		}
 
-		qsort( level.sortedMaps, len, 
+		qsort( level.sortedMaps, len,
 			sizeof(level.sortedMaps[0]), G_SortMapsByzOrder );
 
 		maxMaps = g_maxMapsVotedFor.integer;
-		if ( maxMaps > level.mapVoteNumMaps ) 
+		if ( maxMaps > level.mapVoteNumMaps )
 			maxMaps = level.mapVoteNumMaps;
-	
+
 		for ( i = 0; i < maxMaps; i++ ) {
 			level.mapvoteinfo[level.sortedMaps[i]].voteEligible++;
 		}
@@ -3624,7 +3630,7 @@ void BeginIntermission( void ) {
 ExitLevel
 
 When the intermission has been exited, the server is either killed
-or moved to a new level based on the "nextmap" cvar 
+or moved to a new level based on the "nextmap" cvar
 
 =============
 */
@@ -3676,7 +3682,7 @@ void ExitLevel (void) {
 			level.mapsSinceLastXPReset++;
 		}
 		maxMaps = g_maxMapsVotedFor.integer;
-		if ( maxMaps > level.mapVoteNumMaps ) 
+		if ( maxMaps > level.mapVoteNumMaps )
 			maxMaps = level.mapVoteNumMaps;
 		for ( i = 0; i < maxMaps; i++ ) {
 			if ( level.mapvoteinfo[level.sortedMaps[i]].lastPlayed != -1 ) {
@@ -3684,13 +3690,13 @@ void ExitLevel (void) {
 			}
 			curMapVotes = level.mapvoteinfo[level.sortedMaps[i]].numVotes;
 			curMapAge = level.mapvoteinfo[level.sortedMaps[i]].lastPlayed;
-			if ( curMapAge == -1 ) 
+			if ( curMapAge == -1 )
 				curMapAge = 9999;	// -1 means never, so set suitably high
 
-			if (curMapVotes > highMapVote || 
-						(curMapVotes == highMapVote && 
+			if (curMapVotes > highMapVote ||
+						(curMapVotes == highMapVote &&
 						((!(g_mapVoteFlags.integer & MAPVOTE_TIE_LEASTPLAYED) &&
-							curMapAge < highMapAge) || 
+							curMapAge < highMapAge) ||
 						((g_mapVoteFlags.integer & MAPVOTE_TIE_LEASTPLAYED) &&
 							curMapAge > highMapAge)))) {
 					nextMap = level.sortedMaps[i];
@@ -3699,8 +3705,8 @@ void ExitLevel (void) {
 			}
 		}
 		if ( highMapVote > 0 ) {
-			trap_SendConsoleCommand( EXEC_APPEND, 
-					va("map %s;set nextmap %s\n", 
+			trap_SendConsoleCommand( EXEC_APPEND,
+					va("map %s;set nextmap %s\n",
 						level.mapvoteinfo[nextMap].bspName,
 						g_nextmap.string));
 		} else {
@@ -3746,7 +3752,7 @@ void ExitLevel (void) {
 }
 
 // dvl - real time stamp
-char *G_GetRealTime(void) 
+char *G_GetRealTime(void)
 {
 	qtime_t tm;
 
@@ -3781,9 +3787,9 @@ void QDECL G_LogPrintf( const char *fmt, ... ) {
 		sec -= min * 60;
 		tens = sec / 10;
 		sec -= tens * 10;
-		Com_sprintf( string, 
-				sizeof(string), 
-				"%i:%i%i ", 
+		Com_sprintf( string,
+				sizeof(string),
+				"%i:%i%i ",
 				min, tens, sec );
 	}
 
@@ -3808,7 +3814,7 @@ void QDECL G_LogPrintf( const char *fmt, ... ) {
 	// TODO: Make a function for this
 	// TODO: Queue this when bgr finishes his additions
 	//	if (g_httpPostURL_log.string[0]) {
-	//		g_httpinfo_t *post_info = (g_httpinfo_t *)malloc(sizeof(g_httpinfo_t)); 
+	//		g_httpinfo_t *post_info = (g_httpinfo_t *)malloc(sizeof(g_httpinfo_t));
 	//		Q_strncpyz( post_info->url, g_httpPostURL_log.string, sizeof(post_info->url) );
 	//		Q_strncpyz( post_info->message, string, sizeof(post_info->message) );
 	//		create_thread(libhttpc_post,(void*)post_info);
@@ -3820,7 +3826,7 @@ void QDECL G_LogPrintf( const char *fmt, ... )_attribute((format(printf,1,2)));
 
 // tjw: returns the max number of seconds remaining in a dynamite
 //      plant that would end the round if it were to explode
-//      
+//
 //      returns -1 if there are no round-ending plants
 int G_EndRoundCountdown()
 {
@@ -3862,7 +3868,7 @@ int G_EndRoundCountdown()
 		num = trap_EntitiesInBox(mins, maxs, touch, MAX_GENTITIES);
 		for(j=0; j<num ; j++ ) {
 			hit = &g_entities[touch[j]];
-			if(!( hit->r.contents & CONTENTS_TRIGGER)) 
+			if(!( hit->r.contents & CONTENTS_TRIGGER))
 				continue;
 			if(!(hit->s.eType == ET_OID_TRIGGER))
 				continue;
@@ -3970,7 +3976,7 @@ void LogExit( const char *string ) {
 	}
 
 	// CHRUKER: b016 - Moved here because we needed the stats to be
-	//          up-to-date before sending	
+	//          up-to-date before sending
 	// NERVE - SMF - send gameCompleteStatus message to master servers
 	trap_SendConsoleCommand( EXEC_APPEND, "gameCompleteStatus\n" );
 
@@ -4046,8 +4052,8 @@ void LogExit( const char *string ) {
 
 					if( cl->sess.sessionTeam != teamNum )
 						continue;
-					
-					// CHRUKER: b017 
+
+					// CHRUKER: b017
 					if( cl->sess.skill[i] < 1 )
 						continue;
 					// CHRUKER: b017
@@ -4060,7 +4066,7 @@ void LogExit( const char *string ) {
 					else {
 						if( (cl->sess.skillpoints[i] - cl->sess.startskillpoints[i]) > highestskillpointsincrease ) {
 							highestskillpointsincrease = (cl->sess.skillpoints[i] - cl->sess.startskillpoints[i]);
-							highestskillpointsclient = j; 
+							highestskillpointsclient = j;
 						}
 					} // b017
 				}
@@ -4075,15 +4081,15 @@ void LogExit( const char *string ) {
 						if( cl->sess.sessionTeam != teamNum )
 							continue;
 
-						 // CHRUKER: b017 
+						 // CHRUKER: b017
 						if( cl->sess.skill[i] < 1 )
 							continue;
 
-						 // CHRUKER: b017 
+						 // CHRUKER: b017
 						if ( i == SK_BATTLE_SENSE || i == SK_LIGHT_WEAPONS ) {
 							if( cl->sess.skillpoints[i] == highestskillpoints ) {
 								cl->sess.medals[i]++;
-	
+
 								ClientUserinfoChanged( level.sortedClients[j] );
 							}
 						}
@@ -4164,7 +4170,7 @@ void LogExit( const char *string ) {
 	//if (g_httpPostURL_ratings.string[0]) {
 	//	for(i=0; i<level.numConnectedClients; i++) {
 	//		gclient_t *cl = level.clients + level.sortedClients[ i ];
-	//		g_httpinfo_t *post_info = (g_httpinfo_t *)malloc(sizeof(g_httpinfo_t)); 
+	//		g_httpinfo_t *post_info = (g_httpinfo_t *)malloc(sizeof(g_httpinfo_t));
 	//		char *message;
 	//		message = va("RATINGS:"
 	//			" GUID: %s"
@@ -4195,7 +4201,7 @@ void LogExit( const char *string ) {
 	G_xpsave_writeconfig();
 	G_reset_disconnects();
 
-	// tjw: when the map finishes normally this must be cleared 	
+	// tjw: when the map finishes normally this must be cleared
 	trap_Cvar_Set( "g_reset", "0");
 }
 
@@ -4271,7 +4277,7 @@ void CheckIntermissionExit( void ) {
 		} else {
 			notReady++;
 		}
-		
+
 		// Count players who have voted
 		if (cl->ps.eFlags & EF_VOTED) {
 			voted++;
@@ -4291,16 +4297,16 @@ void CheckIntermissionExit( void ) {
 			// until enough votes are gathered.  If there are enough non-voting
 			// spectators, we wait until they disconnect, they vote, or they
 			// are kicked by the system (which could be a VERY long time)
-            if (((100.0f * (voted / (players * 1.0f))) < 
+            if (((100.0f * (voted / (players * 1.0f))) <
                 (g_intermissionReadyPercent.value * 1.0f)) &&
                 (g_mapVoteFlags.integer & MAPVOTE_ALT_INTERMISSION) ) {
 
 				return;
             }
-            
-            if((100.0f * (ready / (players * 1.0f))) >= 
+
+            if((100.0f * (ready / (players * 1.0f))) >=
                 (g_intermissionReadyPercent.value * 1.0f)) {
-                
+
                 exit = qtrue;
             }
         }
@@ -4308,7 +4314,7 @@ void CheckIntermissionExit( void ) {
 
 	// Gordon: changing this to a minute for now
 	// tjw: making this a cvar
-	if(!exit && (level.time < (level.intermissiontime + 
+	if(!exit && (level.time < (level.intermissiontime +
 		(1000 * g_intermissionTime.integer)))) {
 
 		return;
@@ -4363,7 +4369,7 @@ void CheckExitRules( void ) {
 		return;
 	}
 
-	// tjw: is this really necessary?	
+	// tjw: is this really necessary?
 	//if ( level.numPlayingClients < 2 ) {
 	//	return;
 	//}
@@ -4440,7 +4446,7 @@ void CheckExitRules( void ) {
 					return;
 				}
 			} else {
-				// check for sudden death 
+				// check for sudden death
 				if ( ScoreIsTied() ) {
 					// score is tied, so don't end the game
 					return;
@@ -4548,7 +4554,7 @@ void CheckGameState() {
 		}
 	}
 
-	if ( current_gs == GS_WAITING_FOR_PLAYERS && g_minGameClients.integer > 1 && 
+	if ( current_gs == GS_WAITING_FOR_PLAYERS && g_minGameClients.integer > 1 &&
 		level.numPlayingClients >= g_minGameClients.integer && level.lastRestartTime + 1000 < level.time ) {
 
 		level.lastRestartTime = level.time;
@@ -4700,7 +4706,7 @@ void CheckVote( qboolean forced ) {
 	if((g_voting.integer & VOTEF_USE_TOTAL_VOTERS) &&
 		level.time - level.voteInfo.voteTime >= VOTE_TIME) {
 
-		total = (level.voteInfo.voteYes 
+		total = (level.voteInfo.voteYes
 			+ level.voteInfo.voteNo);
 	}
 	else if(level.voteInfo.vote_fn == G_Kick_v ||
@@ -4755,10 +4761,10 @@ void CheckVote( qboolean forced ) {
 			gentity_t *ent;
 
 			ent = &g_entities[level.voteInfo.voteCaller];
-			if(ent->client) 
+			if(ent->client)
 				ent->client->pers.voteCount--;
 		}
-		
+
 	}
 	else if((level.voteInfo.voteNo &&
 		level.voteInfo.voteNo >= (100-pcnt)*total/100) ||
@@ -4781,20 +4787,20 @@ void CheckVote( qboolean forced ) {
 		// still waiting for a majority
 		return;
 	}
-	if(g_voteResultsMinLevel.integer > -1) { 
+	if(g_voteResultsMinLevel.integer > -1) {
 		for( i = 0; i < level.numConnectedClients; i++ ) {
 			loopent = g_entities + level.sortedClients[i];
 			if(_shrubbot_level(loopent) >= g_voteResultsMinLevel.integer ||
 				loopent->client->sess.referee == RL_REFEREE){
-				trap_SendServerCommand( loopent-g_entities, va("cpm \"^2Axis vote results, yes: %i, no %i\n\"", 
+				trap_SendServerCommand( loopent-g_entities, va("cpm \"^2Axis vote results, yes: %i, no %i\n\"",
 					level.voteInfo.axisVoteYes, level.voteInfo.axisVoteNo));
-				trap_SendServerCommand( loopent-g_entities, va("cpm \"^2Allies vote results, yes: %i, no %i\n\"", 
+				trap_SendServerCommand( loopent-g_entities, va("cpm \"^2Allies vote results, yes: %i, no %i\n\"",
 					level.voteInfo.alliesVoteYes, level.voteInfo.alliesVoteNo));
 			}
 		}
 	}
 
-	level.voteInfo.axisVoteYes = level.voteInfo.axisVoteNo = 
+	level.voteInfo.axisVoteYes = level.voteInfo.axisVoteNo =
 		level.voteInfo.alliesVoteYes = level.voteInfo.alliesVoteNo = 0;
 	level.voteInfo.voteTime = 0;
 	trap_SetConfigstring(CS_VOTE_TIME, "");
@@ -4999,7 +5005,7 @@ void CheckCvars( void ) {
 		InitSkillLevelStructure( SK_FIRST_AID );
 		G_ReassignSkillLevel( SK_FIRST_AID );
 	}
-	
+
 	if( g_skillEngineer.modificationCount != g_skillEngineer_lastMod ) {
 		g_skillEngineer_lastMod = g_skillEngineer.modificationCount;
 		InitSkillLevelStructure( SK_EXPLOSIVES_AND_CONSTRUCTION );
@@ -5059,7 +5065,7 @@ void G_RunThink (gentity_t *ent) {
 	if (thinktime > level.time) {
 		return;
 	}
-	
+
 	ent->nextthink = 0;
 	if (!ent->think) {
 		G_Error ( "NULL ent->think");
@@ -5081,7 +5087,7 @@ qboolean G_PositionEntityOnTag( gentity_t *entity, gentity_t* parent, char *tagN
 	AnglesToAxis( parent->r.currentAngles, axis );
 
 	VectorCopy( parent->r.currentOrigin, entity->r.currentOrigin );
-	
+
 	if(!trap_GetTag( -1, parent->tagNumber, tagName, &tag )) {
 		return qfalse;
 	}
@@ -5157,7 +5163,7 @@ void G_TagLinkEntity( gentity_t* ent, int msec ) {
 			} else {
 				frac = ((ent->backdelta * (MAX_SPLINE_SEGMENTS)) - pos) * ent->backspline->segments[pos].length;
 			}
-			
+
 
 			VectorMA( ent->backspline->segments[pos].start, frac, ent->backspline->segments[pos].v_norm, v );
 			if(parent->s.apos.trBase[0]) {
@@ -5165,7 +5171,7 @@ void G_TagLinkEntity( gentity_t* ent, int msec ) {
 			}
 
 			VectorCopy( v, origin );
-			
+
 			if(ent->s.angles2[0]) {
 				BG_LinearPathOrigin2( ent->s.angles2[0], &ent->backspline, &ent->backdelta, v, ent->back );
 			}
@@ -5195,7 +5201,7 @@ void G_TagLinkEntity( gentity_t* ent, int msec ) {
 			ent->backspline =	parent->backspline;
 
 			VectorCopy( v, origin );
-			
+
 			if(ent->s.angles2[0]) {
 				BG_LinearPathOrigin2( ent->s.angles2[0], &ent->backspline, &ent->backdelta, v, ent->back );
 			}
@@ -5204,7 +5210,7 @@ void G_TagLinkEntity( gentity_t* ent, int msec ) {
 
 			if(	ent->s.angles2[0] < 0 ) {
 				VectorSubtract( v, origin, v );
-				vectoangles( v, angles );				
+				vectoangles( v, angles );
 			} else if( ent->s.angles2[0] > 0 ){
 				VectorSubtract( origin, v, v );
 				vectoangles( v, angles );
@@ -5319,8 +5325,8 @@ void G_RunEntity( gentity_t* ent, int msec ) {
 		return;
 	}
 
-	if ( ent->s.eType == ET_MISSILE 
-		|| ent->s.eType == ET_FLAMEBARREL 
+	if ( ent->s.eType == ET_MISSILE
+		|| ent->s.eType == ET_FLAMEBARREL
 		|| ent->s.eType == ET_FP_PARTS
 		|| ent->s.eType == ET_FIRE_COLUMN
 		|| ent->s.eType == ET_FIRE_COLUMN_SMOKE
@@ -5347,42 +5353,42 @@ void G_RunEntity( gentity_t* ent, int msec ) {
 	// DHM - Nerve :: Server-side collision for flamethrower
 	if( ent->s.eType == ET_FLAMETHROWER_CHUNK ) {
 		G_RunFlamechunk( ent );
-		
+
 		// ydnar: hack for instantaneous velocity
 		VectorSubtract( ent->r.currentOrigin, ent->oldOrigin, ent->instantVelocity );
 		VectorScale( ent->instantVelocity, 1000.0f / msec, ent->instantVelocity );
-		
+
 		return;
 	}
 
 	if( ent->s.eType == ET_ITEM || ent->physicsObject ) {
 		G_RunItem( ent );
-		
+
 		// ydnar: hack for instantaneous velocity
 		VectorSubtract( ent->r.currentOrigin, ent->oldOrigin, ent->instantVelocity );
 		VectorScale( ent->instantVelocity, 1000.0f / msec, ent->instantVelocity );
-		
+
 		return;
 	}
 
 	if ( ent->s.eType == ET_MOVER || ent->s.eType == ET_PROP)
 	{
 		G_RunMover( ent );
-		
+
 		// ydnar: hack for instantaneous velocity
 		VectorSubtract( ent->r.currentOrigin, ent->oldOrigin, ent->instantVelocity );
 		VectorScale( ent->instantVelocity, 1000.0f / msec, ent->instantVelocity );
-		
+
 		return;
 	}
-	
+
 	if( ent-g_entities < MAX_CLIENTS ) {
 		G_RunClient( ent );
-		
+
 		// ydnar: hack for instantaneous velocity
 		VectorSubtract( ent->r.currentOrigin, ent->oldOrigin, ent->instantVelocity );
 		VectorScale( ent->instantVelocity, 1000.0f / msec, ent->instantVelocity );
-		
+
 		return;
 	}
 
@@ -5397,7 +5403,7 @@ void G_RunEntity( gentity_t* ent, int msec ) {
 	}
 
 	G_RunThink( ent );
-		
+
 	// ydnar: hack for instantaneous velocity
 	VectorSubtract( ent->r.currentOrigin, ent->oldOrigin, ent->instantVelocity );
 	VectorScale( ent->instantVelocity, 1000.0f / msec, ent->instantVelocity );
@@ -5410,7 +5416,7 @@ void G_UpdateCSInfo()
 	trap_GetServerinfo(cs, sizeof(cs));
 	level.csLenTotal += (int)(strlen(cs) - level.csLen[0] + 1);
 	level.csLen[0] = (strlen(cs) + 1);
-	
+
 	cs[0] = '\0';
 	trap_GetConfigstring(CS_SYSTEMINFO, cs, sizeof(cs));
 	level.csLenTotal += (int)(strlen(cs) - level.csLen[1] + 1);
@@ -5434,13 +5440,13 @@ void G_RunFrame( int levelTime ) {
 		return;
 	}
 
-	// tjw: track CS_SERVERINFO and CS_SYSTEMINFO changes which 
+	// tjw: track CS_SERVERINFO and CS_SYSTEMINFO changes which
 	//      can be made outside of the game code
 	G_UpdateCSInfo();
 
 
-	// tjw: workaround for q3 bug 
-	//      levelTime will start over when the timelimit 
+	// tjw: workaround for q3 bug
+	//      levelTime will start over when the timelimit
 	//      expires on dual objective maps.
 	if(level.previousTime > level.time)
 		level.overTime = level.previousTime;
@@ -5486,7 +5492,7 @@ void G_RunFrame( int levelTime ) {
 	if( level.alliedArtyCounter < 0 ) {
 		level.alliedArtyCounter = 0;
 	}
-	
+
 #if 0
 	if(trap_Cvar_VariableIntegerValue( "dbg_spam" )) {
 		trap_SetConfigstring( CS_VOTE_STRING, va(
@@ -5503,7 +5509,7 @@ uebrgpiebrpgibqeripgubeqrpigubqifejbgipegbrtibgurepqgbn%i", level.time )
 );
 	}
 #endif
- 
+
 #ifdef SAVEGAME_SUPPORT
 	G_CheckLoadGame();
 #endif // SAVEGAME_SUPPORT
@@ -5526,25 +5532,25 @@ uebrgpiebrpgibqeripgubeqrpigubqifejbgipegbrtibgurepqgbn%i", level.time )
 
 	if(level.time >= level.nextBannerTime ) {
 		G_displayBanner(0);
-	}	
+	}
 
 	if((g_weapons.integer & WPF_DROP_BINOCS) &&
 			(g_misc.integer & MISC_BINOC_MASTER) &&
-			((level.time % 1000) == 0) && 
+			((level.time % 1000) == 0) &&
 			(((level.time / 1000) % 60) == 0) ) {
 		G_BinocMasters(qfalse);
 	}
 
 	// Perro: Display current streaks
-	if ((g_spreeOptions.integer & SPREE_SHOW_ACTIVE_INGAME) && 
-			((level.time % 1000) == 0) && 
+	if ((g_spreeOptions.integer & SPREE_SHOW_ACTIVE_INGAME) &&
+			((level.time % 1000) == 0) &&
 			(((level.time / 1000) % 60) == 0))  {
 		G_Streakers(qfalse);
 	}
 	// Perro: Show the long streak periodically
-	if ((g_spreeOptions.integer & SPREE_SHOW_ACTIVE_INGAME) && 
-			(level.maxspree_count) && 
-			((level.time % 1000) == 0) && 
+	if ((g_spreeOptions.integer & SPREE_SHOW_ACTIVE_INGAME) &&
+			(level.maxspree_count) &&
+			((level.time % 1000) == 0) &&
 			(((level.time / 1000) % 120) == 0))  {
 		G_MapLongStreak(qfalse);
 	}
@@ -5684,31 +5690,31 @@ void InitSkillLevelStructure( skillType_t skillType )
 	switch( skillType )
 	{
 	case SK_HEAVY_WEAPONS:
-		Q_strncpyz( newLevels, g_skillSoldier.string, 
+		Q_strncpyz( newLevels, g_skillSoldier.string,
 			sizeof(g_skillSoldier.string) );
 		break;
 	case SK_FIRST_AID:
-		Q_strncpyz( newLevels, g_skillMedic.string, 
+		Q_strncpyz( newLevels, g_skillMedic.string,
 			sizeof(g_skillMedic.string) );
 		break;
 	case SK_EXPLOSIVES_AND_CONSTRUCTION:
-		Q_strncpyz( newLevels, g_skillEngineer.string, 
+		Q_strncpyz( newLevels, g_skillEngineer.string,
 			sizeof(g_skillEngineer.string) );
 		break;
 	case SK_SIGNALS:
-		Q_strncpyz( newLevels, g_skillFieldOps.string, 
+		Q_strncpyz( newLevels, g_skillFieldOps.string,
 			sizeof(g_skillFieldOps.string) );
 		break;
 	case SK_MILITARY_INTELLIGENCE_AND_SCOPED_WEAPONS:
-		Q_strncpyz( newLevels, g_skillCovertOps.string, 
+		Q_strncpyz( newLevels, g_skillCovertOps.string,
 			sizeof(g_skillCovertOps.string) );
 		break;
 	case SK_BATTLE_SENSE:
-		Q_strncpyz( newLevels, g_skillBattleSense.string, 
+		Q_strncpyz( newLevels, g_skillBattleSense.string,
 			sizeof(g_skillBattleSense.string) );
 		break;
 	case SK_LIGHT_WEAPONS:
-		Q_strncpyz( newLevels, g_skillLightWeapons.string, 
+		Q_strncpyz( newLevels, g_skillLightWeapons.string,
 			sizeof(g_skillLightWeapons.string) );
 		break;
 	}
@@ -5770,7 +5776,7 @@ void G_mapvoteinfo_write()
 	for( i = 0; i < MAX_VOTE_MAPS; i++) {
 		if ( level.mapvoteinfo[i].bspName[0] ) {
 			trap_FS_Write("[mapvoteinfo]\n", 14, f);
-	
+
 			trap_FS_Write("name             = ", 19, f);
 			G_shrubbot_writeconfig_string(
 					level.mapvoteinfo[i].bspName, f);
@@ -5786,7 +5792,7 @@ void G_mapvoteinfo_write()
 			trap_FS_Write("vote_eligible    = ", 19, f);
 			G_shrubbot_writeconfig_string(
 					va("%d",level.mapvoteinfo[i].voteEligible), f);
-	
+
 			trap_FS_Write("\n", 1, f);
 		}
 	}
@@ -5806,8 +5812,8 @@ void G_mapvoteinfo_read()
 	char *t;
 	char bspName[128];
 
-	len = trap_FS_FOpenFile("mapvoteinfo.cfg", &f, FS_READ) ; 
-	
+	len = trap_FS_FOpenFile("mapvoteinfo.cfg", &f, FS_READ) ;
+
 	if(len < 0) {
 		G_Printf("readconfig: could not open mapvoteinfo file\n");
 		return;
@@ -5822,7 +5828,7 @@ void G_mapvoteinfo_read()
 	t = COM_Parse(&cnf);
 	while(*t) {
 		if(!Q_stricmp(t, "name")) {
-			G_shrubbot_readconfig_string(&cnf, 
+			G_shrubbot_readconfig_string(&cnf,
 				bspName, sizeof(bspName));
 			curMap = -1;
 			for ( i = 0; i < level.mapVoteNumMaps; i++ ) {
@@ -5852,8 +5858,8 @@ void G_mapvoteinfo_read()
 			// do nothing for the moment
 		} else {
 			G_Printf("mapvoteinfo: [mapvoteinfo] parse error near "
-				"%s on line %d\n", 
-				t, 
+				"%s on line %d\n",
+				t,
 				COM_GetCurrentParseLine());
 		}
 

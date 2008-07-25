@@ -277,7 +277,7 @@ struct gentity_s {
 	struct gclient_s	*client;			// NULL if not a client
 
 	qboolean	inuse;
-	
+
 	vec3_t		instantVelocity;	// ydnar: per entity instantaneous velocity, set per frame
 
 	char		*classname;			// set in QuakeEd
@@ -291,13 +291,13 @@ struct gentity_s {
 	char		*model;
 	char		*model2;
 	int			freetime;			// level.time when the object was freed
-	
+
 	int			eventTime;			// events will be cleared EVENT_VALID_MSEC after set
 	qboolean	freeAfterEvent;
 	qboolean	unlinkAfterEvent;
 
 	qboolean	physicsObject;		// if true, it can be pushed by movers and fall off edges
-									// all game items are physicsObjects, 
+									// all game items are physicsObjects,
 	float		physicsBounce;		// 1.0 = continuous bounce, 0.0 = no bounce
 	int			clipmask;			// brushes with this content value will be collided against
 									// when moving.  items and corpses do not collide against
@@ -420,7 +420,7 @@ struct gentity_s {
 	int			dl_atten;
 
 
-	int			key;			// used by:  target_speaker->nopvs, 
+	int			key;			// used by:  target_speaker->nopvs,
 
 	qboolean	active;
 
@@ -504,7 +504,7 @@ struct gentity_s {
 	int			goalPriority[2];
 
 	int			tagNumber;		// Gordon: "handle" to a tag header
-	
+
 	int				linkTagTime;
 
 	splinePath_t*	backspline;
@@ -667,7 +667,7 @@ typedef struct {
 	int numBinocs;
 	int mapVotedFor[3];
 
-	// kw 
+	// kw
 	int			nextteam;	// changes team after next class command
 
 	// Perro - Killing Streaks, death streaks
@@ -685,7 +685,7 @@ typedef struct {
 	int pr_skill_updates[SK_NUM_SKILLS][NUM_SKILL_LEVELS];
 
 	// tjw: total milliseconds of time playing at each skill
-	//      used currnetly for pr_skill[] dispensing  
+	//      used currnetly for pr_skill[] dispensing
 	int skill_time[SK_NUM_SKILLS][NUM_SKILL_LEVELS];
 	// tjw: used for building skill_time[]
 	int skill_start[SK_NUM_SKILLS][NUM_SKILL_LEVELS];
@@ -722,7 +722,7 @@ typedef struct {
 
 	// redeye - moved greeting message to ClientBegin
 	qboolean need_greeting;
-	
+
 	// quad - ettv and shoutcaster
 	int shoutcaster;
 	int ettv;
@@ -760,7 +760,7 @@ typedef struct ipFilter_s {
 // client data that stays across multiple respawns, but is cleared
 // on each level change or team change at ClientBegin()
 typedef struct {
-	clientConnected_t	connected;	
+	clientConnected_t	connected;
 	usercmd_t	cmd;				// we would lose angles if not persistant
 	usercmd_t	oldcmd;				// previous command processed by pmove()
 	qboolean	localClient;		// true if "ip" info key is "localhost"
@@ -795,7 +795,7 @@ typedef struct {
 	int			invitationEndTime;		// Gordon: quickly now, chop chop!.....
 
 	int			propositionClient;		// Gordon: propositionClient2 has requested you invite this client to join the fireteam
-	int			propositionClient2;		// Gordon: 
+	int			propositionClient2;		// Gordon:
 	int			propositionEndTime;		// Gordon: tick, tick, tick....
 
 	int			autofireteamEndTime;
@@ -836,7 +836,7 @@ typedef struct {
 
 	ipFilter_t		complaintips[MAX_COMPLAINTIPS];
 
-	// tjw 
+	// tjw
 	int hitsounds;
 	qboolean slashKill;
 	qboolean etpubc;
@@ -895,8 +895,8 @@ typedef struct {
 	int torsoFrame;
 	int torsoOldFrameTime;
 	int torsoFrameTime;
-	float torsoYawAngle;	
-	float torsoPitchAngle;	
+	float torsoYawAngle;
+	float torsoPitchAngle;
 	qboolean torsoYawing;
 	qboolean torsoPitching;
 
@@ -907,8 +907,8 @@ typedef struct {
 	int legsFrame;
 	int legsOldFrameTime;
 	int legsFrameTime;
-	float legsYawAngle;	
-	float legsPitchAngle;	
+	float legsYawAngle;
+	float legsPitchAngle;
 	qboolean legsYawing;
 	qboolean legsPitching;
 
@@ -1085,7 +1085,7 @@ struct gclient_s {
 	qboolean		maxlivescalced;
 	int				disconnectLives;
 	qboolean		XPSave_loaded;
-	int				flametime; 
+	int				flametime;
 
 //unlagged - smooth clients #1
 	// the last frame number we got an update from this client
@@ -1131,7 +1131,7 @@ typedef struct limbo_cam_s {
 #define	MAX_SPAWN_VARS_CHARS	2048
 #define VOTE_MAXSTRING			256		// Same value as MAX_STRING_TOKENS
 
-// tjw: increased from 8 to 10 for compatability with maps that relied on 
+// tjw: increased from 8 to 10 for compatability with maps that relied on
 //      it before Project: Bug Fix #055
 #define	MAX_SCRIPT_ACCUM_BUFFERS	10
 
@@ -1291,7 +1291,7 @@ typedef struct {
 	brushmodelInfo_t	brushModelInfo[128];
 	int					numBrushModels;
 	gentity_t	*gameManager;
- 
+
     // record last time we loaded, so we can hack around sighting issues on reload
     int   lastLoadTime;
 
@@ -1707,11 +1707,11 @@ qboolean G_AimAtNearest( gentity_t *ent , int weapon);
 
 void CalcMuzzlePoints(gentity_t *ent, int weapon);
 void CalcMuzzlePointForActivate ( gentity_t *ent, vec3_t forward, vec3_t right, vec3_t up, vec3_t muzzlePoint );
-void Weapon_MagicAmmo_Ext(gentity_t *ent, 
+void Weapon_MagicAmmo_Ext(gentity_t *ent,
 						  vec3_t viewpos,
 						  vec3_t tosspos,
 						  vec3_t velocity);
-void Weapon_Medic_Ext(gentity_t *ent, 
+void Weapon_Medic_Ext(gentity_t *ent,
 						  vec3_t viewpos,
 						  vec3_t tosspos,
 						  vec3_t velocity);
@@ -2016,7 +2016,7 @@ extern	vmCvar_t	g_OmniBotPath;
 extern	vmCvar_t	g_OmniBotEnable;
 extern	vmCvar_t	g_OmniBotFlags;
 extern	vmCvar_t	g_OmniBotPlaying;
-extern	vmCvar_t	g_OmniBotGib; 
+extern	vmCvar_t	g_OmniBotGib;
 
 extern	vmCvar_t	g_gametype;
 
@@ -2348,6 +2348,9 @@ extern vmCvar_t g_slashKill;
 extern vmCvar_t g_noSkillUpgrades;
 extern vmCvar_t g_chargeType;
 
+// flms
+extern vmCvar_t g_flushItems;
+
 // Michael
 
 // for changing amount of xp needed to level up each skill
@@ -2644,12 +2647,12 @@ int			trap_AAS_Retreat
 	int *dangerSpots,
 	// The number of danger spots
 	int dangerSpotCount,
-	vec3_t srcpos, 
-	int srcarea, 
-	vec3_t dangerpos, 
-	int dangerarea, 
+	vec3_t srcpos,
+	int srcarea,
+	vec3_t dangerpos,
+	int dangerarea,
 	// Min range from startpos
-	float range, 
+	float range,
 	// Min range from danger
 	float dangerRange,
 	int travelflags
@@ -3299,7 +3302,7 @@ extern g_shrubbot_ban_t *g_shrubbot_bans[MAX_SHRUBBOT_BANS];
 #define XPSF_NR_MAPRESET	2  // no reset on map restarts
 #define XPSF_NR_EVER		4  // no reset ever
 // call ClientDisconnect() on clients with the same GUID as the connecting
-// client even if sv_wwwDlDisconnected is enabled. 
+// client even if sv_wwwDlDisconnected is enabled.
 #define XPSF_WIPE_DUP_GUID	8
 #define XPSF_STORE_AT_RESTART 16 // store xp at restarts, nextmaps, /map etc
 // Note that everywhere where this flag is used is being checked if intermission
@@ -3307,7 +3310,7 @@ extern g_shrubbot_ban_t *g_shrubbot_bans[MAX_SHRUBBOT_BANS];
 // serverload)
 
 
-// forty - #601 - moved g_hitboxes flags to bg_public.h 
+// forty - #601 - moved g_hitboxes flags to bg_public.h
 
 // tjw: g_hitsounds flags
 
@@ -3345,7 +3348,7 @@ extern g_shrubbot_ban_t *g_shrubbot_bans[MAX_SHRUBBOT_BANS];
 // specs continue following the same player when he goes
 // into limbo
 #define SPECF_PERSIST_FOLLOW 4
-// specs go into freelook instead of following next 
+// specs go into freelook instead of following next
 // available player
 #define SPECF_FL_ON_LIMBO 8
 
@@ -3355,7 +3358,7 @@ extern g_shrubbot_ban_t *g_shrubbot_bans[MAX_SHRUBBOT_BANS];
 #define SIF_P 1
 // display team information with Players_Allies and Players_Axis
 #define SIF_PLAYERS 2
-// display semi-colon delimited list of campaign maps 
+// display semi-colon delimited list of campaign maps
 #define SIF_CAMPAIGN_MAPS 4
 // display current campaign status in form xx,yy
 #define SIF_C 8
@@ -3366,10 +3369,10 @@ extern g_shrubbot_ban_t *g_shrubbot_bans[MAX_SHRUBBOT_BANS];
 // send PR instead of XP/KR in SERVERINFO, overrides SIF_KILL_RATING
 #define SIF_PLAYER_RATING 64
 
-// tjw: g_goombaFlags 
+// tjw: g_goombaFlags
 
 // goomba can only damage enemies
-#define GBF_ENEMY_ONLY 1 
+#define GBF_ENEMY_ONLY 1
 // EV_FALL_SHORT (hopping) does not do damage
 #define GBF_NO_HOP_DAMAGE 2
 // EV_FALL_SHORT does not to damage to teammates
@@ -3388,7 +3391,7 @@ extern g_shrubbot_ban_t *g_shrubbot_bans[MAX_SHRUBBOT_BANS];
 // use playerrating for active team balancing
 #define ATB_PLAYERRATING 2
 
-// tjw: g_ATB_rating 
+// tjw: g_ATB_rating
 
 // use total player XP
 #define ATBR_XP 1
@@ -3399,7 +3402,7 @@ extern g_shrubbot_ban_t *g_shrubbot_bans[MAX_SHRUBBOT_BANS];
 // use playerRating
 #define ATBR_PLAYERRATING 4
 
-// tjw: g_stats 
+// tjw: g_stats
 
 // don't count hits when gibbing corpses
 #define STATF_CORPSE_NO_HIT 1
@@ -3423,7 +3426,7 @@ extern g_shrubbot_ban_t *g_shrubbot_bans[MAX_SHRUBBOT_BANS];
 
 // always send the obituary to the client as EV_OBITUARY
 #define OBIT_CLIENT_ONLY 1
-// send the obituary as EV_OBITUARY if we think the client, but only if we 
+// send the obituary as EV_OBITUARY if we think the client, but only if we
 // think the client knows how to handle it
 #define OBIT_CLIENT_PREF 2
 // always let the server handle the obituary with cpm (or other means)
@@ -3435,8 +3438,8 @@ extern g_shrubbot_ban_t *g_shrubbot_bans[MAX_SHRUBBOT_BANS];
 #define LOGOPTS_DIS_TAPCON	4 // Disable the tap-out confirmation dialog box
 #define LOGOPTS_BAN_CONN	8 // Display connection attempts by banned players
 #define LOGOPTS_REPORT_GIBS	16 // Report $victim was gibbed by $attacker
-#define LOGOPTS_OMIT_ITEMS	32 // Omit "Item" lines from logfile 
-#define LOGOPTS_GUID	128 // Log the GUIDs, had other functionality in shrubet 
+#define LOGOPTS_OMIT_ITEMS	32 // Omit "Item" lines from logfile
+#define LOGOPTS_GUID	128 // Log the GUIDs, had other functionality in shrubet
 #define LOGOPTS_PRIVMSG 256 // log all private messages
 #define LOGOPTS_REALTIME 512 // real time stamps in log (dvl)
 #define LOGOPTS_TK_WEAPON 2048 // print out how you TK'ed
@@ -3509,7 +3512,7 @@ void G_IntermissionVoteTally( gentity_t *ent );
 #define ASBLOCK_ANNOUNCE 1
 #define ASBLOCK_EASY 2
 // Not implemented but reserving since it's in the shrub docs
-#define ASBLOCK_PLAY_SOUND 4 
+#define ASBLOCK_PLAY_SOUND 4
 #define ASBLOCK_LVL3_FDOPS_NOBLOCK 8
 #define ASBLOCK_TEAMMATE_NOBLOCK 16
 #define ASBLOCK_GIVE_XP 32
