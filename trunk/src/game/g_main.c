@@ -547,6 +547,7 @@ vmCvar_t g_damageBonusOpts;
 
 // quad
 vmCvar_t g_noSkillUpgrades;
+vmCvar_t g_chargeType;
 
 vmCvar_t g_countryFlags; //mcwf GeoIP
 
@@ -1099,6 +1100,7 @@ cvarTable_t		gameCvarTable[] = {
 	
 	//quad
 	{ &g_noSkillUpgrades, "g_noSkillUpgrades", "0", 0},
+	{ &g_chargeType, "g_chargeType", "2", 0},
 
 };
 

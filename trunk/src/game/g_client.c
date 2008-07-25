@@ -616,7 +616,27 @@ void limbo( gentity_t *ent, qboolean makeCorpse )
 
 		// forty - #589 - Dens slashkill exploit fix
 		// Dens: save the chargetime for g_slashkill flag 4
-		ent->client->pers.savedClassWeaponTime = ent->client->ps.classWeaponTime;
+		// quad: multiclass charge handling
+		if ( g_chargeType.integer == 2 ) {
+			switch(ent->client->sess.playerType) {
+				case PC_MEDIC:
+					ent->client->pers.savedClassWeaponTimeMed = ent->client->ps.classWeaponTime;
+					break;
+				case PC_ENGINEER:
+					ent->client->pers.savedClassWeaponTimeEng = ent->client->ps.classWeaponTime;
+					break;
+				case PC_FIELDOPS:
+					ent->client->pers.savedClassWeaponTimeFop = ent->client->ps.classWeaponTime;
+					break;
+				case PC_COVERTOPS:
+					ent->client->pers.savedClassWeaponTimeCvop = ent->client->ps.classWeaponTime;
+					break;
+				default:
+					ent->client->pers.savedClassWeaponTime = ent->client->ps.classWeaponTime;
+			}
+		} else {
+			ent->client->pers.savedClassWeaponTime = ent->client->ps.classWeaponTime;
+		}
 
 		ent->client->ps.pm_flags |= PMF_LIMBO;
 		ent->client->ps.pm_flags |= PMF_FOLLOW;
@@ -1607,7 +1627,10 @@ void SetWolfSpawnWeapons( gclient_t *client )
 	}
 	else {
 		// tjw: give full charge bar
-		client->ps.classWeaponTime = -999999;
+		// quad: cvar for this // TODO: first spawn?!?
+		if ( g_chargeType.integer == 0 ) {
+			client->ps.classWeaponTime = -999999;
+		}
 	}
 
 	client->pers.slashKill = qfalse;
@@ -3131,7 +3154,28 @@ void ClientSpawn(
 	//client->ps.classWeaponTime = savedClassWeaponTime;
 
 	// forty - #589 - Dens slashkill exploit fix
-	client->ps.classWeaponTime = client->pers.savedClassWeaponTime;
+	// quad: multiclass charge handling
+	if ( g_chargeType.integer == 2 ) {
+		switch(client->sess.latchPlayerType) {
+			case PC_MEDIC:
+				client->ps.classWeaponTime = client->pers.savedClassWeaponTimeMed;
+				break;
+			case PC_ENGINEER:
+				client->ps.classWeaponTime = client->pers.savedClassWeaponTimeEng;
+				break;
+			case PC_FIELDOPS:
+				client->ps.classWeaponTime = client->pers.savedClassWeaponTimeFop;
+				break;
+			case PC_COVERTOPS:
+				client->ps.classWeaponTime = client->pers.savedClassWeaponTimeCvop;
+				break;
+			default:
+				client->ps.classWeaponTime = client->pers.savedClassWeaponTime;
+		}
+	} else {
+		client->ps.classWeaponTime = client->pers.savedClassWeaponTime;
+	}
+	
 
 	client->deathTime = savedDeathTime;
 

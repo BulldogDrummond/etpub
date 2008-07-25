@@ -1978,4 +1978,5 @@
            fix for Ticket #10 by RedEye
 * flms:    added g_spawnInvulFair by PCR
 * drevil:  added support for Omni-bot 0.7
-
+* quad:    added more control over "energy" ( class weapon time ) via cvar
+           g_chargeType

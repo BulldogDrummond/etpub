@@ -47,7 +47,7 @@ dt {
 </tr>
 <tr>
 <td><a href="#g_spawnInvulFair">g_spawnInvulFair</a></td>
-<td>&nbsp;</td>
+<td><a href="#g_chargeType">g_chargeType</a></td>
 <td>&nbsp;</td>
 <td>&nbsp;</td>
 </tr>
@@ -3149,7 +3149,6 @@ every map requires an engi for example</p>
 example: vsay hi Hey, how are you doing
 will write on the screen Hey, how are you doing, and also plays the voicechat 'hi"
 <p>Note: this requires ETPub client > 20070825</p>
-</p>
 <p>Default is 1</p>
 
 <a name="g_countryFlags"></a>
@@ -3159,16 +3158,30 @@ will write on the screen Hey, how are you doing, and also plays the voicechat 'h
 <p>Players can enable/disable it with cg_countryFlags (default 1).</p>
 <p>Note: this requires ETPub client > 20080505. Also, you will need the
 GeoIP.dat file in your server's etpub folder. You can get the latest one at
-http://www.maxmind.com/download/geoip/database/GeoIP.dat.gz</p>
-</p>
+http://www.maxmind.com/download/geoip/database/GeoIP.dat.gz</p>
 <p>Default is 1</p>
 
 <a name="g_noSkillUpgrades"></a>
 <dt>g_noSkillUpgrades [integer]
 <dd>
 <p>When set to 1, disables player skill upgrades.</p>
-</p>
 <p>Default is 0</p>
+
+<a name="g_chargeType"></a>
+<dt>g_chargeType [0|1|2]
+<dd>
+<p>Changes the way the charge bar works. Using g_slashKill will take precedence 
+over this setting</p>
+<dl>
+	<dt>0
+	<dd>Old ETPub behaviour.
+	<dt>1
+	<dd>Does not reset the charge bar at respawn.
+	<dt>2
+	<dd>ETPro behaviour. Each class has its own charge bar, which fill up
+	independently.
+</dl>
+<p>Default is 2</p>
 
 <hr>
 <a name="mapvoting"></a>

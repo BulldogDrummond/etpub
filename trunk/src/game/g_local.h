@@ -854,6 +854,10 @@ typedef struct {
 
 	// forty - #589 - Dens slashkill exploit fix
 	int	savedClassWeaponTime; // Dens: to save the chargebar for g_slashkill flag 4
+	int	savedClassWeaponTimeMed;
+	int	savedClassWeaponTimeEng;
+	int	savedClassWeaponTimeFop;
+	int	savedClassWeaponTimeCvop;
 
 	// Dens: multikills
 	int multikill_time;
@@ -2342,6 +2346,7 @@ extern vmCvar_t g_slashKill;
 
 // quad
 extern vmCvar_t g_noSkillUpgrades;
+extern vmCvar_t g_chargeType;
 
 // Michael
 
