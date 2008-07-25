@@ -1106,7 +1106,7 @@ cvarTable_t		gameCvarTable[] = {
 	{ &g_chargeType, "g_chargeType", "2", 0},
 
 	//flms
-	{ &g_chargeType, "g_flushItems", "1", 0},
+	{ &g_flushItems, "g_flushItems", "1", 0},
 
 };
 
