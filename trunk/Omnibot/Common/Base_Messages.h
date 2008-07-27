@@ -1,8 +1,8 @@
 ////////////////////////////////////////////////////////////////////////////////
 // 
 // $LastChangedBy: drevil $
-// $LastChangedDate: 2008-04-07 19:57:21 -0700 (Mon, 07 Apr 2008) $
-// $LastChangedRevision: 2549 $
+// $LastChangedDate: 2008-07-22 22:13:08 -0700 (Tue, 22 Jul 2008) $
+// $LastChangedRevision: 3109 $
 //
 ////////////////////////////////////////////////////////////////////////////////
 
@@ -533,6 +533,23 @@ struct Event_ScriptMessage
 struct Event_ScriptSignal
 {
 	char		m_SignalName[64];
+};
+
+struct Event_EntityConnection
+{
+	GameEntity	m_Entity;
+	int			m_ConnectionId;
+	ConnDir		m_ConnectionDir;
+	BitFlag32	m_Team;
+	float		m_Radius;
+	bool		m_Teleport;
+
+	Event_EntityConnection()
+		: m_ConnectionId(0)
+		, m_ConnectionDir(CON_TWO_WAY)
+		, m_Teleport(false)
+	{
+	}
 };
 
 #pragma pack(pop)

@@ -1,8 +1,8 @@
 ////////////////////////////////////////////////////////////////////////////////
 // 
 // $LastChangedBy: drevil $
-// $LastChangedDate: 2008-05-19 21:01:05 -0700 (Mon, 19 May 2008) $
-// $LastChangedRevision: 2862 $
+// $LastChangedDate: 2008-07-22 22:13:08 -0700 (Tue, 22 Jul 2008) $
+// $LastChangedRevision: 3109 $
 //
 ////////////////////////////////////////////////////////////////////////////////
 
@@ -158,6 +158,13 @@ typedef enum eFireMode
 	// Cept for this
 	InvalidFireMode
 } FireMode;
+
+typedef enum eConnDir
+{
+	CON_SOURCE,
+	CON_DEST,
+	CON_TWO_WAY,
+} ConnDir;
 
 typedef enum eStance
 {

@@ -1,8 +1,8 @@
 ////////////////////////////////////////////////////////////////////////////////
 // 
 // $LastChangedBy: drevil $
-// $LastChangedDate: 2008-02-03 22:28:54 -0800 (Sun, 03 Feb 2008) $
-// $LastChangedRevision: 2420 $
+// $LastChangedDate: 2008-07-22 22:13:08 -0700 (Tue, 22 Jul 2008) $
+// $LastChangedRevision: 3109 $
 //
 // about: Generic Bot Events
 //
@@ -38,6 +38,7 @@ typedef enum
 		GAME_CHEATS,
 		GAME_SCRIPTSIGNAL,
 		GAME_SOUND,
+		GAME_ADD_ENTITY_CONNECTION,
 	GAME_ID_LAST,
 
 	EVENT_ID_FIRST,
