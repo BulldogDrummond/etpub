@@ -2583,13 +2583,7 @@ public:
 		if(pEnt && pEnt->inuse)
 		{
 			// Set any flags.
-			if ( pEnt->s.eType == ET_PLAYER && pEnt->health > GIB_HEALTH && pEnt->health <= 0 
-				&& g_OmniBotGib.integer )
-			{
-				//ungibbed players are proned
-				_flags.SetFlag(ENT_FLAG_PRONED); 
-			}
-			else if(pEnt->health <= 0)
+			if(pEnt->health <= 0)
 				_flags.SetFlag(ENT_FLAG_DEAD);
 			if(pEnt->client && !IsBot(pEnt))
 				_flags.SetFlag(ENT_FLAG_HUMANCONTROLLED);

@@ -36,7 +36,6 @@ vmCvar_t	g_OmniBotPath;
 vmCvar_t	g_OmniBotEnable;
 vmCvar_t	g_OmniBotPlaying;
 vmCvar_t	g_OmniBotFlags;
-vmCvar_t	g_OmniBotGib;
 
 vmCvar_t  g_panzerwar;
 vmCvar_t  g_sniperwar;
@@ -1099,7 +1098,6 @@ cvarTable_t		gameCvarTable[] = {
 	{ &g_OmniBotEnable, "omnibot_enable", "1", CVAR_ARCHIVE | CVAR_SERVERINFO_NOUPDATE | CVAR_NORESTART, 0, qfalse },
 	{ &g_OmniBotPlaying, "omnibot_playing", "0", CVAR_SERVERINFO_NOUPDATE | CVAR_ROM, 0, qfalse },
 	{ &g_OmniBotFlags, "omnibot_flags", "0", CVAR_ARCHIVE | CVAR_NORESTART, 0, qfalse },
-	{ &g_OmniBotGib, "g_botGib", "0", CVAR_ARCHIVE, 0, qtrue},
 
 	//quad
 	{ &g_noSkillUpgrades, "g_noSkillUpgrades", "0", 0},

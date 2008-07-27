@@ -2016,7 +2016,6 @@ extern	vmCvar_t	g_OmniBotPath;
 extern	vmCvar_t	g_OmniBotEnable;
 extern	vmCvar_t	g_OmniBotFlags;
 extern	vmCvar_t	g_OmniBotPlaying;
-extern	vmCvar_t	g_OmniBotGib;
 
 extern	vmCvar_t	g_gametype;
 
