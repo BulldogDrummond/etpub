@@ -1982,3 +1982,4 @@
 * quad:    added more control over "energy" ( class weapon time ) via cvar
            g_chargeType
 * flms:    added g_flushItems (NQ)
+* flms:    mg's can make headshots

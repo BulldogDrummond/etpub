@@ -1012,6 +1012,12 @@ qboolean IsHeadShotWeapon (int mod) {
 			|| mod == MOD_FG42SCOPE
 
 			|| mod == MOD_KNIFE
+
+			|| ((mod == MOD_MG42
+					|| mod == MOD_MACHINEGUN
+					|| mod == MOD_BROWNING
+					|| mod == MOD_MOBILE_MG42)
+					&& (g_weapons.integer & WPF_MG_HEADSHOT))
 			)
 		return qtrue;
 

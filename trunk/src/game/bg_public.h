@@ -883,6 +883,7 @@ typedef enum {
 #define WPF_GARAND_EQUALITY			512
 #define WPF_MORTAR_BOXED			1024 //perro: Mortar boxing
 #define WPF_KNIFE_GIBS				2048 // Dens: knife gibs when dead
+#define WPF_MG_HEADSHOT				4096 // flms: mg's can also make headshots
 
 #define MISC_DOUBLE_JUMP 1
 #define MISC_BINOC_MASTER 2
