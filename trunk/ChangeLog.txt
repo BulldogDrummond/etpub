@@ -1983,3 +1983,4 @@
            g_chargeType
 * flms:    added g_flushItems (NQ)
 * flms:    mg's can make headshots
+* flms:    you also hear hitsounds when Friendly Fire is off and g_reflectFriendlyFire is on

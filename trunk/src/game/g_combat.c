@@ -1421,6 +1421,7 @@ void G_Hitsound(gentity_t *targ,
 		if(!(g_hitsounds.integer & HSF_NO_TEAM_WARN) &&
 			(!client->lasthurt_mod || 
 			 client->lasthurt_client != attacker->s.number) &&
+			attacker->client->lasthurt_mod != MOD_REFLECTED_FF &&
 			g_gamestate.integer == GS_PLAYING &&
 			!gib) {
 			
@@ -2110,7 +2111,11 @@ void G_Damage( gentity_t *targ, gentity_t *inflictor, gentity_t *attacker,  vec3
 								ffDamage = 0;
 							}
 							// apply the damage...
+							if(!g_friendlyFire.integer) {
+								G_Hitsound(attacker, attacker, mod, ((targ->health - take) <= limbo_health), headShot);
+							}
 							attacker->health -= ffDamage;
+							attacker->client->lasthurt_mod = MOD_REFLECTED_FF;
 							// fatal?
 							if (attacker->health <=0 ){
 								attacker->deathType = MOD_REFLECTED_FF;
