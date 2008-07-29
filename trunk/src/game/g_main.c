@@ -550,6 +550,7 @@ vmCvar_t g_chargeType;
 
 // flms
 vmCvar_t g_flushItems;
+vmCvar_t g_mg42;
 
 vmCvar_t g_countryFlags; //mcwf GeoIP
 
@@ -1105,6 +1106,7 @@ cvarTable_t		gameCvarTable[] = {
 
 	//flms
 	{ &g_flushItems, "g_flushItems", "1", 0},
+	{ &g_mg42, "g_mg42", "0", 0},
 
 };
 

@@ -2349,6 +2349,7 @@ extern vmCvar_t g_chargeType;
 
 // flms
 extern vmCvar_t g_flushItems;
+extern vmCvar_t g_mg42;
 
 // Michael
 

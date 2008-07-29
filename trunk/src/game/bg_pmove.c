@@ -29,6 +29,7 @@
 #define PM_MEDIC_NOSELFADREN 0 // don't know that this matters client side
 #define PM_TRACE_ALL (cgs.misc & MISC_TRACE_ALL)
 #define PM_OLD_PRONE (cgs.misc & MISC_OLD_PRONE)
+#define PM_MG_RELOADS 0
 
 #elif GAMEDLL
 #define PM_GameType g_gametype.integer
@@ -44,6 +45,7 @@
 #define PM_MEDIC_NOSELFADREN (g_medics.integer & MEDIC_NOSELFADREN)
 #define PM_TRACE_ALL (g_misc.integer & MISC_TRACE_ALL)
 #define PM_OLD_PRONE (g_misc.integer & MISC_OLD_PRONE)
+#define PM_MG_RELOADS (g_mg42.integer & MG_RELOADS)
 #endif
 
 #define PM_IsSinglePlayerGame() (PM_GameType == GT_SINGLE_PLAYER || PM_GameType == GT_COOP)
@@ -2717,6 +2719,8 @@ static void PM_BeginWeaponReload( int weapon ) {
 		break;
 	case WP_MOBILE_MG42:
 	case WP_MOBILE_MG42_SET:
+		if(PM_MG_RELOADS)
+			break;
 		if(pm->ps->ammoclip[WP_MOBILE_MG42] != 0)
 			return;
 		break;

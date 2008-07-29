@@ -84,5 +84,7 @@ extern vmCvar_t g_misc;
 extern vmCvar_t g_doubleJumpHeight;
 extern vmCvar_t g_staminaRecharge;
 extern vmCvar_t g_medics;
+// flms
+extern vmCvar_t g_mg42;
 
 #endif
