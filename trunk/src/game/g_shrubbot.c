@@ -24,7 +24,7 @@ extern char bigTextBuffer[100000];
 extern vmCvar_t g_panzerwar, g_sniperwar, g_riflewar;
 
 #define WARCOMMAND(TYPE)\
-	{#TYPE "war", G_shrubbot_ ## TYPE ## war, 'G', 0,\
+	{#TYPE "war", G_shrubbot_ ## TYPE ## war, 'q', 0,\
 		"enables/disables " #TYPE "war", "on|off"}
 
 // note: list ordered alphabetically
@@ -40,8 +40,8 @@ static const struct g_shrubbot_cmd g_shrubbot_cmds[] = {
 		"burns a player taking some of his health",
 		"[^3name|slot#^7] (^hreason^7)"},
 	// redeye
-	{"bye",	G_shrubbot_bye,	'D', 0,
-		"Print a goodbye message to all players", ""},
+	// {"bye",	G_shrubbot_bye,	'D', 0,
+	//	"Print a goodbye message to all players", ""},
 	{"cancelvote",	G_shrubbot_cancelvote,	'c', 0,
 		"cancel a vote taking place", ""},
 		{"dewarn",	G_shrubbot_dewarn,	'R', 0,
@@ -55,7 +55,7 @@ static const struct g_shrubbot_cmd g_shrubbot_cmds[] = {
 		"fling all players", ""},
 	{"gib",		G_shrubbot_gib,		'g', SCMDF_TYRANNY,
 		"instantly gib a player", "[^3name|slot#^7]"},
-  {"giba",  G_shrubbot_giba,    'G', SCMDF_TYRANNY,
+  {"giba",  G_shrubbot_giba,    'Q', SCMDF_TYRANNY,
     "instantly gib all players", ""},
 	{"help",	G_shrubbot_help,	'h', 0,
 		"display commands available to you or help on a specific command",
@@ -78,7 +78,7 @@ static const struct g_shrubbot_cmd g_shrubbot_cmds[] = {
 		"[^3r|b|s|all^7]"},
 	{"lol",		G_shrubbot_lol,		'x', SCMDF_TYRANNY,
 		"grenades drop from a specified player or all players",
-		"(^hname|slot#^7)"},
+		"(^hname|slot#^7) (^hnades#^7"},
 	{"mute",	G_shrubbot_mute,	'm', 0,
 		"mute a player", "[^3name|slot#^7] (^htime^7) (^hreason^7)"},
 	{"news",	G_shrubbot_news,	'W', 0,
@@ -135,11 +135,11 @@ static const struct g_shrubbot_cmd g_shrubbot_cmds[] = {
 	WARCOMMAND(sniper),
 	{"spec999",	G_shrubbot_spec999,	'P', 0,
 		"move 999 pingers to the spectator team", ""},
-  {"splat",   G_shrubbot_gib,   'g', SCMDF_TYRANNY,
-    "instantly gib a player", "[^3name|slot#^7]"},
-  {"splata",  G_shrubbot_giba,    'G', SCMDF_TYRANNY,
-    "instantly gib all players", ""},
-	{"spreerecord",G_shrubbot_spreerecord, 't', 0,
+  // {"splat",   G_shrubbot_gib,   'g', SCMDF_TYRANNY,
+  //	"instantly gib a player", "[^3name|slot#^7]"},
+  // {"splata",  G_shrubbot_giba,    'Q', SCMDF_TYRANNY,
+  //	"instantly gib all players", ""},
+	{"spreerecord",G_shrubbot_spreerecord, 'E', 0,
 		"see the spreerecord of this map and the overall spreerecord", ""},
 	// redeye
 	{"spree",	G_shrubbot_spree,	'E', 0,
@@ -156,7 +156,7 @@ static const struct g_shrubbot_cmd g_shrubbot_cmds[] = {
 		"show the current local server time", ""},
 	// redeye
 	{"tspree",	G_shrubbot_tspree,	'E', 0,
-		"show the top n current killing spree (default top 5)", "[n]"},
+		"show the top n current killing spree (default top 5)", "(^hamount^7)"},
 	{"unban",	G_shrubbot_unban,	'b', 0,
 		"unbans a player specified by the slot as seen in !showbans",
 		"[^3ban slot#^7]"},
@@ -4255,7 +4255,7 @@ qboolean G_shrubbot_tspree(gentity_t *ent, int skiparg)
 	qboolean found = qfalse;
 
 	if(Q_SayArgc() > 2+skiparg) {
-		SPC("^/tspree usage: ^7!tspree [n]");
+		SPC("^/tspree usage: ^7!tspree [amount]");
 		return qfalse;
 	}else{
 		Q_SayArgv(1+skiparg, name, sizeof(name));
@@ -4313,12 +4313,12 @@ qboolean G_shrubbot_tspree(gentity_t *ent, int skiparg)
 } */
 
 
-qboolean G_shrubbot_bye(gentity_t *ent, int skiparg)
+/*qboolean G_shrubbot_bye(gentity_t *ent, int skiparg)
 {
 	AP(va("chat \"^/%s^3 waves his hand to say ^1GOOD BYE^3. We surely meet later!\" -1",
 		ent->client->pers.netname));
 	return qtrue;
-}
+} */
 
 /* qboolean G_shrubbot_sk(gentity_t *ent, int skiparg)
 {
