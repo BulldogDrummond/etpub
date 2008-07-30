@@ -2421,10 +2421,10 @@ char *ClientConnect( int clientNum, qboolean firstTime, qboolean isBot ) {
 	
 		if(Q_stricmp(client->sess.guid, guid)){ 
 			G_LogPrintf( "GUIDSPOOF: client %i Original guid %s"
-				"Secondary guid %s\nettv %d",
+				"Secondary guid %s",
 				clientNum,
 				client->sess.guid,
-				guid, client->sess.ettv);
+				guid);
 			if((g_spoofOptions.integer & SPOOFOPT_EMPTY_GUID) 
 				&& !Q_stricmp(client->sess.guid, "")){
 				Q_strncpyz(client->sess.guid, guid, sizeof(client->sess.guid));

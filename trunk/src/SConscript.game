@@ -86,6 +86,7 @@ g_censor.c
 g_player_rating.c
 g_settings.c
 et-antiwarp.c
+geoip.c
 ../../../../../Omnibot/Common/BotLoadLibrary.cpp
 """
 
