@@ -331,6 +331,14 @@ struct Msg_GotoWaypoint
 {
 	char		m_WaypointName[64];
 	float		m_Origin[3];
+
+	Msg_GotoWaypoint()
+	{
+		m_Origin[0] = 0.f;
+		m_Origin[1] = 0.f;
+		m_Origin[2] = 0.f;
+		m_WaypointName[0] = 0;
+	}
 };
 
 struct Msg_MoverAt

@@ -205,6 +205,7 @@ eomnibot_error Omnibot_LoadLibrary(int version, const char *lib, const char *pat
 		if(pfnGetBotFuncs == 0)
 		{
 			r = BOT_ERROR_CANTGETBOTFUNCTIONS;
+			Omnibot_Load_PrintErr(OB_VA("Omni-bot Failed with Error: %s", Omnibot_ErrorString(r)));
 		} 
 		else
 		{
@@ -327,8 +328,9 @@ eomnibot_error Omnibot_LoadLibrary(int version, const char *lib, const char *pat
 		pfnGetBotFuncs = (pfnGetFunctionsFromDLL)GetProcAddress(g_BotLibrary, "ExportBotFunctionsFromDLL");
 		if(!pfnGetBotFuncs)
 		{
-			OB_ShowLastError("GetProcAddress", dlerror());
 			r = BOT_ERROR_CANTGETBOTFUNCTIONS;
+			Omnibot_Load_PrintErr(OB_VA("Omni-bot Failed with Error: %s", Omnibot_ErrorString(r)));
+			OB_ShowLastError("GetProcAddress", dlerror());
 		}
 		else
 		{
