@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="Windows-1252"?>
 <VisualStudioProject
 	ProjectType="Visual C++"
-	Version="8.00"
+	Version="8,00"
 	Name="game"
 	ProjectGUID="{4F8332D7-5687-4875-813A-A1B7AA479C2D}"
 	RootNamespace="game"
@@ -216,6 +216,7 @@
 				Name="VCPostBuildEventTool"
 				Description="Copy to ET"
 				CommandLine="copy &quot;$(TargetPath)&quot; &quot;$(ETDIR)\etpub\&quot;"
+				ExcludedFromBuild="true"
 			/>
 		</Configuration>
 	</Configurations>
@@ -335,6 +336,9 @@
 				>
 			</File>
 			<File
+				RelativePath=".\geoip.c"
+				>
+			<File
 				RelativePath=".\g_active.c"
 				>
 			</File>
@@ -402,6 +406,9 @@
 				RelativePath=".\g_items.c"
 				>
 			</File>
+			<File
+				RelativePath=".\g_lua.c"
+				>
 			<File
 				RelativePath=".\g_main.c"
 				>

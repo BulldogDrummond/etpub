@@ -1849,7 +1849,7 @@ static void ClientCleanName( const char *in, char *out, int outSize )
 
 void G_StartPlayerAppropriateSound(gentity_t *ent, char *soundType) {
 }
-// Dens: based on reyalp's userinfocheck.lua
+// Dens: based on reyalp's userinfocheck.lua and combinedfixes.lua
 char *CheckUserinfo( int clientNum )
 {
 	char	userinfo[MAX_INFO_STRING];
@@ -1864,6 +1864,14 @@ char *CheckUserinfo( int clientNum )
 	length = strlen(userinfo);
 	if(length < 1){
 		return "Userinfo too short";
+	}
+
+	// Dens: 44 is a bit random now: MAX_INFO_STRING - 44 = 980. The LUA script
+	// uses 980, but I don't know if there is a specific reason for that
+	// number. Userinfo should never get this big anyway, unless someone is
+	// trying to force the engine to truncate it, so that the real IP is lost
+	if(length > MAX_INFO_STRING - 44){
+		return "Userinfo too long";
 	}
 
 	// Dens: userinfo always has to have a leading slash
@@ -1885,7 +1893,8 @@ char *CheckUserinfo( int clientNum )
 		return "Bad number of slashes in userinfo";
 	}
 
-	// Dens: make sure there is only one ip, cl_guid, name and cl_punkbuster field
+	// Dens: make sure there is only one ip, cl_guid, name and cl_punkbuster
+	// field
 	if(length > 4){
 		for(i=0;userinfo[i+3];i++){
 			if(userinfo[i] == '\\' && userinfo[i+1] == 'i' &&
@@ -1993,7 +2002,11 @@ void ClientUserinfoChanged( int clientNum ) {
 
 	// check for malformed or illegal info strings
 	if ( !Info_Validate(userinfo) ) {
-		Q_strncpyz( userinfo, "\\name\\badinfo", sizeof(userinfo) );
+		// Dens: this makes not much sense: game found a weird char in the
+		// userinfo, so let's make the userinfo useless for the game...
+		// better just drop the client
+		// Q_strncpyz( userinfo, "\\name\\badinfo", sizeof(userinfo) );
+		trap_DropClient( clientNum, "^1Forbidden character in userinfo" , 0);
 	}
 
 #ifndef DEBUG_STATS
@@ -2470,54 +2483,49 @@ char *ClientConnect( int clientNum, qboolean firstTime, qboolean isBot ) {
 		Q_strncpyz(client->sess.ip, value, sizeof(client->sess.ip));
 	}
 
-//mcwf GeoIP
+	//mcwf GeoIP
+	
+	//10.0.0.0/8			[RFC1918]
+	//172.16.0.0/12			[RFC1918]
+	//192.168.0.0/16		[RFC1918]
+	//169.254.0.0/16		[RFC3330] we need this ?
 
-//10.0.0.0/8			[RFC1918]
-//172.16.0.0/12			[RFC1918]
-//192.168.0.0/16		[RFC1918]
-//169.254.0.0/16		[RFC3330] we need this ?
-
-
-//query performance about ~2.6 Sec for 1 million requests p4 2.0 Ghz
+	//query performance about ~2.6 Sec for 1 million requests p4 2.0 Ghz
 
 	if (gidb != NULL) {
 
-	value = Info_ValueForKey (userinfo, "ip");
-	if (!strcmp( value, "localhost")) {
-
-		client->sess.uci = 0;
-
-	} else {
-
-		unsigned long ip = GeoIP_addr_to_num(value);
-
-		if (((ip & 0xFF000000) == 0x0A000000) ||
-			((ip & 0xFFF00000) == 0xAC100000) ||
-			((ip & 0xFFFF0000) == 0xC0A80000) ||
-			( ip == 0x7F000001) ) {
+		value = Info_ValueForKey (userinfo, "ip");
+		if (!strcmp( value, "localhost")) {
 
 			client->sess.uci = 0;
 
 		} else {
 
-			unsigned int ret = GeoIP_seek_record(gidb,ip);
+			unsigned long ip = GeoIP_addr_to_num(value);
 
-			if (ret > 0) {
-				client->sess.uci = ret;
+			if (((ip & 0xFF000000) == 0x0A000000) ||
+				((ip & 0xFFF00000) == 0xAC100000) ||
+				((ip & 0xFFFF0000) == 0xC0A80000) ||
+				( ip == 0x7F000001) ) {
+
+				client->sess.uci = 0;
+
 			} else {
-				client->sess.uci = 246;
-				G_LogPrintf("GeoIP: This IP:%s cannot be located\n",value);
+
+				unsigned int ret = GeoIP_seek_record(gidb,ip);
+
+				if (ret > 0) {
+					client->sess.uci = ret;
+				} else {
+					client->sess.uci = 246;
+					G_LogPrintf("GeoIP: This IP:%s cannot be located\n",value);
+				}
 			}
-	
 		}
-
+	} else {
+		client->sess.uci = 255; //Don't draw anything if DB error
 	}
-
-} else {
-client->sess.uci = 255; //Don't draw anything if DB error
-}
-
-//mcwf GeoIP
+	//mcwf GeoIP
 
 	// tjw: this should not be necessary, but there seems to be
 	//      certain cases that allow new players to assume the

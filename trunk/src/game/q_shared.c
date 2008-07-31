@@ -1448,6 +1448,11 @@ qboolean Info_Validate( const char *s ) {
 	if ( strchr( s, ';' ) ) {
 		return qfalse;
 	}
+	// Dens: added \n. Newlines may confuse logparsers like etadmin and they
+	// shouldn't be in the userinfo anyway
+	if( strchr( s, '\n' ) ) {
+		return qfalse;
+	}
 	return qtrue;
 }
 
