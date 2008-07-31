@@ -19,12 +19,15 @@ export DEPEND DEPEND_REDIR INCLUDES GAME_CFLAGS
 
 all: qagame.mp.i386.so $(UI) $(CGAME)
 
-qagame.mp.i386.so: botai depend $(ALL_OBJECTS)
-	$(CXX) $(LDFLAGS) $(ALL_OBJECTS) $(wildcard ../botai/*.bai) -o $@
+qagame.mp.i386.so: botai lua depend $(ALL_OBJECTS)
+	$(CXX) $(LDFLAGS) $(ALL_OBJECTS) $(wildcard ../botai/*.bai) ../$(LUADIR)/src/liblua.a -o $@
 	#${STRIP} $@
 
 botai: 
 	$(MAKE) -C ../botai
+
+lua:
+	$(MAKE) -C ../$(LUADIR) linux
 
 depend: $(SRCS)
 	touch Makefile.depend
@@ -37,7 +40,7 @@ depend: $(SRCS)
 
 %.o: %.c
 	$(CC) -c $(CFLAGS) $< -o $@
-	
+
 %.oxx: %.cpp
 	$(CXX) -c $(CXXFLAGS) $< -o $@
 
@@ -52,9 +55,10 @@ depend: $(SRCS)
 
 %.wcg: %.c
 	$(MINGW) -c $(CGAME_WIN_CFLAGS) $< -o $@
-	
+
 clean:
 	$(MAKE) -C ../botai clean
+	$(MAKE) -C ../$(LUADIR) clean
 	-rm qagame.mp.i386.so *.o *.oxx *.ui *.wui *.cg *.wcg Makefile.depend*
 	-rm ../../Omnibot/Common/BotLoadLibrary.oxx
 

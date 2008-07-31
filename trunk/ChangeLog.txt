@@ -1984,4 +1984,5 @@
 * flms:    added g_flushItems (NQ)
 * flms:    mg's can make headshots
 * flms:    you also hear hitsounds when Friendly Fire is off and g_reflectFriendlyFire is on
-* flms:    mg's can reload midclip
+* flms:    mg's can reload midclip* quad:    Lua API for ETPub, aiming for compatibility with ETPro 
+           http://wolfwiki.anime.net/index.php/Lua_Mod_API (TODO: Docs!)

@@ -5,6 +5,7 @@
 
 #include "g_local.h"
 #include "g_etbot_interface.h"
+#include "g_lua.h"
 
 /*
 ==============================================================================
@@ -1172,6 +1173,13 @@ qboolean	ConsoleCommand( void ) {
 	char	cmd[MAX_TOKEN_CHARS];
 	
 	trap_Argv( 0, cmd, sizeof( cmd ) );
+	
+	if (Q_stricmp (cmd, "lua_status") == 0 ) {
+		G_LuaStatus(NULL);
+		return qtrue;
+	}
+	
+	//TODO: Lua console command hook
 
 #ifdef SAVEGAME_SUPPORT
 	if (Q_stricmp (cmd, "savegame") == 0) {
@@ -1672,14 +1680,17 @@ qboolean	ConsoleCommand( void ) {
 		for (i = 0; i < num_axis; ++i) {
 			cl = level.clients + axis[i];
 			G_Printf("%-24s %-10.0f %-10.f\n",
-				cl->pers.netname
-				,cl->sess.overall_killrating
+				cl->pers.netname,
+				cl->sess.overall_killrating,
+				0.0 //TODO: something missing here?
 			);
 			overall_sum += cl->sess.overall_killrating;
 		}
 		G_Printf("%-24s %-10.0f %-10.f\n",
 			"Average:",
-			overall_sum / num_axis);
+			overall_sum / num_axis,
+			0.0 //TODO: something missing here?
+		);
 
 		G_Printf("\n");
 
@@ -1688,8 +1699,9 @@ qboolean	ConsoleCommand( void ) {
 		for (i = 0; i < num_allies; ++i) {
 			cl = level.clients + allies[i];
 			G_Printf("%-24s %-10.0f %-10.f\n",
-				cl->pers.netname
-				,cl->sess.overall_killrating
+				cl->pers.netname,
+				cl->sess.overall_killrating,
+				0.0 //TODO: something missing here?
 			);
 			overall_sum += cl->sess.overall_killrating;
 		}

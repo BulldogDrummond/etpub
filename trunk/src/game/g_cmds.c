@@ -5804,6 +5804,13 @@ void ClientCommand( int clientNum ) {
 
 	trap_Argv( 0, cmd, sizeof( cmd ) );
 	
+	if (Q_stricmp (cmd, "lua_status") == 0) {
+		G_LuaStatus(ent);
+		return;
+	}
+	
+	//TODO: Lua client command hook
+	
 	if (Q_stricmp (cmd, "say") == 0) {
 		// forty - in mod flood protection
 		flooding = ClientIsFlooding(ent);

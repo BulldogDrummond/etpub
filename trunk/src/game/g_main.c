@@ -1,6 +1,7 @@
 #include "g_local.h"
 #include "etpro_mdx.h"
 #include "g_http_client.h"
+#include "g_lua.h"
 #include "../ui/menudef.h" // Dens: needed for the ref level
 
 // Include the "External"/"Public" components of AI_Team
@@ -547,6 +548,7 @@ vmCvar_t g_damageBonusOpts;
 // quad
 vmCvar_t g_noSkillUpgrades;
 vmCvar_t g_chargeType;
+vmCvar_t lua_modules;
 
 // flms
 vmCvar_t g_flushItems;
@@ -1103,6 +1105,7 @@ cvarTable_t		gameCvarTable[] = {
 	//quad
 	{ &g_noSkillUpgrades, "g_noSkillUpgrades", "0", 0},
 	{ &g_chargeType, "g_chargeType", "2", 0},
+	{ &lua_modules, "lua_modules", "", 0},
 
 	//flms
 	{ &g_flushItems, "g_flushItems", "1", 0},
@@ -2264,13 +2267,13 @@ void G_UpdateCvars( void )
 
 				if ( cv->trackChange && !(cv->cvarFlags & CVAR_LATCH) ) {
 					trap_SendServerCommand( -1, va("print \"Server:[lof] %s [lon]changed to[lof] %s\n\"", cv->cvarName, cv->vmCvar->string ) );
-	          if(cv->vmCvar == &g_panzerwar) {
-            	G_PanzerWar();
-          	} else if(cv->vmCvar == &g_sniperwar) {
-            	G_SniperWar();
-          	} else if(cv->vmCvar == &g_riflewar) {
-							G_RifleWar();
-						}
+					if(cv->vmCvar == &g_panzerwar) {
+						G_PanzerWar();
+					} else if(cv->vmCvar == &g_sniperwar) {
+						G_SniperWar();
+					} else if(cv->vmCvar == &g_riflewar) {
+						G_RifleWar();
+					}
 				}
 
 				if (cv->teamShader) {
@@ -2370,6 +2373,10 @@ void G_UpdateCvars( void )
 				}
 				else if(G_IsEtpubinfoCvar(cv->vmCvar)) {
 					G_UpdateEtpubinfo();
+				}
+				// quad - Lua API cvars
+				else if(cv->vmCvar == &lua_modules /* || cv->vmCvar == &lua_allowedModules */) {
+					G_LuaShutdown();
 				}
 				// OSP - Update vote info for clients, if necessary
 				else if(!G_IsSinglePlayerGame()) {
@@ -3007,6 +3014,10 @@ void G_InitGame( int levelTime, int randomSeed, int restart ) {
 		G_Printf("g_fixedphysics is EXPERIMENTAL, enabled it at your own risk, as it may be BUGGY\n");
 		//FIXME - turn off pmove_fixed
 	}*/
+	
+	// quad - Lua API
+	G_LuaInit();
+	G_LuaHook_InitGame(levelTime, randomSeed, restart);
 }
 
 
@@ -3017,6 +3028,10 @@ G_ShutdownGame
 =================
 */
 void G_ShutdownGame( int restart ) {
+
+	// quad - Lua API
+	G_LuaHook_ShutdownGame(restart);
+	G_LuaShutdown();
 
 	// Arnout: gametype latching
 	if	(
@@ -5633,6 +5648,9 @@ uebrgpiebrpgibqeripgubeqrpigubqifejbgipegbrtibgurepqgbn%i", level.time )
 	// Check if we are reloading, and times have expired
 	G_CheckReloadStatus();
 #endif // SAVEGAME_SUPPORT
+	
+	// quad - Lua API callback
+	G_LuaHook_RunFrame(levelTime);
 }
 
 // Is this a single player type game - sp or coop?

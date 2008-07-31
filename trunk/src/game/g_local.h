@@ -2346,6 +2346,7 @@ extern vmCvar_t g_slashKill;
 // quad
 extern vmCvar_t g_noSkillUpgrades;
 extern vmCvar_t g_chargeType;
+extern vmCvar_t lua_modules;
 
 // flms
 extern vmCvar_t g_flushItems;
