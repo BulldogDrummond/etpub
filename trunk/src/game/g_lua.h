@@ -38,6 +38,12 @@ lua_vm_t * G_LuaGetVM(lua_State *L);
 void G_LuaHook_InitGame(int levelTime, int randomSeed, int restart);
 void G_LuaHook_ShutdownGame(int restart);
 void G_LuaHook_RunFrame(int levelTime);
+//TODO: test all after this line
+qboolean G_LuaHook_ClientConnect(int clientNum, qboolean firstTime, qboolean isBot, char *reason);
+void G_LuaHook_ClientDisconnect(int clientNum);
+void G_LuaHook_ClientBegin(int clientNum);
+void G_LuaHook_ClientUserinfoChanged(int clientNum);
+void G_LuaHook_ClientSpawn(int clientNum, qboolean revived, qboolean teamChange, qboolean restoreHealth);
 
 #endif /* ifndef _G_LUA_H */
 

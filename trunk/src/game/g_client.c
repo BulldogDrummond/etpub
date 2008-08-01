@@ -1,4 +1,5 @@
 #include "g_local.h"
+#include "g_lua.h"
 #include "../ui/menudef.h"
 
 // g_client.c -- client functions that don't happen every frame
@@ -2234,6 +2235,13 @@ void ClientUserinfoChanged( int clientNum ) {
 	if( !Q_stricmp( oldname, s ) ) {
 		return;
 	}
+	
+	// Lua API callbacks
+	// This only gets called when the ClientUserinfo is changed, replicating 
+	// ETPro's behaviour.
+	G_LuaHook_ClientUserinfoChanged(clientNum);
+	
+	
 
 	if (g_logOptions.integer & LOGOPTS_GUID) // Log the GUIDs?
 	{
@@ -2450,6 +2458,11 @@ char *ClientConnect( int clientNum, qboolean firstTime, qboolean isBot ) {
 					0);
 			}
 		}
+	}
+	
+	// Lua API callbacks (check with Lua scripts)
+	if ( G_LuaHook_ClientConnect(clientNum, firstTime, isBot, reason) ) {
+		return reason;
 	}
 
 	// they can connect
@@ -3005,6 +3018,9 @@ void ClientBegin( int clientNum )
 	// OSP
 	G_smvUpdateClientCSList(ent);
 	// OSP
+	
+	// Lua API callbacks
+	G_LuaHook_ClientBegin(clientNum);
 }
 
 gentity_t *SelectSpawnPointFromList( char *list, vec3_t spawn_origin, vec3_t spawn_angles )
@@ -3487,6 +3503,9 @@ void ClientSpawn(
 		if ( !revived )
 			G_UseTargets( spawnPoint, ent );
 	}
+	
+	// Lua API callbacks
+	G_LuaHook_ClientSpawn( ent-g_entities, revived, teamChange, restoreHealth );
 
 	// run a client frame to drop exactly to the floor,
 	// initialize animations and other things
@@ -3559,6 +3578,9 @@ void ClientDisconnect( int clientNum ) {
 	if ( !ent->client ) {
 		return;
 	}
+	
+	// Lua API callbacks
+	G_LuaHook_ClientDisconnect(clientNum);
 
 	//////////////////////////////////////////////////////////////////////////
 	Bot_Event_ClientDisConnected(clientNum);

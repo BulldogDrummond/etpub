@@ -449,4 +449,143 @@ void G_LuaHook_RunFrame(int levelTime)
 	}
 }
 
+/** G_LuaHook_ClientConnect
+ * rejectreason = et_ClientConnect( clientNum, firstTime, isBot ) callback
+ */
+qboolean G_LuaHook_ClientConnect(int clientNum, qboolean firstTime, qboolean isBot, char *reason)
+{
+	int i;
+	lua_vm_t *vm;
+	for (i=0; i<LUA_NUM_VM; i++) {
+		vm = lVM[i];
+		if (vm) {
+			if (vm->id < 0 || vm->err)
+				continue;
+			if (!G_LuaGetNamedFunction(vm, "et_ClientConnect"))
+				continue;
+			// Arguments
+			lua_pushinteger(vm->L, clientNum);
+			lua_pushinteger(vm->L, (int)firstTime);
+			lua_pushinteger(vm->L, (int)isBot);
+			// Call
+			if (!G_LuaCall(vm, 3, 1)) {
+				G_LuaStopVM(vm);
+				continue;
+			}
+			// Return values
+			if (lua_isstring(vm->L, -1)) {
+				Q_strncpyz(reason, lua_tostring(vm->L, -1), MAX_STRING_CHARS);
+				return qtrue;
+			}
+		}
+	}
+	return qfalse;
+}
+
+/** G_LuaHook_ClientDisconnect
+ * et_ClientDisconnect( clientNum ) callback
+ */
+void G_LuaHook_ClientDisconnect(int clientNum)
+{
+	int i;
+	lua_vm_t *vm;
+	for (i=0; i<LUA_NUM_VM; i++) {
+		vm = lVM[i];
+		if (vm) {
+			if (vm->id < 0 || vm->err)
+				continue;
+			if (!G_LuaGetNamedFunction(vm, "et_ClientDisconnect"))
+				continue;
+			// Arguments
+			lua_pushinteger(vm->L, clientNum);
+			// Call
+			if (!G_LuaCall(vm, 1, 0)) {
+				G_LuaStopVM(vm);
+				continue;
+			}
+			// Return values
+		}
+	}
+}
+
+/** G_LuaHook_ClientBegin
+ * et_ClientBegin( clientNum ) callback
+ */
+void G_LuaHook_ClientBegin(int clientNum)
+{
+	int i;
+	lua_vm_t *vm;
+	for (i=0; i<LUA_NUM_VM; i++) {
+		vm = lVM[i];
+		if (vm) {
+			if (vm->id < 0 || vm->err)
+				continue;
+			if (!G_LuaGetNamedFunction(vm, "et_ClientBegin"))
+				continue;
+			// Arguments
+			lua_pushinteger(vm->L, clientNum);
+			// Call
+			if (!G_LuaCall(vm, 1, 0)) {
+				G_LuaStopVM(vm);
+				continue;
+			}
+			// Return values
+		}
+	}
+}
+
+/** void G_LuaHook_ClientUserinfoChanged(int clientNum);
+ * et_ClientUserinfoChanged( clientNum ) callback
+ */
+void G_LuaHook_ClientUserinfoChanged(int clientNum)
+{
+	int i;
+	lua_vm_t *vm;
+	for (i=0; i<LUA_NUM_VM; i++) {
+		vm = lVM[i];
+		if (vm) {
+			if (vm->id < 0 || vm->err)
+				continue;
+			if (!G_LuaGetNamedFunction(vm, "et_ClientUserinfoChanged"))
+				continue;
+			// Arguments
+			lua_pushinteger(vm->L, clientNum);
+			// Call
+			if (!G_LuaCall(vm, 1, 0)) {
+				G_LuaStopVM(vm);
+				continue;
+			}
+			// Return values
+		}
+	}
+}
+
+/** G_LuaHook_ClientSpawn
+ * et_ClientSpawn( clientNum, revived, teamChange, restoreHealth ) callback
+ */
+void G_LuaHook_ClientSpawn(int clientNum, qboolean revived, qboolean teamChange, qboolean restoreHealth)
+{
+	int i;
+	lua_vm_t *vm;
+	for (i=0; i<LUA_NUM_VM; i++) {
+		vm = lVM[i];
+		if (vm) {
+			if (vm->id < 0 || vm->err)
+				continue;
+			if (!G_LuaGetNamedFunction(vm, "et_ClientSpawn"))
+				continue;
+			// Arguments
+			lua_pushinteger(vm->L, clientNum);
+			lua_pushinteger(vm->L, (int)revived);
+			lua_pushinteger(vm->L, (int)teamChange);
+			lua_pushinteger(vm->L, (int)restoreHealth);
+			// Call
+			if (!G_LuaCall(vm, 4, 0)) {
+				G_LuaStopVM(vm);
+				continue;
+			}
+			// Return values
+		}
+	}
+}
 
