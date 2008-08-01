@@ -51,6 +51,12 @@ dt {
 <td><a href="#g_flushItems">g_flushItems</a></td>
 <td><a href="#g_mg42">g_mg42</a></td>
 </tr>
+<tr>
+<td><a href="#lua_modules">lua_modules</a></td>
+<td><a href="#sv_maxConnsPerIP">sv_maxConnsPerIP</a></td>
+<td><a href="#">&nbsp;</a></td>
+<td><a href="#">&nbsp;</a></td>
+</tr>
 </table>
 
 <br>
@@ -78,7 +84,7 @@ dt {
 <tr>
 <td colspan=4 align=center><b>server console commands</b></td>
 </tr><tr>
-<td>&nbsp;</td>
+<td><a href="#lua_status">lua_status</a></td>
 <td>&nbsp;</td>
 <td>&nbsp;</td>
 <td>&nbsp;</td>
@@ -3202,6 +3208,23 @@ over this setting</p>
 <p>Evens the dropped items out with the surface.</p>
 <p>Default is 1</p>
 
+<a name="lua_modules"></a>
+<dt>lua_modules [string]
+<dd>
+<p>List of files to be loaded by the Lua API engine. Can be separated by
+space, comma or semicolon. The paths are relative to the mod's directory,
+and can optionally be placed inside pk3 archieves.</p>
+<p>We are aiming for compatibility with ETPro's 
+<a href="http://wolfwiki.anime.net/index.php/Lua_Mod_API">Lua Mod API</a></p>
+<p>Default is ""</p>
+
+<a name="sv_maxConnsPerIP"></a>
+<dt>sv_maxConnsPerIP [integer]
+<dd>
+<p>Maximum number of connections allowed from one particular IP. This prevents
+the fake clients Denial of Service attack.</p>
+<p>Default is 4</p>
+
 <hr>
 <a name="mapvoting"></a>
 <h3>Map Voting</h3>
@@ -3403,6 +3426,11 @@ etpub does this automatically every time a map ends or the server is shut down.<
 <dd>
 <p>Clears all the spreerecords stored in XPSave file (doesn't work during warmup or
 intermission)</p>
+
+<a name="lua_status"></a>
+<dt>lua_status
+<dd>
+<p>Shows information about the scripts currently loaded by the Lua API engine.</p>
 
 </dl>
 

@@ -1991,4 +1991,5 @@
            added the \n char to the list of characters that may not be used in
            a userinfo string. A user with any of the forbidden chars in his/her
            userinfo will be dropped from the server from now on
+* quad:    added sv_maxConnsPerIP as a prevention for fakeplayer DoS attack
 

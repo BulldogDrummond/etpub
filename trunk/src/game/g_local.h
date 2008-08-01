@@ -2347,6 +2347,7 @@ extern vmCvar_t g_slashKill;
 extern vmCvar_t g_noSkillUpgrades;
 extern vmCvar_t g_chargeType;
 extern vmCvar_t lua_modules;
+extern vmCvar_t sv_maxConnsPerIP;
 
 // flms
 extern vmCvar_t g_flushItems;

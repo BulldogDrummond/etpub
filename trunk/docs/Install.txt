@@ -6,6 +6,9 @@ etpub is a server side only modification.  This means that it only is
 installed on servers and clients do not need to download any files to
 play on etpub servers. 
 
+Using the etpub client is however highly recommended and brings many new
+features like the country flags, custom huds or team and class menus.
+
 To install etpub on your server, you only need to ensure that the 
 Enemy Territory binary loads the qagame shared library instead of the
 default one when it is started.  Below I'll describe how to
@@ -27,7 +30,11 @@ is located at /usr/local/games/enemy-territory/
 2) Copy the glibc-2.1/qagame.mp.i386.so file from the etpub distribution
 to the 'etpub' directory created in step one.
 
-3) Ensure that etded is called with the command line arguments 
+3) To use the country flags feature, you'll need the GeoIP database file located
+in the directory from step one. Please read the README in extra/GeoIP for details
+on how to obtain the file.
+
+4) Ensure that etded is called with the command line arguments 
 ' +set fs_game etpub ' (in addition to the ones you already use).
 
 See http://etpub.org/content.php?content.1
@@ -36,6 +43,10 @@ Windows
 -------
 
 1) Run setup.exe in the win32 directory.
+
+2) To use the country flags feature, you'll need the GeoIP database file located
+in the directory from step one. Please read the README in extra/GeoIP for details
+on how to obtain the file.
 
 For manual install instructions, see http://etpub.org/content.php?content.4
 

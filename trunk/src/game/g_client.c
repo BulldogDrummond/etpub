@@ -1849,10 +1849,29 @@ static void ClientCleanName( const char *in, char *out, int outSize )
 
 void G_StartPlayerAppropriateSound(gentity_t *ent, char *soundType) {
 }
+
+char *GetParsedIP(char *ipadd)
+{
+	// code by Dan Pop, http://bytes.com/forum/thread212174.html
+	unsigned b1, b2, b3, b4, port = 0;
+	unsigned char c;
+	int rc;
+	static char ipge[20];
+	rc = sscanf(ipadd, "%3u.%3u.%3u.%3u:%u%c", &b1, &b2, &b3, &b4, &port, &c);
+	if (rc < 4 || rc > 5) 
+		return NULL;
+	if ( (b1 | b2 | b3 | b4) > 255 || port > 65535) 
+		return NULL;
+	if (strspn(ipadd, "0123456789.:") < strlen(ipadd))
+		return -1;
+	sprintf(ipge, "%u.%u.%u.%u", b1, b2, b3, b4);
+	return ipge;
+}
+
 // Dens: based on reyalp's userinfocheck.lua and combinedfixes.lua
 char *CheckUserinfo( int clientNum )
 {
-	char	userinfo[MAX_INFO_STRING];
+	char	userinfo[MAX_INFO_STRING], *value;
 	int		length = 0, i, slashCount = 0, count = 0;
 
 	if(!(g_spoofOptions.integer & SPOOFOPT_USERINFOCHECK)){
@@ -1903,8 +1922,13 @@ char *CheckUserinfo( int clientNum )
 			}
 		}
 	}
-	if(count > 1){
+	if(count == 0){
+		return "Missing IP in userinfo.";
+	} else if(count > 1){
 		return "Too many IP fields in userinfo";
+	} else {
+		if (GetParsedIP(Info_ValueForKey(userinfo, "ip")) == NULL)
+			return "Malformed IP in userinfo.";
 	}
 	count = 0;
 
@@ -1933,7 +1957,9 @@ char *CheckUserinfo( int clientNum )
 			}
 		}
 	}
-	if(count > 1){
+	if(count == 0){
+		return "Missing name field in userinfo";
+	} else if(count > 1){
 		return "Too many name fields in userinfo";
 	}
 	count = 0;
@@ -1955,6 +1981,10 @@ char *CheckUserinfo( int clientNum )
 	if(count > 1){
 		return "Too many cl_punkbuster fields in userinfo";
 	}
+	
+	value = Info_ValueForKey(userinfo, "rate");
+	if (value == NULL || value[0] == '\0')
+		return "Wrong rate field in userinfo.";
 
 	return 0;
 }
@@ -2250,6 +2280,8 @@ char *ClientConnect( int clientNum, qboolean firstTime, qboolean isBot ) {
 	char		guid[33];
 	char		*userinfoReason;
 	char 		name[MAX_NETNAME];
+	int			conn_per_ip;
+	char		ip[20], *ip2;
 
 
 	ent = &g_entities[ clientNum ];
@@ -2273,6 +2305,30 @@ char *ClientConnect( int clientNum, qboolean firstTime, qboolean isBot ) {
 	userinfoReason = CheckUserinfo(clientNum);
 	if(userinfoReason){
 		return userinfoReason;
+	}
+	
+	// quad: check for maximum connections per IP
+	// based on reyalp's combinedfixes.lua and Invaderzim's patch
+	// (prevents fakeplayers DOS http://aluigi.altervista.org/fakep.htm )
+	conn_per_ip = 1;
+	value = Info_ValueForKey (userinfo, "ip");
+	Q_strncpyz(ip, GetParsedIP(value), sizeof(ip));
+	for (i=0; i<level.numConnectedClients; i++) {
+		clientNum2 = level.sortedClients[i];
+		if(clientNum == clientNum2) continue;
+		trap_GetUserinfo(clientNum2, 
+			userinfo2,
+			sizeof(userinfo2));
+		value = Info_ValueForKey (userinfo2, "ip");
+		ip2 = GetParsedIP(value);
+		if (strcmp(ip, ip2)==0) {
+			conn_per_ip++;
+		}
+	}
+	if (conn_per_ip > sv_maxConnsPerIP.integer) {
+		G_LogPrintf("ETPub: Possible DoS attack, rejecting client from %s "
+					"(%d connections already)\n", ip, sv_maxConnsPerIP.integer);
+		return "Too many connections from your IP.";
 	}
 
 	value = Info_ValueForKey (userinfo, "name");

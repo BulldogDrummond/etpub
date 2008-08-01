@@ -549,6 +549,7 @@ vmCvar_t g_damageBonusOpts;
 vmCvar_t g_noSkillUpgrades;
 vmCvar_t g_chargeType;
 vmCvar_t lua_modules;
+vmCvar_t sv_maxConnsPerIP;
 
 // flms
 vmCvar_t g_flushItems;
@@ -1103,9 +1104,10 @@ cvarTable_t		gameCvarTable[] = {
 	{ &g_OmniBotFlags, "omnibot_flags", "0", CVAR_ARCHIVE | CVAR_NORESTART, 0, qfalse },
 
 	//quad
-	{ &g_noSkillUpgrades, "g_noSkillUpgrades", "0", 0},
-	{ &g_chargeType, "g_chargeType", "2", 0},
+	{ &g_noSkillUpgrades, "g_noSkillUpgrades", "0", CVAR_ARCHIVE},
+	{ &g_chargeType, "g_chargeType", "2", CVAR_ARCHIVE},
 	{ &lua_modules, "lua_modules", "", 0},
+	{ &sv_maxConnsPerIP, "sv_maxConnsPerIP", "4", CVAR_SERVERINFO | CVAR_ARCHIVE},
 
 	//flms
 	{ &g_flushItems, "g_flushItems", "1", 0},
