@@ -44,6 +44,14 @@ void G_LuaHook_ClientDisconnect(int clientNum);
 void G_LuaHook_ClientBegin(int clientNum);
 void G_LuaHook_ClientUserinfoChanged(int clientNum);
 void G_LuaHook_ClientSpawn(int clientNum, qboolean revived, qboolean teamChange, qboolean restoreHealth);
+qboolean G_LuaHook_ClientCommand(int clientNum, char *command);
+qboolean G_LuaHook_ConsoleCommand(char *command);
+qboolean G_LuaHook_UpgradeSkill(int cno, skillType_t skill);
+// TODO: this REALLY needs testing!!! (I'm not sure about cno arg)
+qboolean G_LuaHook_SetPlayerSkill( int cno, skillType_t skill ); 
+void G_LuaHook_Print( char *text );
+void G_LuaHook_Obituary(int victim, int killer, int meansOfDeath);
+
 
 #endif /* ifndef _G_LUA_H */
 

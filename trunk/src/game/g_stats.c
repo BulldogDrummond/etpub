@@ -1,4 +1,5 @@
 #include "g_local.h"
+#include "g_lua.h"
 
 void G_LogDeath( gentity_t* ent, weapon_t weap ) {
 	weap = BG_DuplicateWeapon(weap);
@@ -137,6 +138,11 @@ void G_SetPlayerScore( gclient_t *client ) {
 void G_SetPlayerSkill( gclient_t *client, skillType_t skill ) {
 	int i;
 
+	// Lua API callbacks
+	if (G_LuaHook_SetPlayerSkill( client - level.clients, skill ) ) {
+		return;
+	}
+	
 	for( i = NUM_SKILL_LEVELS - 1; i >= 0; i-- ) {
 		if( client->sess.skillpoints[skill] >= skillLevels[skill][i] ) {
 			client->sess.skill[skill] = i;
@@ -165,6 +171,11 @@ static void G_UpgradeSkill( gentity_t *ent, skillType_t skill ) {
 
 		if( ci->skill[skill] <= ci->skill[i] )
 			break;
+	}
+	
+	// Lua API callbacks
+	if (G_LuaHook_UpgradeSkill(g_entities - ent, skill) ) {
+		return;
 	}
 
 	G_DebugAddSkillLevel( ent, skill );

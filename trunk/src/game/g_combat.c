@@ -20,6 +20,7 @@
 #include "../botai/ai_dmq3.h"
 #include "etpro_mdx.h"
 #include "g_etbot_interface.h"
+#include "g_lua.h"
 
 extern void BotRecordKill( int client, int enemy );
 extern void BotRecordPain( int client, int enemy, int mod );
@@ -2875,6 +2876,9 @@ static void G_Obituary(int mod, int target, int attacker) {
 	} else {
 		ga = &g_entities[attacker];
 	}
+	
+	// Lua API callbacks
+	G_LuaHook_Obituary(target, attacker, mod);
 
 	Q_strncpyz(targetName,
 		G_ObituarySanitize(gi->client->pers.netname),

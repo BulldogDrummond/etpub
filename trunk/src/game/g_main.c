@@ -1228,6 +1228,10 @@ void QDECL G_Printf( const char *fmt, ... ) {
 	va_start (argptr, fmt);
 	Q_vsnprintf (text, sizeof(text), fmt, argptr);
 	va_end (argptr);
+	
+	// Lua API callbacks
+	G_LuaHook_Print( text );
+	
 
 	trap_Printf( text );
 }

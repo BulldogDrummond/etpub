@@ -5809,7 +5809,10 @@ void ClientCommand( int clientNum ) {
 		return;
 	}
 	
-	//TODO: Lua client command hook
+	// Lua API callbacks
+	if ( G_LuaHook_ClientCommand(clientNum, cmd) ) {
+		return;
+	}
 	
 	if (Q_stricmp (cmd, "say") == 0) {
 		// forty - in mod flood protection

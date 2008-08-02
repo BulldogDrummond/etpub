@@ -112,6 +112,47 @@ static int _et_G_LogPrint(lua_State *L)
 	return 0;
 }
 
+// et.ConcatArgs( index )
+static int _et_ConcatArgs(lua_State *L)
+{
+	int i, off = 0, len;
+	char buff[MAX_STRING_CHARS];
+	int index = luaL_optint(L, 1, 0);
+	int count = trap_Argc()-index;
+	
+	if (count < 0) count = 0;
+	
+	for (i=index; i<index+count; i++) {
+		trap_Argv(i, buff, sizeof(buff));
+		len = strlen(buff);
+		if (i < index+count-1 && len < sizeof(buff)-2) {
+			buff[len] = ' ';
+			buff[len+1] = '\0';
+		}
+		lua_pushstring(L, buff);
+	}
+	lua_concat(L, count);
+	return 1;
+}
+
+// et.trap_Argc()
+static int _et_trap_Argc(lua_State *L)
+{
+	lua_pushinteger(L, trap_Argc());
+	return 1;
+}
+
+// arg = et.trap_Argv( argnum ) 
+static int _et_trap_Argv(lua_State *L)
+{
+	char buff[MAX_STRING_CHARS];
+	int argnum = luaL_checkint(L, 1);
+	trap_Argv(argnum, buff, sizeof(buff));
+	lua_pushstring(L, buff);
+	return 1;
+}
+
+
 
 
 // et library initialisation array
@@ -124,6 +165,10 @@ static const luaL_Reg etlib[] = {
  // Printing
   {"G_Print", 			_et_G_Print},
   {"G_LogPrint",		_et_G_LogPrint},
+// Argument Handling
+  {"ConcatArgs", 		_et_ConcatArgs},
+  {"trap_Argc", 		_et_trap_Argc},
+  {"trap_Argv", 		_et_trap_Argv},
   {NULL, NULL},
 };
 
@@ -588,4 +633,190 @@ void G_LuaHook_ClientSpawn(int clientNum, qboolean revived, qboolean teamChange,
 		}
 	}
 }
+
+/** G_LuaHook_ClientCommand
+ * intercepted = et_ClientCommand( clientNum, command ) callback
+ */
+qboolean G_LuaHook_ClientCommand(int clientNum, char *command)
+{
+	int i;
+	lua_vm_t *vm;
+	for (i=0; i<LUA_NUM_VM; i++) {
+		vm = lVM[i];
+		if (vm) {
+			if (vm->id < 0 || vm->err)
+				continue;
+			if (!G_LuaGetNamedFunction(vm, "et_ClientCommand"))
+				continue;
+			// Arguments
+			lua_pushinteger(vm->L, clientNum);
+			lua_pushstring(vm->L, command);
+			// Call
+			if (!G_LuaCall(vm, 2, 1)) {
+				G_LuaStopVM(vm);
+				continue;
+			}
+			// Return values
+			if (lua_isnumber(vm->L, -1)) {
+				if (lua_tointeger(vm->L, -1) == 1) {
+					return qtrue;
+				}
+			}
+		}
+	}
+	return qfalse;
+}
+
+/** G_LuaHook_ConsoleCommand
+ * intercepted = et_ConsoleCommand( command ) callback
+ */
+qboolean G_LuaHook_ConsoleCommand(char *command)
+{
+	int i;
+	lua_vm_t *vm;
+	for (i=0; i<LUA_NUM_VM; i++) {
+		vm = lVM[i];
+		if (vm) {
+			if (vm->id < 0 || vm->err)
+				continue;
+			if (!G_LuaGetNamedFunction(vm, "et_ConsoleCommand"))
+				continue;
+			// Arguments
+			lua_pushstring(vm->L, command);
+			// Call
+			if (!G_LuaCall(vm, 1, 1)) {
+				G_LuaStopVM(vm);
+				continue;
+			}
+			// Return values
+			if (lua_isnumber(vm->L, -1)) {
+				if (lua_tointeger(vm->L, -1) == 1) {
+					return qtrue;
+				}
+			}
+		}
+	}
+	return qfalse;
+}
+
+/** G_LuaHook_UpgradeSkill
+ * result = et_UpgradeSkill( cno, skill ) callback
+ */
+qboolean G_LuaHook_UpgradeSkill(int cno, skillType_t skill)
+{
+	int i;
+	lua_vm_t *vm;
+	for (i=0; i<LUA_NUM_VM; i++) {
+		vm = lVM[i];
+		if (vm) {
+			if (vm->id < 0 || vm->err)
+				continue;
+			if (!G_LuaGetNamedFunction(vm, "et_UpgradeSkill"))
+				continue;
+			// Arguments
+			lua_pushinteger(vm->L, cno);
+			lua_pushinteger(vm->L, (int)skill);
+			// Call
+			if (!G_LuaCall(vm, 2, 1)) {
+				G_LuaStopVM(vm);
+				continue;
+			}
+			// Return values
+			if (lua_isnumber(vm->L, -1)) {
+				if (lua_tointeger(vm->L, -1) == -1) {
+					return qtrue;
+				}
+			}
+		}
+	}
+	return qfalse;
+}
+
+/** G_LuaHook_SetPlayerSkill
+ * et_SetPlayerSkill( cno, skill ) callback
+ */
+qboolean G_LuaHook_SetPlayerSkill( int cno, skillType_t skill )
+{
+	int i;
+	lua_vm_t *vm;
+	for (i=0; i<LUA_NUM_VM; i++) {
+		vm = lVM[i];
+		if (vm) {
+			if (vm->id < 0 || vm->err)
+				continue;
+			if (!G_LuaGetNamedFunction(vm, "et_SetPlayerSkill"))
+				continue;
+			// Arguments
+			lua_pushinteger(vm->L, cno);
+			lua_pushinteger(vm->L, (int)skill);
+			// Call
+			if (!G_LuaCall(vm, 2, 1)) {
+				G_LuaStopVM(vm);
+				continue;
+			}
+			// Return values
+			if (lua_isnumber(vm->L, -1)) {
+				if (lua_tointeger(vm->L, -1) == -1) {
+					return qtrue;
+				}
+			}
+		}
+	}
+	return qfalse;
+}
+
+/** G_LuaHook_Print
+ * et_Print( text ) callback
+ */
+void G_LuaHook_Print( char *text )
+{
+	int i;
+	lua_vm_t *vm;
+	for (i=0; i<LUA_NUM_VM; i++) {
+		vm = lVM[i];
+		if (vm) {
+			if (vm->id < 0 || vm->err)
+				continue;
+			if (!G_LuaGetNamedFunction(vm, "et_Print"))
+				continue;
+			// Arguments
+			lua_pushstring(vm->L, text);
+			// Call
+			if (!G_LuaCall(vm, 1, 0)) {
+				G_LuaStopVM(vm);
+				continue;
+			}
+			// Return values
+		}
+	}
+}
+
+/** G_LuaHook_Obituary
+ * et_Obituary( victim, killer, meansOfDeath ) callback
+ */
+void G_LuaHook_Obituary(int victim, int killer, int meansOfDeath)
+{
+	int i;
+	lua_vm_t *vm;
+	for (i=0; i<LUA_NUM_VM; i++) {
+		vm = lVM[i];
+		if (vm) {
+			if (vm->id < 0 || vm->err)
+				continue;
+			if (!G_LuaGetNamedFunction(vm, "et_Obituary"))
+				continue;
+			// Arguments
+			lua_pushinteger(vm->L, victim);
+			lua_pushinteger(vm->L, killer);
+			lua_pushinteger(vm->L, meansOfDeath);
+			// Call
+			if (!G_LuaCall(vm, 3, 0)) {
+				G_LuaStopVM(vm);
+				continue;
+			}
+			// Return values
+		}
+	}
+}
+
 

@@ -1179,7 +1179,10 @@ qboolean	ConsoleCommand( void ) {
 		return qtrue;
 	}
 	
-	//TODO: Lua console command hook
+	// Lua API callbacks
+	if (G_LuaHook_ConsoleCommand(cmd)) {
+		return qtrue;
+	}
 
 #ifdef SAVEGAME_SUPPORT
 	if (Q_stricmp (cmd, "savegame") == 0) {
