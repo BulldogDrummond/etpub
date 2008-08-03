@@ -1851,13 +1851,17 @@ static void ClientCleanName( const char *in, char *out, int outSize )
 void G_StartPlayerAppropriateSound(gentity_t *ent, char *soundType) {
 }
 
-char *GetParsedIP(char *ipadd)
+const char *GetParsedIP(const char *ipadd)
 {
 	// code by Dan Pop, http://bytes.com/forum/thread212174.html
 	unsigned b1, b2, b3, b4, port = 0;
 	unsigned char c;
 	int rc;
 	static char ipge[20];
+
+	if(!Q_strncmp(ipadd,"localhost",strlen("localhost")))
+		return "localhost";
+
 	rc = sscanf(ipadd, "%3u.%3u.%3u.%3u:%u%c", &b1, &b2, &b3, &b4, &port, &c);
 	if (rc < 4 || rc > 5) 
 		return NULL;
