@@ -11,7 +11,7 @@ lua_vm_t * lVM[LUA_NUM_VM];
 /* Lua et library handlers */
 /***************************/
 
-// ET Library Calls
+// ET Library Calls {{{
 // et.RegisterModname( modname )
 static int _et_RegisterModname(lua_State *L)
 {
@@ -91,8 +91,9 @@ static int _et_IPCSend(lua_State *L)
 	lua_pushinteger(L, 1);
 	return 1;
 }
+// }}}
 
-// Printing
+// Printing {{{
 // et.G_Print( text )
 static int _et_G_Print(lua_State *L)
 {
@@ -111,7 +112,9 @@ static int _et_G_LogPrint(lua_State *L)
 	}
 	return 0;
 }
+// }}}
 
+// Argument Handling {{{
 // et.ConcatArgs( index )
 static int _et_ConcatArgs(lua_State *L)
 {
@@ -151,31 +154,272 @@ static int _et_trap_Argv(lua_State *L)
 	lua_pushstring(L, buff);
 	return 1;
 }
+// }}}
+
+// Cvars {{{
+//cvarvalue = et.trap_Cvar_Get( cvarname ) 
+static int _et_trap_Cvar_Get(lua_State *L)
+{
+	char buff[MAX_CVAR_VALUE_STRING];
+	char *cvarname = luaL_checkstring(L, 1);
+	trap_Cvar_VariableStringBuffer(cvarname, buff, sizeof(buff));
+	lua_pushstring(L, buff);
+	return 1;
+}
+
+// et.trap_Cvar_Set( cvarname, cvarvalue )
+static int _et_trap_Cvar_Set(lua_State *L)
+{
+	char *cvarname = luaL_checkstring(L, 1);
+	char *cvarvalue= luaL_checkstring(L, 2);
+	trap_Cvar_Set(cvarname, cvarvalue);
+	return 0;
+}
+// }}}
+
+// Config Strings {{{
+// configstringvalue = et.trap_GetConfigstring( index ) 
+static int _et_trap_GetConfigstring(lua_State *L)
+{
+	char buff[MAX_STRING_CHARS];
+	int index = luaL_checkint(L, 1);
+	trap_GetConfigstring(index, buff, sizeof(buff));
+	lua_pushstring(L, buff);
+	return 1;
+}
+
+// et.trap_SetConfigstring( index, configstringvalue ) 
+static int _et_trap_SetConfigstring(lua_State *L)
+{
+	int index = luaL_checkint(L, 1);
+	char *csv = luaL_checkstring(L, 2);
+	trap_SetConfigstring(index, csv);
+	return 0;
+}
+// }}}
+
+// Server {{{
+// et.trap_SendConsoleCommand( when, command )
+static int _et_trap_SendConsoleCommand(lua_State *L)
+{
+	int when = luaL_checkint(L, 1);
+	char *cmd= luaL_checkstring(L, 2);
+	trap_SendConsoleCommand(when, cmd);
+	return 0;
+}
+// }}}
+
+// Clients {{{
+// et.trap_DropClient( clientnum, reason, ban_time )
+static int _et_trap_DropClient(lua_State *L)
+{
+	int clientnum = luaL_checkint(L, 1);
+	char *reason = luaL_checkstring(L, 2);
+	int ban = trap_Cvar_VariableIntegerValue("g_defaultBanTime");
+	ban = luaL_optint(L, 3, ban);
+	trap_DropClient(clientnum, reason, ban);
+	return 0;
+}
+
+// et.trap_SendServerCommand( clientnum, command )
+static int _et_trap_SendServerCommand(lua_State *L)
+{
+	int clientnum = luaL_checkint(L, 1);
+	char *cmd = luaL_checkstring(L, 2);
+	trap_SendServerCommand(clientnum, cmd);
+	return 0;
+}
+
+// et.G_Say( clientNum, mode, text )
+static int _et_G_Say(lua_State *L)
+{
+	int clientnum = luaL_checkint(L, 1);
+	int mode = luaL_checkint(L, 2);
+	char *text = luaL_checkstring(L, 3);
+	G_Say(g_entities+clientnum, NULL, mode, text);
+	return 0;
+}
+
+// et.ClientUserinfoChanged( clientNum )
+static int _et_ClientUserinfoChanged(lua_State *L)
+{
+	int clientnum = luaL_checkint(L, 1);
+	ClientUserinfoChanged(clientnum);
+	return 0;
+}
+// }}}
+
+// Userinfo {{{
+// userinfo = et.trap_GetUserinfo( clientnum )
+static int _et_trap_GetUserinfo(lua_State *L)
+{
+	char buff[MAX_STRING_CHARS];
+	int clientnum = luaL_checkint(L, 1);
+	trap_GetUserinfo(clientnum, buff, sizeof(buff));
+	lua_pushstring(L, buff);
+	return 1;
+}
+
+// et.trap_SetUserinfo( clientnum, userinfo )
+static int _et_trap_SetUserinfo(lua_State *L)
+{
+	int clientnum = luaL_checkint(L, 1);
+	char *userinfo = luaL_checkstring(L, 2);
+	trap_SetUserinfo(clientnum, userinfo);
+	return 0;
+}
+// }}}
+
+// String Utility Functions {{{
+// infostring = et.Info_RemoveKey( infostring, key )
+static int _et_Info_RemoveKey(lua_State *L)
+{
+	char buff[MAX_INFO_STRING];
+	char *key = luaL_checkstring(L, 2);
+	Q_strncpyz(buff, luaL_checkstring(L, 1), sizeof(buff));
+	Info_RemoveKey(buff, key);
+	lua_pushstring(L, buff);
+	return 1;
+}
+
+// infostring = et.Info_SetValueForKey( infostring, key, value )
+static int _et_Info_SetValueForKey(lua_State *L)
+{
+	char *buff[MAX_INFO_STRING];
+	char *key = luaL_checkstring(L, 2);
+	char *value = luaL_checkstring(L, 3);
+	Q_strncpyz(buff, luaL_checkstring(L, 1), sizeof(buff));
+	Info_SetValueForKey(buff, key, value);
+	lua_pushstring(L, buff);
+	return 1;
+}
+
+// keyvalue = et.Info_ValueForKey( infostring, key )
+static int _et_Info_ValueForKey(lua_State *L)
+{
+	char *infostring = luaL_checkstring(L, 1);
+	char *key = luaL_checkstring(L, 2);
+	lua_pushstring(L, Info_ValueForKey(infostring, key));
+	return 1;
+}
+
+// cleanstring = et.Q_CleanStr( string )
+static int _et_Q_CleanStr(lua_State *L)
+{
+	char buff[MAX_STRING_CHARS];
+	Q_strncpyz(buff, luaL_checkstring(L, 1), sizeof(buff));
+	Q_CleanStr(buff);
+	lua_pushstring(L, buff);
+	return 1;
+}
+// }}}
+
+// ET Filesystem {{{
+// fd, len = et.trap_FS_FOpenFile( filename, mode )
+static int _et_trap_FS_FOpenFile(lua_State *L)
+{
+	fileHandle_t fd;
+	int len;
+	char *filename = luaL_checkstring(L, 1);
+	int mode = luaL_checkint(L, 2);
+	len = trap_FS_FOpenFile(filename, &fd, mode);
+	lua_pushinteger(L, fd);
+	lua_pushinteger(L, len);
+	return 2;
+}
+
+// filedata = et.trap_FS_Read( fd, count )
+static int _et_trap_FS_Read(lua_State *L)
+{
+	fileHandle_t df = 0;//TODO:
+	return 1;	
+}
+// count = et.trap_FS_Write( filedata, count, fd )
+// et.trap_FS_Rename( oldname, newname )
+// et.trap_FS_FCloseFile( fd )
+// }}}
+
+// Indexes {{{
+// soundindex = et.G_SoundIndex( filename )
+// modelindex = et.G_ModelIndex( filename )
+// }}}
+
+// Sound {{{
+// et.G_globalSound( sound )
+// et.G_Sound( entnum, soundindex )
+// }}}
+
+// Miscellaneous {{{
+// milliseconds = et.trap_Milliseconds()
+// et.G_Damage( target, inflictor, attacker, damage, dflags, mod )
+// }}}
+
+// Entities {{{
+// entnum = et.G_Spawn()
+// entnum = et.G_TempEntity( origin, event )
+// et.G_FreeEntity( entnum )
+// spawnval = et.G_GetSpawnVar( entnum, key )
+// et.G_SetSpawnVar( entnum, key, value )
+// integer entnum = et.G_SpawnGEntityFromSpawnVars( string spawnvar, string spawnvalue, ... )
+// et.trap_LinkEntity( entnum )
+// et.trap_UnlinkEntity( entnum )
+// (variable) = et.gentity_get ( entnum, Fieldname ,arrayindex )
+// et.gentity_set( entnum, Fieldname, arrayindex, (value) )
+// et.G_AddEvent( ent, event, eventparm' )
+// }}}
+
+
 
 
 
 
 // et library initialisation array
 static const luaL_Reg etlib[] = {
-// ET Library Calls
-  {"RegisterModname", 	_et_RegisterModname},
-  {"FindSelf", 			_et_FindSelf},
-  {"FindMod",			_et_FindMod},
-  {"IPCSend",			_et_IPCSend},
- // Printing
-  {"G_Print", 			_et_G_Print},
-  {"G_LogPrint",		_et_G_LogPrint},
-// Argument Handling
-  {"ConcatArgs", 		_et_ConcatArgs},
-  {"trap_Argc", 		_et_trap_Argc},
-  {"trap_Argv", 		_et_trap_Argv},
-  {NULL, NULL},
+	// ET Library Calls
+	{"RegisterModname", 	_et_RegisterModname},
+	{"FindSelf", 			_et_FindSelf},
+	{"FindMod",			_et_FindMod},
+	{"IPCSend",			_et_IPCSend},
+	// Printing
+	{"G_Print", 			_et_G_Print},
+	{"G_LogPrint",		_et_G_LogPrint},
+	// Argument Handling
+	{"ConcatArgs", 		_et_ConcatArgs},
+	{"trap_Argc", 		_et_trap_Argc},
+	{"trap_Argv", 		_et_trap_Argv},
+	// Cvars
+	{"trap_Cvar_Get",	_et_trap_Cvar_Get},
+	{"trap_Cvar_Set",	_et_trap_Cvar_Set},
+	// Config Strings
+	{"trap_GetConfigstring", _et_trap_GetConfigstring},
+	{"trap_SetConfigstring", _et_trap_SetConfigstring},
+	// Server
+	{"trap_SendConsoleCommand", _et_trap_SendConsoleCommand},
+	// Clients
+	{"trap_DropClient",	_et_trap_DropClient},
+	{"trap_SendServerCommand",	_et_trap_SendServerCommand},
+	{"G_Say",	_et_G_Say},
+	{"ClientUserinfoChanged",	_et_ClientUserinfoChanged},
+	// String Utility Functions
+	{"Info_RemoveKey", _et_Info_RemoveKey},
+	{"Info_SetValueForKey", _et_Info_SetValueForKey},
+	{"Info_ValueForKey", _et_Info_ValueForKey},
+	{"Q_CleanStr",		_et_Q_CleanStr},
+	// ET Filesystem
+// fd, len = et.trap_FS_FOpenFile( filename, mode )
+// filedata = et.trap_FS_Read( fd, count )
+// count = et.trap_FS_Write( filedata, count, fd )
+// et.trap_FS_Rename( oldname, newname )
+// et.trap_FS_FCloseFile( fd ) 
+	
+	{NULL, NULL},
 };
 
 /*************/
 /* Lua API   */
 /*************/
 
+//{{{
 /** G_LuaInit()
  * Initialises the Lua API interface 
  */
@@ -409,10 +653,13 @@ lua_vm_t * G_LuaGetVM(lua_State *L)
 			return lVM[i];
 	return NULL;
 }
+//}}}
 
 /*****************************/
 /* Lua API hooks / callbacks */
 /*****************************/
+
+//{{{
 
 /** G_LuaHook_InitGame
  * et_InitGame( levelTime, randomSeed, restart ) callback 
@@ -819,4 +1066,4 @@ void G_LuaHook_Obituary(int victim, int killer, int meansOfDeath)
 	}
 }
 
-
+//}}}
