@@ -103,6 +103,8 @@ local_env.Append( CPPDEFINES = [ 'GAMEDLL' ] )
 
 local_env.Append( CPPDEFINES = [ 'USE_MDXFILE' ] )
 
+local_env.Append( CPPDEFINES = [ 'NO_BOT_SUPPORT' ] )
+
 local_env.Append( CPPDEFINES = [ 'THREADS' ] )
 
 local_env.Append( CPPPATH = [ '../../../../Omnibot/Common', '../../../../Omnibot/ET' ] )
