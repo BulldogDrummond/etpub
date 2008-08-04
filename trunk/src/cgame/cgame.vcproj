@@ -306,10 +306,6 @@
 				>
 			</File>
 			<File
-				RelativePath=".\cg_crash.c"
-				>
-			</File>
-			<File
 				RelativePath=".\cg_debriefing.c"
 				>
 			</File>
