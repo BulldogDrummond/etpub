@@ -2,6 +2,7 @@
 
 project game
 	: requirements <define>GAMEDLL
+	: requirements <define>NO_BOT_SUPPORT
 	: requirements <variant>debug:<define>DEBUG
 	: requirements <include>../botai
 	: requirements <include>../../Omnibot/Common
