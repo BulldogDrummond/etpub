@@ -2328,6 +2328,7 @@ char *ClientConnect( int clientNum, qboolean firstTime, qboolean isBot ) {
 	for (i=0; i<level.numConnectedClients; i++) {
 		clientNum2 = level.sortedClients[i];
 		if(clientNum == clientNum2) continue;
+		if(g_entities[clientNum2].r.svFlags & SVF_BOT) continue; // IGNORE BOTS
 		trap_GetUserinfo(clientNum2, 
 			userinfo2,
 			sizeof(userinfo2));
