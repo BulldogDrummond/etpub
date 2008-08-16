@@ -754,6 +754,11 @@ void SetMoverState( gentity_t *ent, moverState_t moverState, int time ) {
 			f = 1000.0 / ent->s.pos.trDuration;
 			VectorScale( delta, f, ent->s.pos.trDelta );
 			ent->s.pos.trType = TR_LINEAR_STOP;
+			{
+				const char *pName = _GetEntityName(ent);
+				if (Q_stricmp(pName, ""))
+						Bot_Util_SendTrigger(ent, NULL, va("%s_Moving", pName), "opening");
+			}
 			break;
 		case MOVER_2TO1:	// closing
 			VectorCopy( ent->pos2, ent->s.pos.trBase );
@@ -767,18 +772,31 @@ void SetMoverState( gentity_t *ent, moverState_t moverState, int time ) {
 			}
 			VectorScale( delta, f, ent->s.pos.trDelta );
 			ent->s.pos.trType = TR_LINEAR_STOP;
+			{
+				const char *pName = _GetEntityName(ent);
+				if (Q_stricmp(pName, ""))
+						Bot_Util_SendTrigger(ent, NULL, va("%s_Moving", pName), "closing");
+			}
 			break;
 
 
 		case MOVER_POS1ROTATE:	// at close
 			VectorCopy( ent->r.currentAngles , ent->s.apos.trBase);
 			ent->s.apos.trType = TR_STATIONARY;
-			Bot_Util_SendTrigger(ent, NULL, va("%s_Closed", _GetEntityName(ent)), "closed");
+			{
+				const char *pName = _GetEntityName(ent);
+				if (Q_stricmp(pName, ""))
+						Bot_Util_SendTrigger(ent, NULL, va("%s_Moving", pName), "closed");
+			}
 			break;
 		case MOVER_POS2ROTATE:	// at open
 			VectorCopy( ent->r.currentAngles , ent->s.apos.trBase);
 			ent->s.apos.trType = TR_STATIONARY;
-			Bot_Util_SendTrigger(ent, NULL, va("%s_Opened", _GetEntityName(ent)), "opened");
+			{
+				const char *pName = _GetEntityName(ent);
+				if (Q_stricmp(pName, ""))
+						Bot_Util_SendTrigger(ent, NULL, va("%s_Moving", pName), "opened");
+			}
 			break;
 		case MOVER_1TO2ROTATE:	// opening
 			VectorClear(ent->s.apos.trBase);			// set base to start position {0,0,0}
