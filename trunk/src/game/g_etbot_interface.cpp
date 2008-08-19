@@ -1412,6 +1412,11 @@ static int _GetEntityClass(gentity_t *_ent)
 			/*if(_ent->health <= 0 && _ent->client->ps.pm_type == PM_DEAD)
 			return ET_CLASSEX_INJUREDPLAYER;*/
 
+			// for scripted class changes, count latched in warmup or if dead
+			if ( g_gamestate.integer > GS_PLAYING || _ent->client->ps.pm_type > PM_SPECTATOR || 
+				_ent->client->ps.pm_flags & PMF_LIMBO ) 
+				return Bot_PlayerClassGameToBot(_ent->client->sess.latchPlayerType);	
+
 			return Bot_PlayerClassGameToBot(_ent->client->sess.playerType);			
 		}
 	case ET_ITEM:
