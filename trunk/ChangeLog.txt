@@ -1985,11 +1985,15 @@
 * flms:    mg's can make headshots
 * flms:    you also hear hitsounds when Friendly Fire is off and 
            g_reflectFriendlyFire is on
-* flms:    mg's can reload midclip* quad:    Lua API for ETPub, aiming for compatibility with ETPro 
+* flms:    mg's can reload midclip
+* quad:    Lua API for ETPub, aiming for compatibility with ETPro 
            http://wolfwiki.anime.net/index.php/Lua_Mod_API (TODO: Docs!)
 * stephan: added an oversized userinfo check to g_spoofOptions flag 256 and
            added the \n char to the list of characters that may not be used in
            a userinfo string. A user with any of the forbidden chars in his/her
            userinfo will be dropped from the server from now on
 * quad:    added sv_maxConnsPerIP as a prevention for fakeplayer DoS attack
-
+* stephan: changed sv_maxConnsPerIP to g_maxConnsPerIP, since it is a game cvar
+           and not an engine cvar
+* stephan: changed the flags of g_damageBonusOpts and added
+           g_damageBonusNearMedics and g_damageBonusTotalMedics. See docs

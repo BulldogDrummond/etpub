@@ -53,9 +53,9 @@ dt {
 </tr>
 <tr>
 <td><a href="#lua_modules">lua_modules</a></td>
-<td><a href="#sv_maxConnsPerIP">sv_maxConnsPerIP</a></td>
-<td><a href="#">&nbsp;</a></td>
-<td><a href="#">&nbsp;</a></td>
+<td><a href="#g_maxConnsPerIP">g_maxConnsPerIP</a></td>
+<td><a href="#g_damageBonusNearMedics">g_damageBonusNearMedics</a></td>
+<td><a href="#g_damageBonusTotalMedics">g_damageBonusTotalMedics</a></td>
 </tr>
 </table>
 
@@ -3110,37 +3110,50 @@ g_healthSpeedBottom 50.0<br>
 <a name="g_damageBonus"></a>
 <dt>g_damageBonus [float]
 <dd>
-<p>The percentage of extra damage that is done when one of the g_damageBonusOpts
-conditions is reached</p>
+<p>The percentage of extra damage that is done when one of the
+g_damageBonusOpts conditions is reached or when there are
+g_damageBonusNearMedics near the attacker or when there are
+g_damageBonusTotalMedics. When one positive and one negative condition is
+reached, the damage will just be default. When two negative or two positive
+conditions occur, the damage will change only once</p>
 <p>Default is 20.0 (Max is 100.0)</p>
 
 <a name="g_damageBonusOpts"></a>
 <dt>g_damageBonusOpts [bitflag]
 <dd>
-<p>Adds/Substracts the g_damageBonus percentage of damage when the conditions
-are reached. When one positive and one negative condition is reached, the damage
-will just be default. When two negative or two positive conditions occure the
-damage will change only once</p>
+<p>Some settings that change the behaviour of g_damageBonus</p>
 <dl>
 	<dt>1
 	<dd>Do less damage when there is no engi on the attackers team
 	<dt>2
-	<dd>Do less damage when the attacker is a medic and there are at least 2
-	other medics near the attacker
-	<dt>4
 	<dd>Do extra damage when the attacker is no engi and is near an engi
-	<dt>8
+	<dt>4
 	<dd>When two or more negative/positive conditions occur, change the damage
 	multiple times (cumulative)
-	<dt>16
+	<dt>8
 	<dd>Do the same checks at the target (when the target has no engi, the
 	attacker does more damage, etc)
-	<dt>32
+	<dt>16
 	<dd>Print a lot of debug info (best used on listening servers)
 </dl>
 <p>Note: this CVAR should have different values for different maps, since not
 every map requires an engi for example</p>
 <p>Default is 0</p>
+
+<a name="g_damageBonusNearMedics"></a>
+<dt>g_damageBonusNearMedics [integer]
+<dd>
+<p>When the attacker is a medic and is near at least this number of other
+medics, his damage is reduced by g_damageBonus percent</p>
+<p>Default is 0 (Disabled) (Recommended value when used, is 1 or 2)</p>
+
+<a name="g_damageBonusTotalMedics"></a>
+<dt>g_damageBonusTotalMedics [integer]
+<dd>
+<p>When the attacker is a medic and there are at least this number of medics in
+the team, his damage is reduced by g_damageBonus percent</p>
+<p>Default is 0 (Disabled) (This field does NOT accept percentage values at
+this point)</p>
 
 <a name="g_panzerwar"></a>
 <dt>g_panzerwar [0|1]
@@ -3218,8 +3231,8 @@ and can optionally be placed inside pk3 archieves.</p>
 <a href="http://wolfwiki.anime.net/index.php/Lua_Mod_API">Lua Mod API</a></p>
 <p>Default is ""</p>
 
-<a name="sv_maxConnsPerIP"></a>
-<dt>sv_maxConnsPerIP [integer]
+<a name="g_maxConnsPerIP"></a>
+<dt>g_maxConnsPerIP [integer]
 <dd>
 <p>Maximum number of connections allowed from one particular IP. This prevents
 the fake clients Denial of Service attack.</p>

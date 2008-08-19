@@ -2347,7 +2347,7 @@ extern vmCvar_t g_slashKill;
 extern vmCvar_t g_noSkillUpgrades;
 extern vmCvar_t g_chargeType;
 extern vmCvar_t lua_modules;
-extern vmCvar_t sv_maxConnsPerIP;
+extern vmCvar_t g_maxConnsPerIP;
 
 // flms
 extern vmCvar_t g_flushItems;
@@ -2533,6 +2533,8 @@ extern vmCvar_t g_healthSpeedStart;
 extern vmCvar_t g_healthSpeedBottom;
 extern vmCvar_t g_damageBonus;
 extern vmCvar_t g_damageBonusOpts;
+extern vmCvar_t g_damageBonusNearMedics;
+extern vmCvar_t g_damageBonusTotalMedics;
 
 extern vmCvar_t g_countryFlags; //mcwf GeoIP
 
@@ -3626,11 +3628,10 @@ void G_IntermissionVoteTally( gentity_t *ent );
 
 // Dens: g_damageBonusOpts
 #define DMGBONUS_NO_ENGI 1 // Do less damage when no engi in your team
-#define DMGBONUS_3_MEDICS 2 // Do less damage when near 2 other medics
-#define DMGBONUS_NEAR_ENGI 4 // Do extra damage when near an engi
-#define DMGBONUS_CUMULATIVE 8 // When multiple bonusses found, do count them all instead of just reducing damage once
-#define DMGBONUS_CHECK_ENEMY 16 // Also check the other team (do more damage when no engi in other team, etc.)
-#define DMGBONUS_DEBUG 32 // Print a lot of debug info
+#define DMGBONUS_NEAR_ENGI 2 // Do extra damage when near an engi
+#define DMGBONUS_CUMULATIVE 4 // When multiple bonusses found, do count them all instead of just reducing damage once
+#define DMGBONUS_CHECK_ENEMY 8 // Also check the other team (do more damage when no engi in other team, etc.)
+#define DMGBONUS_DEBUG 16 // Print a lot of debug info
 
 // forty - canister kicking
 void G_CanisterKick();

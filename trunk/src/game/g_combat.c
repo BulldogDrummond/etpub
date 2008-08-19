@@ -1500,7 +1500,8 @@ float G_calculateDamageBonus(gentity_t *targ, gentity_t *attacker){
 
 	debug[0] = '\0';
 
-	if(!g_damageBonusOpts.integer || g_damageBonus.value > 100.0f 
+	if(!(g_damageBonusOpts.integer > 0 || g_damageBonusNearMedics.integer > 0
+		|| g_damageBonusTotalMedics.integer > 0) || g_damageBonus.value > 100.0f
 		|| g_damageBonus.value <= 0)
 		return 1.0f;
 
@@ -1520,12 +1521,25 @@ float G_calculateDamageBonus(gentity_t *targ, gentity_t *attacker){
 			}
 		}
 
-		if(g_damageBonusOpts.integer & DMGBONUS_3_MEDICS &&
+		if(g_damageBonusNearMedics.integer > 0 &&
 			attacker->client->sess.playerType == PC_MEDIC){
-			if( G_TeamPlayerTypeInRange(attacker, PC_MEDIC, attacker->client->sess.sessionTeam, closerange) > 2){
+			if( G_TeamPlayerTypeInRange(attacker, PC_MEDIC, attacker->client->sess.sessionTeam, closerange) >
+				g_damageBonusNearMedics.integer){
 				count--;
 				if(g_damageBonusOpts.integer & DMGBONUS_DEBUG)
-					Q_strcat(debug, sizeof(debug),"Att 3 Meds (-) ");
+					Q_strcat(debug, sizeof(debug), va("Att near at least %i Meds (-) ",
+					g_damageBonusNearMedics.integer));
+			}
+		}
+
+		if(g_damageBonusTotalMedics.integer > 0 &&
+			attacker->client->sess.playerType == PC_MEDIC){
+				if( G_ClassCount(NULL, PC_MEDIC, attacker->client->sess.sessionTeam) >= 
+					g_damageBonusTotalMedics.integer){
+				count--;
+				if(g_damageBonusOpts.integer & DMGBONUS_DEBUG)
+					Q_strcat(debug, sizeof(debug), va("Att in team with at least %i Meds (-) ",
+					g_damageBonusTotalMedics.integer));
 			}
 		}
 
@@ -1539,7 +1553,7 @@ float G_calculateDamageBonus(gentity_t *targ, gentity_t *attacker){
 		}
 	}
 
-	if(targ && targ->client && g_damageBonusOpts.integer & DMGBONUS_CHECK_ENEMY){
+	if(targ && targ->client && (g_damageBonusOpts.integer & DMGBONUS_CHECK_ENEMY)){
 		if(g_damageBonusOpts.integer & DMGBONUS_DEBUG)
 			Q_strcat(debug, sizeof(debug),va("Target: %s ^7",targ->client->pers.netname));
 
@@ -1551,12 +1565,25 @@ float G_calculateDamageBonus(gentity_t *targ, gentity_t *attacker){
 			}
 		}
 
-		if(g_damageBonusOpts.integer & DMGBONUS_3_MEDICS &&
+		if(g_damageBonusNearMedics.integer > 0 &&
 			targ->client->sess.playerType == PC_MEDIC){
-			if( G_TeamPlayerTypeInRange(targ, PC_MEDIC, targ->client->sess.sessionTeam, closerange) > 2){
+			if( G_TeamPlayerTypeInRange(targ, PC_MEDIC, targ->client->sess.sessionTeam, closerange) >
+				g_damageBonusNearMedics.integer){
 				count++;
 				if(g_damageBonusOpts.integer & DMGBONUS_DEBUG)
-					Q_strcat(debug, sizeof(debug),"Tar 3 Meds (+) ");
+					Q_strcat(debug, sizeof(debug), va("Tar near at least %i Meds (+) ",
+					g_damageBonusNearMedics.integer));
+			}
+		}
+
+		if(g_damageBonusTotalMedics.integer > 0 &&
+			targ->client->sess.playerType == PC_MEDIC){
+				if( G_ClassCount(NULL, PC_MEDIC, targ->client->sess.sessionTeam) >= 
+					g_damageBonusTotalMedics.integer){
+				count++;
+				if(g_damageBonusOpts.integer & DMGBONUS_DEBUG)
+					Q_strcat(debug, sizeof(debug), va("Tar in team with at least %i Meds (+) ",
+					g_damageBonusTotalMedics.integer));
 			}
 		}
 
@@ -1601,7 +1628,6 @@ float G_calculateDamageBonus(gentity_t *targ, gentity_t *attacker){
 			}
 		}
 	}
-	
 	return 1.0f;
 }
 

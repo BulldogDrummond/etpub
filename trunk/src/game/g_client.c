@@ -2338,9 +2338,9 @@ char *ClientConnect( int clientNum, qboolean firstTime, qboolean isBot ) {
 			conn_per_ip++;
 		}
 	}
-	if (conn_per_ip > sv_maxConnsPerIP.integer) {
+	if (conn_per_ip > g_maxConnsPerIP.integer) {
 		G_LogPrintf("ETPub: Possible DoS attack, rejecting client from %s "
-					"(%d connections already)\n", ip, sv_maxConnsPerIP.integer);
+					"(%d connections already)\n", ip, g_maxConnsPerIP.integer);
 		return "Too many connections from your IP.";
 	}
 

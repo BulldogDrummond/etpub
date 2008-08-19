@@ -544,12 +544,14 @@ vmCvar_t g_healthSpeedBottom;
 // Dens: do some extra damage at certain conditions (see g_local.h)
 vmCvar_t g_damageBonus;
 vmCvar_t g_damageBonusOpts;
+vmCvar_t g_damageBonusNearMedics;
+vmCvar_t g_damageBonusTotalMedics;
 
 // quad
 vmCvar_t g_noSkillUpgrades;
 vmCvar_t g_chargeType;
 vmCvar_t lua_modules;
-vmCvar_t sv_maxConnsPerIP;
+vmCvar_t g_maxConnsPerIP;
 
 // flms
 vmCvar_t g_flushItems;
@@ -1092,6 +1094,8 @@ cvarTable_t		gameCvarTable[] = {
 	{ &g_healthSpeedBottom, "g_healthSpeedBottom", "50.0", 0},
 	{ &g_damageBonus, "g_damageBonus", "20.0", 0},
 	{ &g_damageBonusOpts, "g_damageBonusOpts", "0", 0},
+	{ &g_damageBonusNearMedics, "g_damageBonusNearMedics", "0", 0},
+	{ &g_damageBonusTotalMedics, "g_damageBonusTotalMedics", "0", 0},
 
 	{ &g_countryFlags, "g_countryFlags", "1", 0}, //mcwf GeoIP
 
@@ -1107,7 +1111,7 @@ cvarTable_t		gameCvarTable[] = {
 	{ &g_noSkillUpgrades, "g_noSkillUpgrades", "0", CVAR_ARCHIVE},
 	{ &g_chargeType, "g_chargeType", "2", CVAR_ARCHIVE},
 	{ &lua_modules, "lua_modules", "", 0},
-	{ &sv_maxConnsPerIP, "sv_maxConnsPerIP", "4", CVAR_SERVERINFO | CVAR_ARCHIVE},
+	{ &g_maxConnsPerIP, "g_maxConnsPerIP", "4", CVAR_SERVERINFO | CVAR_ARCHIVE},
 
 	//flms
 	{ &g_flushItems, "g_flushItems", "1", 0},
