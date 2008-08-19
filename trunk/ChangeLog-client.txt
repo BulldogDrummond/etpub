@@ -1,4 +1,3 @@
-
 20050519
 --------
 * josh: Added antilag debug output to the client for internal testing only
@@ -405,3 +404,7 @@ current
 * quad:    added cg_tracers = 2 for drawing all but your own tracers
 * flms:    fixed the fireteam layout which was bugged by latched classes
 * flms:    added resetTimer command to just reset the enemy spawn timer
+* stephan: finally fixed a bug where a custom hud wasn't loaded when a player
+           started playing (first map)
+* stephan: fixed a bug where the backup profile wasn't loaded when 
+           cg_fireTeamOptions was set to 1

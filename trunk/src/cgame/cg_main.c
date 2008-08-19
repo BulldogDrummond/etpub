@@ -790,6 +790,14 @@ void CG_UpdateCvars( void ) {
 					// Show it up again because either watermark bitmap itself or
 					// any watermark-dependent time variables have changed
 					cg.watermarkConnectTime = cg.time;
+				}else if(cv->vmCvar == &cg_hud){
+					if(CG_LoadHud(cg_hud.string)) {
+						CG_Printf("^2Loaded HUD (cg_hud changed): %s\n", cg_hud.string);
+					} else if ( CG_LoadDefaultHud() ) {
+						CG_Printf("^2No HUD or invalid HUD specified, default HUD loaded (cg_hud changed)\n");
+					} else {
+						CG_Printf("^1ERROR: unable to load any HUD (cg_hud changed)\n");
+					}
 				}
 				// HOLLEMOD - END
 			}
@@ -3160,7 +3168,7 @@ void CG_Init( int serverMessageNum, int serverCommandSequence, int clientNum, qb
 		for(i = 0; i < MAX_FIRETEAM_MEMBERS; i++) {
 			ci = CG_SortedFireTeamPlayerForPosition( i );
 			if(!ci) {
-				return; // there was no-one in this position
+				break; // there was no-one in this position
 			}
 			ci->selected = qtrue;
 		}
