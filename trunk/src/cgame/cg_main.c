@@ -371,6 +371,7 @@ vmCvar_t	cg_hitSounds; // Elf
 vmCvar_t	cg_damageKick; // Terifire
 vmCvar_t	cg_spawnTimer_set;//quad
 vmCvar_t	cg_spawnTimer_period;//quad
+vmCvar_t	cg_locations; // flms
 
 typedef struct {
 	vmCvar_t	*vmCvar;
@@ -673,6 +674,7 @@ cvarTable_t		cvarTable[] = {
 	{ &cg_damageKick, "cg_damageKick", "1", CVAR_ARCHIVE },	// Terifire
 	{ &cg_spawnTimer_set, "cg_spawnTimer_set", "-1", CVAR_TEMP }, //quad
 	{ &cg_spawnTimer_period, "cg_spawnTimer_period", "0", CVAR_TEMP }, //quad
+	{ &cg_locations, "cg_locations", "1", CVAR_ARCHIVE }, // flms
 };
 
 int		cvarTableSize = sizeof( cvarTable ) / sizeof( cvarTable[0] );
@@ -3139,6 +3141,8 @@ void CG_Init( int serverMessageNum, int serverCommandSequence, int clientNum, qb
 	// OSP
 	cgs.dumpStatsFile = 0;
 	cgs.dumpStatsTime = 0;
+
+	CG_LoadLocations();
 
 	// forty - #297 - watermarks
 	// HOLLEMOD - START

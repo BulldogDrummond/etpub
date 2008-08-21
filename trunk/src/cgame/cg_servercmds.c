@@ -1679,7 +1679,7 @@ void CG_VoiceChatLocal( int mode, qboolean voiceOnly, int clientNum, int color, 
 	sfxHandle_t snd;
 	qhandle_t	sprite;
 	bufferedVoiceChat_t vchat;
-	const char *loc = " ";			// NERVE - SMF
+	char *locStr = NULL;			// NERVE - SMF
 
 /*	// NERVE - SMF - don't do this in wolfMP
 	// if we are going into the intermission, don't start any voices
@@ -1711,19 +1711,32 @@ void CG_VoiceChatLocal( int mode, qboolean voiceOnly, int clientNum, int color, 
 			Q_strncpyz(vchat.cmd, cmd, sizeof(vchat.cmd));
 
 			if( mode != SAY_ALL ) {
-				// NERVE - SMF - get location
-				loc = BG_GetLocationString( origin );
-				if( !loc || !*loc ) {
-					loc = " ";
+				vec2_t	loc;
+
+				loc[0] = origin[0];
+				loc[1] = origin[1];
+
+				if(cg_locations.integer > 0) {
+			
+				locStr = CG_GetLocationMsg(origin);
+		
+				if(cg_locations.integer > 1)
+						Q_strcat( locStr, 64, va(" ^3(%s)", BG_GetLocationString( loc )) );
+
+				} else {
+					locStr = BG_GetLocationString( loc );
 				}
+		
+				if( !locStr || !*locStr )
+					locStr = " ";
 			}
 
 			if( mode == SAY_TEAM ) {
 				Com_sprintf(vchat.message, sizeof(vchat.message), "(%s%c%c)%c%c(%s): %c%c%s", 
-					ci->name, Q_COLOR_ESCAPE, COLOR_WHITE, Q_COLOR_ESCAPE, COLOR_YELLOW, loc, Q_COLOR_ESCAPE, color, CG_TranslateString( chat ) );
+					ci->name, Q_COLOR_ESCAPE, COLOR_WHITE, Q_COLOR_ESCAPE, COLOR_YELLOW, locStr, Q_COLOR_ESCAPE, color, CG_TranslateString( chat ) );
 			} else if( mode == SAY_BUDDY ) {
 				Com_sprintf(vchat.message, sizeof(vchat.message), "<%s%c%c>%c%c<%s>: %c%c%s",
-					ci->name, Q_COLOR_ESCAPE, COLOR_WHITE, Q_COLOR_ESCAPE, COLOR_YELLOW, loc, Q_COLOR_ESCAPE, color, CG_TranslateString( chat ) );
+					ci->name, Q_COLOR_ESCAPE, COLOR_WHITE, Q_COLOR_ESCAPE, COLOR_YELLOW, locStr, Q_COLOR_ESCAPE, color, CG_TranslateString( chat ) );
 			} else {
 				Com_sprintf(vchat.message, sizeof(vchat.message), "%s%c%c: %c%c%s", 
 					ci->name, Q_COLOR_ESCAPE, COLOR_YELLOW, Q_COLOR_ESCAPE, color, CG_TranslateString( chat ) );

@@ -408,3 +408,5 @@ current
            started playing (first map)
 * stephan: fixed a bug where the backup profile wasn't loaded when 
            cg_fireTeamOptions was set to 1
+* flms:    added location names (NQ style).
+           TODO: dyno counter names

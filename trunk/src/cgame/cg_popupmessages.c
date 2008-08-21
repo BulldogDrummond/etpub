@@ -465,7 +465,35 @@ const char* CG_GetPMItemText( centity_t* cent ) {
 			if( cgs.clientinfo[cg.clientNum].team == cent->currentState.effect2Time ) {
 				return NULL;
 			}
-			return va( "Spotted by %s^7 at %s", cgs.clientinfo[cent->currentState.effect3Time].name, BG_GetLocationString( cent->currentState.origin ) );
+			{
+				vec2_t	loc;
+				char *locStr = NULL;
+
+				loc[0] =  cent->currentState.origin[0];
+				loc[1] =  cent->currentState.origin[1];
+
+				if (cg_locations.integer > 0){
+					vec3_t	origin;
+					qboolean locValid = qtrue;
+
+					origin[0] =  cent->currentState.origin[0];
+					origin[1] =  cent->currentState.origin[1];
+					origin[2] =  cent->currentState.origin[2];
+
+					locStr = CG_GetLocationMsg(origin);
+
+					if(cg_locations.integer > 1)
+						Q_strcat( locStr, 64, va(" ^3(%s)", BG_GetLocationString( loc )) );
+
+				} else {
+					locStr = BG_GetLocationString( loc );
+				}
+
+				if( !locStr || !*locStr )
+				locStr = "";
+				
+				return va( "Spotted by %s^7 at %s", cgs.clientinfo[cent->currentState.effect3Time].name, locStr );
+			}
 		case PM_OBJECTIVE:
 			switch( cent->currentState.density ) {
 				case 0:

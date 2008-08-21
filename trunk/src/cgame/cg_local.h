@@ -1995,6 +1995,15 @@ typedef struct {
 	int requestTime;
 } objectives_t;
 
+#define MAX_C_LOCATIONS 1024
+
+typedef struct location_s
+{
+	int		index;
+	vec3_t	origin;
+	char	message[64];
+} location_t;
+
 #define NUM_ENDGAME_AWARDS 14
 
 
@@ -2253,6 +2262,10 @@ typedef struct {
 	oidInfo_t			oidInfo[MAX_OID_TRIGGERS];
 
 	qboolean			initing;
+
+	location_t			location[MAX_C_LOCATIONS];
+	int					numLocations;
+	qboolean			locationsLoaded;
 
 	// josh: improve double jump prediction
 	float doubleJumpHeight; // from g_doubleJumpHeight
@@ -2568,6 +2581,7 @@ extern vmCvar_t			cg_hitSounds;
 extern vmCvar_t			cg_damageKick;
 extern vmCvar_t			cg_spawnTimer_period;
 extern vmCvar_t			cg_spawnTimer_set;
+extern vmCvar_t			cg_locations;
 
 #define FTOPTS_AUTO_MEMBER_SELECT 1
 
@@ -2952,6 +2966,8 @@ void CG_FlameDamage( int owner, vec3_t org, float radius );
 void	CG_InitLocalEntities( void );
 localEntity_t	*CG_AllocLocalEntity( void );
 void	CG_AddLocalEntities( void );
+char			*CG_GetLocationMsg(vec3_t origin);
+void			CG_LoadLocations( void );
 
 //
 // cg_effects.c
