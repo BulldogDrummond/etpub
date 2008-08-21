@@ -3608,11 +3608,11 @@ void G_IntermissionVoteTally( gentity_t *ent );
 // Always use userinfo ip
 #define SPOOFOPT_USERINFO_IP 32
 // Allow an empty guid at first connect to be changed
-#define SPOOFOPT_EMPTY_GUID 64
+// #define SPOOFOPT_EMPTY_GUID 64 // Dens: not optional anymore in 0.9.0
 // Allow an empty ip at first connect to be changed
-#define SPOOFOPT_EMPTY_IP 128
+// #define SPOOFOPT_EMPTY_IP 128 // Dens: an empty ip is not possible
 // Do a basic userinfocheck
-#define SPOOFOPT_USERINFOCHECK 256
+// #define SPOOFOPT_USERINFOCHECK 256 // Dens: not optional anymore in 0.9.0
 
 // Dens: g_warningOptions
 #define WARNOP_LINK_GUID 1

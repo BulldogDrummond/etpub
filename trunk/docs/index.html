@@ -57,6 +57,12 @@ dt {
 <td><a href="#g_damageBonusNearMedics">g_damageBonusNearMedics</a></td>
 <td><a href="#g_damageBonusTotalMedics">g_damageBonusTotalMedics</a></td>
 </tr>
+<tr>
+<td><a href="#g_spoofOptions">g_spoofOptions</a></td>
+<td><a href="#top">&nbsp;</a></td>
+<td><a href="#top">&nbsp;</a></td>
+<td><a href="#top">&nbsp;</a></td>
+</tr>
 </table>
 
 <br>
@@ -2710,7 +2716,9 @@ The format is ":map1:map2:map3:", where mapX is the .bsp name.
 <dt>g_minConnectLevel [integer]
 <dd>
 <p>The minimum shrubbot adminlevel required for players to be able to connect.
-When set to 0 everyone can connect.</p>
+</p>
+<p><b>NOTE:</b> this only works for positive levels, any value &lt;= 0 will
+allow everyone to connect</p>
 <p><b>NOTE:</b> Bots won't be enable to connect either.</p>
 <p>Default is 0</p>
 
@@ -2892,18 +2900,15 @@ for more information about this file.</p>
 <dt>g_spoofOptions [bitmask]
 <dd>
 <p>In etpub 0.8.1 some protection is build in which tries to limit IP and GUID spoofing / stealing.
-By default this protection kicks players that change their GUID or IP during gameplay. In some cases
-it can happen though that players get kicked while they are not actually spoofing their GUID or IP. They
-can just reconnect then and everything should work fine again. If you get too much problems with the kicks,
-you can change the spoofprotection with this cvar.</p>
+By default this protection kicks players that change their GUID or IP during gameplay.</p>
+<p><b>Note:</b> this cvar has been changed a lot in etpub 0.9.1. All the kicks of innocent players
+should be gone now.</p>
 <p><b>Do NOT change this CVAR unless you encounter problems!</b></p>
 	<dl>
 	<dt>1
-	<dd>Kick for GUIDspoofing. Unfortunately PunkbusterClient appears to be a bit slow in parsing the
-		playerguid and so at the moment this gives many innocent kicks. At this point it is probably
-		better to enable flag 64 when you enable this flag (on a public server).
+	<dd>Kick for GUIDspoofing.
 	<dt>2
-	<dd>Kick for IPspoofing. This should not give many problems
+	<dd>Kick for IPspoofing.
 	<dt>4
 	<dd>Display a global warning when someone is GUIDspoofing. (When flag 1 is set, this will not work)
 	<dt>8
@@ -2914,18 +2919,9 @@ you can change the spoofprotection with this cvar.</p>
 	<dt>32
 	<dd>Don't use the stored IP when etpub 0.7.x didn't use it either. (This option is a higher security
 		risk, but copies the 0.7.x behaviour of handling IPS)
-	<dt>64
-	<dd>Allow an empty GUID at the first time connection. This flag should prevent all the GUIDkicking of
-		innocent players, but makes it pretty easy to spoof a GUID
-	<dt>128
-	<dd>Allow an empty IP at the first time connection. This flag should prevent all the IPkicking of
-		innocent players, but makes it pretty easy to spoof an IP
-	<dt>256
-	<dd>Do some basic userinfochecks which make IP spoofing a lot harder. Really recommended at all times
 	</dl>
-<p><b>Note:</b> settings this CVAR to 48 causes the exact same behaviour as ETPub 0.7.x, but flag 256 is
-really recommended. 304 will be ETPub 0.7.x + flag 256</p>
-<p>Default is 339 (Flag 1 + 2 + 16 + 64 + 256)</p>
+<p><b>Note:</b> settings this CVAR to 48 causes the exact same behaviour as ETPub 0.7.x</p>
+<p>Default is 3 (Flag 1 + 2)</p>
 </dd>
 
 <a name="g_warningOptions"></a>

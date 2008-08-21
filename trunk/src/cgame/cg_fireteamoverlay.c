@@ -350,15 +350,15 @@ void CG_DrawFireTeamOverlay( rectDef_t* rect ) {
 
 	h = 12 + 2 + 2;
 	for(i = 0; i < MAX_FIRETEAM_MEMBERS; i++) {
+		int		locwidth;
+		vec3_t	origin;
+
 		ci = CG_SortedFireTeamPlayerForPosition( i );
 		if(!ci) {
-			break;;
+			break;
 		}
 
 		h += FT_BAR_HEIGHT + FT_BAR_YSPACING;
-
-		int				locwidth;
-		vec3_t	origin;
 
 		loc[0] = ci->location[0];
 		loc[1] = ci->location[1];

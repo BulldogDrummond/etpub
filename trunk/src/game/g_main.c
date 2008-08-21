@@ -1075,7 +1075,7 @@ cvarTable_t		gameCvarTable[] = {
 
 	{ &g_spreeOptions, "g_spreeOptions", "0", 0},
 	{ &g_multikillTime, "g_multikillTime", "1000", 0},
-	{ &g_spoofOptions, "g_spoofOptions", "339", 0},
+	{ &g_spoofOptions, "g_spoofOptions", "3", 0},
 
 	// Dens: advanced warning system
 	{ &g_warningOptions, "g_warningOptions", "0", 0},

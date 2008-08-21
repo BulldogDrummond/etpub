@@ -1997,3 +1997,7 @@
            and not an engine cvar
 * stephan: changed the flags of g_damageBonusOpts and added
            g_damageBonusNearMedics and g_damageBonusTotalMedics. See docs
+* stephan: changed g_spoofOptions again. Some of the old flags are not optional
+           anymore. This prevents the innocent guidspoofkick many people were
+           experiencing. Furthermore an empty IP field is not allowed anymore.
+           Default value set to 3

@@ -48,7 +48,7 @@ menuDef {
 // Controls //
 	SUBWINDOW( 6, 136, (SUBWINDOW_WIDTH), 76, "CONTROLS" )
 	BIND( 8, 152, (SUBWINDOW_WIDTH)-4, 10, "Playdead:", .2, 8, "playdead", "" )
-	BIND( 8, 164, (SUBWINDOW_WIDTH)-4, 10, "Objectives", .2, 8, "+obj", "" )
+	BIND( 8, 164, (SUBWINDOW_WIDTH)-4, 10, "Objectives:", .2, 8, "+obj", "" )
 	BIND( 8, 176, (SUBWINDOW_WIDTH)-4, 10, "Classmenu:", .2, 8, "classmenu", "" )
 	BIND( 8, 188, (SUBWINDOW_WIDTH)-4, 10, "Teammenu:", .2, 8, "teammenu", "" )
 	BIND( 8, 200, (SUBWINDOW_WIDTH)-4, 10, "Spawnmenu:", .2, 8, "spawnmenu", "" )

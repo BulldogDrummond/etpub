@@ -1879,9 +1879,9 @@ char *CheckUserinfo( int clientNum )
 	char	userinfo[MAX_INFO_STRING], *value;
 	int		length = 0, i, slashCount = 0, count = 0;
 
-	if(!(g_spoofOptions.integer & SPOOFOPT_USERINFOCHECK)){
+	/*if(!(g_spoofOptions.integer & SPOOFOPT_USERINFOCHECK)){
 		return 0;
-	}
+	}*/
 
 	trap_GetUserinfo( clientNum, userinfo, sizeof( userinfo ) );
 
@@ -1994,6 +1994,49 @@ char *CheckUserinfo( int clientNum )
 	return 0;
 }
 
+char *CheckSpoofing(gclient_t *client, char *guid, char *IP, char *name){
+
+	if(Q_stricmp(client->sess.guid, guid)){
+		if(!Q_stricmp(client->sess.guid, "")){
+			Q_strncpyz(client->sess.guid, guid, sizeof(client->sess.guid));
+		}else{
+			G_LogPrintf( "GUIDSPOOF: client %i Original guid %s"
+				"Secondary guid %s",
+				client->ps.clientNum,
+				client->sess.guid,
+				guid);
+			if(g_spoofOptions.integer & SPOOFOPT_KICK_GUID){
+				return "You are kicked for guidspoofing";
+			}else if(g_spoofOptions.integer & SPOOFOPT_WARN_GUID){
+				AP(va("cpm \"^1GUIDSPOOF: ^7%s\"", name));
+			}
+		}
+	}
+	
+	if(Q_stricmp(client->sess.ip, IP)){ 
+		G_LogPrintf( "IPSPOOF: client %i Original ip %s"
+			"Secondary ip %s\n",
+			client->ps.clientNum,
+			client->sess.ip,
+			IP);
+	if(g_spoofOptions.integer & SPOOFOPT_KICK_IP){
+			return "You are kicked for IPspoofing";
+		}else if(g_spoofOptions.integer & SPOOFOPT_WARN_IP){
+			AP(va("cpm \"^1IPSPOOF: ^7%s\"", name));
+		}
+	}
+
+	if(g_spoofOptions.integer & SPOOFOPT_USERINFO_GUID){
+		Q_strncpyz(client->sess.guid, guid, sizeof(client->sess.guid));
+	}
+
+	if(g_spoofOptions.integer & SPOOFOPT_USERINFO_IP){
+		Q_strncpyz(client->sess.ip, IP, sizeof(client->sess.ip));
+	}
+
+	return 0;
+}
+
 /*
 ===========
 ClientUserInfoChanged
@@ -2027,7 +2070,7 @@ void ClientUserinfoChanged( int clientNum ) {
 	if(reason){
 		trap_DropClient( clientNum,va("^1%s", reason), 0);
 	}
-
+	
 	client->medals = 0;
 	for( i = 0; i < SK_NUM_SKILLS; i++ ) {
 		client->medals += client->sess.medals[ i ];
@@ -2042,6 +2085,12 @@ void ClientUserinfoChanged( int clientNum ) {
 		// better just drop the client
 		// Q_strncpyz( userinfo, "\\name\\badinfo", sizeof(userinfo) );
 		trap_DropClient( clientNum, "^1Forbidden character in userinfo" , 0);
+	}
+	
+	reason = CheckSpoofing(client, Info_ValueForKey(userinfo, "cl_guid"),
+		Info_ValueForKey(userinfo, "ip"), Info_ValueForKey(userinfo, "name"));
+	if(reason){
+		trap_DropClient( clientNum,va("^1%s", reason), 0);
 	}
 
 #ifndef DEBUG_STATS
@@ -2304,6 +2353,12 @@ char *ClientConnect( int clientNum, qboolean firstTime, qboolean isBot ) {
 	Q_strncpyz(guid, value, sizeof(guid));
 	
 
+	// Dens: check for bad userinfo
+	userinfoReason = CheckUserinfo(clientNum);
+	if(userinfoReason){
+		return userinfoReason;
+	}
+
 	// IP filtering
 	// https://zerowing.idsoftware.com/bugzilla/show_bug.cgi?id=500
 	// recommanding PB based IP / GUID banning, the builtin system is pretty limited
@@ -2312,18 +2367,12 @@ char *ClientConnect( int clientNum, qboolean firstTime, qboolean isBot ) {
 	if ( G_FilterIPBanPacket( value ) ) {
 		return "You are banned from this server.";
 	}
-
-	// Dens: check for bad userinfo
-	userinfoReason = CheckUserinfo(clientNum);
-	if(userinfoReason){
-		return userinfoReason;
-	}
 	
 	// quad: check for maximum connections per IP
 	// based on reyalp's combinedfixes.lua and Invaderzim's patch
 	// (prevents fakeplayers DOS http://aluigi.altervista.org/fakep.htm )
 	conn_per_ip = 1;
-	value = Info_ValueForKey (userinfo, "ip");
+	// value = Info_ValueForKey (userinfo, "ip"); // Dens: value is already the ip
 	Q_strncpyz(ip, GetParsedIP(value), sizeof(ip));
 	for (i=0; i<level.numConnectedClients; i++) {
 		clientNum2 = level.sortedClients[i];
@@ -2497,57 +2546,13 @@ char *ClientConnect( int clientNum, qboolean firstTime, qboolean isBot ) {
 	// Dens: To prevent guid and ip spoofing, the guid and ip are stored at
 	// the moment the client connects the first time. If at any point the guid
 	// or ip in the userinfo is different from the stored guid or ip, the client
-	// is kicked.
+	// is kicked. (The kicks are moved to ClientUserinfoChanged)
 	if(!firstTime){
 		if(!Q_stricmp(client->sess.guid, "NOGUID")){
 			Q_strncpyz(client->sess.guid, "", sizeof(client->sess.guid));
 		}
 		if(!Q_stricmp(client->sess.ip, "NOIP")){
 			Q_strncpyz(client->sess.ip, "", sizeof(client->sess.ip));
-		}
-	
-		if(Q_stricmp(client->sess.guid, guid)){ 
-			G_LogPrintf( "GUIDSPOOF: client %i Original guid %s"
-				"Secondary guid %s",
-				clientNum,
-				client->sess.guid,
-				guid);
-			if((g_spoofOptions.integer & SPOOFOPT_EMPTY_GUID) 
-				&& !Q_stricmp(client->sess.guid, "")){
-				Q_strncpyz(client->sess.guid, guid, sizeof(client->sess.guid));
-			}else if(g_spoofOptions.integer & SPOOFOPT_KICK_GUID){
-				return "You are kicked for guidspoofing";
-			}else if(g_spoofOptions.integer & SPOOFOPT_WARN_GUID){
-				value = Info_ValueForKey(userinfo, "name");
-				AP(va("cpm \"^1GUIDSPOOF: ^7%s\"", value));
-			}
-		}
-
-		value = Info_ValueForKey (userinfo, "ip");
-		if(Q_stricmp(client->sess.ip, value)){ 
-			G_LogPrintf( "IPSPOOF: client %i Original ip %s"
-				"Secondary ip %s\n",
-				clientNum,
-				client->sess.ip,
-				value);
-			if((g_spoofOptions.integer & SPOOFOPT_EMPTY_IP) 
-				&& !Q_stricmp(client->sess.ip, "")){
-				Q_strncpyz(client->sess.ip, value, sizeof(client->sess.ip));
-			}else if(g_spoofOptions.integer & SPOOFOPT_KICK_IP){
-				return "You are kicked for IPspoofing";
-			}else if(g_spoofOptions.integer & SPOOFOPT_WARN_IP){
-				value = Info_ValueForKey(userinfo, "name");
-				AP(va("cpm \"^1IPSPOOF: ^7%s\"", value));
-			}
-		}
-
-		if(g_spoofOptions.integer & SPOOFOPT_USERINFO_GUID){
-			Q_strncpyz(client->sess.guid, guid, sizeof(client->sess.guid));
-		}
-
-		value = Info_ValueForKey (userinfo, "ip");
-		if(g_spoofOptions.integer & SPOOFOPT_USERINFO_IP){
-			Q_strncpyz(client->sess.ip, value, sizeof(client->sess.ip));
 		}
 	}else{
 		value = Info_ValueForKey (userinfo, "ip");
