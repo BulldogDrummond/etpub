@@ -3691,9 +3691,11 @@ static void CG_DrawWarmup( void ) {
 	if(!sec) {
 		if((cgs.gamestate == GS_WARMUP && !cg.warmup) || cgs.gamestate == GS_WAITING_FOR_PLAYERS) {
 
-			s1 = va( CG_TranslateString( "^7WARMUP: Waiting on ^2%i^7 %s" ), cgs.minclients, cgs.minclients == 1 ? "player" : "players" );
+			s1 = va( CG_TranslateString( "WARMUP: Waiting on ^2%i^3 %s" ), cgs.minclients, cgs.minclients == 1 ? "player" : "players" );
 			w = CG_DrawStrlen( s1 );
-			CG_DrawStringExt(320 - w * cw/2, 0, s1, colorWhite, qfalse, qtrue, cw, cw * 3 / 2, 0);
+			if(cg.bannerPrintTime == 0){
+				CG_DrawStringExt(320 - w * cw/2, 0, s1, colorYellow, qfalse, qtrue, cw, cw * 3 / 2, 0);
+			}
 
 			if(!cg.demoPlayback && cg.snap->ps.persistant[PERS_TEAM] != TEAM_SPECTATOR &&
 			  (!(cg.snap->ps.pm_flags & PMF_FOLLOW) || (cg.snap->ps.pm_flags & PMF_LIMBO))) {
@@ -3742,10 +3744,12 @@ static void CG_DrawWarmup( void ) {
 		sec = 0;
 	}
 
-		s = va( "%s %i", CG_TranslateString( "(WARMUP) Match begins in:" ), sec + 1 );
+	s = va( "%s %i", CG_TranslateString( "(WARMUP) Match begins in:" ), sec + 1 );
 
 	w = CG_DrawStrlen( s );
-	CG_DrawStringExt( 320 - w * cw / 2, 0, s, colorWhite, qfalse, qtrue, cw, cw * 3 / 2, 0 );
+	if(cg.bannerPrintTime == 0){
+		CG_DrawStringExt( 320 - w * cw / 2, 0, s, colorYellow, qfalse, qtrue, cw, cw * 3 / 2, 0 );
+	}
 
 	// NERVE - SMF - stopwatch stuff
 	s1 = "";
