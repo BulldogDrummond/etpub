@@ -337,6 +337,7 @@ void CG_DrawFireTeamOverlay( rectDef_t* rect ) {
 	vec4_t tclr =	{ 0.6f,		0.6f,		0.6f,		1.0f };
 	vec4_t bgColor		= { 0.0f, 0.0f, 0.0f, 0.6f };		// window
 	vec4_t borderColor	= { 0.5f, 0.5f, 0.5f, 0.5f };	// window
+	centity_t*	cent;
 
 	bgColor[3] = cg_fireteamAlpha.value;
 
@@ -364,9 +365,12 @@ void CG_DrawFireTeamOverlay( rectDef_t* rect ) {
 		loc[1] = ci->location[1];
 
 		if(cg_locations.integer > 0) {
-			origin[0] = ci->location[0];
-			origin[1] = ci->location[1];
-			origin[2] = ci->location[2];
+			cent = &cg_entities[ci->clientNum];
+
+			// Dens: use lerpOrigin for now
+			origin[0] = cent->lerpOrigin[0];
+			origin[1] = cent->lerpOrigin[1];
+			origin[2] = cent->lerpOrigin[2];
 	
 			locStr[i] = va( "^3%s", CG_GetLocationMsg(origin));
 
