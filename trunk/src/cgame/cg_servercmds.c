@@ -29,6 +29,14 @@ static void CG_ForceCvar() {
 		CG_Printf("forcecvar: MAX_FORCECVARS hit\n");
 		return;
 	}
+
+	// Dens: cg_hud can't be forced for two reasons: 1. People should just be
+	// able to choose their own hud. 2. The way a hud is loaded should be
+	// changed, since at the moment a different hud can be loaded, even if
+	// cg_hud is locked
+	if(!Q_stricmp("cg_hud", cvarName))
+		return;
+
 	Q_strncpyz(cg.forceCvars[cg.forceCvarCount][0],
 		cvarName,
 		sizeof(cg.forceCvars[0][0]));
@@ -1777,7 +1785,7 @@ CG_VoiceChat
 */
 void CG_VoiceChat( int mode ) {
 	const char *cmd, *msg = NULL;
-	int clientNum, color, i, j;
+	int clientNum, color, i;
 	qboolean voiceOnly;
 	vec3_t origin;			// NERVE - SMF
 

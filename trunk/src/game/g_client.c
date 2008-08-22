@@ -2001,7 +2001,7 @@ char *CheckSpoofing(gclient_t *client, char *guid, char *IP, char *name){
 			Q_strncpyz(client->sess.guid, guid, sizeof(client->sess.guid));
 		}else{
 			G_LogPrintf( "GUIDSPOOF: client %i Original guid %s"
-				"Secondary guid %s",
+				"Secondary guid %s\n",
 				client->ps.clientNum,
 				client->sess.guid,
 				guid);
@@ -2019,7 +2019,7 @@ char *CheckSpoofing(gclient_t *client, char *guid, char *IP, char *name){
 			client->ps.clientNum,
 			client->sess.ip,
 			IP);
-	if(g_spoofOptions.integer & SPOOFOPT_KICK_IP){
+		if(g_spoofOptions.integer & SPOOFOPT_KICK_IP){
 			return "You are kicked for IPspoofing";
 		}else if(g_spoofOptions.integer & SPOOFOPT_WARN_IP){
 			AP(va("cpm \"^1IPSPOOF: ^7%s\"", name));
@@ -2059,7 +2059,7 @@ void ClientUserinfoChanged( int clientNum ) {
 	char	medalStr[16] = "";
 	int		characterIndex;
 	int		etpubc;
-	char	*reason;
+	char	*reason, guid[33], ip[22], name[MAX_NETNAME];
 
 	ent = g_entities + clientNum;
 	client = ent->client;
@@ -2087,8 +2087,11 @@ void ClientUserinfoChanged( int clientNum ) {
 		trap_DropClient( clientNum, "^1Forbidden character in userinfo" , 0);
 	}
 	
-	reason = CheckSpoofing(client, Info_ValueForKey(userinfo, "cl_guid"),
-		Info_ValueForKey(userinfo, "ip"), Info_ValueForKey(userinfo, "name"));
+	Q_strncpyz(guid, Info_ValueForKey(userinfo, "cl_guid"), sizeof(guid));
+	Q_strncpyz(ip, Info_ValueForKey(userinfo, "ip"), sizeof(ip));
+	Q_strncpyz(name, Info_ValueForKey(userinfo, "name"), sizeof(name));
+
+	reason = CheckSpoofing(client, guid, ip, name);
 	if(reason){
 		trap_DropClient( clientNum,va("^1%s", reason), 0);
 	}

@@ -410,3 +410,4 @@ current
            cg_fireTeamOptions was set to 1
 * flms:    added location names (NQ style).
            TODO: dyno counter names
+* stephan: made it impossible to forcecvar cg_hud
