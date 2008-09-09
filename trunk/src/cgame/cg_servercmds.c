@@ -1720,6 +1720,7 @@ void CG_VoiceChatLocal( int mode, qboolean voiceOnly, int clientNum, int color, 
 
 			if( mode != SAY_ALL ) {
 				vec2_t	loc;
+				qboolean locValid = qtrue;
 
 				loc[0] = origin[0];
 				loc[1] = origin[1];
@@ -1727,8 +1728,13 @@ void CG_VoiceChatLocal( int mode, qboolean voiceOnly, int clientNum, int color, 
 				if(cg_locations.integer > 0) {
 			
 				locStr = CG_GetLocationMsg(origin);
+
+				if (!Q_stricmp( locStr, "^3Unknown")){
+					locStr = va( "^3(%s)", BG_GetLocationString( loc ));
+					locValid = qfalse;
+				}
 		
-				if(cg_locations.integer > 1)
+				if(cg_locations.integer > 1 && locValid)
 						Q_strcat( locStr, 64, va(" ^3(%s)", BG_GetLocationString( loc )) );
 
 				} else {

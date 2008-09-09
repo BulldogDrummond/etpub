@@ -366,6 +366,7 @@ void CG_DrawFireTeamOverlay( rectDef_t* rect ) {
 
 		if(cg_locations.integer > 0) {
 			cent = &cg_entities[ci->clientNum];
+			qboolean locValid = qtrue;
 
 			// Dens: use lerpOrigin for now
 			origin[0] = cent->lerpOrigin[0];
@@ -374,7 +375,12 @@ void CG_DrawFireTeamOverlay( rectDef_t* rect ) {
 	
 			locStr[i] = va( "^3%s", CG_GetLocationMsg(origin));
 
-			if(cg_locations.integer > 1)
+			if (!Q_stricmp( locStr[i], "^3Unknown")){
+				locStr[i] = va( "^3(%s)", BG_GetLocationString( loc ));
+				locValid = qfalse;
+			}
+
+			if(cg_locations.integer > 1 && locValid)
 				Q_strcat( locStr[i], 64, va(" ^3(%s)", BG_GetLocationString( loc )) );
 
 		} else {
