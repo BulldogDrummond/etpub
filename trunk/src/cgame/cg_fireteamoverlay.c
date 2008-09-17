@@ -365,8 +365,8 @@ void CG_DrawFireTeamOverlay( rectDef_t* rect ) {
 		loc[1] = ci->location[1];
 
 		if(cg_locations.integer > 0) {
-			cent = &cg_entities[ci->clientNum];
 			qboolean locValid = qtrue;
+			cent = &cg_entities[ci->clientNum];
 
 			// Dens: use lerpOrigin for now
 			origin[0] = cent->lerpOrigin[0];
