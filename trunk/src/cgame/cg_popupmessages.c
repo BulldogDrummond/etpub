@@ -482,13 +482,13 @@ const char* CG_GetPMItemText( centity_t* cent ) {
 
 					locStr = CG_GetLocationMsg(origin);
 
-					if (!Q_stricmp( locStr, "^3Unknown")){
-						locStr = va( "^3(%s)", BG_GetLocationString( loc ));
+					if (!Q_stricmp( locStr, "Unknown")){
+						locStr = va( "%s", BG_GetLocationString( loc ));
 						locValid = qfalse;
 					}
 
 					if(cg_locations.integer > 1 && locValid)
-						Q_strcat( locStr, 64, va(" ^3(%s)", BG_GetLocationString( loc )) );
+						Q_strcat( locStr, 64, va(" (%s)", BG_GetLocationString( loc )) );
 
 				} else {
 					locStr = BG_GetLocationString( loc );
