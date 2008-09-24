@@ -1997,7 +1997,7 @@ char *CheckUserinfo( int clientNum )
 char *CheckSpoofing(gclient_t *client, char *guid, char *IP, char *name){
 
 	if(Q_stricmp(client->sess.guid, guid)){
-		if(!Q_stricmp(client->sess.guid, "")){
+		if( !client->sess.guid || !Q_stricmp(client->sess.guid, "") ){
 			Q_strncpyz(client->sess.guid, guid, sizeof(client->sess.guid));
 		}else{
 			G_LogPrintf( "GUIDSPOOF: client %i Original guid %s"
@@ -2014,15 +2014,19 @@ char *CheckSpoofing(gclient_t *client, char *guid, char *IP, char *name){
 	}
 	
 	if(Q_stricmp(client->sess.ip, IP)){ 
-		G_LogPrintf( "IPSPOOF: client %i Original ip %s"
-			"Secondary ip %s\n",
-			client->ps.clientNum,
-			client->sess.ip,
-			IP);
-		if(g_spoofOptions.integer & SPOOFOPT_KICK_IP){
-			return "You are kicked for IPspoofing";
-		}else if(g_spoofOptions.integer & SPOOFOPT_WARN_IP){
-			AP(va("cpm \"^1IPSPOOF: ^7%s\"", name));
+		if ( !client->sess.ip || !Q_stricmp(client->sess.ip, "") ){
+			Q_strncpyz(client->sess.ip, IP, sizeof(client->sess.ip));
+		}else{
+			G_LogPrintf( "IPSPOOF: client %i Original ip %s"
+				"Secondary ip %s\n",
+				client->ps.clientNum,
+				client->sess.ip,
+				IP);
+			if(g_spoofOptions.integer & SPOOFOPT_KICK_IP){
+				return "You are kicked for IPspoofing";
+			}else if(g_spoofOptions.integer & SPOOFOPT_WARN_IP){
+				AP(va("cpm \"^1IPSPOOF: ^7%s\"", name));
+			}
 		}
 	}
 
