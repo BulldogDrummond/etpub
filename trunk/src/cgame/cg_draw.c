@@ -3183,6 +3183,14 @@ static void CG_DrawVote(void) {
 				&cgs.media.font4);
 			return;
 		}
+		if( cgs.complaintClient == -5 ) {
+			s = "You were team-killed by a bot.";
+			//CG_DrawStringExt( 8, 200, CG_TranslateString( s ), color, qtrue, qtrue, TINYCHAR_WIDTH, TINYCHAR_HEIGHT, 80 );
+			CG_Text_Paint_Ext( x, y, cg_fontQAScale.value, cg_fontQAScale.value,
+				color, s, 0, 0, ITEM_TEXTSTYLE_SHADOWED,
+				&cgs.media.font4);
+			return;
+		}
 	}
 
 	if( cgs.applicationEndTime > cg.time && cgs.applicationClient < 0 ) {
