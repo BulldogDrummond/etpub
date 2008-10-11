@@ -122,6 +122,8 @@ void AddDeferredGoal(gentity_t *ent)
 			Q_strncpyz(goaldef.m_TagName,pGoalName?pGoalName:"",MapGoalDef::BufferSize);
 			break;
 		}
+	default:
+		break;
 	}
 }
 
@@ -179,7 +181,7 @@ void GetMG42s()
 			if ( name )
 				strcpy(mg42s[ numofmg42s ].name, name);
 			else
-				mg42s[ numofmg42s ].name[ 0 ] = NULL;
+				mg42s[ numofmg42s ].name[ 0 ] = (char)NULL;
 
 			mg42s[ numofmg42s ].buildable = false;
 			numofmg42s++;
@@ -2116,17 +2118,17 @@ public:
 			cmd.rightmove = (char)(rght * fMaxSpeed);
 
 			if(_input.m_ButtonFlags.CheckFlag(BOT_BUTTON_FWD) || _input.m_ButtonFlags.CheckFlag(BOT_BUTTON_MOVEUP))
-				cmd.forwardmove = fMaxSpeed;
+				cmd.forwardmove = (char)fMaxSpeed;
 			if(_input.m_ButtonFlags.CheckFlag(BOT_BUTTON_BACK) || _input.m_ButtonFlags.CheckFlag(BOT_BUTTON_MOVEDN))
-				cmd.forwardmove = -fMaxSpeed;
+				cmd.forwardmove = (char)-fMaxSpeed;
 			if(_input.m_ButtonFlags.CheckFlag(BOT_BUTTON_RSTRAFE))
-				cmd.rightmove = fMaxSpeed;
+				cmd.rightmove = (char)fMaxSpeed;
 			if(_input.m_ButtonFlags.CheckFlag(BOT_BUTTON_LSTRAFE))
-				cmd.rightmove = -fMaxSpeed;
+				cmd.rightmove = (char)-fMaxSpeed;
 			if(_input.m_ButtonFlags.CheckFlag(BOT_BUTTON_JUMP))
-				cmd.upmove = fMaxSpeed;
+				cmd.upmove = (char)fMaxSpeed;
 			if(_input.m_ButtonFlags.CheckFlag(BOT_BUTTON_CROUCH))
-				cmd.upmove = -fMaxSpeed;
+				cmd.upmove = (char)-fMaxSpeed;
 		}
 		trap_BotUserCommand(_client, &cmd);
 	}
@@ -3430,6 +3432,8 @@ public:
 					}
 					break;
 				}
+			default:
+				break;
 			}
 		}
 
@@ -3984,7 +3988,7 @@ public:
 					if(pEnt && pEnt->client && pGunEntity)
 					{
 						pMsg->m_Current = pEnt->client->ps.weapHeat[WP_DUMMY_MG42];
-						pMsg->m_Max = MAX_MG42_HEAT;
+						pMsg->m_Max = (int)MAX_MG42_HEAT;
 					}
 					else
 					{
@@ -4439,7 +4443,7 @@ public:
 					if(G_IsOnFireteam(pEnt-g_entities, &ft))
 					{
 						pMsg->m_FireTeamNum = ft->ident;
-						pMsg->m_Leader = HandleFromEntity(&g_entities[ft->joinOrder[0]]);
+						pMsg->m_Leader = HandleFromEntity(&g_entities[(int)ft->joinOrder[0]]);
 						pMsg->m_InFireTeam = True;
 
 						int mbrnum = 0;
@@ -4448,7 +4452,7 @@ public:
 							pMsg->m_Members[mbrnum].Reset();
 							if(ft->joinOrder[i] != -1) 
 							{
-								GameEntity ge = HandleFromEntity(&g_entities[ft->joinOrder[i]]);
+								GameEntity ge = HandleFromEntity(&g_entities[(int)ft->joinOrder[i]]);
 								if(ge.IsValid())
 									pMsg->m_Members[mbrnum++] = ge;
 							}
@@ -4894,10 +4898,10 @@ const char *_GetEntityName(gentity_t *_ent)
 
 		if ( name )
 		{
-			char undschar[] = { '-', NULL };
+			char undschar[] = { '-', (char)NULL };
 			char skipchar[] = { '[', ']', '#', '!', '*', '`', 
 				'^', '&', '<', '>', '+', '=', '|', '\'', '%', 
-				'.', ':', '/', NULL };
+				'.', ':', '/', (char)NULL };
 			char *curchar = NULL;
 			char *tmp = NULL;
 			char *tmpdst = NULL;
