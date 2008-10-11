@@ -624,6 +624,11 @@ int Pickup_Weapon( gentity_t *ent, gentity_t *other ) {
 					G_AddSkillPoints( ent->parent, SK_SIGNALS, 1.f );
 					G_DebugAddSkillPoints( ent->parent, SK_SIGNALS, 1.f, "ammo pack picked up" );
 				}
+
+				//omni-bot event
+				if ( ent->parent )
+					Bot_Event_RecievedAmmo(other-g_entities, ent->parent);
+
 				// extracted code originally here into AddMagicAmmo -xkan, 9/18/2002
 				// add 1 clip of magic ammo for any two-handed weapon
 			}
@@ -808,7 +813,8 @@ int Pickup_Health (gentity_t *ent, gentity_t *other) {
 	other->client->ps.stats[STAT_HEALTH] = other->health;
 
 	//omni-bot event
-	Bot_Event_Healed(other-g_entities, ent->parent);
+	if ( ent->parent )
+		Bot_Event_Healed(other-g_entities, ent->parent);
 
 	return -1;
 }

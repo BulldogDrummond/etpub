@@ -1,8 +1,8 @@
 ////////////////////////////////////////////////////////////////////////////////
 // 
 // $LastChangedBy: crapshoot $
-// $LastChangedDate: 2008-05-29 20:13:21 -0700 (Thu, 29 May 2008) $
-// $LastChangedRevision: 2894 $
+// $LastChangedDate: 2008-10-09 00:10:07 -0700 (Thu, 09 Oct 2008) $
+// $LastChangedRevision: 3605 $
 //
 // Title: TF Message Structure Definitions
 //
@@ -220,6 +220,11 @@ struct Event_FireTeamWarning
 	GameEntity	m_WarnedBy;
 };
 
+struct Event_Ammo
+{
+	GameEntity	m_WhoDoneIt;
+};
+
 struct ET_GameType
 {
 	int			m_GameType;
@@ -235,6 +240,11 @@ struct ET_CvarGet
 {
 	char *		m_Cvar;
 	int			m_Value;
+};
+
+struct ET_DisableBotPush
+{
+	int			m_Push;
 };
 
 #pragma pack(pop)

@@ -1,8 +1,8 @@
 ////////////////////////////////////////////////////////////////////////////////
 // 
 // $LastChangedBy: drevil $
-// $LastChangedDate: 2008-07-22 22:13:08 -0700 (Tue, 22 Jul 2008) $
-// $LastChangedRevision: 3109 $
+// $LastChangedDate: 2008-09-21 00:57:13 -0700 (Sun, 21 Sep 2008) $
+// $LastChangedRevision: 3464 $
 //
 ////////////////////////////////////////////////////////////////////////////////
 
@@ -133,9 +133,9 @@ typedef enum eobResult
 } obResult;
 
 #ifdef __cplusplus
-inline int SUCCESS(obResult _res)
+inline bool SUCCESS(obResult _res)
 {
-	return (_res == Success) ? 1 : 0;
+	return (_res == Success) ? true : false;
 }
 inline int MAKE_KEY(char _1, char _2, char _3, char _4)
 {
@@ -145,7 +145,6 @@ inline int MAKE_KEY(char _1, char _2, char _3, char _4)
 #define SUCCESS(res) ((res) == Success ? 1 : 0)
 #define MAKE_KEY(res) (((_1)<<24) | ((_2)<<16) | ((_3)<<8) | (_4))
 #endif
-//#define SUCCESS(x) ((x)==Success ? true : false)
 
 typedef enum eFireMode
 {
@@ -611,6 +610,7 @@ typedef enum eEntityFlag
 	ENT_FLAG_INVEHICLE,
 	ENT_FLAG_FROZEN,
 	ENT_FLAG_TAUNTING,
+	ENT_FLAG_AIMING,
 
 	// THIS MUST BE LAST
 	ENT_FLAG_FIRST_USER	= 32

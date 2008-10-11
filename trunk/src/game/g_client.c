@@ -2901,8 +2901,13 @@ void ClientBegin( int clientNum )
 	client->pers.complaintClient = -1;
 	client->pers.complaintEndTime = -1;
 
-	//Omni-bot: make sure this isn't set
-	client->sess.botSuicide = qfalse;
+	//Omni-bot
+	client->sess.botSuicide = qfalse; // make sure this is not set
+
+	if ( ent->r.svFlags & SVF_BOT )
+		client->sess.botPush = qtrue; // make sure this is set for bots
+	else
+		client->sess.botPush = qfalse;
 
 	// tjw: even if g_teamChangeKills is 0, kill them if they try to
 	//      change teams twice in one round to prevent team change

@@ -658,8 +658,9 @@ typedef struct {
 	int			team_damage_received;
 	int			team_kills;
 
-	//bot /kill 2 seconds before next spawn
-	qboolean	botSuicide;
+	//Omni-bot
+	qboolean	botSuicide;			// /kill before next spawn
+	qboolean	botPush;			// allow for disabling of bot pushing via script
 
 	// matt
 	float team_hits;

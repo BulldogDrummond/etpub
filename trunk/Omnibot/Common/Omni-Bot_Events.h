@@ -1,8 +1,8 @@
 ////////////////////////////////////////////////////////////////////////////////
 // 
 // $LastChangedBy: drevil $
-// $LastChangedDate: 2008-07-22 22:13:08 -0700 (Tue, 22 Jul 2008) $
-// $LastChangedRevision: 3109 $
+// $LastChangedDate: 2008-08-27 23:18:41 -0700 (Wed, 27 Aug 2008) $
+// $LastChangedRevision: 3372 $
 //
 // about: Generic Bot Events
 //
@@ -157,6 +157,8 @@ typedef enum
 	GEN_MSG_GOTOWAYPOINT,
 	GEN_MSG_VEHICLEINFO,
 	GEN_MSG_MOVERAT,
+
+	GEN_MSG_SETLOADOUT,
 
 	// This must stay last.
 	GEN_MSG_END

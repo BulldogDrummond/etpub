@@ -253,6 +253,10 @@ void PushBot( gentity_t *ent, gentity_t *other ) {
 	if(other->client && Bot_Util_AllowPush(other->client->ps.weapon) == qfalse)
 		return;
 
+	// dont push if scripted not to
+	if(ent->client && !ent->client->sess.botPush)
+		return;
+
 	oldspeed = VectorLength( other->client->ps.velocity );
 	if (oldspeed < 200)
 		oldspeed = 200;

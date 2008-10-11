@@ -32,9 +32,8 @@ bool IsBot(gentity_t *e)
 
 //////////////////////////////////////////////////////////////////////////
 
-const int		MAX_CACHE = 32;
-int				g_NumSmokeGrenades = 0;
-gentity_t		*g_SmokeGrenadeCache[MAX_CACHE] = {0};
+const int		MAX_SMOKEGREN_CACHE = 32;
+gentity_t		*g_SmokeGrenadeCache[MAX_SMOKEGREN_CACHE] = {0};
 
 struct BotEntity
 {
@@ -56,23 +55,6 @@ BotEntity		m_EntityHandles[MAX_GENTITIES];
 #define WC_COVERTOPS_TIME	level.covertopsChargeTime	[team-TEAM_AXIS]
 
 //////////////////////////////////////////////////////////////////////////
-
-//gentity_t *EntityFromHandle(GameEntity _ent)
-//{
-//	gentity_t *pEnt = (gentity_t*)_ent;
-//	// Make sure it's within bounds.
-//	if(pEnt >= &g_entities[0] && pEnt < &g_entities[MAX_GENTITIES])
-//	{
-//		switch(pEnt-g_entities)
-//		{
-//		case ENTITYNUM_WORLD: // world ent not marked inuse for some reason
-//			return &g_entities[ENTITYNUM_WORLD];
-//		default:
-//			return pEnt->inuse ? pEnt : 0;
-//		}
-//	}
-//	return 0;
-//}
 
 gentity_t *INDEXENT(const int _gameId)
 {
@@ -1292,9 +1274,11 @@ gentity_t *Bot_EntInvisibleBySmokeBomb(vec3_t start, vec3_t end)
 	}
 
 	//while (ent = G_FindSmokeBomb( ent )) 
-	for(int i = 0; i < g_NumSmokeGrenades; ++i)
+	for(int i = 0; i < MAX_SMOKEGREN_CACHE; ++i)
 	{
 		ent = g_SmokeGrenadeCache[i];
+		if(!ent)
+			continue;
 
 		if (ent->s.effect1Time == 16)
 		{
@@ -1315,16 +1299,19 @@ gentity_t *Bot_EntInvisibleBySmokeBomb(vec3_t start, vec3_t end)
 			smokeRadius = MAX_SMOKE_RADIUS;
 		// if distance from line is short enough, vision is blocked by smoke
 
-		//float fColorRed[3] = { 1.0f, 0.0f, 0.0f };
-		//float fColorGrn[3] = { 0.0f, 1.0f, 0.0f };
-
 		if (DistanceFromLineSquared(smokeCenter, start, end) < (smokeRadius * smokeRadius))
 		{
-			//pfnPrintMessage("hid by smoke");			
-			//pfnAddTempDisplayLine(smokeCenter, end, fColorGrn);
+			//// if smoke is farther, we're less sensitive to being hidden.
+
+			//const float DistToEnd = VectorDistanceSquared(start,end);
+			//const float DistToSmoke = VectorDistanceSquared(start,smokeCenter);
+
+			//g_InterfaceFunctions->DebugLine(smokeCenter, end,obColor(0,255,0),0.2f);
+			//pfnPrintMessage("hid by smoke");
 			return ent;
 		}
 		//pfnAddTempDisplayLine(smokeCenter, start, fColorRed);
+		//g_InterfaceFunctions->DebugLine(smokeCenter, end,obColor(255,0,0),0.2f);
 	}
 
 	return 0;
@@ -1886,11 +1873,15 @@ public:
 			if ((_newclass == RANDOM_CLASS) || (bot->client->sess.latchPlayerType < 0) ||
 				(bot->client->sess.latchPlayerType >= NUM_PLAYER_CLASSES))
 			{
-				if (TeamCount(_client, TEAM_ALLIES) <= TeamCount(_client, TEAM_AXIS)) 
+				predictedTeam = bot->client->sess.sessionTeam;
+				if(predictedTeam!=TEAM_ALLIES && predictedTeam!=TEAM_AXIS)
 				{
-					predictedTeam = TEAM_ALLIES;
-				} else {
-					predictedTeam = TEAM_AXIS;
+					if (TeamCount(_client, TEAM_ALLIES) <= TeamCount(_client, TEAM_AXIS)) 
+					{
+						predictedTeam = TEAM_ALLIES;
+					} else {
+						predictedTeam = TEAM_AXIS;
+					}
 				}
 
 				if (CountPlayerClass(predictedTeam, PC_ENGINEER) < OMNIBOT_MIN_ENG) {
@@ -1998,6 +1989,20 @@ public:
 
 		// Set the weapon
 		cmd.weapon = _weaponBotToGame(_input.m_CurrentWeapon);
+
+		// If trying to switch to rifle nade from anything other than the base rifle, switch to base first
+		if(cmd.weapon == WP_GPG40 && bot->client->ps.weapon == WP_GPG40 /*&& bot->client->ps.weapon != WP_KAR98*/) 
+		{
+			const int ammo = bot->client->ps.ammoclip[BG_FindClipForWeapon(WP_GPG40)];
+			if(ammo==0 && bot->client->ps.weaponstate==WEAPON_READY)
+				cmd.weapon = WP_KAR98;
+		}
+		else if(cmd.weapon == WP_M7 && bot->client->ps.weapon == WP_M7 /*&& bot->client->ps.weapon != WP_CARBINE*/) 
+		{
+			const int ammo = bot->client->ps.ammoclip[BG_FindClipForWeapon(WP_M7)];
+			if(ammo==0 && bot->client->ps.weaponstate==WEAPON_READY)
+				cmd.weapon = WP_CARBINE;
+		}
 
 		// Process the bot keypresses.
 		if(_input.m_ButtonFlags.CheckFlag(BOT_BUTTON_RESPAWN))
@@ -2842,7 +2847,8 @@ public:
 					(pEnt->s.eType == ET_OID_TRIGGER) ||
 					(pEnt->s.eType == ET_HEALER) ||
 					(pEnt->s.eType == ET_SUPPLIER) ||
-					/*(pEnt->s.eType == ET_MOVER) ||*/
+					(pEnt->s.eType == ET_MOVER && (pEnt->r.currentOrigin[0] == 0 && pEnt->r.currentOrigin[1] == 0 &&
+					pEnt->r.currentOrigin[2] == 0)) ||
 					/*(pEnt->s.eType == ET_CORPSE) ||*/
 					!Q_stricmp(pEnt->classname, "trigger_multiple") || 
 					!Q_stricmp(pEnt->classname, "func_commandpoint") ||
@@ -3244,6 +3250,7 @@ public:
 						bud.udata.m_Int = 0;
 						switch(e->target_ent->constructibleStats.weaponclass)
 						{
+						case -1: // Grenade, fall through and also register as satchel and dyno.
 						case 1: // Satchelable, it should fall through and also register as dyno.
 							bud.udata.m_Int |= XPLO_TYPE_SATCHEL;
 						case 2: // Dynamite
@@ -3687,10 +3694,10 @@ public:
 				if(pMsg && pEnt && pEnt->client)
 				{
 					char userinfo[MAX_INFO_STRING];
-					trap_GetUserinfo(pEnt->s.clientNum, userinfo, MAX_INFO_STRING);
+					trap_GetUserinfo(pEnt-g_entities, userinfo, MAX_INFO_STRING);
 					Info_SetValueForKey(userinfo, "name", pMsg->m_NewName);
-					trap_SetUserinfo(pEnt->s.clientNum, userinfo);
-					ClientUserinfoChanged(pEnt->s.clientNum);
+					trap_SetUserinfo(pEnt-g_entities, userinfo);
+					ClientUserinfoChanged(pEnt-g_entities);
 				}
 				break;
 			}
@@ -4478,6 +4485,25 @@ public:
 				}
 				break;
 			}
+		case ET_MSG_DISABLEBOTPUSH:
+			{
+				OB_GETMSG(ET_DisableBotPush);
+				if(pMsg)
+				{
+					if(pEnt && pEnt->client)
+					{
+						if ( pMsg->m_Push > 0 )
+						{
+							pEnt->client->sess.botPush = qfalse;
+						}
+						else
+						{
+							pEnt->client->sess.botPush = qtrue;
+						}
+					}
+				}
+				break;
+			}
 		default:
 			{
 				return UnknownMessageType;
@@ -5044,6 +5070,18 @@ void Bot_Event_Healed(int _client, gentity_t *_whodoneit)
 	}
 }
 
+void Bot_Event_RecievedAmmo(int _client, gentity_t *_whodoneit)
+{
+	if(IsOmnibotLoaded())
+	{
+		if ( IsBot(&g_entities[_client]) )
+		{
+			Event_Ammo d = { HandleFromEntity(_whodoneit) };
+			g_BotFunctions.pfnBotSendEvent(_client, MessageHelper(ET_EVENT_RECIEVEDAMMO, &d, sizeof(d)));
+		}
+	}
+}
+
 void Bot_Event_Revived(int _client, gentity_t *_whodoneit)
 {
 	if(IsOmnibotLoaded())
@@ -5312,6 +5350,20 @@ void Bot_Event_EntityCreated(gentity_t *pEnt)
 
 		Bot_Util_CheckForGoalEntity(ent);
 	}
+
+	//////////////////////////////////////////////////////////////////////////
+	// Cache smoke bombs
+	if( pEnt->s.eType == ET_MISSILE && pEnt->s.weapon == WP_SMOKE_BOMB )
+	{
+		for(int i = 0; i < MAX_SMOKEGREN_CACHE; ++i)
+		{
+			if(!g_SmokeGrenadeCache[i])
+			{
+				g_SmokeGrenadeCache[i] = pEnt;
+				break;
+			}
+		}
+	}
 }
 
 extern "C" 
@@ -5335,6 +5387,13 @@ extern "C"
 			m_EntityHandles[iEntNum].m_Used = false;
 			m_EntityHandles[iEntNum].m_NewEntity = false;
 			while(++m_EntityHandles[iEntNum].m_HandleSerial==0) {}
+		}
+		for(int i = 0; i < MAX_SMOKEGREN_CACHE; ++i)
+		{
+			if(g_SmokeGrenadeCache[i]==pEnt)
+			{
+				g_SmokeGrenadeCache[i] = NULL;
+			}
 		}
 	}
 

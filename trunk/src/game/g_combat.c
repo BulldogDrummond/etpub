@@ -720,8 +720,12 @@ void player_die( gentity_t *self, gentity_t *inflictor, gentity_t *attacker, int
 				!G_shrubbot_permission(attacker, SBF_IMMUNITY) &&
 				!attacker->client->sess.referee) {
 
-				if( attacker->client->pers.localClient && !(attacker->r.svFlags & SVF_BOT) ) {
-					trap_SendServerCommand( self-g_entities, "complaint -4" );
+				if( attacker->client->pers.localClient ) 
+				{
+					if(attacker->r.svFlags & SVF_BOT)
+						trap_SendServerCommand( self-g_entities, "complaint -5" );
+					else
+						trap_SendServerCommand( self-g_entities, "complaint -4" );
 				} else {
 					if( meansOfDeath != MOD_CRUSH_CONSTRUCTION && meansOfDeath != MOD_CRUSH_CONSTRUCTIONDEATH && meansOfDeath != MOD_CRUSH_CONSTRUCTIONDEATH_NOATTACKER ) {
 						if( g_complaintlimit.integer ) {

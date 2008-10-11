@@ -1,8 +1,8 @@
 ////////////////////////////////////////////////////////////////////////////////
 // 
-// $LastChangedBy: drevil $
-// $LastChangedDate: 2008-05-31 18:38:33 -0700 (Sat, 31 May 2008) $
-// $LastChangedRevision: 2901 $
+// $LastChangedBy: crapshoot $
+// $LastChangedDate: 2008-10-09 00:10:07 -0700 (Thu, 09 Oct 2008) $
+// $LastChangedRevision: 3605 $
 //
 // Title: ET Config
 //
@@ -29,6 +29,7 @@ typedef enum eET_Version
 	ET_VERSION_0_7_alpha1,
 	ET_VERSION_0_7_alpha2,
 	ET_VERSION_0_7,
+	ET_VERSION_0_71,
 	ET_VERSION_LAST,
 	ET_VERSION_LATEST = ET_VERSION_LAST - 1
 } ET_Version;
@@ -47,6 +48,7 @@ typedef enum eET_Events
 	ET_EVENT_FIRETEAM_INVITED,
 	ET_EVENT_FIRETEAM_PROPOSAL,
 	ET_EVENT_FIRETEAM_WARNED,
+	ET_EVENT_RECIEVEDAMMO,
 
 	ET_EVENT_END
 } ET_Event;
@@ -103,6 +105,7 @@ typedef enum eET_Msgs
 	ET_MSG_GETGAMETYPE,
 	ET_MSG_SETCVAR,
 	ET_MSG_GETCVAR,
+	ET_MSG_DISABLEBOTPUSH,
 
 	ET_MSG_END
 } ET_Msg;
@@ -255,6 +258,7 @@ typedef enum eET_GoalType
 	ET_GOAL_EXPLOSIVE,	    // func_explosives
 	ET_GOAL_FLAMETHROWER,		// flamethrower camp
 	ET_GOAL_PANZER,			// panzer camp
+	ET_GOAL_USERGOAL,			// routeable flag for scripted waypoint goals (i.e. useswitch)
 
 	// THIS MUST STAY LAST
 	ET_GOAL_END
