@@ -3159,9 +3159,6 @@ void G_SayTo( gentity_t *ent, gentity_t *other, int mode, int color, const char 
 			(ent - g_entities))) {
 
 			Q_strncpyz(cmd, "print", sizeof(cmd));
-
-			// Omni-bot: Tell the bot about the chat message
-			Bot_Event_ChatMessage(other-g_entities, ent, mode, message);
 		}
 		else if(mode == SAY_TEAM || mode == SAY_BUDDY) {
 			Q_strncpyz(cmd, "tchat", sizeof(cmd));
@@ -3176,6 +3173,9 @@ void G_SayTo( gentity_t *ent, gentity_t *other, int mode, int color, const char 
 			message,
 			(!Q_stricmp(cmd, "print")) ? "\n" : "",
 			ent-g_entities, localize));
+
+		// Omni-bot: Tell the bot about the chat message
+		Bot_Event_ChatMessage(other-g_entities, ent, mode, message);
 	}
 }
 

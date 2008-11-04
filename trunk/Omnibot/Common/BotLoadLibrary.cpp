@@ -1,8 +1,8 @@
 ////////////////////////////////////////////////////////////////////////////////
 // 
 // $LastChangedBy: drevil $
-// $LastChangedDate: 2008-07-29 15:29:21 -0700 (Tue, 29 Jul 2008) $
-// $LastChangedRevision: 3188 $
+// $LastChangedDate: 2008-10-18 23:56:31 -0700 (Sat, 18 Oct 2008) $
+// $LastChangedRevision: 3676 $
 //
 ////////////////////////////////////////////////////////////////////////////////
 
@@ -286,10 +286,11 @@ bool OB_ShowLastError(const char *context, const char *errormsg)
 void *Omnibot_LL(const char *file)
 {
 	g_OmnibotLibPath = file;
-	Omnibot_Load_PrintMsg(OB_VA("Looking for %s", g_OmnibotLibPath.c_str()));
 	void *pLib = dlopen(g_OmnibotLibPath.c_str(), RTLD_NOW);
 	if(!pLib)
 		OB_ShowLastError("LoadLibrary", dlerror());
+
+	Omnibot_Load_PrintMsg(OB_VA("Looking for %s, ", g_OmnibotLibPath.c_str(), pLib ? "found." : "not found"));
 	return pLib;
 }
 
