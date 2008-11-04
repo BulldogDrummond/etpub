@@ -47,6 +47,7 @@
 			/>
 			<Tool
 				Name="VCCLCompilerTool"
+				AdditionalOptions="/D &quot;NO_BOT_SUPPORT&quot;"
 				Optimization="0"
 				AdditionalIncludeDirectories="&quot;..\lua-5.1.3\src&quot;;..\..\Omnibot\ET;..\..\Omnibot\Common"
 				PreprocessorDefinitions="WIN32;_DEBUG;_WINDOWS;BUILDING_REF_GL;DEBUG;GAMEDLL;USE_MDXFILE"
@@ -143,9 +144,10 @@
 			/>
 			<Tool
 				Name="VCCLCompilerTool"
+				AdditionalOptions="/D &quot;NO_BOT_SUPPORT&quot;"
 				Optimization="2"
 				InlineFunctionExpansion="1"
-				AdditionalIncludeDirectories="..\..\Omnibot\ET;..\..\Omnibot\Common"
+				AdditionalIncludeDirectories="&quot;..\lua-5.1.3\src&quot;;..\..\Omnibot\ET;..\..\Omnibot\Common"
 				PreprocessorDefinitions="WIN32;NDEBUG;_WINDOWS;GAMEDLL;USE_MDXFILE"
 				StringPooling="true"
 				RuntimeLibrary="0"
