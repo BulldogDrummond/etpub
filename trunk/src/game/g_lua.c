@@ -1039,9 +1039,9 @@ void G_LuaHook_Print( char *text )
 }
 
 /** G_LuaHook_Obituary
- * et_Obituary( victim, killer, meansOfDeath ) callback
+ * customObit = et_Obituary( victim, killer, meansOfDeath ) callback
  */
-void G_LuaHook_Obituary(int victim, int killer, int meansOfDeath)
+qboolean G_LuaHook_Obituary(int victim, int killer, int meansOfDeath, char *customObit)
 {
 	int i;
 	lua_vm_t *vm;
@@ -1057,13 +1057,18 @@ void G_LuaHook_Obituary(int victim, int killer, int meansOfDeath)
 			lua_pushinteger(vm->L, killer);
 			lua_pushinteger(vm->L, meansOfDeath);
 			// Call
-			if (!G_LuaCall(vm, 3, 0)) {
+			if (!G_LuaCall(vm, 3, 1)) {
 				G_LuaStopVM(vm);
 				continue;
 			}
 			// Return values
+			if (lua_isstring(vm->L, -1)) {
+				Q_strncpyz(customObit, lua_tostring(vm->L, -1), MAX_STRING_CHARS);
+				return qtrue;
+			}
 		}
 	}
+	return qfalse;
 }
 
 //}}}

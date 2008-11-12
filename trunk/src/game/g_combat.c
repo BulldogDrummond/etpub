@@ -408,6 +408,8 @@ void player_die( gentity_t *self, gentity_t *inflictor, gentity_t *attacker, int
 	qboolean	killedintank = qfalse;
 	//float			timeLived;
 	weapon_t	weap;
+	// pheno: G_LuaHook_Obituary()'s custom Obituary
+	char		customObit[MAX_STRING_CHARS] = "";
 
 	// tjw: for g_shortcuts
 	if(attacker && attacker->client) {
@@ -643,8 +645,17 @@ void player_die( gentity_t *self, gentity_t *inflictor, gentity_t *attacker, int
 			AP(va("cpm \"%s ^7was gibbed by^7 %s\"", self->client->pers.netname, killerName));
 	}
 
+	// pheno: Lua API callbacks
+	if ( G_LuaHook_Obituary(self->s.number, killer, meansOfDeath, customObit) &&
+		 g_obituary.integer ) {
+		// broadcast the custom obituary to everyone
+		if ( g_logOptions.integer & LOGOPTS_OBIT_CHAT ) {
+			AP(va("chat \"%s\" -1", customObit));
+		} else {
+			trap_SendServerCommand(-1, va("cpm \"%s\n\"", customObit));
+		}
 	// broadcast the death event to everyone
-	if (g_obituary.integer == OBIT_SERVER_ONLY ||
+	} else if (g_obituary.integer == OBIT_SERVER_ONLY ||
 		(g_obituary.integer == OBIT_CLIENT_PREF &&
 			(meansOfDeath == MOD_GOOMBA ||
 			meansOfDeath == MOD_POISON ||
@@ -2907,9 +2918,6 @@ static void G_Obituary(int mod, int target, int attacker) {
 		ga = &g_entities[attacker];
 	}
 	
-	// Lua API callbacks
-	G_LuaHook_Obituary(target, attacker, mod);
-
 	Q_strncpyz(targetName,
 		G_ObituarySanitize(gi->client->pers.netname),
 		sizeof(targetName));

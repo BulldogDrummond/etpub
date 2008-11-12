@@ -50,7 +50,7 @@ qboolean G_LuaHook_UpgradeSkill(int cno, skillType_t skill);
 // TODO: this REALLY needs testing!!! (I'm not sure about cno arg)
 qboolean G_LuaHook_SetPlayerSkill( int cno, skillType_t skill ); 
 void G_LuaHook_Print( char *text );
-void G_LuaHook_Obituary(int victim, int killer, int meansOfDeath);
+qboolean G_LuaHook_Obituary(int victim, int killer, int meansOfDeath, char *customObit);
 
 
 #endif /* ifndef _G_LUA_H */
