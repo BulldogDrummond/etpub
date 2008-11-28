@@ -4955,7 +4955,7 @@ qboolean Bot_Util_CheckForSuicide(gentity_t *ent)
 		{
 			if(ent->client->sess.sessionTeam == TEAM_AXIS)
 			{						
-				if ( (g_redlimbotime.integer - (level.time%g_redlimbotime.integer)) < 2000 )
+				if ( (g_redlimbotime.integer - ((level.dwRedReinfOffset + level.timeCurrent - level.startTime) % g_redlimbotime.integer)) < 2000 )
 				{
 					Cmd_Kill_f(ent);
 					ent->client->sess.botSuicide = qfalse;
@@ -4964,7 +4964,7 @@ qboolean Bot_Util_CheckForSuicide(gentity_t *ent)
 			}
 			else if(ent->client->sess.sessionTeam == TEAM_ALLIES)
 			{
-				if ( (g_bluelimbotime.integer - (level.time%g_bluelimbotime.integer)) < 2000 )
+				if ( (g_bluelimbotime.integer - ((level.dwBlueReinfOffset + level.timeCurrent - level.startTime) % g_bluelimbotime.integer)) < 2000 )
 				{
 					Cmd_Kill_f(ent);
 					ent->client->sess.botSuicide = qfalse;
