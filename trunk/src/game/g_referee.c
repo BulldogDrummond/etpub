@@ -106,7 +106,7 @@ void G_ref_cmd(gentity_t *ent, unsigned int dwCommand, qboolean fValue)
 
 	// forty - in mod flood protection
 	// yada - dont check this on console
-	if(	ent && ClientIsFlooding(ent) ){
+	if(	ent && ClientIsFlooding(ent, qfalse) ){
 		CP("print \"^1Spam Protection: ^7dropping ref\n\"");
 		return;
 	}

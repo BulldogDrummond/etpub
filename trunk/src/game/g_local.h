@@ -1801,6 +1801,8 @@ void G_SendScore( gentity_t *client );
 // g_cmds.c
 //
 void G_SayTo( gentity_t *ent, gentity_t *other, int mode, int color, const char *name, const char *message, qboolean localize ); // JPW NERVE removed static declaration so it would link
+// pheno: added for Lua et.G_Say() support
+void G_Say( gentity_t *ent, gentity_t *target, int mode, const char *chatText );
 qboolean Cmd_CallVote_f( gentity_t *ent, unsigned int dwCommand, qboolean fValue );
 void Cmd_Follow_f( gentity_t *ent, unsigned int dwCommand, qboolean fValue );
 void Cmd_Say_f( gentity_t *ent, int mode, qboolean arg0 );
@@ -1844,7 +1846,7 @@ void ClientBegin( int clientNum );
 void ClientCommand( int clientNum );
 float ClientHitboxMaxZ(gentity_t *hitEnt);
 // forty - in mod flood protection
-qboolean ClientIsFlooding(gentity_t *ent);
+qboolean ClientIsFlooding( gentity_t *ent, qboolean noUpdate );
 
 //
 // g_active.c
@@ -2349,6 +2351,9 @@ extern vmCvar_t g_noSkillUpgrades;
 extern vmCvar_t g_chargeType;
 extern vmCvar_t lua_modules;
 extern vmCvar_t g_maxConnsPerIP;
+
+// pheno
+extern vmCvar_t lua_allowedModules;
 
 // flms
 extern vmCvar_t g_flushItems;

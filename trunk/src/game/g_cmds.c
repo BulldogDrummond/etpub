@@ -3679,7 +3679,7 @@ qboolean Cmd_CallVote_f( gentity_t *ent, unsigned int dwCommand, qboolean fRefCo
 	
 	if(!fRefCommand){
 		// forty - in mod flood protection
-		if(ClientIsFlooding(ent)) {
+		if(ClientIsFlooding(ent, qfalse)) {
 			CP("print \"^1Spam Protection: ^7dropping callvote\n\"");
 			return qfalse;
 		}
@@ -5619,14 +5619,16 @@ void Cmd_SwapPlacesWithBot_f( gentity_t *ent, int botNum ) {
 }
 
 // forty - in mod flood protection
-qboolean ClientIsFlooding(gentity_t *ent) {
+// pheno: added noUpdate to do no update on necessary fields
+//        if Lua API calls this function
+qboolean ClientIsFlooding(gentity_t *ent, qboolean noUpdate) {
 	if(!ent->client || !g_floodprotect.integer)
 		return qfalse;
 	
 	//G_Printf("Level.time: %d\n", level.time);
 
 	//Threshold time is too old, let's set it.
-	if(level.time - ent->client->thresholdTime > 30000)
+	if(level.time - ent->client->thresholdTime > 30000 && !noUpdate)
 		ent->client->thresholdTime = level.time;
 
 	// admins shouldn't be immune to this.
@@ -5645,12 +5647,16 @@ qboolean ClientIsFlooding(gentity_t *ent) {
 		ent->client->numReliableCmds > g_floodthreshold.integer
 	) {
 		// shut down really repetitive flooders
-		ent->client->nextReliableTime = level.time + 500;
+		if ( !noUpdate ) {
+			ent->client->nextReliableTime = level.time + 500;
+		}
 		return qtrue;
 	}
 	
-	ent->client->numReliableCmds++;	
-	ent->client->nextReliableTime = level.time + g_floodWait.integer;
+	if ( !noUpdate ) {
+		ent->client->numReliableCmds++;	
+		ent->client->nextReliableTime = level.time + g_floodWait.integer;
+	}
 	return qfalse;
 }
 
@@ -5816,7 +5822,7 @@ void ClientCommand( int clientNum ) {
 	
 	if (Q_stricmp (cmd, "say") == 0) {
 		// forty - in mod flood protection
-		flooding = ClientIsFlooding(ent);
+		flooding = ClientIsFlooding(ent, qfalse);
 
 		if( ent->client->sess.auto_unmute_time == 0 && !flooding) {
 			Cmd_Say_f (ent, SAY_ALL, qfalse);
@@ -5831,7 +5837,7 @@ void ClientCommand( int clientNum ) {
 		!Q_stricmp (cmd, "mt") 
 	) {
 		// forty - in mod flood protection
-		flooding = ClientIsFlooding(ent);
+		flooding = ClientIsFlooding(ent, qfalse);
 
 		if(!flooding) 
 			G_PrivateMessage(ent);
@@ -5842,7 +5848,7 @@ void ClientCommand( int clientNum ) {
 
 	if (!Q_stricmp (cmd, "ma")) {
 		// forty - in mod flood protection
-		flooding = ClientIsFlooding(ent);
+		flooding = ClientIsFlooding(ent, qfalse);
 
 		if(!flooding) 
 			G_AdminChat(ent);
@@ -5874,7 +5880,7 @@ void ClientCommand( int clientNum ) {
 
 	if( Q_stricmp (cmd, "say_team") == 0 ) {
 		// forty - in mod flood protection
-		flooding = ClientIsFlooding(ent);
+		flooding = ClientIsFlooding(ent, qfalse);
 
 		if( ent->client->sess.auto_unmute_time == 0 && !flooding) {
 			Cmd_Say_f (ent, SAY_TEAM, qfalse);
@@ -5884,7 +5890,7 @@ void ClientCommand( int clientNum ) {
 		return;
 	} else if (Q_stricmp (cmd, "vsay") == 0) {
 		// forty - in mod flood protection
-		flooding = ClientIsFlooding(ent);
+		flooding = ClientIsFlooding(ent, qfalse);
 
 		if( ent->client->sess.auto_unmute_time == 0 && !flooding) {
 			Cmd_Voice_f (ent, SAY_ALL, qfalse, qfalse);
@@ -5894,7 +5900,7 @@ void ClientCommand( int clientNum ) {
 		return;
 	} else if (Q_stricmp (cmd, "vsay_team") == 0) {
 		// forty - in mod flood protection
-		flooding = ClientIsFlooding(ent);
+		flooding = ClientIsFlooding(ent, qfalse);
 
 		if( ent->client->sess.auto_unmute_time == 0 && !flooding) {
 			Cmd_Voice_f (ent, SAY_TEAM, qfalse, qfalse);
@@ -5904,7 +5910,7 @@ void ClientCommand( int clientNum ) {
 		return;
 	} else if (Q_stricmp (cmd, "say_buddy") == 0) {
 		// forty - in mod flood protection
-		flooding = ClientIsFlooding(ent);
+		flooding = ClientIsFlooding(ent, qfalse);
 
 		if( ent->client->sess.auto_unmute_time == 0 && !flooding) {
 			Cmd_Say_f( ent, SAY_BUDDY, qfalse );
@@ -5914,7 +5920,7 @@ void ClientCommand( int clientNum ) {
 		return;
 	} else if (Q_stricmp (cmd, "vsay_buddy") == 0) {
 		// forty - in mod flood protection
-		flooding = ClientIsFlooding(ent);
+		flooding = ClientIsFlooding(ent, qfalse);
 
 		if( ent->client->sess.auto_unmute_time == 0 && !flooding) {
 			Cmd_Voice_f( ent, SAY_BUDDY, qfalse, qfalse );
@@ -5940,7 +5946,7 @@ void ClientCommand( int clientNum ) {
 		return;
 	} else if (Q_stricmp (cmd, "fireteam") == 0) {
 		// forty - in mod flood protection
-		flooding = ClientIsFlooding(ent);
+		flooding = ClientIsFlooding(ent, qfalse);
 
 		if(!flooding)
 			Cmd_FireTeam_MP_f (ent);
@@ -5952,7 +5958,7 @@ void ClientCommand( int clientNum ) {
 		return;
 	} else if (Q_stricmp (cmd, "rconAuth") == 0) {
 		// forty - in mod flood protection
-		flooding = ClientIsFlooding(ent);
+		flooding = ClientIsFlooding(ent, qfalse);
 
 		if(!flooding)
 			Cmd_AuthRcon_f( ent );

@@ -1,4 +1,4 @@
-SRCS=$(wildcard *.c)
+SRCS=$(wildcard *.c) ../sha-1/sha1.c
 SRCSCPP=$(wildcard *.cpp) ../../Omnibot/Common/BotLoadLibrary.cpp
 OBJECTS=$(subst .c,.o,$(SRCS)) $(subst .cpp,.oxx,$(SRCSCPP))
 ALL_OBJECTS=$(OBJECTS)

@@ -100,34 +100,34 @@ void G_xpsave_writeconfig()
 	if(len < 0) {
 		G_Printf("G_xpsave_writeconfig: could not open %s\n",
 				g_XPSaveFile.string);
-	}
-
-	trap_FS_Write("[serverstat]\n", 13, f);
-	trap_FS_Write("rating           = ", 19, f);
-	G_shrubbot_writeconfig_float(g_serverstat.rating, f);
-	trap_FS_Write("rating_variance  = ", 19, f);
-	G_shrubbot_writeconfig_float(g_serverstat.rating_variance, f);
-	trap_FS_Write("distance_rating  = ", 19, f);
-	G_shrubbot_writeconfig_float(g_serverstat.distance_rating, f);
-	trap_FS_Write("distance_variance= ", 19, f);
-	G_shrubbot_writeconfig_float(g_serverstat.distance_variance, f);
-	trap_FS_Write("\n", 1, f);
-	G_Printf("xpsave: wrote server rating: %f\n", g_serverstat.rating);
-
-	for(i=0; g_mapstats[i]; i++) {
-		trap_FS_Write("[mapstat]\n", 10, f);
-		trap_FS_Write("name             = ", 19, f);
-		G_shrubbot_writeconfig_string(g_mapstats[i]->name, f);
-		trap_FS_Write("rating           = ", 19, f);
-		G_shrubbot_writeconfig_float(g_mapstats[i]->rating, f);
-		trap_FS_Write("rating_variance  = ", 19, f);
-		G_shrubbot_writeconfig_float(g_mapstats[i]->rating_variance, f);
-		trap_FS_Write("spree_record     = ", 19, f);
-		G_shrubbot_writeconfig_int(g_mapstats[i]->spreeRecord, f);
-		trap_FS_Write("spree_name       = ", 19, f);
-		G_shrubbot_writeconfig_string(g_mapstats[i]->spreeName, f);
-		trap_FS_Write("\n", 1, f);
-	}
+ 	}
+ 
+ 	trap_FS_Write("[serverstat]\n", 13, f);
+	trap_FS_Write("rating            = ", 20, f);
+ 	G_shrubbot_writeconfig_float(g_serverstat.rating, f);
+	trap_FS_Write("rating_variance   = ", 20, f);
+ 	G_shrubbot_writeconfig_float(g_serverstat.rating_variance, f);
+	trap_FS_Write("distance_rating   = ", 20, f);
+ 	G_shrubbot_writeconfig_float(g_serverstat.distance_rating, f);
+	trap_FS_Write("distance_variance = ", 20, f);
+ 	G_shrubbot_writeconfig_float(g_serverstat.distance_variance, f);
+ 	trap_FS_Write("\n", 1, f);
+ 	G_Printf("xpsave: wrote server rating: %f\n", g_serverstat.rating);
+ 
+ 	for(i=0; g_mapstats[i]; i++) {
+ 		trap_FS_Write("[mapstat]\n", 10, f);
+		trap_FS_Write("name              = ", 20, f);
+ 		G_shrubbot_writeconfig_string(g_mapstats[i]->name, f);
+		trap_FS_Write("rating            = ", 20, f);
+ 		G_shrubbot_writeconfig_float(g_mapstats[i]->rating, f);
+		trap_FS_Write("rating_variance   = ", 20, f);
+ 		G_shrubbot_writeconfig_float(g_mapstats[i]->rating_variance, f);
+		trap_FS_Write("spree_record      = ", 20, f);
+ 		G_shrubbot_writeconfig_int(g_mapstats[i]->spreeRecord, f);
+		trap_FS_Write("spree_name        = ", 20, f);
+ 		G_shrubbot_writeconfig_string(g_mapstats[i]->spreeName, f);
+ 		trap_FS_Write("\n", 1, f);
+ 	}
 	G_Printf("xpsave: wrote %d mapstats\n", i);
 
 	for(i=0; g_xpsaves[i]; i++) {
@@ -136,56 +136,56 @@ void G_xpsave_writeconfig()
 		age = t - g_xpsaves[i]->time;
 		if(age > eff_XPSaveMaxAge) {
 			continue;
-		}
-
-		trap_FS_Write("[xpsave]\n", 9, f);
-		trap_FS_Write("guid             = ", 19, f);
-		G_shrubbot_writeconfig_string(g_xpsaves[i]->guid, f);
-		trap_FS_Write("name             = ", 19, f);
-		G_shrubbot_writeconfig_string(g_xpsaves[i]->name, f);
-		trap_FS_Write("time             = ", 19, f);
-		G_shrubbot_writeconfig_int(g_xpsaves[i]->time, f);
-		if(age <= eff_XPSaveMaxAge_xp) {
-			for(j=0; j<SK_NUM_SKILLS; j++) {
-				if(g_xpsaves[i]->skill[j] == 0.0f)
-					continue;
-				trap_FS_Write(va("skill[%i]         = ", j),
-					19, f);
-				G_shrubbot_writeconfig_float(
-					g_xpsaves[i]->skill[j], f);
-			}
-		}
-		if(g_xpsaves[i]->kill_rating != 0.0f) { 
-			trap_FS_Write("kill_rating      = ", 19, f);
-			G_shrubbot_writeconfig_float(g_xpsaves[i]->kill_rating,
-				f);
-		}
-		if(g_xpsaves[i]->kill_variance != SIGMA2_DELTA) { 
-			trap_FS_Write("kill_variance    = ", 19, f);
-			G_shrubbot_writeconfig_float(g_xpsaves[i]->kill_variance,
-				f);
-		}
-		if(g_xpsaves[i]->rating != 0) { 
-			trap_FS_Write("rating           = ", 19, f);
-			G_shrubbot_writeconfig_float(
-				g_xpsaves[i]->rating, f);
-		}
-		if(g_xpsaves[i]->rating_variance != SIGMA2_THETA) { 
-			trap_FS_Write("rating_variance  = ", 19, f);
-			G_shrubbot_writeconfig_float(
-				g_xpsaves[i]->rating_variance, f);
-		}
-		if(g_xpsaves[i]->mutetime) {
-			trap_FS_Write("mutetime         = ", 19, f);
-			G_shrubbot_writeconfig_int(g_xpsaves[i]->mutetime, f);
-		}
-		if(g_playerRating.integer & PLAYER_RATING_SKILLS) {
-			for(j=0; j<SK_NUM_SKILLS; j++) {
-				trap_FS_Write(va("pr_skill[%i]      = ", j),
-					19, f);
-				G_shrubbot_writeconfig_string(
-					va("%i %f %i %f %i %f %i %f %i %f",
-					g_xpsaves[i]->pr_skill_updates[j][0],
+ 		}
+ 
+ 		trap_FS_Write("[xpsave]\n", 9, f);
+		trap_FS_Write("guid              = ", 20, f);
+ 		G_shrubbot_writeconfig_string(g_xpsaves[i]->guid, f);
+		trap_FS_Write("name              = ", 20, f);
+ 		G_shrubbot_writeconfig_string(g_xpsaves[i]->name, f);
+		trap_FS_Write("time              = ", 20, f);
+ 		G_shrubbot_writeconfig_int(g_xpsaves[i]->time, f);
+ 		if(age <= eff_XPSaveMaxAge_xp) {
+ 			for(j=0; j<SK_NUM_SKILLS; j++) {
+ 				if(g_xpsaves[i]->skill[j] == 0.0f)
+ 					continue;
+				trap_FS_Write(va("skill[%i]          = ", j),
+					20, f);
+ 				G_shrubbot_writeconfig_float(
+ 					g_xpsaves[i]->skill[j], f);
+ 			}
+ 		}
+ 		if(g_xpsaves[i]->kill_rating != 0.0f) { 
+			trap_FS_Write("kill_rating       = ", 20, f);
+ 			G_shrubbot_writeconfig_float(g_xpsaves[i]->kill_rating,
+ 				f);
+ 		}
+ 		if(g_xpsaves[i]->kill_variance != SIGMA2_DELTA) { 
+			trap_FS_Write("kill_variance     = ", 20, f);
+ 			G_shrubbot_writeconfig_float(g_xpsaves[i]->kill_variance,
+ 				f);
+ 		}
+ 		if(g_xpsaves[i]->rating != 0) { 
+			trap_FS_Write("rating            = ", 20, f);
+ 			G_shrubbot_writeconfig_float(
+ 				g_xpsaves[i]->rating, f);
+ 		}
+ 		if(g_xpsaves[i]->rating_variance != SIGMA2_THETA) { 
+			trap_FS_Write("rating_variance   = ", 20, f);
+ 			G_shrubbot_writeconfig_float(
+ 				g_xpsaves[i]->rating_variance, f);
+ 		}
+ 		if(g_xpsaves[i]->mutetime) {
+			trap_FS_Write("mutetime          = ", 20, f);
+ 			G_shrubbot_writeconfig_int(g_xpsaves[i]->mutetime, f);
+ 		}
+ 		if(g_playerRating.integer & PLAYER_RATING_SKILLS) {
+ 			for(j=0; j<SK_NUM_SKILLS; j++) {
+				trap_FS_Write(va("pr_skill[%i]       = ", j),
+					20, f);
+ 				G_shrubbot_writeconfig_string(
+ 					va("%i %f %i %f %i %f %i %f %i %f",
+ 					g_xpsaves[i]->pr_skill_updates[j][0],
 					g_xpsaves[i]->pr_skill[j][0],
 					g_xpsaves[i]->pr_skill_updates[j][1],
 					g_xpsaves[i]->pr_skill[j][1],

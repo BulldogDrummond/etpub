@@ -375,7 +375,7 @@ void G_ready_cmd(gentity_t *ent, unsigned int dwCommand, qboolean state)
 	char *status[2] = { " NOT", "" };
 
 	// forty - in mod flood protection
-	if(ClientIsFlooding(ent)) {
+	if(ClientIsFlooding(ent, qtrue)) {
 		CP("print \"^1Spam Protection: ^7dropping ready\n\"");
 		return;
 	}
@@ -429,7 +429,7 @@ void G_ready_cmd(gentity_t *ent, unsigned int dwCommand, qboolean state)
 void G_say_teamnl_cmd(gentity_t *ent, unsigned int dwCommand, qboolean fValue)
 {
 	// forty - in mod flood protection
-	if(ClientIsFlooding(ent)) {
+	if(ClientIsFlooding(ent, qfalse)) {
 		CP("print \"^1Spam Protection: ^7dropping teamchat\n\"");
 		return;
 	}
@@ -457,7 +457,7 @@ void G_specinvite_cmd(gentity_t *ent, unsigned int dwCommand, qboolean fLock)
 	char arg[MAX_TOKEN_CHARS];
 
 	// forty - in mod flood protection
-	if(ClientIsFlooding(ent)) {
+	if(ClientIsFlooding(ent, qfalse)) {
 		CP("print \"^1Spam Protection: ^7dropping specinvite\n\"");
 		return;
 	}
@@ -564,7 +564,7 @@ void G_teamready_cmd(gentity_t *ent, unsigned int dwCommand, qboolean state)
 	gclient_t *cl;
 
 	// forty - in mod flood protection
-	if(ClientIsFlooding(ent)) {
+	if(ClientIsFlooding(ent, qfalse)) {
 		CP("print \"^1Spam Protection: ^7dropping teamready\n\"");
 		return;
 	}

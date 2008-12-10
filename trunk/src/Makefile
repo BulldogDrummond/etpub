@@ -12,7 +12,7 @@ UI_FLAGS=-march=i686 -D_M_IX86=400 -DUIDLL
 DEPEND=-makedepend
 DEPEND_REDIR=2> /dev/null
 LUADIR=lua-5.1.3
-INCLUDES=-I. -I../../Omnibot/ET -I../../Omnibot/Common -I../$(LUADIR)/src
+INCLUDES=-I. -I../../Omnibot/ET -I../../Omnibot/Common -I../$(LUADIR)/src -I../sha-1
 BASE_CFLAGS=$(INCLUDES) -pipe -Wall -fmessage-length=0 -DNDEBUG $(OPT) -Winline -ffast-math -fomit-frame-pointer -finline-functions -fschedule-insns2 -m32 -fno-strict-aliasing
 #CFLAGS=$(BASE_CFLAGS) -fPIC -fno-function-cse -fvisibility=hidden
 CFLAGS=$(BASE_CFLAGS) -fPIC

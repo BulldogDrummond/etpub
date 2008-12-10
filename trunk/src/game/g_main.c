@@ -553,6 +553,9 @@ vmCvar_t g_chargeType;
 vmCvar_t lua_modules;
 vmCvar_t g_maxConnsPerIP;
 
+// pheno
+vmCvar_t lua_allowedModules;
+
 // flms
 vmCvar_t g_flushItems;
 vmCvar_t g_mg42;
@@ -1112,6 +1115,9 @@ cvarTable_t		gameCvarTable[] = {
 	{ &g_chargeType, "g_chargeType", "2", CVAR_ARCHIVE},
 	{ &lua_modules, "lua_modules", "", 0},
 	{ &g_maxConnsPerIP, "g_maxConnsPerIP", "4", CVAR_SERVERINFO | CVAR_ARCHIVE},
+
+	// pheno
+	{ &lua_allowedModules, "lua_allowedModules", "", 0 },
 
 	//flms
 	{ &g_flushItems, "g_flushItems", "1", 0},
@@ -2385,7 +2391,7 @@ void G_UpdateCvars( void )
 					G_UpdateEtpubinfo();
 				}
 				// quad - Lua API cvars
-				else if(cv->vmCvar == &lua_modules /* || cv->vmCvar == &lua_allowedModules */) {
+				else if(cv->vmCvar == &lua_modules || cv->vmCvar == &lua_allowedModules) {
 					G_LuaShutdown();
 				}
 				// OSP - Update vote info for clients, if necessary
@@ -3825,7 +3831,10 @@ void QDECL G_LogPrintf( const char *fmt, ... ) {
 	va_end( argptr );
 
 	if ( g_dedicated.integer ) {
-		G_Printf( "%s", string + l );
+		//G_Printf( "%s", string + l );
+		// pheno: to avoid Lua API's et_Print() <-> et.G_LogPrint()
+		//        loop that causes a server crash
+		trap_Printf(string + l);
 	}
 
 	if ( !level.logFile ) {

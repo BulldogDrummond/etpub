@@ -2000,4 +2000,18 @@
 * stephan: changed g_spoofOptions again. Some of the old flags are not optional
            anymore. This prevents the innocent guidspoofkick many people were
            experiencing. Furthermore an empty IP field is not allowed anymore.
-           Default value set to 3
+           Default value set to 3* pheno:   fixed xpsave [serverstat] parse error on distance_variance
+* pheno:   added et.ClientIsFlooding() library call to Lua API. This function
+           only checks for flooding, necessary fields are not updated!
+* pheno:   made more Lua API additions
+* pheno:   added read-only access to gentity fields
+* pheno:   added SHA-1 routines
+* pheno:   fixed Lua's et.G_Print()/et.G_LogPrint() library call on et_Print()
+           callback server crash bug
+* pheno:   added et.G_shrubbot_permission( ent, flag ) library call to Lua API
+* pheno:   added lua_allowedModules: If set, only lua modules with the matching
+           sha-1 signatures listed in this cvar will be allowed to load
+* pheno:   fixed LUA_PATH to ease use of the require() function
+* pheno:   (Lua API) added RW access to gentity field sess.ignoreClients
+* pheno:   (Lua API) added et.G_AddSkillPoints( ent, skill, points )
+           library call

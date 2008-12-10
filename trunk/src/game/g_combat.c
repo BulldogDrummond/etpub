@@ -408,7 +408,7 @@ void player_die( gentity_t *self, gentity_t *inflictor, gentity_t *attacker, int
 	qboolean	killedintank = qfalse;
 	//float			timeLived;
 	weapon_t	weap;
-	// pheno: G_LuaHook_Obituary()'s custom Obituary
+	// pheno: G_LuaHook_Obituary()'s custom obituary
 	char		customObit[MAX_STRING_CHARS] = "";
 
 	// tjw: for g_shortcuts
@@ -648,6 +648,9 @@ void player_die( gentity_t *self, gentity_t *inflictor, gentity_t *attacker, int
 	// pheno: Lua API callbacks
 	if ( G_LuaHook_Obituary(self->s.number, killer, meansOfDeath, customObit) &&
 		 g_obituary.integer ) {
+		if ( self->s.number < 0 || self->s.number >= MAX_CLIENTS ) {
+			G_Error("G_LuaHook_Obituary: target out of range");
+		}
 		// broadcast the custom obituary to everyone
 		if ( g_logOptions.integer & LOGOPTS_OBIT_CHAT ) {
 			AP(va("chat \"%s\" -1", customObit));
