@@ -375,7 +375,7 @@ void G_ready_cmd(gentity_t *ent, unsigned int dwCommand, qboolean state)
 	char *status[2] = { " NOT", "" };
 
 	// forty - in mod flood protection
-	if(ClientIsFlooding(ent, qtrue)) {
+	if(ClientIsFlooding(ent, qfalse)) {
 		CP("print \"^1Spam Protection: ^7dropping ready\n\"");
 		return;
 	}
