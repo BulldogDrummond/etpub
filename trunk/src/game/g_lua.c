@@ -940,6 +940,9 @@ static const luaL_Reg etlib[] = {
 	{"trap_SendServerCommand",	_et_trap_SendServerCommand},
 	{"G_Say",	_et_G_Say},
 	{"ClientUserinfoChanged",	_et_ClientUserinfoChanged},
+	// Userinfo
+	{"trap_GetUserinfo", _et_trap_GetUserinfo},
+	{"trap_SetUserinfo", _et_trap_SetUserinfo},
 	// String Utility Functions
 	{"Info_RemoveKey", _et_Info_RemoveKey},
 	{"Info_SetValueForKey", _et_Info_SetValueForKey},
