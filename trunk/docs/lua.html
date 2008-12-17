@@ -200,10 +200,26 @@ if et.G_shrubbot_permission(1, "C") == 1 then
 	-- client has permission, do something
 end</pre></dd>
 </dl>
+<p><b>*</b><i class="diff"><strong>level</strong> = et.G_shrubbot_level( <strong>ent</strong> )</i></p>
+<dl>
+	<dd>Returns the <strong>level</strong> for client <strong>ent</strong>.</dd>
+	<dd>&nbsp;</dd>
+	<dd>Note: Use <i>nil</i> or <i>-1</i> to get the level for console.</dd>
+	<dd>&nbsp;</dd>
+	<dd>&nbsp;</dd>
+	<dd><h6>LUA CODE EXAMPLE</h6><pre>-- get shrubbot level for client #2
+level = et.G_shrubbot_level(2)</pre></dd>
+</dl>
 
 <a name="callbacks"></a><h2>CALLBACKS</h2>
 
 <a name="qagame_execution"></a><h3>qagame Execution</h3>
+
+<a name="client_management"></a><h3>Client Management</h3>
+<p>et_ClientSpawn( <strong>clientNum</strong>, <strong>revived</strong>, <b>*</b><i class="diff"><strong>teamChange</strong></i>, <b>*</b><i class="diff"><strong>restoreHealth</strong></i> )</p>
+<!--<dl>
+	<dd>Called when a client is spawned. <b>clientNum</b> is the client slot id. <b>revived</b> is 1 if the client was spawned by being revived.</dd>
+</dl>-->
 
 <a name="commands"></a><h3>Commands</h3>
 <p><strong>intercepted</strong> = et_ClientCommand( <strong>clientNum</strong>, <strong>command</strong> )</p>

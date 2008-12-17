@@ -18,6 +18,7 @@
 #define FIELD_VEC3			4
 #define FIELD_ARRAY			5
 #define FIELD_TRAJECTORY	6
+#define FIELD_FLOAT_ARRAY	7
 
 #define FIELD_FLAG_GENTITY	1 // gentity field
 #define FIELD_FLAG_GCLIENT	2 // gclient field

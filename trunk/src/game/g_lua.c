@@ -648,6 +648,7 @@ static const gentity_field_t gentity_fields[] = {
 	_et_gclient_addfield(sess.guid, FIELD_STRING, FIELD_FLAG_NOPTR + FIELD_FLAG_READONLY),
 	_et_gclient_addfield(sess.ip, FIELD_STRING, FIELD_FLAG_NOPTR + FIELD_FLAG_READONLY),
 	_et_gclient_addfield(sess.ignoreClients, FIELD_ARRAY, 0),
+	_et_gclient_addfield(sess.skillpoints, FIELD_FLOAT_ARRAY, FIELD_FLAG_READONLY),
 	
 	{ NULL },
 };
@@ -828,6 +829,9 @@ int _et_gentity_get(lua_State *L)
 		case FIELD_TRAJECTORY:
 			_et_gentity_gettrajectory(L, (trajectory_t *)addr);
 			return 1;
+		case FIELD_FLOAT_ARRAY:
+			lua_pushnumber(L, (*(float *)(addr + (sizeof(int) * luaL_optint(L, 3, 0)))));
+			return 1;
 	}
 	return 0;
 }
@@ -883,6 +887,9 @@ static int _et_gentity_set(lua_State *L)
 		case FIELD_TRAJECTORY:
 			_et_gentity_settrajectory(L, (trajectory_t *)addr);
 			break;
+		case FIELD_FLOAT_ARRAY:
+			*(float *)(addr + (sizeof(int) * luaL_checkint(L, 3))) = luaL_checknumber(L, 4);
+			return 1;
 	}
 	return 0;
 }
@@ -909,6 +916,18 @@ static int _et_G_shrubbot_permission(lua_State *L)
 		ent = g_entities + entnum;
 	}
 	lua_pushinteger(L, G_shrubbot_permission(ent, flag));
+	return 1;
+}
+
+// level = et.G_shrubbot_level( ent )
+static int _et_G_shrubbot_level(lua_State *L)
+{
+	int entnum = luaL_optint(L, 1, -1);
+	gentity_t *ent = NULL;
+	if ( entnum > -1 ) {
+		ent = g_entities + entnum;
+	}
+	lua_pushinteger(L, _shrubbot_level(ent));
 	return 1;
 }
 // }}}
@@ -975,6 +994,7 @@ static const luaL_Reg etlib[] = {
 	{"G_AddEvent", _et_G_AddEvent},
 	// Shrubbot
 	{"G_shrubbot_permission", _et_G_shrubbot_permission},
+	{"G_shrubbot_level", _et_G_shrubbot_level},
 
 	{ NULL },
 };

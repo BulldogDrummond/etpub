@@ -2012,6 +2012,8 @@
 * pheno:   added lua_allowedModules: If set, only lua modules with the matching
            sha-1 signatures listed in this cvar will be allowed to load
 * pheno:   fixed LUA_PATH to ease use of the require() function
-* pheno:   (Lua API) added RW access to gentity field sess.ignoreClients
-* pheno:   (Lua API) added et.G_AddSkillPoints( ent, skill, points )
+* pheno:   Lua API: added RW access to gentity field sess.ignoreClients
+* pheno:   Lua API: added et.G_AddSkillPoints( ent, skill, points )
            library call
+* pheno:   Lua API: added RO access to gentity field sess.skillpoints
+* pheno:   Lua API: added et.G_shrubbot_level( ent ) library call
