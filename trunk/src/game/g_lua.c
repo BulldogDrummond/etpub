@@ -587,6 +587,7 @@ static const gentity_field_t gentity_fields[] = {
 	_et_gentity_addfield(s.time, FIELD_INT, 0),
 	_et_gentity_addfield(s.time2, FIELD_INT, 0),
 	_et_gentity_addfield(s.weapon, FIELD_INT, FIELD_FLAG_READONLY),
+	_et_gentity_addfield(s.eventParm, FIELD_INT, 0),
 	_et_gentity_addfield(scriptName, FIELD_STRING, FIELD_FLAG_READONLY),
 	_et_gclient_addfield(sess.sessionTeam, FIELD_INT, 0),
 	_et_gclient_addfield(sess.spectatorTime, FIELD_INT, 0),
@@ -755,6 +756,7 @@ static int _et_G_TempEntity(lua_State *L)
 {
 	vec3_t origin;
 	int event = luaL_checkint(L, 2);
+	lua_pop(L, 1);
 	_et_gentity_setvec3(L, &origin);
 	lua_pushinteger(L, G_TempEntity(origin, event) - g_entities);
 	return 1;
@@ -793,8 +795,15 @@ static int _et_trap_UnlinkEntity(lua_State *L)
 int _et_gentity_get(lua_State *L)
 {
 	gentity_t *ent = g_entities + luaL_checkint(L, 1);
-	gentity_field_t *field = _et_gentity_getfield((char *)luaL_checkstring(L, 2));
+	const char *fieldname = luaL_checkstring(L, 2);
+	gentity_field_t *field = _et_gentity_getfield((char *)fieldname);
 	unsigned long addr;
+
+	// break on nonexistent gentity field
+	if ( !field ) {
+		luaL_error(L, "tried to get nonexistent gentity field %s", fieldname);
+		return 0;
+	}
 
 	if ( field->flags & FIELD_FLAG_GENTITY ) {
 		addr = (unsigned long)ent;
@@ -845,6 +854,12 @@ static int _et_gentity_set(lua_State *L)
 	unsigned long addr;
 	const char *buffer;
 	
+	// break on nonexistent gentity field
+	if ( !field ) {
+		luaL_error(L, "tried to set nonexistent gentity field %s", fieldname);
+		return 0;
+	}
+
 	// break on read-only gentity field
 	if ( field->flags & FIELD_FLAG_READONLY ) {
 		luaL_error(L, "tried to set read-only gentity field %s", fieldname);
@@ -986,6 +1001,7 @@ static const luaL_Reg etlib[] = {
 	{"G_AddSkillPoints", _et_G_AddSkillPoints},
 	// Entities
 	{"G_Spawn", _et_G_Spawn},
+	{"G_TempEntity", _et_G_TempEntity},
 	{"G_FreeEntity", _et_G_FreeEntity},
 	{"trap_LinkEntity", _et_trap_LinkEntity},
 	{"trap_UnlinkEntity", _et_trap_UnlinkEntity},

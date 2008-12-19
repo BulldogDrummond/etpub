@@ -2017,3 +2017,7 @@
            library call
 * pheno:   Lua API: added RO access to gentity field sess.skillpoints
 * pheno:   Lua API: added et.G_shrubbot_level( ent ) library call
+* pheno:   Lua API: added RW access to missing s.eventParm gentity field
+* pheno:   Lua API: fixed and registered et.G_TempEntity() library call
+* pheno:   Lua API: added error handling for getting or setting nonexistent
+           gentity fields
