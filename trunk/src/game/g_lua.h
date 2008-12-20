@@ -16,7 +16,7 @@
 #define FIELD_FLOAT			2
 #define FIELD_ENTITY		3
 #define FIELD_VEC3			4
-#define FIELD_ARRAY			5
+#define FIELD_INT_ARRAY		5
 #define FIELD_TRAJECTORY	6
 #define FIELD_FLOAT_ARRAY	7
 

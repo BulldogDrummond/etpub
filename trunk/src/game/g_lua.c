@@ -533,12 +533,12 @@ static const gentity_field_t gentity_fields[] = {
 	_et_gclient_addfield(pers.ready, FIELD_INT, 0),
 	_et_gentity_addfield(prevTrain, FIELD_ENTITY, 0),
 	_et_gentity_addfield(props_frame_state, FIELD_INT, FIELD_FLAG_READONLY),
-	_et_gclient_addfield(ps.stats, FIELD_ARRAY, 0),
-	_et_gclient_addfield(ps.persistant, FIELD_ARRAY, 0),
+	_et_gclient_addfield(ps.stats, FIELD_INT_ARRAY, 0),
+	_et_gclient_addfield(ps.persistant, FIELD_INT_ARRAY, 0),
 	_et_gclient_addfield(ps.ping, FIELD_INT, 0),
-	_et_gclient_addfield(ps.powerups, FIELD_ARRAY, 0),
-	_et_gclient_addfield(ps.ammo, FIELD_ARRAY, 0),
-	_et_gclient_addfield(ps.ammoclip, FIELD_ARRAY, 0),
+	_et_gclient_addfield(ps.powerups, FIELD_INT_ARRAY, 0),
+	_et_gclient_addfield(ps.ammo, FIELD_INT_ARRAY, 0),
+	_et_gclient_addfield(ps.ammoclip, FIELD_INT_ARRAY, 0),
 	_et_gentity_addfield(r.absmax, FIELD_VEC3, FIELD_FLAG_READONLY),
 	_et_gentity_addfield(r.absmin, FIELD_VEC3, FIELD_FLAG_READONLY),
 	_et_gentity_addfield(r.bmodel, FIELD_INT, FIELD_FLAG_READONLY),
@@ -607,13 +607,13 @@ static const gentity_field_t gentity_fields[] = {
 	_et_gclient_addfield(sess.game_points, FIELD_INT, 0),
 	// missing sess.gibs
 	_et_gclient_addfield(sess.kills, FIELD_INT, 0),
-	_et_gclient_addfield(sess.medals, FIELD_ARRAY, 0),
+	_et_gclient_addfield(sess.medals, FIELD_INT_ARRAY, 0),
 	_et_gclient_addfieldalias(sess.muted, sess.auto_unmute_time, FIELD_INT, 0),
 	_et_gclient_addfield(sess.rank, FIELD_INT, 0),
 	_et_gclient_addfield(sess.referee, FIELD_INT, 0),
 	_et_gclient_addfield(sess.rounds, FIELD_INT, 0),
 	// missing sess.semiadmin
-	_et_gclient_addfield(sess.skill, FIELD_ARRAY, 0),
+	_et_gclient_addfield(sess.skill, FIELD_INT_ARRAY, 0),
 	_et_gclient_addfield(sess.spec_invite, FIELD_INT, 0),
 	_et_gclient_addfield(sess.spec_team, FIELD_INT, 0),
 	_et_gclient_addfield(sess.suicides, FIELD_INT, 0),
@@ -621,7 +621,7 @@ static const gentity_field_t gentity_fields[] = {
 	_et_gclient_addfield(sess.team_kills, FIELD_INT, 0),
 	_et_gclient_addfieldalias(sess.team_received, sess.team_damage_received, FIELD_INT, 0),
 	// TODO: sess.aWeaponStats
-	//_et_gclient_addfield(sess.aWeaponStats, FIELD_ARRAY, 0),
+	//_et_gclient_addfield(sess.aWeaponStats, FIELD_?_ARRAY, 0),
 	_et_gentity_addfield(spawnflags, FIELD_INT, FIELD_FLAG_READONLY),
 	_et_gentity_addfield(spawnitem, FIELD_STRING, FIELD_FLAG_READONLY),
 	_et_gentity_addfield(speed, FIELD_INT, 0),
@@ -648,7 +648,7 @@ static const gentity_field_t gentity_fields[] = {
 	// new ETPub fields
 	_et_gclient_addfield(sess.guid, FIELD_STRING, FIELD_FLAG_NOPTR + FIELD_FLAG_READONLY),
 	_et_gclient_addfield(sess.ip, FIELD_STRING, FIELD_FLAG_NOPTR + FIELD_FLAG_READONLY),
-	_et_gclient_addfield(sess.ignoreClients, FIELD_ARRAY, 0),
+	_et_gclient_addfield(sess.ignoreClients, FIELD_INT_ARRAY, 0),
 	_et_gclient_addfield(sess.skillpoints, FIELD_FLOAT_ARRAY, FIELD_FLAG_READONLY),
 	
 	{ NULL },
@@ -799,9 +799,9 @@ int _et_gentity_get(lua_State *L)
 	gentity_field_t *field = _et_gentity_getfield((char *)fieldname);
 	unsigned long addr;
 
-	// break on nonexistent gentity field
+	// break on invalid gentity field
 	if ( !field ) {
-		luaL_error(L, "tried to get nonexistent gentity field %s", fieldname);
+		luaL_error(L, "tried to get invalid gentity field \"%s\"", fieldname);
 		return 0;
 	}
 
@@ -832,7 +832,7 @@ int _et_gentity_get(lua_State *L)
 		case FIELD_VEC3:
 			_et_gentity_getvec3(L, *(vec3_t *)addr);
 			return 1;
-		case FIELD_ARRAY:
+		case FIELD_INT_ARRAY:
 			lua_pushinteger(L, (*(int *)(addr + (sizeof(int) * luaL_optint(L, 3, 0)))));
 			return 1;
 		case FIELD_TRAJECTORY:
@@ -854,15 +854,15 @@ static int _et_gentity_set(lua_State *L)
 	unsigned long addr;
 	const char *buffer;
 	
-	// break on nonexistent gentity field
+	// break on invalid gentity field
 	if ( !field ) {
-		luaL_error(L, "tried to set nonexistent gentity field %s", fieldname);
+		luaL_error(L, "tried to set invalid gentity field \"%s\"", fieldname);
 		return 0;
 	}
 
 	// break on read-only gentity field
 	if ( field->flags & FIELD_FLAG_READONLY ) {
-		luaL_error(L, "tried to set read-only gentity field %s", fieldname);
+		luaL_error(L, "tried to set read-only gentity field \"%s\"", fieldname);
 		return 0;
 	}
 	
@@ -896,7 +896,7 @@ static int _et_gentity_set(lua_State *L)
 		case FIELD_VEC3:
 			_et_gentity_setvec3(L, (vec3_t *)addr);
 			break;
-		case FIELD_ARRAY:
+		case FIELD_INT_ARRAY:
 			*(int *)(addr + (sizeof(int) * luaL_checkint(L, 3))) = luaL_checkint(L, 4);
 			break;
 		case FIELD_TRAJECTORY:
