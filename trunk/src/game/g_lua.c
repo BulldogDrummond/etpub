@@ -1170,7 +1170,7 @@ qboolean G_LuaStartVM(lua_vm_t* vm)
 	if ( lua_istable(vm->L, -1) ) {
 		lua_pushstring(vm->L, va("%s%s%s%s?.lua", homepath, LUA_DIRSEP, gamepath, LUA_DIRSEP));
 		lua_setfield(vm->L, -2, "path");
-		lua_pushstring(vm->L, va("%s%s%s%s?.dll", homepath, LUA_DIRSEP, gamepath, LUA_DIRSEP));
+		lua_pushstring(vm->L, va("%s%s%s%s?.%s", homepath, LUA_DIRSEP, gamepath, LUA_DIRSEP, EXTENSION));
 		lua_setfield(vm->L, -2, "cpath");
 	}
 	lua_pop(vm->L, 1);

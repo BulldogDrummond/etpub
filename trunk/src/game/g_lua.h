@@ -25,13 +25,17 @@
 #define FIELD_FLAG_NOPTR	4
 #define FIELD_FLAG_READONLY	8 // read-only access
 
-// define HOSTARCH depending on host architecture
+// define HOSTARCH and EXTENSION depending on host architecture
 #if defined __linux__
-	#define HOSTARCH "UNIX"
+
+#define HOSTARCH	"UNIX"
+#define EXTENSION	"so"
+
 #elif defined WIN32
-	#define HOSTARCH "WIN32"
-#else
-	// OSX
+
+#define HOSTARCH	"WIN32"
+#define EXTENSION	"dll"
+
 #endif
 
 // macros to register predefined constants
