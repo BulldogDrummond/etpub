@@ -1615,6 +1615,12 @@ typedef enum {
 
 // font support 
 
+//mcwf
+qboolean need_escape(char * data);
+char * escape_string(const char * string);
+void unescape_string(char * string);
+//mcwf
+
 #define GLYPH_START 0
 #define GLYPH_END 255
 #define GLYPH_CHARSTART 32

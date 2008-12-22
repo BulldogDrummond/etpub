@@ -1321,6 +1321,36 @@ The string has been tokenized and can be retrieved with
 Cmd_Argc() / Cmd_Argv()
 =================
 */
+
+//mcwf
+char    *ConcatArgs( int start ) {
+        int             i, c, tlen;
+        static char     line[MAX_STRING_CHARS];
+        int             len;
+        char    arg[MAX_STRING_CHARS];
+
+        len = 0;
+        c = trap_Argc();
+        for ( i = start ; i < c ; i++ ) {
+                trap_Argv( i, arg, sizeof( arg ) );
+                tlen = strlen( arg );
+                if ( len + tlen >= MAX_STRING_CHARS - 1 ) {
+                        break;
+                }
+                memcpy( line + len, arg, tlen );
+                len += tlen;
+                if ( i != c - 1 ) {
+                        line[len] = ' ';
+                        len++;
+                }
+        }
+
+        line[len] = 0;
+
+        return line;
+}
+//mcwf
+
 qboolean CG_ConsoleCommand( void ) {
 	const char	*cmd;
 	int		i;
@@ -1331,6 +1361,64 @@ qboolean CG_ConsoleCommand( void ) {
 	}
 
 	cmd = CG_Argv(0);
+
+	//mcwf
+	if (!Q_stricmp(cmd,"m")) { 
+		if (need_escape(ConcatArgs(1))) {
+		trap_SendClientCommand(va("m \"%s\"\n",escape_string(ConcatArgs(1))));  // say private
+		return -1;
+		}
+	}
+
+	if (!Q_stricmp(cmd,"priv")) { 
+		if (need_escape(ConcatArgs(1))) {
+		trap_SendClientCommand(va("priv \"%s\"\n",escape_string(ConcatArgs(1))));  // say private clone
+		return -1;
+		}
+	}
+
+	if (!Q_stricmp(cmd,"mt")) { 
+		if (need_escape(ConcatArgs(1))) {
+		trap_SendClientCommand(va("mt \"%s\"\n",escape_string(ConcatArgs(1))));  // say private team
+		return -1;
+		}
+	}
+
+	if (!Q_stricmp(cmd,"ma")) { 
+		if (need_escape(ConcatArgs(1))) {
+		trap_SendClientCommand(va("ma \"%s\"\n",escape_string(ConcatArgs(1))));  // admin chat
+		return -1;
+		}
+	}
+
+	if (!Q_stricmp(cmd,"say")) {
+		if (need_escape(ConcatArgs(1))) {
+		trap_SendClientCommand(va("say \"%s\"\n",escape_string(ConcatArgs(1))));  // say normal
+		return -1;
+		}
+	}
+
+	if (!Q_stricmp(cmd,"say_team")) {
+		if (need_escape(ConcatArgs(1))) {
+		trap_SendClientCommand(va("say_team \"%s\"\n",escape_string(ConcatArgs(1)))); // say team
+		return -1;
+		}
+	}
+
+	if (!Q_stricmp(cmd,"say_teamnl")) {
+		if (need_escape(ConcatArgs(1))) {
+		trap_SendClientCommand(va("say_teamnl \"%s\"\n",escape_string(ConcatArgs(1)))); // say team no pos
+		return -1;
+		}
+	}
+
+	if (!Q_stricmp(cmd,"say_buddy")) {
+		if (need_escape(ConcatArgs(1))) {
+		trap_SendClientCommand(va("say_buddy \"%s\"\n",escape_string(ConcatArgs(1)))); // say fireteam
+		return -1;
+		}
+	}
+	//mcwf
 
 	for ( i = 0 ; i < sizeof( commands ) / sizeof( commands[0] ) ; i++ ) {
 		if ( !Q_stricmp( cmd, commands[i].cmd ) ) {

@@ -1594,5 +1594,85 @@ char *Q_StrReplace(char *haystack, char *needle, char *newp)
 	return final;
 }
 
+//mcwf
+qboolean need_escape(char * data) {
+
+    while (*data != '\0') {
+
+	   if (((unsigned char)*data > 0x7E) ||
+		   ((unsigned char)*data == 0x3D) || 
+		   ((unsigned char)*data == 0x25)) {
+	    return qtrue;
+		}
+		
+		data++;
+    }
+
+return qfalse;
+}
+
+//grabed from squid (sprintf removed)
+static char * do_escape(const char * data) {
+
+	const char hex[] = "0123456789ABCDEF";
+    	static char *buf;
+    	static size_t bufsize = 0;
+    	const char *p;
+    	char *q;
+
+    if (buf == NULL || strlen(data) * 3 > bufsize) {
+	free(buf);
+	bufsize = strlen(data) * 3 + 1;
+	buf = calloc(bufsize, 1);
+    }
+
+    for (p = data, q = buf; *p != '\0'; p++) {
+
+		if (((unsigned char)*p > 0x7E) ||
+			((unsigned char)*p == 0x3D) || 
+			((unsigned char)*p == 0x25)) {
+
+		*q++ = 0x3D;
+		*q++ = hex[((unsigned char)*p >> 4) & 15];
+		*q++ = hex[(unsigned char)*p & 15];
+
+		} else {
+
+		*q++ = *p;
+
+		}
+
+    }
+    *q = '\0';
+    return (buf);
+}
+
+char * escape_string(const char * string) {
+    return do_escape(string);
+}
+
+//grabed from squid
+void unescape_string(char * string) {
+
+    static char code[] = "00";
+    char *s = NULL;
+    char *t = NULL;
+
+    if ((int) strlen(string) < 3 || !strchr(string, '='))
+        return;
+    for (s = t = string; *s; s++) {
+        if (*s == '=' && *(s + 1) && *(s + 2)) {
+            code[0] = *(++s);
+            code[1] = *(++s);
+            *t++ = (char) strtol(code, NULL, 16);
+        } else {
+            *t++ = *s;
+        }
+    }
+    do {
+        *t++ = *s;
+    } while (*s++);
+}
+//mcwf
 
 //====================================================================

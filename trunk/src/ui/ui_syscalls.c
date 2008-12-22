@@ -125,6 +125,11 @@ qhandle_t trap_R_RegisterSkin( const char *name ) {
 
 void trap_R_RegisterFont(const char *fontName, int pointSize, fontInfo_t *font) {
 	syscall( UI_R_REGISTERFONT, fontName, pointSize, font );
+	//mcwf 0xff handle fix (ET bug ?)
+	if (!font->glyphs[0xff].glyph) {
+	     font->glyphs[0xff].glyph = trap_R_RegisterShaderNoMip(font->glyphs[0xff].shaderName);
+	}
+	//mcwf
 }
 
 qhandle_t trap_R_RegisterShaderNoMip( const char *name ) {

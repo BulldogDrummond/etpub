@@ -236,6 +236,7 @@ void G_AdminChat(gentity_t *ent)
 			tent->s.eventParm = G_SoundIndex(va("%s",g_privateMessageSound.string));
 		}
 	}
+	unescape_string(msg); //mcwf
 	G_LogPrintf( "adminchat: %s: %s\n", netname, msg );
 }
 
@@ -344,6 +345,7 @@ void G_PrivateMessage(gentity_t *ent)
 		SP(va("%s\n", str));
 
 		if(g_tyranny.integer && g_logOptions.integer & LOGOPTS_PRIVMSG) {
+			unescape_string(msg); //mcwf
 			if(teamonly)
 				G_LogPrintf( "tprivmsg: %s: %s: %s\n", netname, name, msg );
 			else
@@ -3170,7 +3172,7 @@ void G_SayTo( gentity_t *ent, gentity_t *other, int mode, int color, const char 
 		trap_SendServerCommand(other-g_entities,
 			va("%s \"%s%c%c%s%s\" %i %i",
 			cmd, name, Q_COLOR_ESCAPE, color,
-			message,
+			escape_string(message), //mcwf
 			(!Q_stricmp(cmd, "print")) ? "\n" : "",
 			ent-g_entities, localize));
 
@@ -3190,6 +3192,8 @@ void G_Say( gentity_t *ent, gentity_t *target, int mode, const char *chatText ) 
 	qboolean	localize = qfalse;
 	char		*loc;
 	char		*shortcuts;
+
+	unescape_string(chatText); //mcwf
 
 	Q_strncpyz( text, chatText, sizeof(text) );
 	if ((g_censor.string[0] || g_censorNeil.integer) &&

@@ -2536,8 +2536,11 @@ static void CG_ServerCommand( void ) {
 		return;
 	}
 
-	if ( !Q_stricmp( cmd, "print" ) ) {
-		CG_Printf( "%s", CG_LocalizeServerCommand( CG_Argv( 1 ) ) );
+	if ( !Q_stricmp( cmd, "print" ) ) { //mcwf
+		char msg_buffer[MAX_STRING_CHARS];
+		Q_strncpyz(msg_buffer, CG_LocalizeServerCommand(CG_Argv(1)), sizeof(msg_buffer));
+		unescape_string(msg_buffer);
+		CG_Printf( "%s",  msg_buffer);
 		return;
 	}
 
@@ -2572,6 +2575,8 @@ static void CG_ServerCommand( void ) {
 			s = CG_Argv( 1 );
 		}
 
+		unescape_string(s); //mcwf
+
 		Q_strncpyz( text, s, MAX_SAY_TEXT );
 		CG_RemoveChatEscapeChar( text );
 		CG_AddToTeamChat( text, client );
@@ -2592,6 +2597,8 @@ static void CG_ServerCommand( void ) {
 		} else {
 			s = CG_Argv( 1 );
 		}
+
+		unescape_string(s); //mcwf
 
 		Q_strncpyz( text, s, MAX_SAY_TEXT );
 		CG_RemoveChatEscapeChar( text );

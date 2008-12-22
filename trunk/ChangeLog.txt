@@ -2021,3 +2021,4 @@
 * pheno:   Lua API: fixed and registered et.G_TempEntity() library call
 * pheno:   Lua API: added error handling for getting or setting nonexistent
            gentity fields
+* pheno:   added mcwf's code for additional font characters from 0x7F to 0xFF

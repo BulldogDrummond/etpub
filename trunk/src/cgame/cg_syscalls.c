@@ -816,6 +816,11 @@ void trap_R_RegisterFont(const char *fontName, int pointSize, fontInfo_t *font) 
 	CG_DrawInformation( qtrue );
 	trap_PumpEventLoop();
 	syscall(CG_R_REGISTERFONT, fontName, pointSize, font );
+	//mcwf 0xff handle fix (ET bug ?)
+	if (!font->glyphs[0xff].glyph) {
+	     font->glyphs[0xff].glyph = trap_R_RegisterShaderNoMip(font->glyphs[0xff].shaderName);
+	}
+	//mcwf
 }
 
 void	trap_CM_LoadMap( const char *mapname ) {
