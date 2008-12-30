@@ -2022,3 +2022,4 @@
 * pheno:   Lua API: added error handling for getting or setting nonexistent
            gentity fields
 * pheno:   added mcwf's code for additional font characters from 0x7F to 0xFF
+* pheno:   Lua API: fixed et_Print() callback won't run on G_LogPrintf()

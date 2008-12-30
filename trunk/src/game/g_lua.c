@@ -95,26 +95,46 @@ static int _et_IPCSend(lua_State *L)
 // }}}
 
 // Printing {{{
+// TODO: find a way to run qagame's printing functions
+//       without running et_Print callback (I didn't want
+//       to clone qagame functions)
 // et.G_Print( text )
 static int _et_G_Print(lua_State *L)
 {
-	const char *text = luaL_checkstring(L, 1);
-	if ( text ) {
-		//G_Printf(text);
-		// pheno: to avoid et_Print() <-> et.G_Print() loop
-		//        that causes a server crash
-		trap_Printf(text);
-	}
+	char text[1024];
+	Q_strncpyz(text, luaL_checkstring(L, 1), sizeof(text));
+	trap_Printf(text);
 	return 0;
 }
 
 // et.G_LogPrint( text ) 
 static int _et_G_LogPrint(lua_State *L)
 {
-	const char *text = luaL_checkstring(L, 1);
-	if ( text ) {
-		G_LogPrintf(text);
+	char buff[1024], text[1024];
+	int min, tens, sec;
+	
+	Q_strncpyz(buff, luaL_checkstring(L, 1), sizeof(buff));
+	
+	if ( g_dedicated.integer ) {
+		trap_Printf(buff);
 	}
+	
+	sec = level.time / 1000;
+	
+	if ( g_logOptions.integer & LOGOPTS_REALTIME ) {
+		Com_sprintf(text, sizeof(text), "%s %s", G_GetRealTime(), buff);
+	} else {
+		min = sec / 60;
+		sec -= min * 60;
+		tens = sec / 10;
+		sec -= tens * 10;
+		Com_sprintf(text, sizeof(text), "%i:%i%i %s", min, tens, sec, buff);
+	}
+	
+	if ( level.logFile ) {
+		trap_FS_Write(text, strlen(text), level.logFile);
+	}
+	
 	return 0;
 }
 // }}}

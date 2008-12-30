@@ -53,13 +53,13 @@ dt {
 </tr>
 <tr>
 <td><a href="#lua_modules">lua_modules</a></td>
+<td><a href="#lua_allowedModules">lua_allowedModules</a></td>
 <td><a href="#g_maxConnsPerIP">g_maxConnsPerIP</a></td>
 <td><a href="#g_damageBonusNearMedics">g_damageBonusNearMedics</a></td>
-<td><a href="#g_damageBonusTotalMedics">g_damageBonusTotalMedics</a></td>
 </tr>
 <tr>
+<td><a href="#g_damageBonusTotalMedics">g_damageBonusTotalMedics</a></td>
 <td><a href="#g_spoofOptions">g_spoofOptions</a></td>
-<td><a href="#top">&nbsp;</a></td>
 <td><a href="#top">&nbsp;</a></td>
 <td><a href="#top">&nbsp;</a></td>
 </tr>
@@ -3185,7 +3185,8 @@ will write on the screen Hey, how are you doing, and also plays the voicechat 'h
 <p>Players can enable/disable it with cg_countryFlags (default 1).</p>
 <p>Note: this requires ETPub client > 20080505. Also, you will need the
 GeoIP.dat file in your server's etpub folder. You can get the latest one at
-http://www.maxmind.com/download/geoip/database/GeoIP.dat.gz</p>
+<a href="http://www.maxmind.com/download/geoip/database/GeoIP.dat.gz">
+http://www.maxmind.com/download/geoip/database/GeoIP.dat.gz</a></p>
 
 <p>Default is 1</p>
 
@@ -3225,6 +3226,15 @@ space, comma or semicolon. The paths are relative to the mod's directory,
 and can optionally be placed inside pk3 archieves.</p>
 <p>We are aiming for compatibility with ETPro's 
 <a href="http://wolfwiki.anime.net/index.php/Lua_Mod_API">Lua Mod API</a></p>
+<p>Default is ""</p>
+
+<a name="lua_allowedModules"></a>
+<dt>lua_allowedModules [string]
+<dd>
+<p>List of sha1 signatures for the lua modules to be loaded by the Lua API
+engine. Can be separated by space, comma or semicolon. Only lua modules with
+the matching sha1 signature listed in this cvar will be allowed to load by
+the Lua API engine (ACL).</p>
 <p>Default is ""</p>
 
 <a name="g_maxConnsPerIP"></a>

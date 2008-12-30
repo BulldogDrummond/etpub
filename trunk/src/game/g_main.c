@@ -3831,10 +3831,7 @@ void QDECL G_LogPrintf( const char *fmt, ... ) {
 	va_end( argptr );
 
 	if ( g_dedicated.integer ) {
-		//G_Printf( "%s", string + l );
-		// pheno: to avoid Lua API's et_Print() <-> et.G_LogPrint()
-		//        loop that causes a server crash
-		trap_Printf(string + l);
+		G_Printf( "%s", string + l );
 	}
 
 	if ( !level.logFile ) {
