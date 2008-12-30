@@ -119,19 +119,19 @@ static int _et_G_LogPrint(lua_State *L)
 		trap_Printf(buff);
 	}
 	
-	sec = level.time / 1000;
-	
-	if ( g_logOptions.integer & LOGOPTS_REALTIME ) {
-		Com_sprintf(text, sizeof(text), "%s %s", G_GetRealTime(), buff);
-	} else {
-		min = sec / 60;
-		sec -= min * 60;
-		tens = sec / 10;
-		sec -= tens * 10;
-		Com_sprintf(text, sizeof(text), "%i:%i%i %s", min, tens, sec, buff);
-	}
-	
 	if ( level.logFile ) {
+		if ( g_logOptions.integer & LOGOPTS_REALTIME ) {
+			Com_sprintf(text, sizeof(text), "%s %s", G_GetRealTime(), buff);
+		} else {
+			sec = level.time / 1000;
+			min = sec / 60;
+			sec -= min * 60;
+			tens = sec / 10;
+			sec -= tens * 10;
+
+			Com_sprintf(text, sizeof(text), "%i:%i%i %s", min, tens, sec, buff);
+		}
+
 		trap_FS_Write(text, strlen(text), level.logFile);
 	}
 	
