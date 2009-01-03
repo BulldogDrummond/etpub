@@ -1801,7 +1801,7 @@ void G_SendScore( gentity_t *client );
 // g_cmds.c
 //
 void G_SayTo( gentity_t *ent, gentity_t *other, int mode, int color, const char *name, const char *message, qboolean localize ); // JPW NERVE removed static declaration so it would link
-// pheno: added for Lua et.G_Say() support
+// pheno: added for Lua's et.G_Say() support
 void G_Say( gentity_t *ent, gentity_t *target, int mode, const char *chatText );
 qboolean Cmd_CallVote_f( gentity_t *ent, unsigned int dwCommand, qboolean fValue );
 void Cmd_Follow_f( gentity_t *ent, unsigned int dwCommand, qboolean fValue );
