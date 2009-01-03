@@ -3048,6 +3048,8 @@ qboolean CG_ViewingDraw(void);
 //
 // cg_scoreboard.c
 //
+// pheno: GeoIP country flags
+qboolean cf_draw(float x, float y, float fade, int clientNum);
 qboolean CG_DrawScoreboard( void );
 //void CG_DrawTourneyScoreboard( void );
 

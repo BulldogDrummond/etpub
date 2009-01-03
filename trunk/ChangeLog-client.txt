@@ -412,3 +412,5 @@ current
            TODO: dyno counter names
 * stephan: made it impossible to forcecvar cg_hud
 * pheno:   added mcwf's code for additional font characters from 0x7F to 0xFF
+* pheno:   added GeoIP country flags to the crosshair. That allows you to
+           display players country flag when aiming on someone.
