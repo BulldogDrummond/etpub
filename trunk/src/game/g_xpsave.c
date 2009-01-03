@@ -658,6 +658,7 @@ qboolean G_xpsave_load(gentity_t *ent)
 	int age;
 	int eff_XPSaveMaxAge_xp = G_getXPSaveMaxAge_xp();
 	int eff_XPSaveMaxAge = G_getXPSaveMaxAge();
+	float startxptotal = 0.0f;
 
 	if(!ent || !ent->client)
 		return qfalse;
@@ -688,8 +689,10 @@ qboolean G_xpsave_load(gentity_t *ent)
 	if(age <= eff_XPSaveMaxAge_xp) {
 		for(i=0; i<SK_NUM_SKILLS; i++) {
 			ent->client->sess.skillpoints[i] = x->skill[i];
-			ent->client->sess.startxptotal += x->skill[i];
+			// pheno: fix for session startxptotal value
+			startxptotal += x->skill[i];
 		}
+		ent->client->sess.startxptotal = startxptotal;
 		ent->client->ps.stats[STAT_XP] = 
 			(int)ent->client->sess.startxptotal;
 		Q_strcat(desc, sizeof(desc), "XP/");

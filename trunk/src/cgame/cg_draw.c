@@ -2764,8 +2764,8 @@ static void CG_DrawCrosshairNames( void ) {
 		}
 
 		// pheno: draw class icons or GeoIP country flags
-		//        when aiming at someone. Depends on server
-		//        and client setting.
+		//        when aiming on someone. Depends on server
+		//        and client settings.
 		if ( !cg_countryFlags.integer ||
 			 !cf_draw(320 - (CG_DrawStrlen(s) * SMALLCHAR_WIDTH) / 2 - 3.5 * SMALLCHAR_WIDTH,
 				163.5, color[3], cg.crosshairClientNum) ) {
