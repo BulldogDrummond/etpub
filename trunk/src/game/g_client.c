@@ -2554,20 +2554,22 @@ char *ClientConnect( int clientNum, qboolean firstTime, qboolean isBot ) {
 	// the moment the client connects the first time. If at any point the guid
 	// or ip in the userinfo is different from the stored guid or ip, the client
 	// is kicked. (The kicks are moved to ClientUserinfoChanged)
-	if(!firstTime){
+	// pheno: removed this peace of code because it causes an empty session
+	//        field for GUID and keeps XPSave from loading stored XP
+	/*if(!firstTime){
 		if(!Q_stricmp(client->sess.guid, "NOGUID")){
 			Q_strncpyz(client->sess.guid, "", sizeof(client->sess.guid));
 		}
 		if(!Q_stricmp(client->sess.ip, "NOIP")){
 			Q_strncpyz(client->sess.ip, "", sizeof(client->sess.ip));
 		}
-	}else{
+	}else{*/
 		value = Info_ValueForKey (userinfo, "ip");
 		// tjw: add guid to session so we don't have to keep parsing
 		//      userinfo everywhere
 		Q_strncpyz(client->sess.guid, guid, sizeof(client->sess.guid));
 		Q_strncpyz(client->sess.ip, value, sizeof(client->sess.ip));
-	}
+	//}
 
 	//mcwf GeoIP
 	
