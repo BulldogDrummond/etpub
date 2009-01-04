@@ -4989,6 +4989,10 @@ int Bot_Interface_ConsoleCommand()
 		}
 		g_BotFunctions.pfnBotConsoleCommand(args);
 	}
+	else
+	{
+		G_Printf("%s%s\n", S_COLOR_RED, "Omni-bot not loaded.");
+	}
 	return 1;
 }
 
