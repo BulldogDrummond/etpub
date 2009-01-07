@@ -2308,7 +2308,7 @@ extern	vmCvar_t		cg_bobroll;
 //extern	vmCvar_t		cg_bobyaw;	// UNUSED
 extern	vmCvar_t		cg_swingSpeed;
 extern	vmCvar_t		cg_shadows;
-//extern	vmCvar_t		cg_gibs;	// UNUSED
+extern	vmCvar_t		cg_gibs; // pheno: gib models
 extern	vmCvar_t		cg_draw2D;
 extern	vmCvar_t		cg_drawFPS;
 extern	vmCvar_t		cg_drawSnapshot;

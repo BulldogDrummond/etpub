@@ -92,7 +92,7 @@ vmCvar_t	cg_bobroll;
 //vmCvar_t	cg_bobyaw;		// UNUSED
 vmCvar_t	cg_swingSpeed;
 vmCvar_t	cg_shadows;
-//vmCvar_t	cg_gibs;			// UNUSED
+vmCvar_t	cg_gibs; // pheno: gib models
 vmCvar_t	cg_draw2D;
 vmCvar_t	cg_drawFPS;
 vmCvar_t	cg_drawSnapshot;
@@ -400,7 +400,7 @@ cvarTable_t		cvarTable[] = {
 	{ &cg_letterbox, "cg_letterbox", "0", CVAR_TEMP },	//----(SA)	added
 	{ &cg_stereoSeparation, "cg_stereoSeparation", "0.4", CVAR_ARCHIVE  },
 	{ &cg_shadows, "cg_shadows", "1", CVAR_ARCHIVE  },
-//	{ &cg_gibs, "cg_gibs", "1", CVAR_ARCHIVE  },				// UNUSED
+	{ &cg_gibs, "cg_gibs", "1", CVAR_ARCHIVE  }, // pheno: gib models
 //bani - #127 - we now draw reticles always in non demoplayback
 //	{ &cg_draw2D, "cg_draw2D", "1", CVAR_CHEAT }, // JPW NERVE changed per atvi req to prevent sniper rifle zoom cheats
 	{ &cg_draw2D, "cg_draw2D", "1", CVAR_ARCHIVE },

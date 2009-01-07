@@ -414,3 +414,4 @@ current
 * pheno:   added mcwf's code for additional font characters from 0x7F to 0xFF
 * pheno:   added GeoIP country flags to the crosshair. That allows you to
            display players country flag when aiming on someone.
+* pheno:   added (reactivated) gib models

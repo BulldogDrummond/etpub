@@ -636,7 +636,7 @@ void CG_GibPlayer( centity_t *cent, vec3_t playerOrigin, vec3_t gdir )
 		NULL
 	};
 
-	if( cg_blood.integer ) {
+	if( cg_blood.integer || cg_gibs.integer ) {
 		// Rafael
 		for( i = 0; i < MAXJUNCTIONS; i++ )
 			newjunction[i] = qfalse;
@@ -648,99 +648,103 @@ void CG_GibPlayer( centity_t *cent, vec3_t playerOrigin, vec3_t gdir )
 		ci = &cgs.clientinfo[ clientNum ];
 		character = CG_CharacterForClientinfo( ci, cent );
 
-		// Ridah, fetch the various positions of the tag_gib*'s
-		// and spawn the gibs from the correct places (especially the head)
-		for( gibIndex = 0, count = 0, foundtag = qtrue; foundtag && gibIndex < MAX_GIB_MODELS && gibTags[gibIndex]; gibIndex++ ) {
+		if ( cg_gibs.integer ) {
+			// Ridah, fetch the various positions of the tag_gib*'s
+			// and spawn the gibs from the correct places (especially the head)
+			for( gibIndex = 0, count = 0, foundtag = qtrue; foundtag && gibIndex < MAX_GIB_MODELS && gibTags[gibIndex]; gibIndex++ ) {
 
-			refEntity_t *re = 0;
+				refEntity_t *re = 0;
 
-			foundtag = qfalse;
+				foundtag = qfalse;
 
-			if( !character->gibModels[gibIndex] ) {
-				continue;
-			}
-
-			re = &cent->pe.bodyRefEnt;
-
-			for( tagIndex=0; (tagIndex = CG_GetOriginForTag( cent, re, gibTags[gibIndex], tagIndex, origin, axis )) >= 0; count++, tagIndex++ ) {
-
-				foundtag = qtrue;
-
-				VectorSubtract( origin, re->origin, dir );
-				VectorNormalize( dir );
-
-				// spawn a gib
-				velocity[0] = dir[0]*(0.5+random())*GIB_VELOCITY*0.3;
-				velocity[1] = dir[1]*(0.5+random())*GIB_VELOCITY*0.3;
-				velocity[2] = GIB_JUMP + dir[2]*(0.5+random())*GIB_VELOCITY*0.5;
-
-				VectorMA( velocity, GIB_VELOCITY, gdir, velocity );
-				AxisToAngles( axis, angles );
-
-				CG_LaunchGib( cent, origin, angles, velocity, character->gibModels[gibIndex], 1.0, 0 );
-
-				for( junction = 0; junction < MAXJUNCTIONS; junction++ ) {
-					if( !Q_stricmp (gibTags[gibIndex], JunctiongibTags[junction]) ) {
-						VectorCopy (origin, junctionOrigin[junction]);
-						newjunction[junction] = qtrue;
-					}
+				if( !character->gibModels[gibIndex] ) {
+					continue;
 				}
-			}
-		}
 
-		for( i=0; i<MAXJUNCTIONS; i++ ) {
-			if( newjunction[i] == qtrue ) {
-				for( j=0; j<MAXJUNCTIONS; j++ ) {
-					if( !Q_stricmp (JunctiongibTags[j], ConnectTags[i]) ) {
-						if( newjunction[j] == qtrue ) {
-							// spawn a blood cloud somewhere on the vec from
-							VectorSubtract (junctionOrigin[i], junctionOrigin[j], dir);					
-							CG_ParticleBloodCloud (cent, junctionOrigin[i], dir);
+				re = &cent->pe.bodyRefEnt;
+
+				for( tagIndex=0; (tagIndex = CG_GetOriginForTag( cent, re, gibTags[gibIndex], tagIndex, origin, axis )) >= 0; count++, tagIndex++ ) {
+
+					foundtag = qtrue;
+
+					VectorSubtract( origin, re->origin, dir );
+					VectorNormalize( dir );
+
+					// spawn a gib
+					velocity[0] = dir[0]*(0.5+random())*GIB_VELOCITY*0.3;
+					velocity[1] = dir[1]*(0.5+random())*GIB_VELOCITY*0.3;
+					velocity[2] = GIB_JUMP + dir[2]*(0.5+random())*GIB_VELOCITY*0.5;
+
+					VectorMA( velocity, GIB_VELOCITY, gdir, velocity );
+					AxisToAngles( axis, angles );
+
+					CG_LaunchGib( cent, origin, angles, velocity, character->gibModels[gibIndex], 1.0, 0 );
+
+					for( junction = 0; junction < MAXJUNCTIONS; junction++ ) {
+						if( !Q_stricmp (gibTags[gibIndex], JunctiongibTags[junction]) ) {
+							VectorCopy (origin, junctionOrigin[junction]);
+							newjunction[junction] = qtrue;
 						}
 					}
 				}
 			}
 		}
 
-		// Ridah, spawn a bunch of blood dots around the place
-		#define GIB_BLOOD_DOTS	3
-		for (i=0, count=0; i<GIB_BLOOD_DOTS*2; i++) {
-      // TTimo: unused
-			//static vec3_t mins = {-10,-10,-10};
-			//static vec3_t maxs = { 10, 10, 10};
-
-			if (i>0) {
-				velocity[0] = ((i%2)*2 - 1)*(40 + 40*random());
-				velocity[1] = (((i/2)%2)*2 - 1)*(40 + 40*random());
-				velocity[2] = (((i<GIB_BLOOD_DOTS)*2)-1)*40;
-			} else {
-				VectorClear( velocity );
-				velocity[2] = -64;
+		if( cg_blood.integer ) {
+			for( i=0; i<MAXJUNCTIONS; i++ ) {
+				if( newjunction[i] == qtrue ) {
+					for( j=0; j<MAXJUNCTIONS; j++ ) {
+						if( !Q_stricmp (JunctiongibTags[j], ConnectTags[i]) ) {
+							if( newjunction[j] == qtrue ) {
+								// spawn a blood cloud somewhere on the vec from
+								VectorSubtract (junctionOrigin[i], junctionOrigin[j], dir);					
+								CG_ParticleBloodCloud (cent, junctionOrigin[i], dir);
+							}
+						}
+					}
+				}
 			}
 
-			VectorAdd( playerOrigin, velocity, origin );
+			// Ridah, spawn a bunch of blood dots around the place
+			#define GIB_BLOOD_DOTS	3
+			for (i=0, count=0; i<GIB_BLOOD_DOTS*2; i++) {
+		  // TTimo: unused
+				//static vec3_t mins = {-10,-10,-10};
+				//static vec3_t maxs = { 10, 10, 10};
 
-			CG_Trace( &trace, playerOrigin, NULL, NULL, origin, -1, CONTENTS_SOLID );
-			if (trace.fraction < 1.0) {
-				//%	BG_GetMarkDir( velocity, trace.plane.normal, velocity );
-				//%	CG_ImpactMark( cgs.media.bloodDotShaders[rand()%5], trace.endpos, velocity, random()*360,
-				//%		1,1,1,1, qtrue, 30, qfalse, cg_bloodTime.integer * 1000 );
-				#if 0
-					BG_GetMarkDir( velocity, trace.plane.normal, projection );
-					VectorSubtract( vec3_origin, projection, projection );
-					projection[ 3 ] = 64;
-					VectorMA( trace.endpos, -8.0f, projection, markOrigin );
-					CG_ImpactMark( cgs.media.bloodDotShaders[ rand() % 5 ], markOrigin, projection, 30.0f, random() * 360.0f, 1.0f, 1.0f, 1.0f, 1.0f, cg_bloodTime.integer * 1000 );
-				#else
-					VectorSet( projection, 0, 0, -1 );
-					projection[ 3 ] = 30.0f;
-					Vector4Set( color, 1.0f, 1.0f, 1.0f, 1.0f );
-					trap_R_ProjectDecal( cgs.media.bloodDotShaders[ rand() % 5 ], 1, (vec3_t*) trace.endpos, projection, color,
-						cg_bloodTime.integer * 1000, (cg_bloodTime.integer * 1000) >> 4 );
-				#endif
-				
-				if (count++ > GIB_BLOOD_DOTS)
-					break;
+				if (i>0) {
+					velocity[0] = ((i%2)*2 - 1)*(40 + 40*random());
+					velocity[1] = (((i/2)%2)*2 - 1)*(40 + 40*random());
+					velocity[2] = (((i<GIB_BLOOD_DOTS)*2)-1)*40;
+				} else {
+					VectorClear( velocity );
+					velocity[2] = -64;
+				}
+
+				VectorAdd( playerOrigin, velocity, origin );
+
+				CG_Trace( &trace, playerOrigin, NULL, NULL, origin, -1, CONTENTS_SOLID );
+				if (trace.fraction < 1.0) {
+					//%	BG_GetMarkDir( velocity, trace.plane.normal, velocity );
+					//%	CG_ImpactMark( cgs.media.bloodDotShaders[rand()%5], trace.endpos, velocity, random()*360,
+					//%		1,1,1,1, qtrue, 30, qfalse, cg_bloodTime.integer * 1000 );
+					#if 0
+						BG_GetMarkDir( velocity, trace.plane.normal, projection );
+						VectorSubtract( vec3_origin, projection, projection );
+						projection[ 3 ] = 64;
+						VectorMA( trace.endpos, -8.0f, projection, markOrigin );
+						CG_ImpactMark( cgs.media.bloodDotShaders[ rand() % 5 ], markOrigin, projection, 30.0f, random() * 360.0f, 1.0f, 1.0f, 1.0f, 1.0f, cg_bloodTime.integer * 1000 );
+					#else
+						VectorSet( projection, 0, 0, -1 );
+						projection[ 3 ] = 30.0f;
+						Vector4Set( color, 1.0f, 1.0f, 1.0f, 1.0f );
+						trap_R_ProjectDecal( cgs.media.bloodDotShaders[ rand() % 5 ], 1, (vec3_t*) trace.endpos, projection, color,
+							cg_bloodTime.integer * 1000, (cg_bloodTime.integer * 1000) >> 4 );
+					#endif
+					
+					if (count++ > GIB_BLOOD_DOTS)
+						break;
+				}
 			}
 		}
 	}

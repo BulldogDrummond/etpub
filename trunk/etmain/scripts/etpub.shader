@@ -272,6 +272,22 @@ gfx/2d/friendlycross
         }
 }
 
+// Gib models
+
+models/gibs/gibs
+{
+	{
+		map models/gibs/gibs.jpg
+		blendFunc GL_ONE GL_ONE_MINUS_SRC_ALPHA
+		rgbGen lightingDiffuse 
+	}
+	{
+		map models/gibs/gibs.jpg
+		blendFunc GL_ZERO GL_ONE
+		rgbGen lightingDiffuse 
+	}
+}
+
 // Machine gun bullet brass
 
 models/weapons2/shells/m_shell

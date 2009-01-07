@@ -376,6 +376,18 @@ qboolean CG_RegisterCharacter( const char *characterFile, bg_character_t *charac
 		}
 	}
 
+	// pheno: gib models
+	character->gibModels[0] = trap_R_RegisterModel("models/gibs/foot.md3");
+	character->gibModels[1] = trap_R_RegisterModel("models/gibs/foot.md3");
+	character->gibModels[2] = trap_R_RegisterModel("models/gibs/leg.md3");
+	character->gibModels[3] = trap_R_RegisterModel("models/gibs/leg.md3");
+	character->gibModels[4] = trap_R_RegisterModel("models/gibs/abdomen.md3");
+	character->gibModels[5] = trap_R_RegisterModel("models/gibs/intestine.md3");
+	character->gibModels[6] = trap_R_RegisterModel("models/gibs/forearm.md3");
+	character->gibModels[7] = trap_R_RegisterModel("models/gibs/forearm.md3");
+	character->gibModels[8] = trap_R_RegisterModel("models/gibs/skull.md3");
+	character->gibModels[9] = trap_R_RegisterModel("models/gibs/abdomen.md3");
+
 	// Register Undressed Corpse Media
 	if( *characterDef.undressedCorpseModel ) {
 		// Register Undressed Corpse Model
