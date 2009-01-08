@@ -525,7 +525,7 @@ static const gentity_field_t gentity_fields[] = {
 	_et_gentity_addfield(model2, FIELD_STRING, FIELD_FLAG_READONLY),
 	_et_gentity_addfield(nextTrain, FIELD_ENTITY, 0),
 	_et_gentity_addfield(noise_index, FIELD_INT, 0),
-	_et_gclient_addfieldalias(origin, ps.origin, FIELD_VEC3, 0),
+	_et_gentity_addfieldalias(origin, r.currentOrigin, FIELD_VEC3, 0),
 	_et_gclient_addfield(pers.connected, FIELD_INT, 0),
 	_et_gclient_addfield(pers.netname, FIELD_STRING, FIELD_FLAG_NOPTR),
 	_et_gclient_addfield(pers.localClient, FIELD_INT, 0),

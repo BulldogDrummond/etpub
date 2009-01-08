@@ -45,6 +45,7 @@
 
 // macros to add gentity and gclient fields
 #define _et_gentity_addfield(n, t, f) {#n, t, offsetof(struct gentity_s, n), FIELD_FLAG_GENTITY + f}
+#define _et_gentity_addfieldalias(n, a, t, f) {#n, t, offsetof(struct gentity_s, a), FIELD_FLAG_GENTITY + f}
 #define _et_gclient_addfield(n, t, f) {#n, t, offsetof(struct gclient_s, n), FIELD_FLAG_GCLIENT + f}
 #define _et_gclient_addfieldalias(n, a, t, f) {#n, t, offsetof(struct gclient_s, a), FIELD_FLAG_GCLIENT + f}
 
