@@ -831,6 +831,7 @@ int _et_gentity_get(lua_State *L)
 		addr = (unsigned long)ent->client;
 	}
 
+	// for NULL entities, return nil (prevents server crashes!)
 	if ( !addr ) {
 		lua_pushnil(L);
 		return 1;
@@ -898,6 +899,7 @@ static int _et_gentity_set(lua_State *L)
 		addr = (unsigned long)ent->client;
 	}
 
+	// for NULL entities, return nil (prevents server crashes!)
 	if ( !addr ) {
 		lua_pushnil(L);
 		return 1;

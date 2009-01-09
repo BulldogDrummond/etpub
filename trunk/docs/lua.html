@@ -187,6 +187,18 @@ end</pre></dd>
 et.G_AddSkillPoints(0, 5, 100.5)</pre></dd>
 </dl>
 
+<a name="entities"></a><h3>Entities</h3>
+<p><strong>(variable)</strong> = et.gentity_get ( <strong>entnum</strong>, <strong>fieldname</strong><i>, <strong>arrayindex</strong></i> )</p>
+<dl>
+	<dd>Gets the value of <strong>fieldname</strong> from entity <strong>entnum</strong> out of the g_entity struct. For NULL entities, <i>nil</i> is returned.</dd>
+	<dd><i><strong>arrayindex</strong></i> is used to specify which element of an array entity field to get. It is required when accessing array type fields. Entity field array indexes start at 0.</dd>
+</dl>
+<p>et.gentity_set( <strong>entnum</strong>, <strong>fieldname</strong><i>, <strong>arrayindex</strong></i>, <strong>value</strong> )</p>
+<dl>
+	<dd>Sets the value of <strong>fieldname</strong> from entity <strong>entnum</strong> in the g_entity struct to <strong>value</strong>.</dd>
+	<dd><i><strong>arrayindex</strong></i> is used to specify which element of an array entity field to set.</dd>
+</dl>
+
 <a name="shrubbot"></a><h3>Shrubbot</h3>
 <p><b>*</b><i class="diff"><strong>permission</strong> = et.G_shrubbot_permission( <strong>ent</strong>, <strong>flag</strong> )</i></p>
 <dl>
