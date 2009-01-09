@@ -830,6 +830,12 @@ int _et_gentity_get(lua_State *L)
 	} else {
 		addr = (unsigned long)ent->client;
 	}
+
+	if ( !addr ) {
+		lua_pushnil(L);
+		return 1;
+	}
+
 	addr += (unsigned long)field->mapping;
 	
 	switch ( field->type ) {
@@ -891,6 +897,12 @@ static int _et_gentity_set(lua_State *L)
 	} else {
 		addr = (unsigned long)ent->client;
 	}
+
+	if ( !addr ) {
+		lua_pushnil(L);
+		return 1;
+	}
+
 	addr += (unsigned long)field->mapping;
 	
 	switch ( field->type ) {
