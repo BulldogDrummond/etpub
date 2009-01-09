@@ -3304,6 +3304,9 @@ qboolean G_ScriptAction_Announce( gentity_t *ent, char *params )
 		Bot_Util_SendTrigger(ent, NULL, token, "announce");
 	}
 
+	// pheno: log script wm_announce actions (ETPro behavior)
+	G_LogPrintf("etpub announce: \"%s\"\n", token);
+
 	return qtrue;
 }
 
