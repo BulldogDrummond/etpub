@@ -115,7 +115,7 @@ static int _et_IPCSend(lua_State *L)
 	
 	// Call
 	if (!G_LuaCall(vm, "et.IPCSend", 2, 0)) {
-		G_LuaStopVM(vm);
+		//G_LuaStopVM(vm);
 		lua_pushinteger(L, 0);
 		return 1;
 	}
@@ -1360,7 +1360,7 @@ void G_LuaHook_InitGame(int levelTime, int randomSeed, int restart)
 	for (i=0; i<LUA_NUM_VM; i++) {
 		vm = lVM[i];
 		if (vm) {
-			if (vm->id < 0 || vm->err)
+			if (vm->id < 0 /*|| vm->err*/)
 				continue;
 			if (!G_LuaGetNamedFunction(vm, "et_InitGame"))
 				continue;
@@ -1370,7 +1370,7 @@ void G_LuaHook_InitGame(int levelTime, int randomSeed, int restart)
 			lua_pushinteger(vm->L, restart);
 			// Call
 			if (!G_LuaCall(vm, "et_InitGame", 3, 0)) {
-				G_LuaStopVM(vm);
+				//G_LuaStopVM(vm);
 				continue;
 			}
 			// Return values
@@ -1388,7 +1388,7 @@ void G_LuaHook_ShutdownGame(int restart)
 	for (i=0; i<LUA_NUM_VM; i++) {
 		vm = lVM[i];
 		if (vm) {
-			if (vm->id < 0 || vm->err)
+			if (vm->id < 0 /*|| vm->err*/)
 				continue;
 			if (!G_LuaGetNamedFunction(vm, "et_ShutdownGame"))
 				continue;
@@ -1396,7 +1396,7 @@ void G_LuaHook_ShutdownGame(int restart)
 			lua_pushinteger(vm->L, restart);
 			// Call
 			if (!G_LuaCall(vm, "et_ShutdownGame", 1, 0)) {
-				G_LuaStopVM(vm);
+				//G_LuaStopVM(vm);
 				continue;
 			}
 			// Return values
@@ -1414,7 +1414,7 @@ void G_LuaHook_RunFrame(int levelTime)
 	for (i=0; i<LUA_NUM_VM; i++) {
 		vm = lVM[i];
 		if (vm) {
-			if (vm->id < 0 || vm->err)
+			if (vm->id < 0 /*|| vm->err*/)
 				continue;
 			if (!G_LuaGetNamedFunction(vm, "et_RunFrame"))
 				continue;
@@ -1422,7 +1422,7 @@ void G_LuaHook_RunFrame(int levelTime)
 			lua_pushinteger(vm->L, levelTime);
 			// Call
 			if (!G_LuaCall(vm, "et_RunFrame", 1, 0)) {
-				G_LuaStopVM(vm);
+				//G_LuaStopVM(vm);
 				continue;
 			}
 			// Return values
@@ -1440,7 +1440,7 @@ qboolean G_LuaHook_ClientConnect(int clientNum, qboolean firstTime, qboolean isB
 	for (i=0; i<LUA_NUM_VM; i++) {
 		vm = lVM[i];
 		if (vm) {
-			if (vm->id < 0 || vm->err)
+			if (vm->id < 0 /*|| vm->err*/)
 				continue;
 			if (!G_LuaGetNamedFunction(vm, "et_ClientConnect"))
 				continue;
@@ -1450,7 +1450,7 @@ qboolean G_LuaHook_ClientConnect(int clientNum, qboolean firstTime, qboolean isB
 			lua_pushinteger(vm->L, (int)isBot);
 			// Call
 			if (!G_LuaCall(vm, "et_ClientConnect", 3, 1)) {
-				G_LuaStopVM(vm);
+				//G_LuaStopVM(vm);
 				continue;
 			}
 			// Return values
@@ -1473,7 +1473,7 @@ void G_LuaHook_ClientDisconnect(int clientNum)
 	for (i=0; i<LUA_NUM_VM; i++) {
 		vm = lVM[i];
 		if (vm) {
-			if (vm->id < 0 || vm->err)
+			if (vm->id < 0 /*|| vm->err*/)
 				continue;
 			if (!G_LuaGetNamedFunction(vm, "et_ClientDisconnect"))
 				continue;
@@ -1481,7 +1481,7 @@ void G_LuaHook_ClientDisconnect(int clientNum)
 			lua_pushinteger(vm->L, clientNum);
 			// Call
 			if (!G_LuaCall(vm, "et_ClientDisconnect", 1, 0)) {
-				G_LuaStopVM(vm);
+				//G_LuaStopVM(vm);
 				continue;
 			}
 			// Return values
@@ -1499,7 +1499,7 @@ void G_LuaHook_ClientBegin(int clientNum)
 	for (i=0; i<LUA_NUM_VM; i++) {
 		vm = lVM[i];
 		if (vm) {
-			if (vm->id < 0 || vm->err)
+			if (vm->id < 0 /*|| vm->err*/)
 				continue;
 			if (!G_LuaGetNamedFunction(vm, "et_ClientBegin"))
 				continue;
@@ -1507,7 +1507,7 @@ void G_LuaHook_ClientBegin(int clientNum)
 			lua_pushinteger(vm->L, clientNum);
 			// Call
 			if (!G_LuaCall(vm, "et_ClientBegin", 1, 0)) {
-				G_LuaStopVM(vm);
+				//G_LuaStopVM(vm);
 				continue;
 			}
 			// Return values
@@ -1525,7 +1525,7 @@ void G_LuaHook_ClientUserinfoChanged(int clientNum)
 	for (i=0; i<LUA_NUM_VM; i++) {
 		vm = lVM[i];
 		if (vm) {
-			if (vm->id < 0 || vm->err)
+			if (vm->id < 0 /*|| vm->err*/)
 				continue;
 			if (!G_LuaGetNamedFunction(vm, "et_ClientUserinfoChanged"))
 				continue;
@@ -1533,7 +1533,7 @@ void G_LuaHook_ClientUserinfoChanged(int clientNum)
 			lua_pushinteger(vm->L, clientNum);
 			// Call
 			if (!G_LuaCall(vm, "et_ClientUserinfoChanged", 1, 0)) {
-				G_LuaStopVM(vm);
+				//G_LuaStopVM(vm);
 				continue;
 			}
 			// Return values
@@ -1551,7 +1551,7 @@ void G_LuaHook_ClientSpawn(int clientNum, qboolean revived, qboolean teamChange,
 	for (i=0; i<LUA_NUM_VM; i++) {
 		vm = lVM[i];
 		if (vm) {
-			if (vm->id < 0 || vm->err)
+			if (vm->id < 0 /*|| vm->err*/)
 				continue;
 			if (!G_LuaGetNamedFunction(vm, "et_ClientSpawn"))
 				continue;
@@ -1562,7 +1562,7 @@ void G_LuaHook_ClientSpawn(int clientNum, qboolean revived, qboolean teamChange,
 			lua_pushinteger(vm->L, (int)restoreHealth);
 			// Call
 			if (!G_LuaCall(vm, "et_ClientSpawn", 4, 0)) {
-				G_LuaStopVM(vm);
+				//G_LuaStopVM(vm);
 				continue;
 			}
 			// Return values
@@ -1580,7 +1580,7 @@ qboolean G_LuaHook_ClientCommand(int clientNum, char *command)
 	for (i=0; i<LUA_NUM_VM; i++) {
 		vm = lVM[i];
 		if (vm) {
-			if (vm->id < 0 || vm->err)
+			if (vm->id < 0 /*|| vm->err*/)
 				continue;
 			if (!G_LuaGetNamedFunction(vm, "et_ClientCommand"))
 				continue;
@@ -1589,7 +1589,7 @@ qboolean G_LuaHook_ClientCommand(int clientNum, char *command)
 			lua_pushstring(vm->L, command);
 			// Call
 			if (!G_LuaCall(vm, "et_ClientCommand", 2, 1)) {
-				G_LuaStopVM(vm);
+				//G_LuaStopVM(vm);
 				continue;
 			}
 			// Return values
@@ -1613,7 +1613,7 @@ qboolean G_LuaHook_ConsoleCommand(char *command)
 	for (i=0; i<LUA_NUM_VM; i++) {
 		vm = lVM[i];
 		if (vm) {
-			if (vm->id < 0 || vm->err)
+			if (vm->id < 0 /*|| vm->err*/)
 				continue;
 			if (!G_LuaGetNamedFunction(vm, "et_ConsoleCommand"))
 				continue;
@@ -1621,7 +1621,7 @@ qboolean G_LuaHook_ConsoleCommand(char *command)
 			lua_pushstring(vm->L, command);
 			// Call
 			if (!G_LuaCall(vm, "et_ConsoleCommand", 1, 1)) {
-				G_LuaStopVM(vm);
+				//G_LuaStopVM(vm);
 				continue;
 			}
 			// Return values
@@ -1645,7 +1645,7 @@ qboolean G_LuaHook_UpgradeSkill(int cno, skillType_t skill)
 	for (i=0; i<LUA_NUM_VM; i++) {
 		vm = lVM[i];
 		if (vm) {
-			if (vm->id < 0 || vm->err)
+			if (vm->id < 0 /*|| vm->err*/)
 				continue;
 			if (!G_LuaGetNamedFunction(vm, "et_UpgradeSkill"))
 				continue;
@@ -1654,7 +1654,7 @@ qboolean G_LuaHook_UpgradeSkill(int cno, skillType_t skill)
 			lua_pushinteger(vm->L, (int)skill);
 			// Call
 			if (!G_LuaCall(vm, "et_UpgradeSkill", 2, 1)) {
-				G_LuaStopVM(vm);
+				//G_LuaStopVM(vm);
 				continue;
 			}
 			// Return values
@@ -1678,7 +1678,7 @@ qboolean G_LuaHook_SetPlayerSkill( int cno, skillType_t skill )
 	for (i=0; i<LUA_NUM_VM; i++) {
 		vm = lVM[i];
 		if (vm) {
-			if (vm->id < 0 || vm->err)
+			if (vm->id < 0 /*|| vm->err*/)
 				continue;
 			if (!G_LuaGetNamedFunction(vm, "et_SetPlayerSkill"))
 				continue;
@@ -1687,7 +1687,7 @@ qboolean G_LuaHook_SetPlayerSkill( int cno, skillType_t skill )
 			lua_pushinteger(vm->L, (int)skill);
 			// Call
 			if (!G_LuaCall(vm, "et_SetPlayerSkill", 2, 1)) {
-				G_LuaStopVM(vm);
+				//G_LuaStopVM(vm);
 				continue;
 			}
 			// Return values
@@ -1711,7 +1711,7 @@ void G_LuaHook_Print( char *text )
 	for (i=0; i<LUA_NUM_VM; i++) {
 		vm = lVM[i];
 		if (vm) {
-			if (vm->id < 0 || vm->err)
+			if (vm->id < 0 /*|| vm->err*/)
 				continue;
 			if (!G_LuaGetNamedFunction(vm, "et_Print"))
 				continue;
@@ -1719,7 +1719,7 @@ void G_LuaHook_Print( char *text )
 			lua_pushstring(vm->L, text);
 			// Call
 			if (!G_LuaCall(vm, "et_Print", 1, 0)) {
-				G_LuaStopVM(vm);
+				//G_LuaStopVM(vm);
 				continue;
 			}
 			// Return values
@@ -1737,7 +1737,7 @@ qboolean G_LuaHook_Obituary(int victim, int killer, int meansOfDeath, char *cust
 	for (i=0; i<LUA_NUM_VM; i++) {
 		vm = lVM[i];
 		if (vm) {
-			if (vm->id < 0 || vm->err)
+			if (vm->id < 0 /*|| vm->err*/)
 				continue;
 			if (!G_LuaGetNamedFunction(vm, "et_Obituary"))
 				continue;
@@ -1747,7 +1747,7 @@ qboolean G_LuaHook_Obituary(int victim, int killer, int meansOfDeath, char *cust
 			lua_pushinteger(vm->L, meansOfDeath);
 			// Call
 			if (!G_LuaCall(vm, "et_Obituary", 3, 1)) {
-				G_LuaStopVM(vm);
+				//G_LuaStopVM(vm);
 				continue;
 			}
 			// Return values
