@@ -6,7 +6,39 @@
 // http://wolfwiki.anime.net/index.php/Lua_Mod_API
 
 lua_vm_t * lVM[LUA_NUM_VM];
-#define LOG G_LogPrintf
+
+void QDECL LOG(const char *fmt, ...)
+{
+	va_list argptr;
+	char buff[1024], string[1024];
+	int min, tens, sec;
+	
+	va_start(argptr, fmt);
+	Q_vsnprintf(buff, sizeof(buff), fmt, argptr);
+	va_end(argptr);
+	
+	if ( g_dedicated.integer ) {
+		trap_Printf(buff);
+	}
+	
+	if ( level.logFile ) {
+		if ( g_logOptions.integer & LOGOPTS_REALTIME ) {
+			Com_sprintf(string, sizeof(string), "%s %s", G_GetRealTime(), buff);
+		} else {
+			sec = level.time / 1000;
+			min = sec / 60;
+			sec -= min * 60;
+			tens = sec / 10;
+			sec -= tens * 10;
+
+			Com_sprintf(string, sizeof(string), "%i:%i%i %s", min, tens, sec, buff);
+		}
+
+		trap_FS_Write(string, strlen(string), level.logFile);
+	}
+}
+
+void QDECL LOG(const char *fmt, ...)_attribute((format(printf,1,2)));
 
 /***************************/
 /* Lua et library handlers */
@@ -95,9 +127,6 @@ static int _et_IPCSend(lua_State *L)
 // }}}
 
 // Printing {{{
-// TODO: find a way to run qagame's printing functions
-//       without running et_Print callback (I didn't want
-//       to clone qagame functions)
 // et.G_Print( text )
 static int _et_G_Print(lua_State *L)
 {
@@ -110,31 +139,9 @@ static int _et_G_Print(lua_State *L)
 // et.G_LogPrint( text ) 
 static int _et_G_LogPrint(lua_State *L)
 {
-	char buff[1024], text[1024];
-	int min, tens, sec;
-	
-	Q_strncpyz(buff, luaL_checkstring(L, 1), sizeof(buff));
-	
-	if ( g_dedicated.integer ) {
-		trap_Printf(buff);
-	}
-	
-	if ( level.logFile ) {
-		if ( g_logOptions.integer & LOGOPTS_REALTIME ) {
-			Com_sprintf(text, sizeof(text), "%s %s", G_GetRealTime(), buff);
-		} else {
-			sec = level.time / 1000;
-			min = sec / 60;
-			sec -= min * 60;
-			tens = sec / 10;
-			sec -= tens * 10;
-
-			Com_sprintf(text, sizeof(text), "%i:%i%i %s", min, tens, sec, buff);
-		}
-
-		trap_FS_Write(text, strlen(text), level.logFile);
-	}
-	
+	char text[1024];
+	Q_strncpyz(text, luaL_checkstring(L, 1), sizeof(text));
+	LOG(text);
 	return 0;
 }
 // }}}

@@ -2025,3 +2025,5 @@
 * pheno:   Lua API: fixed et_Print() callback won't run on G_LogPrintf()
 * pheno:   hopefully fixed the bug that keeps XPSave from loading stored XP
            at the time of client initial connect
+* pheno:   Lua API: fixed a bug that causes an server crash on error output
+           within et_Print() callback
