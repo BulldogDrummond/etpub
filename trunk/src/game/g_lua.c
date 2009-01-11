@@ -498,9 +498,8 @@ static int _et_G_AddSkillPoints(lua_State *L)
 // Entities {{{
 // client entity fields
 static const gentity_field_t gclient_fields[] = {
-	_et_gclient_addfieldalias(client.inactivityTime, inactivityTime, FIELD_INT, 0),
-	_et_gclient_addfieldalias(client.inactivityWarning, inactivityWarning, FIELD_INT, 0),
-	_et_gclient_addfieldalias(origin, ps.origin, FIELD_VEC3, 0),
+	_et_gclient_addfield(inactivityTime, FIELD_INT, 0),
+	_et_gclient_addfield(inactivityWarning, FIELD_INT, 0),
 	_et_gclient_addfield(pers.connected, FIELD_INT, 0),
 	_et_gclient_addfield(pers.netname, FIELD_STRING, FIELD_FLAG_NOPTR),
 	_et_gclient_addfield(pers.localClient, FIELD_INT, 0),
@@ -530,6 +529,7 @@ static const gentity_field_t gclient_fields[] = {
 	_et_gclient_addfield(ps.persistant, FIELD_INT_ARRAY, 0),
 	_et_gclient_addfield(ps.ping, FIELD_INT, 0),
 	_et_gclient_addfield(ps.powerups, FIELD_INT_ARRAY, 0),
+	_et_gclient_addfield(ps.origin, FIELD_VEC3, 0),
 	_et_gclient_addfield(ps.ammo, FIELD_INT_ARRAY, 0),
 	_et_gclient_addfield(ps.ammoclip, FIELD_INT_ARRAY, 0),
 	_et_gclient_addfield(sess.sessionTeam, FIELD_INT, 0),
@@ -560,13 +560,22 @@ static const gentity_field_t gclient_fields[] = {
 	_et_gclient_addfield(sess.spec_invite, FIELD_INT, 0),
 	_et_gclient_addfield(sess.spec_team, FIELD_INT, 0),
 	_et_gclient_addfield(sess.suicides, FIELD_INT, 0),
-	_et_gclient_addfieldalias(sess.team_damage, sess.team_damage_given, FIELD_INT, 0),
 	_et_gclient_addfield(sess.team_kills, FIELD_INT, 0),
-	_et_gclient_addfieldalias(sess.team_received, sess.team_damage_received, FIELD_INT, 0),
+	_et_gclient_addfield(sess.team_damage_given, FIELD_INT, 0),
+	_et_gclient_addfield(sess.team_damage_received, FIELD_INT, 0),
 	// TODO: sess.aWeaponStats
 	//_et_gclient_addfield(sess.aWeaponStats, FIELD_?_ARRAY, 0),
 	
-	// new ETPub fields
+	// To be compatible with ETPro:
+	_et_gclient_addfieldalias(client.inactivityTime, inactivityTime, FIELD_INT, 0),
+	_et_gclient_addfieldalias(client.inactivityWarning, inactivityWarning, FIELD_INT, 0),
+	// origin: use ps.origin instead of r.currentOrigin
+	//         for client entities
+	_et_gclient_addfieldalias(origin, ps.origin, FIELD_VEC3, 0),
+	_et_gclient_addfieldalias(sess.team_damage, sess.team_damage_given, FIELD_INT, 0),
+	_et_gclient_addfieldalias(sess.team_received, sess.team_damage_received, FIELD_INT, 0),
+
+	// New to ETPub:
 	_et_gclient_addfield(sess.guid, FIELD_STRING, FIELD_FLAG_NOPTR + FIELD_FLAG_READONLY),
 	_et_gclient_addfield(sess.ip, FIELD_STRING, FIELD_FLAG_NOPTR + FIELD_FLAG_READONLY),
 	_et_gclient_addfield(sess.ignoreClients, FIELD_INT_ARRAY, 0),
@@ -609,9 +618,6 @@ static const gentity_field_t gentity_fields[] = {
 	_et_gentity_addfield(model2, FIELD_STRING, FIELD_FLAG_READONLY),
 	_et_gentity_addfield(nextTrain, FIELD_ENTITY, 0),
 	_et_gentity_addfield(noise_index, FIELD_INT, 0),
-	// origin: use r.currentOrigin instead of ps.origin
-	//         for non client entities
-	_et_gentity_addfieldalias(origin, r.currentOrigin, FIELD_VEC3, FIELD_FLAG_READONLY),
 	_et_gentity_addfield(prevTrain, FIELD_ENTITY, 0),
 	_et_gentity_addfield(props_frame_state, FIELD_INT, FIELD_FLAG_READONLY),
 	_et_gentity_addfield(r.absmax, FIELD_VEC3, FIELD_FLAG_READONLY),
@@ -686,6 +692,11 @@ static const gentity_field_t gentity_fields[] = {
 	_et_gentity_addfield(wait, FIELD_FLOAT, 0),
 	_et_gentity_addfield(waterlevel, FIELD_INT, FIELD_FLAG_READONLY),
 	_et_gentity_addfield(watertype, FIELD_INT, FIELD_FLAG_READONLY),
+
+	// To be compatible with ETPro:
+	// origin: use r.currentOrigin instead of ps.origin
+	//         for non client entities
+	_et_gentity_addfieldalias(origin, r.currentOrigin, FIELD_VEC3, 0),
 	
 	{ NULL },
 };
@@ -696,7 +707,7 @@ gentity_field_t *_et_gentity_getfield(gentity_t *ent, char *fieldname)
 	int i;
 
 	// search through client fields first
-	if ( ent->client != NULL ) {
+	if ( ent->client ) {
 		for( i = 0; gclient_fields[i].name; i++ ) {
 			if( Q_stricmp(fieldname, gclient_fields[i].name) == 0 ) {
 				return (gentity_field_t *)&gclient_fields[i];
