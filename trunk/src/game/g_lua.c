@@ -496,13 +496,90 @@ static int _et_G_AddSkillPoints(lua_State *L)
 // }}}
 
 // Entities {{{
-// gentity fields array
+// client entity fields
+static const gentity_field_t gclient_fields[] = {
+	_et_gclient_addfieldalias(client.inactivityTime, inactivityTime, FIELD_INT, 0),
+	_et_gclient_addfieldalias(client.inactivityWarning, inactivityWarning, FIELD_INT, 0),
+	_et_gclient_addfieldalias(origin, ps.origin, FIELD_VEC3, 0),
+	_et_gclient_addfield(pers.connected, FIELD_INT, 0),
+	_et_gclient_addfield(pers.netname, FIELD_STRING, FIELD_FLAG_NOPTR),
+	_et_gclient_addfield(pers.localClient, FIELD_INT, 0),
+	_et_gclient_addfield(pers.initialSpawn, FIELD_INT, 0),
+	_et_gclient_addfield(pers.enterTime, FIELD_INT, 0),
+	_et_gclient_addfield(pers.connectTime, FIELD_INT, 0),
+	_et_gclient_addfield(pers.teamState.state, FIELD_INT, 0),
+	_et_gclient_addfield(pers.voteCount, FIELD_INT, 0),
+	_et_gclient_addfield(pers.teamVoteCount, FIELD_INT, 0),
+	_et_gclient_addfield(pers.complaints, FIELD_INT, 0),
+	_et_gclient_addfield(pers.complaintClient, FIELD_INT, 0),
+	_et_gclient_addfield(pers.complaintEndTime, FIELD_INT, 0),
+	_et_gclient_addfield(pers.lastReinforceTime, FIELD_INT, 0),
+	_et_gclient_addfield(pers.applicationClient, FIELD_INT, 0),
+	_et_gclient_addfield(pers.applicationEndTime, FIELD_INT, 0),
+	_et_gclient_addfield(pers.invitationClient, FIELD_INT, 0),
+	_et_gclient_addfield(pers.invitationEndTime, FIELD_INT, 0),
+	_et_gclient_addfield(pers.propositionClient, FIELD_INT, 0),
+	_et_gclient_addfield(pers.propositionClient2, FIELD_INT, 0),
+	_et_gclient_addfield(pers.propositionEndTime, FIELD_INT, 0),
+	_et_gclient_addfield(pers.autofireteamEndTime, FIELD_INT, 0),
+	_et_gclient_addfield(pers.autofireteamCreateEndTime, FIELD_INT, 0),
+	_et_gclient_addfield(pers.autofireteamJoinEndTime, FIELD_INT, 0),
+	_et_gclient_addfield(pers.lastSpawnTime, FIELD_INT, 0),
+	_et_gclient_addfield(pers.ready, FIELD_INT, 0),
+	_et_gclient_addfield(ps.stats, FIELD_INT_ARRAY, 0),
+	_et_gclient_addfield(ps.persistant, FIELD_INT_ARRAY, 0),
+	_et_gclient_addfield(ps.ping, FIELD_INT, 0),
+	_et_gclient_addfield(ps.powerups, FIELD_INT_ARRAY, 0),
+	_et_gclient_addfield(ps.ammo, FIELD_INT_ARRAY, 0),
+	_et_gclient_addfield(ps.ammoclip, FIELD_INT_ARRAY, 0),
+	_et_gclient_addfield(sess.sessionTeam, FIELD_INT, 0),
+	_et_gclient_addfield(sess.spectatorTime, FIELD_INT, 0),
+	_et_gclient_addfield(sess.spectatorState, FIELD_INT, 0),
+	_et_gclient_addfield(sess.spectatorClient, FIELD_ENTITY, 0),
+	// missing sess.latchSpectatorClient
+	_et_gclient_addfield(sess.playerType, FIELD_INT, 0),
+	_et_gclient_addfield(sess.playerWeapon, FIELD_INT, 0),
+	_et_gclient_addfield(sess.playerWeapon2, FIELD_INT, 0),
+	_et_gclient_addfield(sess.spawnObjectiveIndex, FIELD_INT, 0),
+	_et_gclient_addfield(sess.latchPlayerType, FIELD_INT, 0),
+	_et_gclient_addfield(sess.latchPlayerWeapon, FIELD_INT, 0),
+	_et_gclient_addfield(sess.latchPlayerWeapon2, FIELD_INT, 0),
+	_et_gclient_addfield(sess.damage_given, FIELD_INT, 0),
+	_et_gclient_addfield(sess.damage_received, FIELD_INT, 0),
+	_et_gclient_addfield(sess.deaths, FIELD_INT, 0),
+	_et_gclient_addfield(sess.game_points, FIELD_INT, 0),
+	// missing sess.gibs
+	_et_gclient_addfield(sess.kills, FIELD_INT, 0),
+	_et_gclient_addfield(sess.medals, FIELD_INT_ARRAY, 0),
+	_et_gclient_addfieldalias(sess.muted, sess.auto_unmute_time, FIELD_INT, 0),
+	_et_gclient_addfield(sess.rank, FIELD_INT, 0),
+	_et_gclient_addfield(sess.referee, FIELD_INT, 0),
+	_et_gclient_addfield(sess.rounds, FIELD_INT, 0),
+	// missing sess.semiadmin
+	_et_gclient_addfield(sess.skill, FIELD_INT_ARRAY, 0),
+	_et_gclient_addfield(sess.spec_invite, FIELD_INT, 0),
+	_et_gclient_addfield(sess.spec_team, FIELD_INT, 0),
+	_et_gclient_addfield(sess.suicides, FIELD_INT, 0),
+	_et_gclient_addfieldalias(sess.team_damage, sess.team_damage_given, FIELD_INT, 0),
+	_et_gclient_addfield(sess.team_kills, FIELD_INT, 0),
+	_et_gclient_addfieldalias(sess.team_received, sess.team_damage_received, FIELD_INT, 0),
+	// TODO: sess.aWeaponStats
+	//_et_gclient_addfield(sess.aWeaponStats, FIELD_?_ARRAY, 0),
+	
+	// new ETPub fields
+	_et_gclient_addfield(sess.guid, FIELD_STRING, FIELD_FLAG_NOPTR + FIELD_FLAG_READONLY),
+	_et_gclient_addfield(sess.ip, FIELD_STRING, FIELD_FLAG_NOPTR + FIELD_FLAG_READONLY),
+	_et_gclient_addfield(sess.ignoreClients, FIELD_INT_ARRAY, 0),
+	_et_gclient_addfield(sess.skillpoints, FIELD_FLOAT_ARRAY, FIELD_FLAG_READONLY),
+	
+	{ NULL },
+};
+
+// entity fields
 static const gentity_field_t gentity_fields[] = {
 	_et_gentity_addfield(activator, FIELD_ENTITY, FIELD_FLAG_READONLY),
 	_et_gentity_addfield(chain, FIELD_ENTITY, 0),
 	_et_gentity_addfield(classname, FIELD_STRING, 0),
-	_et_gclient_addfieldalias(client.inactivityTime, inactivityTime, FIELD_INT, 0),
-	_et_gclient_addfieldalias(client.inactivityWarning, inactivityWarning, FIELD_INT, 0),
 	_et_gentity_addfield(clipmask, FIELD_INT, 0),
 	_et_gentity_addfield(closespeed, FIELD_FLOAT, 0),
 	_et_gentity_addfield(count, FIELD_INT, 0),
@@ -532,40 +609,11 @@ static const gentity_field_t gentity_fields[] = {
 	_et_gentity_addfield(model2, FIELD_STRING, FIELD_FLAG_READONLY),
 	_et_gentity_addfield(nextTrain, FIELD_ENTITY, 0),
 	_et_gentity_addfield(noise_index, FIELD_INT, 0),
-	_et_gentity_addfieldalias(origin, r.currentOrigin, FIELD_VEC3, 0),
-	_et_gclient_addfield(pers.connected, FIELD_INT, 0),
-	_et_gclient_addfield(pers.netname, FIELD_STRING, FIELD_FLAG_NOPTR),
-	_et_gclient_addfield(pers.localClient, FIELD_INT, 0),
-	_et_gclient_addfield(pers.initialSpawn, FIELD_INT, 0),
-	_et_gclient_addfield(pers.enterTime, FIELD_INT, 0),
-	_et_gclient_addfield(pers.connectTime, FIELD_INT, 0),
-	_et_gclient_addfield(pers.teamState.state, FIELD_INT, 0),
-	_et_gclient_addfield(pers.voteCount, FIELD_INT, 0),
-	_et_gclient_addfield(pers.teamVoteCount, FIELD_INT, 0),
-	_et_gclient_addfield(pers.complaints, FIELD_INT, 0),
-	_et_gclient_addfield(pers.complaintClient, FIELD_INT, 0),
-	_et_gclient_addfield(pers.complaintEndTime, FIELD_INT, 0),
-	_et_gclient_addfield(pers.lastReinforceTime, FIELD_INT, 0),
-	_et_gclient_addfield(pers.applicationClient, FIELD_INT, 0),
-	_et_gclient_addfield(pers.applicationEndTime, FIELD_INT, 0),
-	_et_gclient_addfield(pers.invitationClient, FIELD_INT, 0),
-	_et_gclient_addfield(pers.invitationEndTime, FIELD_INT, 0),
-	_et_gclient_addfield(pers.propositionClient, FIELD_INT, 0),
-	_et_gclient_addfield(pers.propositionClient2, FIELD_INT, 0),
-	_et_gclient_addfield(pers.propositionEndTime, FIELD_INT, 0),
-	_et_gclient_addfield(pers.autofireteamEndTime, FIELD_INT, 0),
-	_et_gclient_addfield(pers.autofireteamCreateEndTime, FIELD_INT, 0),
-	_et_gclient_addfield(pers.autofireteamJoinEndTime, FIELD_INT, 0),
-	_et_gclient_addfield(pers.lastSpawnTime, FIELD_INT, 0),
-	_et_gclient_addfield(pers.ready, FIELD_INT, 0),
+	// origin: use r.currentOrigin instead of ps.origin
+	//         for non client entities
+	_et_gentity_addfieldalias(origin, r.currentOrigin, FIELD_VEC3, FIELD_FLAG_READONLY),
 	_et_gentity_addfield(prevTrain, FIELD_ENTITY, 0),
 	_et_gentity_addfield(props_frame_state, FIELD_INT, FIELD_FLAG_READONLY),
-	_et_gclient_addfield(ps.stats, FIELD_INT_ARRAY, 0),
-	_et_gclient_addfield(ps.persistant, FIELD_INT_ARRAY, 0),
-	_et_gclient_addfield(ps.ping, FIELD_INT, 0),
-	_et_gclient_addfield(ps.powerups, FIELD_INT_ARRAY, 0),
-	_et_gclient_addfield(ps.ammo, FIELD_INT_ARRAY, 0),
-	_et_gclient_addfield(ps.ammoclip, FIELD_INT_ARRAY, 0),
 	_et_gentity_addfield(r.absmax, FIELD_VEC3, FIELD_FLAG_READONLY),
 	_et_gentity_addfield(r.absmin, FIELD_VEC3, FIELD_FLAG_READONLY),
 	_et_gentity_addfield(r.bmodel, FIELD_INT, FIELD_FLAG_READONLY),
@@ -616,39 +664,6 @@ static const gentity_field_t gentity_fields[] = {
 	_et_gentity_addfield(s.weapon, FIELD_INT, FIELD_FLAG_READONLY),
 	_et_gentity_addfield(s.eventParm, FIELD_INT, 0),
 	_et_gentity_addfield(scriptName, FIELD_STRING, FIELD_FLAG_READONLY),
-	_et_gclient_addfield(sess.sessionTeam, FIELD_INT, 0),
-	_et_gclient_addfield(sess.spectatorTime, FIELD_INT, 0),
-	_et_gclient_addfield(sess.spectatorState, FIELD_INT, 0),
-	_et_gclient_addfield(sess.spectatorClient, FIELD_ENTITY, 0),
-	// missing sess.latchSpectatorClient
-	_et_gclient_addfield(sess.playerType, FIELD_INT, 0),
-	_et_gclient_addfield(sess.playerWeapon, FIELD_INT, 0),
-	_et_gclient_addfield(sess.playerWeapon2, FIELD_INT, 0),
-	_et_gclient_addfield(sess.spawnObjectiveIndex, FIELD_INT, 0),
-	_et_gclient_addfield(sess.latchPlayerType, FIELD_INT, 0),
-	_et_gclient_addfield(sess.latchPlayerWeapon, FIELD_INT, 0),
-	_et_gclient_addfield(sess.latchPlayerWeapon2, FIELD_INT, 0),
-	_et_gclient_addfield(sess.damage_given, FIELD_INT, 0),
-	_et_gclient_addfield(sess.damage_received, FIELD_INT, 0),
-	_et_gclient_addfield(sess.deaths, FIELD_INT, 0),
-	_et_gclient_addfield(sess.game_points, FIELD_INT, 0),
-	// missing sess.gibs
-	_et_gclient_addfield(sess.kills, FIELD_INT, 0),
-	_et_gclient_addfield(sess.medals, FIELD_INT_ARRAY, 0),
-	_et_gclient_addfieldalias(sess.muted, sess.auto_unmute_time, FIELD_INT, 0),
-	_et_gclient_addfield(sess.rank, FIELD_INT, 0),
-	_et_gclient_addfield(sess.referee, FIELD_INT, 0),
-	_et_gclient_addfield(sess.rounds, FIELD_INT, 0),
-	// missing sess.semiadmin
-	_et_gclient_addfield(sess.skill, FIELD_INT_ARRAY, 0),
-	_et_gclient_addfield(sess.spec_invite, FIELD_INT, 0),
-	_et_gclient_addfield(sess.spec_team, FIELD_INT, 0),
-	_et_gclient_addfield(sess.suicides, FIELD_INT, 0),
-	_et_gclient_addfieldalias(sess.team_damage, sess.team_damage_given, FIELD_INT, 0),
-	_et_gclient_addfield(sess.team_kills, FIELD_INT, 0),
-	_et_gclient_addfieldalias(sess.team_received, sess.team_damage_received, FIELD_INT, 0),
-	// TODO: sess.aWeaponStats
-	//_et_gclient_addfield(sess.aWeaponStats, FIELD_?_ARRAY, 0),
 	_et_gentity_addfield(spawnflags, FIELD_INT, FIELD_FLAG_READONLY),
 	_et_gentity_addfield(spawnitem, FIELD_STRING, FIELD_FLAG_READONLY),
 	_et_gentity_addfield(speed, FIELD_INT, 0),
@@ -671,26 +686,30 @@ static const gentity_field_t gentity_fields[] = {
 	_et_gentity_addfield(wait, FIELD_FLOAT, 0),
 	_et_gentity_addfield(waterlevel, FIELD_INT, FIELD_FLAG_READONLY),
 	_et_gentity_addfield(watertype, FIELD_INT, FIELD_FLAG_READONLY),
-
-	// new ETPub fields
-	_et_gclient_addfield(sess.guid, FIELD_STRING, FIELD_FLAG_NOPTR + FIELD_FLAG_READONLY),
-	_et_gclient_addfield(sess.ip, FIELD_STRING, FIELD_FLAG_NOPTR + FIELD_FLAG_READONLY),
-	_et_gclient_addfield(sess.ignoreClients, FIELD_INT_ARRAY, 0),
-	_et_gclient_addfield(sess.skillpoints, FIELD_FLOAT_ARRAY, FIELD_FLAG_READONLY),
 	
 	{ NULL },
 };
 
 // gentity fields helper functions
-gentity_field_t *_et_gentity_getfield(char *fieldname)
+gentity_field_t *_et_gentity_getfield(gentity_t *ent, char *fieldname)
 {
 	int i;
+
+	// search through client fields first
+	if ( ent->client != NULL ) {
+		for( i = 0; gclient_fields[i].name; i++ ) {
+			if( Q_stricmp(fieldname, gclient_fields[i].name) == 0 ) {
+				return (gentity_field_t *)&gclient_fields[i];
+			}
+		}
+	}
 	
 	for( i = 0; gentity_fields[i].name; i++ ) {
 		if( Q_stricmp(fieldname, gentity_fields[i].name) == 0 ) {
 			return (gentity_field_t *)&gentity_fields[i];
 		}
 	}
+
 	return 0;
 }
 
@@ -823,7 +842,7 @@ int _et_gentity_get(lua_State *L)
 {
 	gentity_t *ent = g_entities + luaL_checkint(L, 1);
 	const char *fieldname = luaL_checkstring(L, 2);
-	gentity_field_t *field = _et_gentity_getfield((char *)fieldname);
+	gentity_field_t *field = _et_gentity_getfield(ent, (char *)fieldname);
 	unsigned long addr;
 
 	// break on invalid gentity field
@@ -884,7 +903,7 @@ static int _et_gentity_set(lua_State *L)
 {
 	gentity_t *ent = g_entities + luaL_checkint(L, 1);
 	const char *fieldname = luaL_checkstring(L, 2);
-	gentity_field_t *field = _et_gentity_getfield((char *)fieldname);
+	gentity_field_t *field = _et_gentity_getfield(ent, (char *)fieldname);
 	unsigned long addr;
 	const char *buffer;
 	

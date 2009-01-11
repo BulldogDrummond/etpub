@@ -20,8 +20,8 @@
 #define FIELD_TRAJECTORY	6
 #define FIELD_FLOAT_ARRAY	7
 
-#define FIELD_FLAG_GENTITY	1 // gentity field
-#define FIELD_FLAG_GCLIENT	2 // gclient field
+#define FIELD_FLAG_GENTITY	1 // marks a gentity_s field
+#define FIELD_FLAG_GCLIENT	2 // marks a gclient_s field
 #define FIELD_FLAG_NOPTR	4
 #define FIELD_FLAG_READONLY	8 // read-only access
 
