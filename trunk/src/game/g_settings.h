@@ -5,6 +5,7 @@
 #define MAX_KS_ENDS 32
 #define MAX_MULTIKILLS 16
 #define MAX_BANNERS 32
+#define MAX_REVIVESPREES 8
 
 typedef struct {
 	int number;
@@ -54,12 +55,21 @@ typedef struct {
 	char position[8];
 } g_banner_t;
 
+typedef struct {
+	int number;
+	char message[MAX_STRING_CHARS];
+	char position[8];
+	char display[7];
+	char sound[MAX_STRING_CHARS];
+	char play[7];
+} g_reviveSpree_t;
 
 void G_settings_readconfig();
 void G_check_killing_spree(gentity_t *ent, int number);
 void G_check_killing_spree_end(gentity_t *ent, gentity_t *other, int number, int start);
 void G_check_multikill(gentity_t *ent, int number);
 void G_displayBanner(int loop);
+void G_check_revive_spree(gentity_t *ent, int number);
 int G_highest_multikill(gentity_t *ent);
 
 #endif /* ifndef _G_SETTINGS_H */

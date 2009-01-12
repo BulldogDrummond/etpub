@@ -2000,7 +2000,8 @@
 * stephan: changed g_spoofOptions again. Some of the old flags are not optional
            anymore. This prevents the innocent guidspoofkick many people were
            experiencing. Furthermore an empty IP field is not allowed anymore.
-           Default value set to 3* pheno:   fixed xpsave [serverstat] parse error on distance_variance
+           Default value set to 3
+* pheno:   fixed xpsave [serverstat] parse error on distance_variance
 * pheno:   added et.ClientIsFlooding() library call to Lua API. This function
            only checks for flooding, necessary fields are not updated!
 * pheno:   made more Lua API additions
@@ -2027,3 +2028,4 @@
            at the time of client initial connect
 * pheno:   Lua API: fixed a bug that causes an server crash on error output
            within et_Print() callback
+* flms:    added [revive] spree blocks

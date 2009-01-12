@@ -4,6 +4,7 @@ g_killingSpree_t *g_killingSprees[MAX_KILLSPREES];
 g_ks_end_t *g_ks_ends[MAX_KS_ENDS];
 g_multiKill_t *g_multiKills[MAX_MULTIKILLS];
 g_banner_t *g_banners[MAX_BANNERS];
+g_reviveSpree_t *g_reviveSprees[MAX_REVIVESPREES];
 
 void G_settings_readconfig() 
 {
@@ -11,10 +12,12 @@ void G_settings_readconfig()
 	g_ks_end_t *e = g_ks_ends[0];
 	g_multiKill_t *k = g_multiKills[0];
 	g_banner_t *b = g_banners[0];
+	g_reviveSpree_t *r = g_reviveSprees[0];
 	int sc = 0;
 	int ec = 0;
 	int kc = 0;
 	int bc = 0;
+	int rc = 0;
 	fileHandle_t f;
 	int len;
 	char *cnf, *cnf2;
@@ -23,6 +26,7 @@ void G_settings_readconfig()
 	qboolean end_open;
 	qboolean kill_open;
 	qboolean banner_open;
+	qboolean revive_open;
 	int i = 0;
 
 	for(i=0; g_killingSprees[i]; i++) {
@@ -40,6 +44,10 @@ void G_settings_readconfig()
 	for(i=0; g_banners[i]; i++) {
 		free(g_banners[i]);
 		g_banners[i] = NULL;
+	}
+	for(i=0; g_reviveSprees[i]; i++) {
+		free(g_reviveSprees[i]);
+		g_reviveSprees[i] = NULL;
 	}
 
 	if(!g_settings.string[0]){
@@ -63,12 +71,14 @@ void G_settings_readconfig()
 	end_open = qfalse;
 	kill_open = qfalse;
 	banner_open = qfalse;
+	revive_open = qfalse;
 
 	while(*t) {
 		if(!Q_stricmp(t, "[spree]") ||
 			!Q_stricmp(t, "[end]") ||
 			!Q_stricmp(t, "[kill]") ||
-			!Q_stricmp(t, "[banner]")) {
+			!Q_stricmp(t, "[banner]") ||
+			!Q_stricmp(t, "[revive]")) {
 			
 			if(spree_open){
 				g_killingSprees[sc++] = s;
@@ -86,10 +96,15 @@ void G_settings_readconfig()
 				g_banners[bc++] = b;
 			}
 
+			if(revive_open){
+				g_reviveSprees[rc++] = r;
+			}
+
 			spree_open = qfalse;
 			end_open = qfalse;
 			kill_open = qfalse;
 			banner_open = qfalse;
+			revive_open = qfalse;
 		}
 
 		if(spree_open) {
@@ -256,6 +271,35 @@ void G_settings_readconfig()
 					t, 
 					COM_GetCurrentParseLine());
 			}
+		}else if(revive_open) {
+			if(!Q_stricmp(t, "number")) {
+				G_shrubbot_readconfig_int(&cnf,&r->number);
+			}
+			else if(!Q_stricmp(t, "message")) {
+				G_shrubbot_readconfig_string(&cnf,
+					r->message, sizeof(r->message));
+			}
+			else if(!Q_stricmp(t, "position")) {
+				G_shrubbot_readconfig_string(&cnf,
+					r->position, sizeof(r->position));
+			}
+			else if(!Q_stricmp(t, "display")) {
+				G_shrubbot_readconfig_string(&cnf,
+					r->display, sizeof(r->display));
+			}
+			else if(!Q_stricmp(t, "sound")) {
+				G_shrubbot_readconfig_string(&cnf,
+					r->sound, sizeof(r->sound));
+			}
+			else if(!Q_stricmp(t, "play")) {
+				G_shrubbot_readconfig_string(&cnf,
+					r->play, sizeof(r->play));
+			} else {
+				G_Printf("settings: [revive] parse error near "
+					"%s on line %d\n",
+					t,
+					COM_GetCurrentParseLine());
+			}
 		}
 
 		if(!Q_stricmp(t, "[spree]")) {
@@ -326,6 +370,20 @@ void G_settings_readconfig()
 			b->position[0] = '\0';
 			banner_open = qtrue;
 		}
+		if(!Q_stricmp(t, "[revive]")) {
+			if(rc >= MAX_REVIVESPREES) {
+				G_Printf("settings: error MAX_REVIVESPREES exceeded");
+				return;
+			}
+			r = malloc(sizeof(g_reviveSpree_t));
+			r->number = 0;
+			r->message[0] = '\0';
+			r->display[0] = '\0';
+			r->position[0] = '\0';
+			r->sound[0] = '\0';
+			r->play[0] = '\0';
+			revive_open = qtrue;
+		}
 		t = COM_Parse(&cnf);
 	}
 	if(spree_open){
@@ -336,12 +394,14 @@ void G_settings_readconfig()
 		g_multiKills[kc++] = k;
 	}else if(banner_open){
 		g_banners[bc++] = b;
+	}else if(revive_open){
+		g_reviveSprees[rc++] = r;
 	}
 
 	free(cnf2);
 
-	G_Printf("settings: loaded %d sprees, %d ends, %d kills and %d banners\n"
-		, sc, ec, kc, bc);
+	G_Printf("settings: loaded %d sprees, %d ends, %d kills, %d banners and %d revive sprees\n"
+		, sc, ec, kc, bc, rc);
 }
 
 // Dens: moved from g_combat.c
@@ -864,6 +924,85 @@ void G_displayBanner(int loop)
 	}else{
 		// Dens: bad config, show next banner in 10 secs
 		level.nextBannerTime = (level.time + 10000);
+	}
+	return;
+}
+
+void G_check_revive_spree(gentity_t *ent, int number)
+{
+	int i;
+	gentity_t *tent;
+	char name[MAX_NAME_LENGTH] = {"*unknown*"};
+	char *output;
+
+	for(i=0; g_reviveSprees[i]; i++) {
+		if(!g_reviveSprees[i]->number) {
+		 	continue;
+		}
+
+		if(g_reviveSprees[i]->number == number) {
+			if(g_reviveSprees[i]->message[0]) {
+				Q_strncpyz(name,
+					G_KillSpreeSanitize(ent->client->pers.netname),
+					sizeof(name));
+				output = Q_StrReplace(g_reviveSprees[i]->message, "[n]", name);
+
+				if(g_reviveSprees[i]->display[0] && !Q_stricmp(g_reviveSprees[i]->display,"player")){
+					if(g_reviveSprees[i]->position[0]){
+
+						if(!Q_stricmp(g_reviveSprees[i]->position,"center")
+							|| !Q_stricmp(g_reviveSprees[i]->position,"cp")){
+							CP(va("cp \"%s\"",output));
+						}else if(!Q_stricmp(g_reviveSprees[i]->position,"popup")
+							|| !Q_stricmp(g_reviveSprees[i]->position,"cpm")){
+							CP(va("cpm \"%s\"",output));
+						}else if(!Q_stricmp(g_reviveSprees[i]->position,"banner")
+							|| !Q_stricmp(g_reviveSprees[i]->position,"bp")){
+							CP(va("bp \"%s\"",output));
+						}else if(!Q_stricmp(g_reviveSprees[i]->position,"console")
+							|| !Q_stricmp(g_reviveSprees[i]->position,"print")){
+							CP(va("print \"%s\n\"", output));
+						}else{
+							CP(va("chat \"%s\"",output));
+						}
+					}else{
+						CP(va("chat \"%s\"",output));
+					}
+				}else{
+					if(g_reviveSprees[i]->position[0]){
+
+						if(!Q_stricmp(g_reviveSprees[i]->position,"center")
+							|| !Q_stricmp(g_reviveSprees[i]->position,"cp")){
+							AP(va("cp \"%s\"",output));
+						}else if(!Q_stricmp(g_reviveSprees[i]->position,"popup")
+							|| !Q_stricmp(g_reviveSprees[i]->position,"cpm")){
+							AP(va("cpm \"%s\"",output));
+						}else if(!Q_stricmp(g_reviveSprees[i]->position,"banner")
+							|| !Q_stricmp(g_reviveSprees[i]->position,"bp")){
+							AP(va("bp \"%s\"",output));
+						}else if(!Q_stricmp(g_reviveSprees[i]->position,"console")
+							|| !Q_stricmp(g_reviveSprees[i]->position,"print")){
+							AP(va("print \"%s\n\"", output));
+						}else{
+							AP(va("chat \"%s\"",output));
+						}
+					}else{
+						AP(va("chat \"%s\"",output));
+					}
+				}
+			}
+			if(g_reviveSprees[i]->sound[0]){
+				if(g_reviveSprees[i]->play[0] && !Q_stricmp(g_reviveSprees[i]->play,"envi")){
+					G_AddEvent(ent, EV_GENERAL_SOUND,G_SoundIndex(va("%s",g_reviveSprees[i]->sound)));
+				}else if(g_reviveSprees[i]->play[0] && !Q_stricmp(g_reviveSprees[i]->play,"player")){
+					tent = G_TempEntity(ent->r.currentOrigin,EV_GLOBAL_CLIENT_SOUND);
+					tent->s.teamNum = (ent->client - level.clients);
+					tent->s.eventParm = G_SoundIndex(va("%s",g_reviveSprees[i]->sound));
+				}else{
+					G_globalSound(g_reviveSprees[i]->sound);
+				}
+			}
+		}
 	}
 	return;
 }

@@ -369,6 +369,9 @@ void G_KillSpree(gentity_t *ent, gentity_t *attacker)
 	// death spree
 	ent->client->sess.kstreak = 0;
 	ent->client->sess.dstreak++;
+	
+	// end revive spree (doesnt matter if revive sprees are disabled)
+	ent->client->sess.rstreak = 0;
 
 	if(g_spreeOptions.integer & SPREE_SHOW_SPREES){
 		G_check_killing_spree(ent, (-1 * ent->client->sess.dstreak));

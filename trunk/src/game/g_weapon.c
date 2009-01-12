@@ -536,6 +536,11 @@ qboolean ReviveEntity(gentity_t *ent, gentity_t *traceEnt)
 
 	ClientSpawn(traceEnt, qtrue, qfalse, qtrue);
 
+	if(g_spreeOptions.integer & SPREE_SHOW_REVIVES) {
+		ent->client->sess.rstreak++;
+		G_check_revive_spree(ent, ent->client->sess.rstreak);
+	}
+
 	Bot_Event_Revived(traceEnt-g_entities, ent);
 
 	traceEnt->client->ps.stats[STAT_PLAYER_CLASS] = traceEnt->client->sess.playerType;
@@ -5223,7 +5228,7 @@ void G_throwKnife( gentity_t *ent )
 		//dead players
 		ent->client->ps.pm_flags & PMF_LIMBO ||
 		ent->client->ps.pm_type == PM_DEAD ||
-		//ìn a tank/on a MG
+		//ï¿½n a tank/on a MG
 		BG_PlayerMounted(ent->client->ps.eFlags) ||
 		//leaning
 		ent->client->ps.leanf ||

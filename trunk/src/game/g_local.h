@@ -674,6 +674,8 @@ typedef struct {
 	// Perro - Killing Streaks, death streaks
 	int				kstreak;
 	int				dstreak;
+	//flms - revive streak
+	int				rstreak;
 	// Perro - damage-based XP
 	int				XPdmg;
 
@@ -3598,6 +3600,7 @@ void G_IntermissionVoteTally( gentity_t *ent );
 #define SPREE_NO_BOTS 256 // Don't count killing bots for a spree/multikill
 #define SPREE_SHOW_RECORD_INTERMISSION 512 // Show the map and overal spree record in intermission
 #define SPREE_SAVE_RECORD_RESTART 1024 // Also store the record at the places defined by
+#define SPREE_SHOW_REVIVES 2048 //
 // XPSF_STORE_AT_RESTART. This results in extra serverload at that times when this flag is disabled
 
 // Dens: g_spoofOptions
