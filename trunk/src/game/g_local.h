@@ -674,8 +674,6 @@ typedef struct {
 	// Perro - Killing Streaks, death streaks
 	int				kstreak;
 	int				dstreak;
-	//flms - revive streak
-	int				rstreak;
 	// Perro - damage-based XP
 	int				XPdmg;
 
@@ -729,6 +727,8 @@ typedef struct {
 	// quad - ettv and shoutcaster
 	int shoutcaster;
 	int ettv;
+	//flms - revive streak
+	int				rstreak;
 } clientSession_t;
 
 //
