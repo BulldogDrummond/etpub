@@ -1662,7 +1662,7 @@ void unescape_string(char * string) {
     if ((int) strlen(string) < 3 || !strchr(string, '='))
         return;
     for (s = t = string; *s; s++) {
-        if (*s == '=' && strchr(hex,*(s + 1)) && strchr(hex,*(s + 2))) {
+        if (*s == '=' && strchr(hex + 2,*(s + 1)) && strchr(hex,*(s + 2))) {
             code[0] = *(++s);
             code[1] = *(++s);
             *t++ = (char) strtol(code, NULL, 16);
