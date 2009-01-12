@@ -1654,6 +1654,7 @@ char * escape_string(const char * string) {
 //grabed from squid
 void unescape_string(char * string) {
 
+	const char *hex = "0123456789ABCDEF";
     static char code[] = "00";
     char *s = NULL;
     char *t = NULL;
@@ -1661,7 +1662,7 @@ void unescape_string(char * string) {
     if ((int) strlen(string) < 3 || !strchr(string, '='))
         return;
     for (s = t = string; *s; s++) {
-        if (*s == '=' && *(s + 1) && *(s + 2)) {
+        if (*s == '=' && strchr(hex,*(s + 1)) && strchr(hex,*(s + 2))) {
             code[0] = *(++s);
             code[1] = *(++s);
             *t++ = (char) strtol(code, NULL, 16);
