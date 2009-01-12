@@ -3725,7 +3725,9 @@ qboolean Cmd_CallVote_f( gentity_t *ent, unsigned int dwCommand, qboolean fRefCo
 	trap_Argv( 1, arg1, sizeof( arg1 ) );
 	trap_Argv( 2, arg2, sizeof( arg2 ) );
 
-	if(strchr( arg1, ';' ) || strchr( arg2, ';' ) ) {
+	if(strchr( arg1, ';' ) || strchr( arg2, ';' ) || 
+		strchr( arg1, '\r' ) || strchr( arg2, '\r' ) ||
+		strchr( arg1, '\n' ) || strchr( arg2, '\n' ) ) {
 		char *strCmdBase = (!fRefCommand) ? "vote" : "ref command";
 
 		G_refPrintf(ent, "Invalid %s string.", strCmdBase);

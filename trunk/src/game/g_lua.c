@@ -1239,9 +1239,11 @@ qboolean G_LuaStartVM(lua_vm_t* vm)
 
 	lua_getglobal(vm->L, LUA_LOADLIBNAME);
 	if ( lua_istable(vm->L, -1) ) {
-		lua_pushstring(vm->L, va("%s%s%s%s?.lua", homepath, LUA_DIRSEP, gamepath, LUA_DIRSEP));
+		lua_pushstring(vm->L, va("%s%s%s%s?.lua;%s%s%s%slualib%slua%s?.lua", homepath, LUA_DIRSEP, gamepath, LUA_DIRSEP,
+			homepath, LUA_DIRSEP, gamepath, LUA_DIRSEP, LUA_DIRSEP, LUA_DIRSEP));
 		lua_setfield(vm->L, -2, "path");
-		lua_pushstring(vm->L, va("%s%s%s%s?.%s", homepath, LUA_DIRSEP, gamepath, LUA_DIRSEP, EXTENSION));
+		lua_pushstring(vm->L, va("%s%s%s%s?.%s;%s%s%s%slualib%sclibs%s?.%s", homepath, LUA_DIRSEP, gamepath, LUA_DIRSEP, EXTENSION,
+			homepath, LUA_DIRSEP, gamepath, LUA_DIRSEP, LUA_DIRSEP, LUA_DIRSEP, EXTENSION));
 		lua_setfield(vm->L, -2, "cpath");
 	}
 	lua_pop(vm->L, 1);
