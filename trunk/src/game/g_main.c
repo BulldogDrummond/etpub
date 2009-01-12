@@ -1170,6 +1170,27 @@ int vmMain( int command, int arg0, int arg1, int arg2, int arg3, int arg4, int a
 	case GAME_INIT:
 		EnableStackTrace();
 		//G_InitThreads();
+#if defined(__linux__)
+		// quad: on Linux, fix the environment so ld
+		// can find qagame.mp.i386.so for lua purposes
+		{
+			char *crtPath;
+			char addPath[32000];
+			char newPath[MAX_STRING_CHARS];
+			char home[MAX_STRING_CHARS];
+			char game[MAX_STRING_CHARS];
+			crtPath = getenv("LD_LIBRARY_PATH");
+			trap_Cvar_VariableStringBuffer( "fs_homepath", home, sizeof( home ) );
+			trap_Cvar_VariableStringBuffer( "fs_game", game, sizeof( game ) );
+			Q_strncpyz(newPath, va("%s/%s", home, game), sizeof(newPath));
+			if (crtPath == NULL) {
+				setenv("LD_LIBRARY_PATH", newPath, 0);
+			} else if (strstr(crtPath, newPath) == NULL) {
+				Q_strncpyz(addPath, va("%s:%s", crtPath, newPath));
+				setenv("LD_LIBRARY_PATH", addPath, 1);
+			}
+		}
+#endif
 		Bot_Interface_InitHandles();
 		G_InitGame( arg0, arg1, arg2 );
 		if (!Bot_Interface_Init())
