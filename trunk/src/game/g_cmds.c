@@ -3172,7 +3172,7 @@ void G_SayTo( gentity_t *ent, gentity_t *other, int mode, int color, const char 
 		trap_SendServerCommand(other-g_entities,
 			va("%s \"%s%c%c%s%s\" %i %i",
 			cmd, name, Q_COLOR_ESCAPE, color,
-			escape_string(message), //mcwf
+			other->client->pers.etpubc >= 20090112 ? escape_string(message) : message, //mcwf
 			(!Q_stricmp(cmd, "print")) ? "\n" : "",
 			ent-g_entities, localize));
 
