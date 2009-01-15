@@ -5,7 +5,7 @@
 #define WINDOW_X		16
 #define WINDOW_Y		16
 #define WINDOW_WIDTH	400
-#define WINDOW_HEIGHT	240
+#define WINDOW_HEIGHT	280
 #define GROUP_NAME		"grpOptionsCustomiseConfig"
 
 // Macros //
@@ -52,6 +52,10 @@ menuDef {
 	BIND( 8, 176, (SUBWINDOW_WIDTH)-4, 10, "Classmenu:", .2, 8, "classmenu", "" )
 	BIND( 8, 188, (SUBWINDOW_WIDTH)-4, 10, "Teammenu:", .2, 8, "teammenu", "" )
 	BIND( 8, 200, (SUBWINDOW_WIDTH)-4, 10, "Spawnmenu:", .2, 8, "spawnmenu", "" )
+	
+// Sounds //
+	SUBWINDOW( 6, 216, (SUBWINDOW_WIDTH), 28, "SOUNDS" )
+	YESNO( 8, 232, (SUBWINDOW_WIDTH)-4, 10, "Hit sounds:", .2, 8, "cg_hitSounds", "Controls whether a sound is played when successfully shooting another player" )
 
 // Buttons //
 	BUTTON( 6, WINDOW_HEIGHT-24, WINDOW_WIDTH-12, 18, "BACK", .3, 14, close etpub_customize_config; open etpub )
