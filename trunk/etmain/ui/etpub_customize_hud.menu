@@ -49,7 +49,7 @@ menuDef {
 	YESNO( 8, 96, (SUBWINDOW_WIDTH)-4, 10, "Scale Gun:", .2, 8, "cg_gun_fovscale", "Scale the gun when using differten FOV settings" )
 	MULTI( 8, 108, (SUBWINDOW_WIDTH)-4, 10, "Draw Crosshair Ranks:", .2, 8, "cg_drawRanks", cvarFloatList { "No" 0 "Yes, Full Rank" 1 "Yes, Short Rank" 2}, "Draw Ranks when aiming on a player of your team" )
 	MULTI( 8, 120, (SUBWINDOW_WIDTH)-4, 10, "Draw Class Icons:", .2, 8, "cg_drawClassIcons", cvarFloatList { "No (Draw Text)" 0 "Crosshair" 1 "FireTeam" 2 "Crsshr + FT" 3 "ScoreBoard" 4 "Crsshr + SB" 5 "FT + SB" 6 "Crsshr + FT + SB" 7}, "Draw ClassIcons instead of text" )
-	MULTI( 8, 132, (SUBWINDOW_WIDTH)-4, 10, "Draw Country Flags:", .2, 8, "cg_countryFlags", cvarFloatList { "No" 0 "Scoreboard" 1 "Crosshair" 2 "SB + Crsshr" 3}, "Draw country flags" )
+	MULTI( 8, 132, (SUBWINDOW_WIDTH)-4, 10, "Draw Country Flags:", .2, 8, "cg_countryFlags", cvarFloatList { "No" 0 "Scoreboard" 1 "Crosshair" 2 "SB + Crsshr" 3}, "Draw country flags (Requires server side enabling)" )
 	MULTI( 8, 144, (SUBWINDOW_WIDTH)-4, 10, "Draw Crosshair HP:", .2, 8, "cg_drawCrosshairHP", cvarFloatList { "No (Draw Healthbar)" 0 "Yes" 1}, "Draw HP instead of healthbar" )
 	BUTTON( 8+.5*((SUBWINDOW_WIDTH)-196), 156, 196, 10, "Drag & Drop Hud Editor", .2, 8, close etpub_customize_hud ; exec "hudeditor" )
 	
