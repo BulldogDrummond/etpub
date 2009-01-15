@@ -2597,6 +2597,9 @@ extern vmCvar_t			cg_locations;
 #define	CLASSICON_FIRETEAM 2
 #define CLASSICON_SCOREBOARD 4
 
+#define COUNTRYFLAG_SCOREBOARD 1
+#define COUNTRYFLAG_CROSSHAIR 2
+
 //
 // cg_main.c
 //

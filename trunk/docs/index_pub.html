@@ -186,12 +186,16 @@ counter</p>
 <p>Default: 1</p>
 </dd>
 
-<dt>cg_countryFlags [0|1]</dt>
+<dt>cg_countryFlags [bitmask]</dt>
 <dd>
-<p>If enabled by the server players will see the GeoIP country flags in the
-crosshair when aiming at someone and in the scoreboard.</p>
-<p>Note: If the country flag is displayed in the crosshair you won't see the class icon.
-<p>Default: 1</p>
+<p>Show the GeoIP country flags</p>
+	<dl>
+	<dt>1
+	<dd>On scoreboard
+	<dt>2
+	<dd>In crosshair names
+	</dl>
+<p>Default: 3</p>
 </dd>
 
 <dt>cg_gibs [0|1]</dt>

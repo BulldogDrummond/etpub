@@ -319,7 +319,7 @@ static void WM_DrawClientScore( int x, int y, score_t *score, float *color, floa
 
         //mcwf GeoIP
         // draw flag before name
-        if ((score->ping != -1) && (score->ping != 999) && (cg_countryFlags.integer)) {
+        if ((score->ping != -1) && (score->ping != 999) && (cg_countryFlags.integer & COUNTRYFLAG_SCOREBOARD)) {
                 if(cf_draw(tempx-11, y-8, fade, ci->clientNum)) {
                         offset += 14;
                         tempx += 14;
@@ -553,7 +553,7 @@ static void WM_DrawClientScore_Small( int x, int y, score_t *score, float *color
 
         //mcwf GeoIP
         // draw flag before name
-        if ((score->ping != -1) && (score->ping != 999) && (cg_countryFlags.integer)) {
+        if ((score->ping != -1) && (score->ping != 999) && (cg_countryFlags.integer & COUNTRYFLAG_SCOREBOARD)) {
                 if(cf_draw(tempx-11, y-10, fade, ci->clientNum)) {
                         offset += 14;
                         tempx += 14;

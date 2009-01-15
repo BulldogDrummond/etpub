@@ -2766,20 +2766,24 @@ static void CG_DrawCrosshairNames( void ) {
 		// pheno: draw class icons or GeoIP country flags
 		//        when aiming on someone. Depends on server
 		//        and client settings.
-		if ( !cg_countryFlags.integer ||
-			 !cf_draw(320 - (CG_DrawStrlen(s) * SMALLCHAR_WIDTH) / 2 - 3.5 * SMALLCHAR_WIDTH,
-				163.5, color[3], cg.crosshairClientNum) ) {
-			if(cg_drawClassIcons.integer & CLASSICON_CROSSHAIR){
-				// Dens: 4 is for the space between the icon and the text
-				w = CG_DrawStrlen( s ) * SMALLCHAR_WIDTH + 4 + SMALLCHAR_HEIGHT;
-				trap_R_SetColor( color );
-				CG_DrawPic(320 - w/2, 170, SMALLCHAR_HEIGHT, SMALLCHAR_HEIGHT,
-					cgs.media.skillPics[BG_ClassSkillForClass( cg_entities[ cg.crosshairClientNum ].currentState.teamNum )] );
-				trap_R_SetColor( NULL );
-				w -= 2*(4+SMALLCHAR_HEIGHT);
+		if(cg_drawClassIcons.integer & CLASSICON_CROSSHAIR){
+			// Dens: 4 is for the space between the icon and the text
+			w = CG_DrawStrlen( s ) * SMALLCHAR_WIDTH + 4 + SMALLCHAR_HEIGHT;
+			if(cg_countryFlags.integer & COUNTRYFLAG_CROSSHAIR
+				&& cf_draw(320 - (w + 3*SMALLCHAR_WIDTH + 4) / 2, 164, color[3], cg.crosshairClientNum)) {
+				w-= 3*SMALLCHAR_WIDTH + 4;
 			}
+			trap_R_SetColor( color );
+			CG_DrawPic(320 - w/2, 170, SMALLCHAR_HEIGHT, SMALLCHAR_HEIGHT,
+				cgs.media.skillPics[BG_ClassSkillForClass( cg_entities[ cg.crosshairClientNum ].currentState.teamNum )] );
+			trap_R_SetColor( NULL );
+			w -= 2*(4+SMALLCHAR_HEIGHT);
 		}else{
 			w = CG_DrawStrlen( s ) * SMALLCHAR_WIDTH;
+			if(cg_countryFlags.integer & COUNTRYFLAG_CROSSHAIR
+				&& cf_draw(320 - (w + 3*SMALLCHAR_WIDTH + 4) / 2, 164, color[3], cg.crosshairClientNum)) {
+				w-= 3*SMALLCHAR_WIDTH + 4;
+			}
 		}
 
 		// draw the name and class
