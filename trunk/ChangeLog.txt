@@ -2029,3 +2029,4 @@
 * pheno:   Lua API: fixed a bug that causes an server crash on error output
            within et_Print() callback
 * flms:    added [revive] spree blocks
+* flms:    fixed g_noSkillUpgrades

@@ -137,6 +137,8 @@ void G_SetPlayerScore( gclient_t *client ) {
 
 void G_SetPlayerSkill( gclient_t *client, skillType_t skill ) {
 	int i;
+	if (g_noSkillUpgrades.integer)
+		return;
 
 	// Lua API callbacks
 	if (G_LuaHook_SetPlayerSkill( client - level.clients, skill ) ) {
@@ -160,8 +162,6 @@ extern qboolean AddWeaponToPlayer( gclient_t *client, weapon_t weapon, int ammo,
 static void G_UpgradeSkill( gentity_t *ent, skillType_t skill ) {
 	int i, cnt = 0;
 	clientSession_t *ci;
-	if (g_noSkillUpgrades.integer)
-		return;
 
 	ci = &ent->client->sess;
 	// See if this is the first time we've reached this skill level
