@@ -2178,7 +2178,7 @@ evilbanigoto:
 							if(g_dyno.integer & DYNO_COUNTER)
 								trap_SendServerCommand(-1, va("dc 0 %d %d %s", traceEnt->s.number, traceEnt->s.teamNum, BG_GetLocationString(traceEnt->r.currentOrigin)));
 
-							G_Script_ScriptEvent( hit, "dynamited", "" );
+							G_Script_ScriptEvent( hit, "dynamited", (char *)BG_TeamName(ent->client->sess.sessionTeam) );
 
 							// notify omni-bot framework of planted dynamite
 							hit->numPlanted += 1;							
@@ -2261,7 +2261,7 @@ evilbanigoto:
 							if(g_dyno.integer & DYNO_COUNTER)
 								trap_SendServerCommand(-1, va("dc 0 %d %d %s", traceEnt->s.number, traceEnt->s.teamNum, BG_GetLocationString(traceEnt->r.currentOrigin)));
 
-							G_Script_ScriptEvent( hit, "dynamited", "" );
+							G_Script_ScriptEvent( hit, "dynamited", (char *)BG_TeamName(ent->client->sess.sessionTeam) );
 
 							// notify omni-bot framework of planted dynamite
 							hit->numPlanted += 1;							
@@ -2369,7 +2369,7 @@ evilbanigoto:
 									scored++;
 								}
 								if(hit->target_ent) {
-									G_Script_ScriptEvent( hit->target_ent, "defused", "" );
+									G_Script_ScriptEvent( hit->target_ent, "defused", "axis" );
 								}
 
 								{
@@ -2395,7 +2395,7 @@ evilbanigoto:
 									hit->spawnflags &= ~OBJECTIVE_DESTROYED; // "re-activate" objective since it wasn't destroyed
 								}
 								if(hit->target_ent) {
-									G_Script_ScriptEvent( hit->target_ent, "defused", "" );
+									G_Script_ScriptEvent( hit->target_ent, "defused", "allies" );
 								}
 
 								{
@@ -2461,7 +2461,7 @@ evilbanigoto:
 									G_DebugAddSkillPoints( ent, SK_EXPLOSIVES_AND_CONSTRUCTION, 6.f, "defusing enemy dynamite" );
 									scored++;
 								}
-								G_Script_ScriptEvent( hit, "defused", "" );
+								G_Script_ScriptEvent( hit, "defused", "axis" );
 
 								{
 									gentity_t* pm = G_PopupMessage( PM_DYNAMITE );
@@ -2483,7 +2483,7 @@ evilbanigoto:
 									G_DebugAddSkillPoints( ent, SK_EXPLOSIVES_AND_CONSTRUCTION, 6.f, "defusing enemy dynamite" );
 									scored++; 
 								}
-								G_Script_ScriptEvent( hit, "defused", "" );
+								G_Script_ScriptEvent( hit, "defused", "allies" );
 
 								{
 									gentity_t* pm = G_PopupMessage( PM_DYNAMITE );

@@ -3271,6 +3271,9 @@ qboolean G_ScriptAction_Announce_Icon( gentity_t *ent, char *params ) {
 		Bot_Util_SendTrigger(ent, NULL, token, "announce_icon");
 	}
 
+	// pheno: log script wm_announce_icon actions (ETPro behavior)
+	G_LogPrintf("etpub announce: \"%s\"\n", token);
+
 	return qtrue;
 }
 

@@ -822,6 +822,19 @@ void G_Script_ScriptEvent( gentity_t *ent, char *eventStr, char *params )
 	if (i>=0)
 		G_Script_ScriptChange( ent, i );
 
+	// pheno: log script trigger stolen & returned actions (ETPro behavior)
+	if ( !Q_stricmp(eventStr, "trigger") ) {
+		 if ( !Q_stricmp(params, "stolen") ) {
+			 G_LogPrintf("etpub popup: %s stole \"%s\"\n",
+				 BG_TeamName(ent->parent->client->sess.sessionTeam),
+				 ent->message);
+		 } else if ( !Q_stricmp(params, "returned") ) {
+			 G_LogPrintf("etpub popup: %s returned \"%s\"\n",
+				 BG_TeamName(ent->parent->client->sess.sessionTeam),
+				 ent->message);
+		 }
+	}
+
 	//////////////////////////////////////////////////////////////////////////
 	// skip these
 	if(!Q_stricmp(eventStr, "trigger") ||
@@ -837,12 +850,22 @@ void G_Script_ScriptEvent( gentity_t *ent, char *eventStr, char *params )
 		Bot_Util_SendTrigger(ent, NULL,
 			va("Defused at %s.", ent->parent ? ent->parent->track : ent->track), 
 			eventStr);
+
+		// pheno: log script defused actions (ETPro behavior)
+		G_LogPrintf("etpub popup: %s defused \"%s\"\n",
+			params,
+			ent->parent ? ent->parent->track : ent->track);
 	}
 	else if(!Q_stricmp(eventStr, "dynamited"))
 	{
 		Bot_Util_SendTrigger(ent, NULL,
 			va("Planted at %s.", ent->parent ? ent->parent->track : ent->track), 
 			eventStr);
+
+		// pheno: log script dynamited actions (ETPro behavior)
+		G_LogPrintf("etpub popup: %s planted \"%s\"\n",
+			params,
+			ent->parent ? ent->parent->track : ent->track);
 	}
 	else if(!Q_stricmp(eventStr, "destroyed"))
 	{
