@@ -269,7 +269,7 @@ void G_players_cmd(gentity_t *ent, unsigned int dwCommand, qboolean fValue)
 	int user_rate, user_snaps, bots = 0;
 	gclient_t *cl;
 	gentity_t *cl_ent;
-	char n2[MAX_NETNAME], ready[16], ref[16], rate[256];
+	char n2[MAX_NETNAME], ready[16], ref[16], ign[16], rate[256];
 	char *s, *tc, *coach, userinfo[MAX_INFO_STRING];
 
 
@@ -301,6 +301,7 @@ void G_players_cmd(gentity_t *ent, unsigned int dwCommand, qboolean fValue)
 		SanitizeString(cl->pers.netname, n2, qtrue);
 		n2[26] = 0;
 		ref[0] = 0;
+		ign[0] = 0;
 		ready[0] = 0;
 
 		// Rate info
@@ -329,7 +330,12 @@ void G_players_cmd(gentity_t *ent, unsigned int dwCommand, qboolean fValue)
 				strcpy(ready, ((ent) ? "NOTREADY^1 :" : "NOTREADY :"));
 		}
 
-		if(cl->sess.referee) strcpy(ref, "REF");
+		if(cl->sess.referee) strcpy(ref, "REF ");
+
+		// pheno: mark ignored clients
+		if ( COM_BitCheck(ent->client->sess.ignoreClients, idnum) ) {
+			strcpy(ign, (( ent ) ? "^8I" : "I"));
+		}
 
 		if(cl->sess.coach_team) {
 			tteam = cl->sess.coach_team;
@@ -345,8 +351,8 @@ void G_players_cmd(gentity_t *ent, unsigned int dwCommand, qboolean fValue)
 			if(tteam == TEAM_ALLIES) tc = (ent) ? "^4L^7" : "L";
 		}
 
-		if(ent) CP(va("print \"%s%s%2d%s^1:%s %-26s^7%s  ^3%s\n\"", ready, tc, idnum, coach, ((ref[0])?"^3":"^7"), n2, rate, ref));
-		else G_Printf("%s%s%2d%s: %-26s%s  %s\n", ready, tc, idnum, coach, n2, rate, ref);
+		if(ent) CP(va("print \"%s%s%2d%s^1:%s %-26s^7%s  ^3%s%s\n\"", ready, tc, idnum, coach, ((ref[0])?"^3":"^7"), n2, rate, ref, ign));
+		else G_Printf("%s%s%2d%s: %-26s%s  %s%s\n", ready, tc, idnum, coach, n2, rate, ref, ign);
 
 		cnt++;
 	}
