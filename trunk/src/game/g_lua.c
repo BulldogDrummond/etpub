@@ -578,8 +578,13 @@ static const gentity_field_t gclient_fields[] = {
 	// New to ETPub:
 	_et_gclient_addfield(sess.guid, FIELD_STRING, FIELD_FLAG_NOPTR + FIELD_FLAG_READONLY),
 	_et_gclient_addfield(sess.ip, FIELD_STRING, FIELD_FLAG_NOPTR + FIELD_FLAG_READONLY),
-	_et_gclient_addfield(sess.ignoreClients, FIELD_INT_ARRAY, 0),
+	_et_gclient_addfield(sess.ignoreClients, FIELD_INT, 0),
 	_et_gclient_addfield(sess.skillpoints, FIELD_FLOAT_ARRAY, FIELD_FLAG_READONLY),
+	_et_gclient_addfield(pers.lastkilled_client, FIELD_INT, FIELD_FLAG_READONLY),
+	_et_gclient_addfield(pers.lastrevive_client, FIELD_INT, FIELD_FLAG_READONLY),
+	_et_gclient_addfield(pers.lastkiller_client, FIELD_INT, FIELD_FLAG_READONLY),
+	_et_gclient_addfield(pers.lastammo_client, FIELD_INT, FIELD_FLAG_READONLY),
+	_et_gclient_addfield(pers.lasthealth_client, FIELD_INT, FIELD_FLAG_READONLY),
 	
 	{ NULL },
 };
