@@ -826,11 +826,11 @@ void G_Script_ScriptEvent( gentity_t *ent, char *eventStr, char *params )
 	if ( !Q_stricmp(eventStr, "trigger") ) {
 		 if ( !Q_stricmp(params, "stolen") ) {
 			 G_LogPrintf("etpub popup: %s stole \"%s\"\n",
-				 BG_TeamName(ent->parent->client->sess.sessionTeam),
+				 Q_stricmp(ent->classname, "team_CTF_redflag") ? "axis" : "allies",
 				 ent->message);
 		 } else if ( !Q_stricmp(params, "returned") ) {
 			 G_LogPrintf("etpub popup: %s returned \"%s\"\n",
-				 BG_TeamName(ent->parent->client->sess.sessionTeam),
+				 Q_stricmp(ent->classname, "team_CTF_redflag") ? "allies" : "axis",
 				 ent->message);
 		 }
 	}
