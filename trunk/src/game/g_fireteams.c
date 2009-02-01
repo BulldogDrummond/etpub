@@ -331,6 +331,8 @@ void G_RemoveClientFromFireteams( int entityNum, qboolean update, qboolean print
 		return;
 	}
 
+	Bot_Event_LeftFireTeam(entityNum);
+
 	/*if( ft->joinOrder[0] != -1 ) {
 		if( g_entities[(int)ft->joinOrder[0]].r.svFlags & SVF_BOT ) {
 			G_RemoveClientFromFireteams( ft->joinOrder[0], qfalse, qfalse );
@@ -342,8 +344,6 @@ void G_RemoveClientFromFireteams( int entityNum, qboolean update, qboolean print
 			if( ft->joinOrder[i] == -1 ) {
 				break;
 			}
-
-			Bot_Event_LeftFireTeam(ft->joinOrder[i]);
 			trap_SendServerCommand( ft->joinOrder[i], va( "cpm \"%s ^7has left the Fireteam\"\n", level.clients[entityNum].pers.netname ) );
 		}
 	}
