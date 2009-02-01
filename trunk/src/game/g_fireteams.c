@@ -331,8 +331,6 @@ void G_RemoveClientFromFireteams( int entityNum, qboolean update, qboolean print
 		return;
 	}
 
-	Bot_Event_LeftFireTeam(entityNum);
-
 	/*if( ft->joinOrder[0] != -1 ) {
 		if( g_entities[(int)ft->joinOrder[0]].r.svFlags & SVF_BOT ) {
 			G_RemoveClientFromFireteams( ft->joinOrder[0], qfalse, qfalse );
@@ -345,6 +343,7 @@ void G_RemoveClientFromFireteams( int entityNum, qboolean update, qboolean print
 				break;
 			}
 
+			Bot_Event_LeftFireTeam(ft->joinOrder[i]);
 			trap_SendServerCommand( ft->joinOrder[i], va( "cpm \"%s ^7has left the Fireteam\"\n", level.clients[entityNum].pers.netname ) );
 		}
 	}
@@ -406,6 +405,7 @@ void G_DestroyFireteam( int entityNum ) {
 
 	while( ft->joinOrder[0] != -1 ) {
 		if( ft->joinOrder[0] != entityNum ) {
+			Bot_Event_FireTeamDestroyed(ft->joinOrder[0]);
 			trap_SendServerCommand( ft->joinOrder[0], "cpm \"The Fireteam you are on has been disbanded\"\n" );
 		}
 
@@ -413,8 +413,6 @@ void G_DestroyFireteam( int entityNum ) {
 	}
 
 	G_UpdateFireteamConfigString( ft );
-
-	Bot_Event_FireTeamDestroyed(entityNum);
 }
 
 void G_WarnFireTeamPlayer( int entityNum, int otherEntityNum ) {
@@ -469,6 +467,7 @@ void G_KickFireTeamPlayer( int entityNum, int otherEntityNum ) {
 	}
 
 
+	Bot_Event_LeftFireTeam(otherEntityNum);
 	G_RemoveClientFromFireteams( otherEntityNum, qtrue, qfalse );
 
 	G_ClientPrintAndReturn( otherEntityNum, "You have been kicked from the fireteam" );
