@@ -883,76 +883,46 @@ void G_shrubbot_greeting(gentity_t *ent)
 	}
 
 	// Dens: someone who is hidden shouln't be announced
-	if(G_shrubbot_permission(ent,SBF_INCOGNITO)){
-		return;
-	}
-
-	for(i=0; g_shrubbot_admins[i]; i++){
-		if(!Q_stricmp(ent->client->sess.guid,
-			g_shrubbot_admins[i]->guid)){
-
-			if(*g_shrubbot_admins[i]->greeting){
-
-				greeting = Q_StrReplace(g_shrubbot_admins[i]->greeting,
-					"[n]", ent->client->pers.netname);
-				if (g_shrubbot_admins[i]->greeting_sound){
-						G_globalSound(g_shrubbot_admins[i]->greeting_sound);
-				}
-
-				switch(g_greetingPos.integer) {
-					case MSGPOS_CENTER:
-						AP(va("cp \"%s\"",greeting));
-						break;
-					case MSGPOS_LEFT_BANNER:
-						AP(va("cpm \"%s\"",greeting));
-						break;
-					case MSGPOS_BANNER:
-						AP(va("bp \"%s\"",greeting));
-						break;
-					case MSGPOS_CONSOLE:
-						G_Printf( "%s\n",greeting);
-						break;
-					case MSGPOS_CHAT:
-						default:
-						AP(va("chat \"%s\" -1",greeting));
-				}
-			}else{
+	// pheno: incognito players should be announced as level 0 user
+	//        otherwise get the real level number
+	if( !G_shrubbot_permission( ent, SBF_INCOGNITO ) ) {
+		for( i = 0; g_shrubbot_admins[i]; i++ ) {
+			if( !Q_stricmp( ent->client->sess.guid,
+					g_shrubbot_admins[i]->guid ) ) {
 				l = g_shrubbot_admins[i]->level;
-				for(i=0; g_shrubbot_levels[i]; i++) {
-					if(g_shrubbot_levels[i]->level == l) {
-						if(*g_shrubbot_levels[i]->greeting){
-
-							greeting = Q_StrReplace(g_shrubbot_levels[i]->greeting,
-								"[n]", ent->client->pers.netname);
-							if (g_shrubbot_levels[i]->greeting_sound){
-									G_globalSound(g_shrubbot_levels[i]->greeting_sound);
-							}
-
-							switch(g_greetingPos.integer) {
-								case MSGPOS_CENTER:
-									AP(va("cp \"%s\"",greeting));
-									break;
-								case MSGPOS_LEFT_BANNER:
-									AP(va("cpm \"%s\"",greeting));
-									break;
-								case MSGPOS_BANNER:
-									AP(va("bp \"%s\"",greeting));
-									break;
-								case MSGPOS_CONSOLE:
-									G_Printf( "%s\n",greeting);
-									break;
-								case MSGPOS_CHAT:
-									default:
-									AP(va("chat \"%s\" -1",greeting));
-							}
-						}
-						break;
-					}
-				}
+				break;
 			}
-			return;
 		}
 	}
+
+	// play the greeting sound
+	if( g_shrubbot_levels[l]->greeting_sound ) {
+		G_globalSound( g_shrubbot_levels[l]->greeting_sound );
+	}
+
+	// welcome the player
+	greeting = Q_StrReplace( g_shrubbot_levels[l]->greeting,
+		"[n]", ent->client->pers.netname );
+
+	switch( g_greetingPos.integer ) {
+		case MSGPOS_CENTER:
+			AP( va( "cp \"%s\"", greeting ) );
+			break;
+		case MSGPOS_LEFT_BANNER:
+			AP( va( "cpm \"%s\"", greeting ) );
+			break;
+		case MSGPOS_BANNER:
+			AP( va( "bp \"%s\"", greeting ) );
+			break;
+		case MSGPOS_CONSOLE:
+			G_Printf( "%s\n", greeting );
+			break;
+		case MSGPOS_CHAT:
+		default:
+			AP( va( "chat \"%s\" -1", greeting ) );
+			break;
+	}
+
 	return;
 }
 
