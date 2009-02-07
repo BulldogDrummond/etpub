@@ -2078,110 +2078,128 @@ qboolean G_IsWeaponDisabled(
 	gentity_t* ent,
 	weapon_t weapon,
 	team_t team,
-	qboolean quiet)
+	qboolean quiet )
 {
-	int count, wcount, maxCount;
+	int playerCount, weaponCount, maxCount;
 
 	// tjw: specs can have any weapon they want
-	if(team == TEAM_SPECTATOR) {
+	if( team == TEAM_SPECTATOR ) {
+		return qfalse;
+	}
+
+	// pheno: never restrict
+	if( !G_IsHeavyWeapon( weapon ) &&
+			weapon != WP_KAR98 &&
+			weapon != WP_CARBINE ) {
 		return qfalse;
 	}
 
 	// forty - Flames heavy weapons restriction fix
-	count =		G_TeamCount( ent, team, weapon );
-	wcount =	G_TeamCount( ent, team, -1 );
+	playerCount = G_TeamCount( ent, team, -1 );
+	weaponCount = G_TeamCount( ent, team, weapon );
 
-	if(G_IsHeavyWeapon(weapon)) {
-		if( count >= ceil( wcount * g_heavyWeaponRestriction.integer * 0.01f ) ) {
+	if( G_IsHeavyWeapon( weapon ) ) {
+		if( weaponCount >= ceil( playerCount *
+				g_heavyWeaponRestriction.integer * 0.01f ) ) {
+			if( !quiet && !( ent->client->ps.pm_flags & PMF_LIMBO ) ) {
+				CP( "cp \"^1*^3 HEAVY WEAPON not available!^1 *^7\" 1" );
+			}
 			return qtrue;
 		}
 	}
 
-	switch(weapon) {
-	case WP_PANZERFAUST:
-		if( team_maxPanzers.integer == -1 ) break;
-		maxCount = team_maxPanzers.integer;
-		if( strstr(team_maxPanzers.string,"%-") > 0 ) {
-			maxCount = floor(team_maxPanzers.integer 
-					* wcount * 0.01f);
-		} else if( strstr(team_maxPanzers.string,"%") > 0 ) {
-			maxCount = ceil(team_maxPanzers.integer 
-					* wcount * 0.01f);
-		}
-		if( count >= maxCount ) {
-			if(!quiet)
-				CP("cp \"^1PANZERFAUST not available^7\" 1");
-			return qtrue;
-		}
-		break;
-	case WP_MOBILE_MG42:
-		if( team_maxMG42s.integer == -1 ) break;
-		maxCount = team_maxMG42s.integer;
-		if( strstr(team_maxMG42s.string,"%-") > 0) {
-			maxCount = floor(team_maxMG42s.integer 
-					* wcount * 0.01f);
-		} else if( strstr(team_maxMG42s.string,"%") > 0) {
-			maxCount = ceil(team_maxMG42s.integer 
-					* wcount * 0.01f);
-		}
-		if( count >= maxCount ) {
-			if(!quiet)
-				CP("cp \"^1MG42 not available^7\" 1");
-			return qtrue;
-		}
-		break;
-	case WP_FLAMETHROWER:
-		if( team_maxFlamers.integer == -1 ) break;
-		maxCount = team_maxFlamers.integer;
-		if( strstr(team_maxFlamers.string,"%-") > 0) {
-			maxCount = floor(team_maxFlamers.integer 
-					* wcount * 0.01f);
-		} else if( strstr(team_maxFlamers.string,"%") > 0) {
-			maxCount = ceil(team_maxFlamers.integer 
-					* wcount * 0.01f);
-		}
-		if( count >= maxCount ) {
-			if(!quiet)
-				CP("cp \"^1FLAMETHROWER not available^7\" 1");
-			return qtrue;
-		}
-		break;
-	case WP_MORTAR:
-		if( team_maxMortars.integer == -1 ) break;
-		maxCount = team_maxMortars.integer;
-		if( strstr(team_maxMortars.string,"%-") > 0) {
-			maxCount = floor(team_maxMortars.integer 
-					* wcount * 0.01f);
-		} else if( strstr(team_maxMortars.string,"%") > 0) {
-			maxCount = ceil(team_maxMortars.integer 
-					* wcount * 0.01f);
-		}
-		if( count >= maxCount ) {
-			if(!quiet)
-				CP("cp \"^1MORTAR not available^7\" 1");
-			return qtrue;
-		}
-		break;
-	// case WP_GPG40: - forty - needs to be WP_KAR98
-	case WP_KAR98:
-	case WP_CARBINE:
-		if( team_maxGrenLaunchers.integer == -1 ) break;
-		maxCount = team_maxGrenLaunchers.integer;
-		if( strstr(team_maxGrenLaunchers.string,"%-") > 0) {
-			maxCount = floor(team_maxGrenLaunchers.integer 
-					* wcount * 0.01f);
-		} else if( strstr(team_maxGrenLaunchers.string,"%") > 0) {
-			maxCount = ceil(team_maxGrenLaunchers.integer 
-					* wcount * 0.01f);
-		}
-		if( count >= maxCount ) {
-			if(!quiet)
-				CP("cp \"^1GRENADE LAUNCHER not available^7\" 1");
-			return qtrue;
-		}
-		break;
-	default:;
+	switch( weapon ) {
+		case WP_PANZERFAUST:
+			maxCount = team_maxPanzers.integer;
+			if( maxCount == -1 ) {
+				return qfalse;
+			}
+			if( strstr( team_maxPanzers.string, "%-" ) ) {
+				maxCount = floor( maxCount * playerCount * 0.01f );
+			} else if( strstr( team_maxPanzers.string, "%" ) ) {
+				maxCount = ceil( maxCount * playerCount * 0.01f );
+			}
+			if( weaponCount >= maxCount ) {
+				if( !quiet && !( ent->client->ps.pm_flags & PMF_LIMBO ) ) {
+					CP( "cp \"^1*^3 PANZERFAUST not available!^1 *^7\" 1" );
+				}
+				return qtrue;
+			}
+			break;
+		case WP_MOBILE_MG42:
+			maxCount = team_maxMG42s.integer;
+			if( maxCount == -1 ) {
+				return qfalse;
+			}
+			if( strstr( team_maxMG42s.string, "%-" ) ) {
+				maxCount = floor( maxCount * playerCount * 0.01f );
+			} else if( strstr( team_maxMG42s.string, "%" ) ) {
+				maxCount = ceil( maxCount * playerCount * 0.01f );
+			}
+			if( weaponCount >= maxCount ) {
+				if( !quiet && !( ent->client->ps.pm_flags & PMF_LIMBO ) ) {
+					CP( "cp \"^1*^3 MG42 not available!^1 *^7\" 1" );
+				}
+				return qtrue;
+			}
+			break;
+		case WP_FLAMETHROWER:
+			maxCount = team_maxFlamers.integer;
+			if( maxCount == -1 ) {
+				return qfalse;
+			}
+			if( strstr( team_maxFlamers.string, "%-" ) ) {
+				maxCount = floor( maxCount * playerCount * 0.01f );
+			} else if( strstr( team_maxFlamers.string, "%" ) ) {
+				maxCount = ceil( maxCount * playerCount * 0.01f );
+			}
+			if( weaponCount >= maxCount ) {
+				if( !quiet && !( ent->client->ps.pm_flags & PMF_LIMBO ) ) {
+					CP( "cp \"^1*^3 FLAMETHROWER not available!^1 *^7\" 1" );
+				}
+				return qtrue;
+			}
+			break;
+		case WP_MORTAR:
+			maxCount = team_maxMortars.integer;
+			if( maxCount == -1 ) {
+				return qfalse;
+			}
+			if( strstr( team_maxMortars.string, "%-" ) ) {
+				maxCount = floor( maxCount * playerCount * 0.01f );
+			} else if( strstr( team_maxMortars.string, "%" ) ) {
+				maxCount = ceil( maxCount * playerCount * 0.01f );
+			}
+			if( weaponCount >= maxCount ) {
+				if( !quiet && !( ent->client->ps.pm_flags & PMF_LIMBO ) ) {
+					CP( "cp \"^1*^3 MORTAR not available!^1 *^7\" 1" );
+				}
+				return qtrue;
+			}
+			break;
+		// case WP_GPG40: - forty - needs to be WP_KAR98
+		case WP_KAR98:
+		case WP_CARBINE:
+			maxCount = team_maxGrenLaunchers.integer;
+			if( maxCount == -1 ) {
+				return qfalse;
+			}
+			if( strstr( team_maxGrenLaunchers.string, "%-" ) ) {
+				maxCount = floor( maxCount * playerCount * 0.01f );
+			} else if( strstr( team_maxGrenLaunchers.string, "%" ) ) {
+				maxCount = ceil( maxCount * playerCount * 0.01f );
+			}
+			if( weaponCount >= maxCount ) {
+				if( !quiet && !( ent->client->ps.pm_flags & PMF_LIMBO ) ) {
+					CP( "cp \"^1*^3 GRENADE LAUNCHER not available!^1 *^7\" 1" );
+				}
+				return qtrue;
+			}
+			break;
+		default:
+			break;
 	}
+
 	return qfalse;
 }
 
@@ -2252,12 +2270,14 @@ void G_SetClientWeapons( gentity_t* ent, weapon_t w1, weapon_t w2, qboolean upda
 			ci->latchPlayerWeapon = w1;
 			changed = qtrue;
 		}		
-	} else {
+	}
+	// pheno: don't reset latched weapon to 0
+	/* else {
 		if( ci->latchPlayerWeapon != 0 ) {
 			ci->latchPlayerWeapon = 0;
 			changed = qtrue;
 		}
-	}
+	}*/
 	
 	// secundairy weapon
 	if( ci->latchPlayerWeapon2 != w2 ) {

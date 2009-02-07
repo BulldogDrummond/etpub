@@ -295,7 +295,8 @@ void CG_NewClientInfo( int clientNum ) {
 		// forty -	set these so CG_LimboPanel_SendSetupMsg/CG_LimboPanel_Setup
 		//			doesn't act so damned stupid. 
 		//			Otherwise we _will_ lose weapons selections on map changes.
-		if(!cgs.limboLoadoutSelected) {
+		// pheno: removed to fix losing weapon selections on map changes
+		/*if(!cgs.limboLoadoutSelected) {
 			int i;
 
 			cgs.clientinfo[ cg.clientNum ].team = newInfo.team;
@@ -323,7 +324,7 @@ void CG_NewClientInfo( int clientNum ) {
 			
 			cgs.limboLoadoutSelected = qtrue;
 
-		}
+		}*/
 
 		// CHRUKER: b020 - Make sure player class and primary weapons are correct for 
 		// subsequent calls to CG_LimboPanel_SendSetupMsg 

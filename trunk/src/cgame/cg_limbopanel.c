@@ -2829,34 +2829,6 @@ qboolean CG_IsHeavyWeapon( weapon_t weap ) {
 	return qfalse;
 }
 
-qboolean CG_LimboPanel_WeaponIsDisabled( int index ) {
-	/*
-	bg_playerclass_t *classinfo;
-	int count, wcount;
-
-	if( CG_LimboPanel_GetTeam() == TEAM_SPECTATOR ) {
-		return qtrue;
-	}
-
-	classinfo = CG_LimboPanel_GetPlayerClass();	
-
-	if( !CG_IsHeavyWeapon( classinfo->classWeapons[index] ) ) {
-		return qfalse;
-	}
-
-	count =		CG_LimboPanel_TeamCount( -1 );
-	wcount =	CG_LimboPanel_TeamCount( classinfo->classWeapons[index] );
-
-	if( wcount >= ceil( count * cgs.weaponRestrictions ) ) {
-		return qtrue;
-	}
-
-	return qfalse;
-	*/
-	return CG_LimboPanel_RealWeaponIsDisabled(CG_LimboPanel_GetPlayerClass()->
-		classWeapons[index]);
-}
-
 // Dens: originates from q_shared.c
 // Convert a string to an integer, with the same behavior that the engine converts
 // cvars to their integer representation:
@@ -2891,88 +2863,117 @@ int ExtractInt(char *src) {
 	return result;
 }
 
-qboolean CG_LimboPanel_RealWeaponIsDisabled( weapon_t weap ) {
-	int count, wcount, maxCount;
+qboolean CG_LimboPanel_WeaponIsDisabled( int index )
+{
+	weapon_t weapon = CG_LimboPanel_GetPlayerClass()->classWeapons[index];
+	return CG_LimboPanel_RealWeaponIsDisabled( weapon );
+}
+
+qboolean CG_LimboPanel_RealWeaponIsDisabled( weapon_t weapon )
+{
+	int playerCount, weaponCount, maxCount;
 
 	if( CG_LimboPanel_GetTeam() == TEAM_SPECTATOR ) {
 		return qtrue;
 	}
 
-	count =		CG_LimboPanel_TeamCount( -1 );
-	wcount =	CG_LimboPanel_TeamCount( weap );
+	// pheno: never restrict
+	if(	!CG_IsHeavyWeapon( weapon ) &&
+			weapon != WP_KAR98 &&
+			weapon != WP_CARBINE ) {
+		return qfalse;
+	}
+
+	playerCount = CG_LimboPanel_TeamCount( -1 );
+	weaponCount = CG_LimboPanel_TeamCount( weapon );
+
+	// pheno: heavy weapon restriction before team_max* restrictions
+	if( CG_IsHeavyWeapon( weapon ) ) {
+		if( weaponCount >= ceil( playerCount * cgs.weaponRestrictions ) ) {
+			return qtrue;
+		}
+	}
 
 	// gabriel: enforce weapons restrictions client-side
 	// Dens: "." is send as "%" by the server (engine problem)
-
-	switch (weap) {
+	switch( weapon ) {
 		case WP_PANZERFAUST:
-			if (ExtractInt(cgs.team_maxPanzers) != -1) {
-				maxCount = ExtractInt(cgs.team_maxPanzers);
-				if (strstr(cgs.team_maxPanzers, ".-"))
-					maxCount = floor(ExtractInt(cgs.team_maxPanzers) * count * 0.01f);
-				else if (strstr(cgs.team_maxPanzers, "."))
-					maxCount = ceil(ExtractInt(cgs.team_maxPanzers) * count * 0.01f);
-				if (wcount >= maxCount)
-					return qtrue;
+			maxCount = ExtractInt( cgs.team_maxPanzers );
+			if( maxCount == -1 ) {
+				return qfalse;
+			}
+			if( strstr( cgs.team_maxPanzers, ".-" ) ) {
+				maxCount = floor( maxCount * playerCount * 0.01f );
+			} else if( strstr( cgs.team_maxPanzers, "." ) ) {
+				maxCount = ceil( maxCount * playerCount * 0.01f );
+			}
+			if( weaponCount >= maxCount ) {
+				return qtrue;
 			}
 			break;
 		case WP_MORTAR:
-			if (ExtractInt(cgs.team_maxMortars) != -1) {
-				wcount += CG_LimboPanel_TeamCount(WP_MORTAR_SET);
-				maxCount = ExtractInt(cgs.team_maxMortars);
-				if (strstr(cgs.team_maxMortars, ".-"))
-					maxCount = floor(ExtractInt(cgs.team_maxMortars) * count * 0.01f);
-				else if (strstr(cgs.team_maxMortars, "."))
-					maxCount = ceil(ExtractInt(cgs.team_maxMortars) * count * 0.01f);
-				if (wcount >= maxCount)
-					return qtrue;
+			maxCount = ExtractInt( cgs.team_maxMortars );
+			if( maxCount == -1 ) {
+				return qfalse;
+			}
+			//weaponCount += CG_LimboPanel_TeamCount( WP_MORTAR_SET );
+			if( strstr( cgs.team_maxMortars, ".-" ) ) {
+				maxCount = floor( maxCount * playerCount * 0.01f );
+			} else if( strstr( cgs.team_maxMortars, "." ) ) {
+				maxCount = ceil( maxCount * playerCount * 0.01f );
+			}
+			if( weaponCount >= maxCount ) {
+				return qtrue;
 			}
 			break;
 		case WP_MOBILE_MG42:
-			if (ExtractInt(cgs.team_maxMG42s) != -1) {
-				wcount += CG_LimboPanel_TeamCount(WP_MOBILE_MG42_SET);
-				maxCount = ExtractInt(cgs.team_maxMG42s);
-				if (strstr(cgs.team_maxMG42s, ".-"))
-					maxCount = floor(ExtractInt(cgs.team_maxMG42s) * count * 0.01f);
-				else if (strstr(cgs.team_maxMG42s, "."))
-					maxCount = ceil(ExtractInt(cgs.team_maxMG42s) * count * 0.01f);
-				if (wcount >= maxCount)
-					return qtrue;
+			maxCount = ExtractInt( cgs.team_maxMG42s );
+			if( maxCount == -1 ) {
+				return qfalse;
+			}
+			//weaponCount += CG_LimboPanel_TeamCount( WP_MOBILE_MG42_SET );
+			if( strstr( cgs.team_maxMG42s, ".-" ) ) {
+				maxCount = floor( maxCount * playerCount * 0.01f );
+			} else if( strstr( cgs.team_maxMG42s, "." ) ) {
+				maxCount = ceil( maxCount * playerCount * 0.01f );
+			}
+			if( weaponCount >= maxCount ) {
+				return qtrue;
 			}
 			break;
 		case WP_FLAMETHROWER:
-			if (ExtractInt(cgs.team_maxFlamers) != -1) {
-				maxCount = ExtractInt(cgs.team_maxFlamers);
-				if (strstr(cgs.team_maxFlamers, ".-"))
-					maxCount = floor(ExtractInt(cgs.team_maxFlamers) * count * 0.01f);
-				else if (strstr(cgs.team_maxFlamers, "."))
-					maxCount = ceil(ExtractInt(cgs.team_maxFlamers) * count * 0.01f);
-				if (wcount >= maxCount)
-					return qtrue;
+			maxCount = ExtractInt( cgs.team_maxFlamers );
+			if( maxCount == -1 ) {
+				return qfalse;
+			}
+			if( strstr( cgs.team_maxFlamers, ".-" ) ) {
+				maxCount = floor( maxCount * playerCount * 0.01f );
+			} else if( strstr( cgs.team_maxFlamers, "." ) ) {
+				maxCount = ceil( maxCount * playerCount * 0.01f );
+			}
+			if( weaponCount >= maxCount ) {
+				return qtrue;
 			}
 			break;
 		case WP_KAR98:
 		case WP_CARBINE:
-			if (ExtractInt(cgs.team_maxGrenLaunchers) != -1) {
-				wcount = CG_LimboPanel_TeamCount(WP_KAR98) +
-					CG_LimboPanel_TeamCount(WP_CARBINE);
-				maxCount = ExtractInt(cgs.team_maxGrenLaunchers);
-				if (strstr(cgs.team_maxGrenLaunchers, ".-"))
-					maxCount = floor(ExtractInt(cgs.team_maxGrenLaunchers) * count * 0.01f);
-				else if (strstr(cgs.team_maxGrenLaunchers, "."))
-					maxCount = ceil(ExtractInt(cgs.team_maxGrenLaunchers) * count * 0.01f);
-				if (wcount >= maxCount)
-					return qtrue;
+			maxCount = ExtractInt( cgs.team_maxGrenLaunchers );
+			if( maxCount == -1 ) {
+				return qfalse;
+			}
+			//weaponCount = CG_LimboPanel_TeamCount( WP_KAR98 ) +
+			//	CG_LimboPanel_TeamCount( WP_CARBINE );
+			if( strstr( cgs.team_maxGrenLaunchers, ".-" ) ) {
+				maxCount = floor( maxCount * playerCount * 0.01f );
+			} else if( strstr( cgs.team_maxGrenLaunchers, "." ) ) {
+				maxCount = ceil( maxCount * playerCount * 0.01f );
+			}
+			if( weaponCount >= maxCount ) {
+				return qtrue;
 			}
 			break;
-	}
-
-	if( !CG_IsHeavyWeapon( weap ) ) {
-		return qfalse;
-	}
-
-	if( wcount >= ceil( count * cgs.weaponRestrictions ) ) {
-		return qtrue;
+		default:
+			break;
 	}
 
 	return qfalse;

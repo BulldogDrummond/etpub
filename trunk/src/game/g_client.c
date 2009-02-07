@@ -3366,14 +3366,18 @@ void ClientSpawn(
 
 		client->sess.playerType = client->sess.latchPlayerType;
 
-		if(G_IsWeaponDisabled(ent,
-			client->sess.latchPlayerWeapon,
-			client->sess.sessionTeam,
-			qtrue)) {
-
-			bg_playerclass_t* classInfo = BG_PlayerClassForPlayerState( &ent->client->ps );
-			client->sess.latchPlayerWeapon = classInfo->classWeapons[0];
-			update = qtrue;
+		// pheno: change latched primary weapon to our needs
+		//        clients should stay on their choosed weapon if available
+		if( G_IsWeaponDisabled( ent, client->sess.latchPlayerWeapon,
+				client->sess.sessionTeam, qtrue ) ) {
+			if( G_IsWeaponDisabled( ent, client->sess.playerWeapon,
+					client->sess.sessionTeam, qtrue ) ) {
+				bg_playerclass_t* classInfo =
+					BG_PlayerClassForPlayerState( &ent->client->ps );
+				client->sess.latchPlayerWeapon = classInfo->classWeapons[0];
+			} else {
+				client->sess.latchPlayerWeapon = client->sess.playerWeapon;
+			}
 		}
 
 		if( client->sess.playerWeapon != client->sess.latchPlayerWeapon ) {
@@ -3381,7 +3385,7 @@ void ClientSpawn(
 			update = qtrue;
 		}
 
-		if(G_IsWeaponDisabled(ent,
+		/*if(G_IsWeaponDisabled(ent,
 			client->sess.playerWeapon,
 			client->sess.sessionTeam,
 			qtrue)) {
@@ -3389,7 +3393,7 @@ void ClientSpawn(
 			bg_playerclass_t* classInfo = BG_PlayerClassForPlayerState( &ent->client->ps );
 			client->sess.playerWeapon = classInfo->classWeapons[0];
 			update = qtrue;
-		}
+		}*/
 
 		client->sess.playerWeapon2 = client->sess.latchPlayerWeapon2;
 

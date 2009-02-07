@@ -2030,3 +2030,6 @@
            within et_Print() callback
 * flms:    added [revive] spree blocks
 * flms:    fixed g_noSkillUpgrades
+* pheno:   reworked team_max* restrictions. Players stay on their last weapon
+           if they choose a disabled weapon unless their last weapon is
+		   disabled too.
