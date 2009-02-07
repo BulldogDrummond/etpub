@@ -901,26 +901,28 @@ void G_shrubbot_greeting(gentity_t *ent)
 	}
 
 	// welcome the player
-	greeting = Q_StrReplace( g_shrubbot_levels[l]->greeting,
-		"[n]", ent->client->pers.netname );
+	if( g_shrubbot_levels[l]->greeting ) {
+		greeting = Q_StrReplace( g_shrubbot_levels[l]->greeting,
+			"[n]", ent->client->pers.netname );
 
-	switch( g_greetingPos.integer ) {
-		case MSGPOS_CENTER:
-			AP( va( "cp \"%s\"", greeting ) );
-			break;
-		case MSGPOS_LEFT_BANNER:
-			AP( va( "cpm \"%s\"", greeting ) );
-			break;
-		case MSGPOS_BANNER:
-			AP( va( "bp \"%s\"", greeting ) );
-			break;
-		case MSGPOS_CONSOLE:
-			G_Printf( "%s\n", greeting );
-			break;
-		case MSGPOS_CHAT:
-		default:
-			AP( va( "chat \"%s\" -1", greeting ) );
-			break;
+		switch( g_greetingPos.integer ) {
+			case MSGPOS_CENTER:
+				AP( va( "cp \"%s\"", greeting ) );
+				break;
+			case MSGPOS_LEFT_BANNER:
+				AP( va( "cpm \"%s\"", greeting ) );
+				break;
+			case MSGPOS_BANNER:
+				AP( va( "bp \"%s\"", greeting ) );
+				break;
+			case MSGPOS_CONSOLE:
+				G_Printf( "%s\n", greeting );
+				break;
+			case MSGPOS_CHAT:
+			default:
+				AP( va( "chat \"%s\" -1", greeting ) );
+				break;
+		}
 	}
 
 	return;
