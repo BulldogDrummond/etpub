@@ -3367,7 +3367,7 @@ void ClientSpawn(
 		client->sess.playerType = client->sess.latchPlayerType;
 
 		// pheno: change latched primary weapon to our needs
-		//        clients should stay on their choosed weapon if available
+		//        if disabled clients should stay on their last choosed weapon
 		if( G_IsWeaponDisabled( ent, client->sess.latchPlayerWeapon,
 				client->sess.sessionTeam, qtrue ) ) {
 			if( G_IsWeaponDisabled( ent, client->sess.playerWeapon,
