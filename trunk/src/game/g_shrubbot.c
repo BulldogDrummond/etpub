@@ -111,7 +111,8 @@ static const struct g_shrubbot_cmd g_shrubbot_cmds[] = {
 	{"resetmyxp",	G_shrubbot_resetmyxp,	'M', 0,
 		"reset your own XP to zero", ""},
 	{"resetxp",	G_shrubbot_resetxp,	'X', SCMDF_TYRANNY,
-		"reset the XP of a specified player to zero", "[^3name|slot#^7]"},
+		"reset the XP of a specified player to zero",
+		"[^3name|slot#^7] (^3reason^7)"},
 	{"restart",	G_shrubbot_reset,	'r', 0,
 		"restart the current map", ""},
 	WARCOMMAND(rifle),
@@ -177,10 +178,10 @@ static const struct g_shrubbot_cmd g_shrubbot_cmds[] = {
 	// pheno
 	{"freeze", G_shrubbot_freeze, 'F', SCMDF_TYRANNY,
 		"freezes player(s) move",
-		"(^3name|slot#^7)"},
+		"(^3name|slot#^7) (^3reason^7)"},
 	{"unfreeze", G_shrubbot_unfreeze, 'F', SCMDF_TYRANNY,
 		"makes player(s) moving again",
-		"(^3name|slot#^7)"},
+		"(^3name|slot#^7) (^3reason^7)"},
 	{"", NULL, '\0', 0, "", ""}
 };
 
