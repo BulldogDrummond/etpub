@@ -56,7 +56,7 @@ static const struct g_shrubbot_cmd g_shrubbot_cmds[] = {
 	// pheno: !freeze
 	{"freeze", G_shrubbot_freeze, 'F', SCMDF_TYRANNY,
 		"freezes player(s) move",
-		"(^3name|slot#^7) (^3reason^7)"},
+		"(^3name|slot#^7) (^hreason^7)"},
 	{"gib",		G_shrubbot_gib,		'g', SCMDF_TYRANNY,
 		"instantly gib a player", "[^3name|slot#^7]"},
   {"giba",  G_shrubbot_giba,    'Q', SCMDF_TYRANNY,
@@ -116,7 +116,7 @@ static const struct g_shrubbot_cmd g_shrubbot_cmds[] = {
 		"reset your own XP to zero", ""},
 	{"resetxp",	G_shrubbot_resetxp,	'X', SCMDF_TYRANNY,
 		"reset the XP of a specified player to zero",
-		"[^3name|slot#^7] (^3reason^7)"},
+		"[^3name|slot#^7] (^hreason^7)"},
 	{"restart",	G_shrubbot_reset,	'r', 0,
 		"restart the current map", ""},
 	WARCOMMAND(rifle),
@@ -165,10 +165,10 @@ static const struct g_shrubbot_cmd g_shrubbot_cmds[] = {
 	{"unban",	G_shrubbot_unban,	'b', 0,
 		"unbans a player specified by the slot as seen in !showbans",
 		"[^3ban slot#^7]"},
-	// pheno
+	// pheno: !unfreeze
 	{"unfreeze", G_shrubbot_unfreeze, 'F', SCMDF_TYRANNY,
 		"makes player(s) moving again",
-		"(^3name|slot#^7) (^3reason^7)"},
+		"(^3name|slot#^7) (^hreason^7)"},
 	{"unlock",	G_shrubbot_unlock,	'K', 0,
 		"unlock one or all locked teams",
 		"[^3r|b|s|all^7]"},
