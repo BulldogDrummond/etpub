@@ -53,6 +53,10 @@ static const struct g_shrubbot_cmd g_shrubbot_cmds[] = {
 		"fling a player", "[^3name|slot#^7]"},
 	{"flinga",	G_shrubbot_fling,	'L', SCMDF_TYRANNY,
 		"fling all players", ""},
+	// pheno: !freeze
+	{"freeze", G_shrubbot_freeze, 'F', SCMDF_TYRANNY,
+		"freezes player(s) move",
+		"(^3name|slot#^7) (^3reason^7)"},
 	{"gib",		G_shrubbot_gib,		'g', SCMDF_TYRANNY,
 		"instantly gib a player", "[^3name|slot#^7]"},
   {"giba",  G_shrubbot_giba,    'Q', SCMDF_TYRANNY,
@@ -161,6 +165,10 @@ static const struct g_shrubbot_cmd g_shrubbot_cmds[] = {
 	{"unban",	G_shrubbot_unban,	'b', 0,
 		"unbans a player specified by the slot as seen in !showbans",
 		"[^3ban slot#^7]"},
+	// pheno
+	{"unfreeze", G_shrubbot_unfreeze, 'F', SCMDF_TYRANNY,
+		"makes player(s) moving again",
+		"(^3name|slot#^7) (^3reason^7)"},
 	{"unlock",	G_shrubbot_unlock,	'K', 0,
 		"unlock one or all locked teams",
 		"[^3r|b|s|all^7]"},
@@ -175,13 +183,6 @@ static const struct g_shrubbot_cmd g_shrubbot_cmds[] = {
 	{"warn",	G_shrubbot_warn,	'R', 0,
 		"warns a player by displaying the reason text",
 		"[^3name|slot#^7] [^3reason^7]"},
-	// pheno
-	{"freeze", G_shrubbot_freeze, 'F', SCMDF_TYRANNY,
-		"freezes player(s) move",
-		"(^3name|slot#^7) (^3reason^7)"},
-	{"unfreeze", G_shrubbot_unfreeze, 'F', SCMDF_TYRANNY,
-		"makes player(s) moving again",
-		"(^3name|slot#^7) (^3reason^7)"},
 	{"", NULL, '\0', 0, "", ""}
 };
 
