@@ -174,6 +174,13 @@ static const struct g_shrubbot_cmd g_shrubbot_cmds[] = {
 	{"warn",	G_shrubbot_warn,	'R', 0,
 		"warns a player by displaying the reason text",
 		"[^3name|slot#^7] [^3reason^7]"},
+	// pheno
+	{"freeze", G_shrubbot_freeze, 'F', SCMDF_TYRANNY,
+		"freezes player(s) move",
+		"(^3name|slot#^7)"},
+	{"unfreeze", G_shrubbot_unfreeze, 'F', SCMDF_TYRANNY,
+		"makes player(s) moving again",
+		"(^3name|slot#^7)"},
 	{"", NULL, '\0', 0, "", ""}
 };
 
@@ -4331,3 +4338,139 @@ qboolean G_shrubbot_tspree(gentity_t *ent, int skiparg)
 
 	return qtrue;
 } */
+
+qboolean G_shrubbot_freeze( gentity_t *ent, int skiparg )
+{
+	int pids[MAX_CLIENTS];
+	char name[MAX_NAME_LENGTH], *reason, err[MAX_STRING_CHARS];
+	gentity_t *vic;
+	qboolean freezeAll = qfalse;
+	int	 count = 0;
+
+	if( Q_SayArgc() < 2 + skiparg ) {
+		freezeAll = qtrue;
+	}
+
+	Q_SayArgv( 1 + skiparg, name, sizeof( name ) );
+	reason = Q_SayConcatArgs( 2 + skiparg );
+
+	if( !Q_stricmp( name, "-1" ) || freezeAll ) {
+		int i;
+		for( i = 0; i < level.numConnectedClients; i++ ) {
+			vic = g_entities + level.sortedClients[i];
+			if( !_shrubbot_admin_higher( ent, vic ) ||
+				_shrubbot_immutable( ent, vic ) ||
+				!( vic->client->sess.sessionTeam == TEAM_AXIS ||
+					vic->client->sess.sessionTeam == TEAM_ALLIES ) ) {
+				continue;
+			}
+			vic->client->frozen = qtrue;
+			count++;
+		}
+		AP( va( "chat \"^/freeze:^7 %d players frozen\"", count ) );
+		return qtrue;
+	}
+
+	if( ClientNumbersFromString( name, pids ) != 1 ) {
+		G_MatchOnePlayer( pids, err, sizeof( err ) );
+		SPC( va( "^/freeze:^7 %s", err ) );
+		return qfalse;
+	}
+
+	vic = &g_entities[pids[0]];
+	
+	if( !_shrubbot_admin_higher( ent, &g_entities[pids[0]] ) ) {
+		SPC( "^/freeze:^7 sorry, but your intended victim has a higher admin"
+			 " level than you do" );
+		return qfalse;
+	}
+
+	if( _shrubbot_immutable( ent, vic ) ) {
+		SPC( "^/freeze:^7 sorry, but your intended victim is immune to "
+			 " shrubbot commands" );
+		return qfalse;
+	}
+	
+	if( !( vic->client->sess.sessionTeam == TEAM_AXIS ||
+			vic->client->sess.sessionTeam == TEAM_ALLIES ) ) {
+		SPC( "^/freeze:^7 player must be on a team" );
+		return qfalse;
+	}
+	
+	vic->client->frozen = qtrue;
+	
+	AP( va( "chat \"^/freeze:^7 %s^7 was frozen\"",
+		vic->client->pers.netname ) );
+	CPx( pids[0], va( "cp \"^7%s^7 froze you%s\n\"", 
+		ent ? ent->client->pers.netname : "^3SERVER CONSOLE",
+		*reason ? va( "^7 because: %s", reason ) : "" ) );
+
+	return qtrue;
+}
+
+qboolean G_shrubbot_unfreeze( gentity_t *ent, int skiparg )
+{
+	int pids[MAX_CLIENTS];
+	char name[MAX_NAME_LENGTH], err[MAX_STRING_CHARS];
+	gentity_t *vic;
+	qboolean unfreezeAll = qfalse;
+	int count = 0;
+
+	if( Q_SayArgc() < 2 + skiparg ) {
+		unfreezeAll = qtrue;
+	}
+
+	Q_SayArgv( 1+ skiparg, name, sizeof( name ) );
+
+	if( !Q_stricmp( name, "-1" ) || unfreezeAll ) {
+		int i;
+		for( i = 0; i < level.numConnectedClients; i++ ) {
+			vic = g_entities + level.sortedClients[i];
+			if( !_shrubbot_admin_higher( ent, vic ) ||
+				_shrubbot_immutable( ent, vic ) ||
+				!( vic->client->sess.sessionTeam == TEAM_AXIS ||
+					vic->client->sess.sessionTeam == TEAM_ALLIES ) ) {
+				continue;
+			}
+			vic->client->frozen = qfalse;
+			count++;
+		}
+		AP( va( "chat \"^/unfreeze:^7 %d players unfrozen\"", count ) );
+		return qtrue;
+	}
+
+	if( ClientNumbersFromString( name, pids ) != 1 ) {
+		G_MatchOnePlayer( pids, err, sizeof( err ) );
+		SPC( va( "^/unfreeze:^7 %s", err ) );
+		return qfalse;
+	}
+
+	vic = &g_entities[pids[0]];
+	
+	if( !_shrubbot_admin_higher( ent, &g_entities[pids[0]] ) ) {
+		SPC( "^/unfreeze:^7 sorry, but your intended victim has a higher admin"
+			 " level than you do" );
+		return qfalse;
+	}
+
+	if( _shrubbot_immutable( ent, vic ) ) {
+		SPC( "^/unfreeze:^7 sorry, but your intended victim is immune to "
+			 " shrubbot commands" );
+		return qfalse;
+	}
+
+	if( !( vic->client->sess.sessionTeam == TEAM_AXIS ||
+			vic->client->sess.sessionTeam == TEAM_ALLIES ) ) {
+		SPC( "^/unfreeze:^7 player must be on a team" );
+		return qfalse;
+	}
+	
+	vic->client->frozen = qfalse;
+	
+	AP( va( "chat \"^/unfreeze:^7 %s^7 was unfroze\"",
+		vic->client->pers.netname ) );
+	CPx( pids[0], va( "cp \"^7%s^7 unfroze you\n\"",
+		ent ? ent->client->pers.netname : "^3SERVER CONSOLE" ) );
+
+	return qtrue;
+}

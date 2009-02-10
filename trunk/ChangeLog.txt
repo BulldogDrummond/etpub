@@ -2033,3 +2033,4 @@
 * pheno:   reworked team_max* restrictions. Players stay on their last weapon
            if they choose a disabled weapon unless their last weapon is
 		   disabled too.
+* pheno:   !freeze (F) and !unfreeze (F) now available shrubbot commands

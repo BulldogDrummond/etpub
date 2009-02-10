@@ -1469,7 +1469,12 @@ void ClientThink_real( gentity_t *ent ) {
 		client->ps.pm_type = PM_DEAD;
 	} 
 	else {
-		client->ps.pm_type = PM_NORMAL;
+		if( !client->frozen ) {
+			client->ps.pm_type = PM_NORMAL;
+		} else {
+			// pheno: freeze the player
+			client->ps.pm_type = PM_FREEZE;
+		}
 	}
 
 	client->ps.aiState = AISTATE_COMBAT;

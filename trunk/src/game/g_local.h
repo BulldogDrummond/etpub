@@ -1110,6 +1110,9 @@ struct gclient_s {
 
 	// tjw: used for antilag
 	int attackTime;
+
+	// pheno: used for shrubbot freeze/unfreeze command
+	qboolean frozen;
 };
 
 typedef struct {

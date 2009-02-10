@@ -174,6 +174,10 @@ qboolean G_shrubbot_spree(gentity_t *ent, int skiparg);
 qboolean G_shrubbot_tspree(gentity_t *ent, int skiparg);
 qboolean G_shrubbot_bye(gentity_t *ent, int skiparg);
 
+// pheno
+qboolean G_shrubbot_freeze( gentity_t *ent, int skiparg );
+qboolean G_shrubbot_unfreeze( gentity_t *ent, int skiparg );
+
 void Cmd_Warning_f( gentity_t *ent );
 int _shrubbot_level(gentity_t *ent);
 
