@@ -2102,7 +2102,7 @@ qboolean G_IsWeaponDisabled(
 		if( weaponCount >= ceil( playerCount *
 				g_heavyWeaponRestriction.integer * 0.01f ) ) {
 			if( !quiet && !( ent->client->ps.pm_flags & PMF_LIMBO ) ) {
-				CP( "cp \"^1*^3 HEAVY WEAPON not available!^1 *^7\" 1" );
+				CP( "cp \"^1*^3 HEAVY WEAPON not available!^1 *\" 1" );
 			}
 			return qtrue;
 		}
@@ -2121,7 +2121,7 @@ qboolean G_IsWeaponDisabled(
 			}
 			if( weaponCount >= maxCount ) {
 				if( !quiet && !( ent->client->ps.pm_flags & PMF_LIMBO ) ) {
-					CP( "cp \"^1*^3 PANZERFAUST not available!^1 *^7\" 1" );
+					CP( "cp \"^1*^3 PANZERFAUST not available!^1 *\" 1" );
 				}
 				return qtrue;
 			}
@@ -2138,7 +2138,7 @@ qboolean G_IsWeaponDisabled(
 			}
 			if( weaponCount >= maxCount ) {
 				if( !quiet && !( ent->client->ps.pm_flags & PMF_LIMBO ) ) {
-					CP( "cp \"^1*^3 MG42 not available!^1 *^7\" 1" );
+					CP( "cp \"^1*^3 MG42 not available!^1 *\" 1" );
 				}
 				return qtrue;
 			}
@@ -2155,7 +2155,7 @@ qboolean G_IsWeaponDisabled(
 			}
 			if( weaponCount >= maxCount ) {
 				if( !quiet && !( ent->client->ps.pm_flags & PMF_LIMBO ) ) {
-					CP( "cp \"^1*^3 FLAMETHROWER not available!^1 *^7\" 1" );
+					CP( "cp \"^1*^3 FLAMETHROWER not available!^1 *\" 1" );
 				}
 				return qtrue;
 			}
@@ -2172,7 +2172,7 @@ qboolean G_IsWeaponDisabled(
 			}
 			if( weaponCount >= maxCount ) {
 				if( !quiet && !( ent->client->ps.pm_flags & PMF_LIMBO ) ) {
-					CP( "cp \"^1*^3 MORTAR not available!^1 *^7\" 1" );
+					CP( "cp \"^1*^3 MORTAR not available!^1 *\" 1" );
 				}
 				return qtrue;
 			}
@@ -2191,7 +2191,7 @@ qboolean G_IsWeaponDisabled(
 			}
 			if( weaponCount >= maxCount ) {
 				if( !quiet && !( ent->client->ps.pm_flags & PMF_LIMBO ) ) {
-					CP( "cp \"^1*^3 GRENADE LAUNCHER not available!^1 *^7\" 1" );
+					CP( "cp \"^1*^3 GRENADE LAUNCHER not available!^1 *\" 1" );
 				}
 				return qtrue;
 			}

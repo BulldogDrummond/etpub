@@ -905,12 +905,12 @@ void G_shrubbot_greeting(gentity_t *ent)
 	}
 
 	// play the greeting sound
-	if( g_shrubbot_levels[l]->greeting_sound[0] ) {
+	if( *g_shrubbot_levels[l]->greeting_sound ) {
 		G_globalSound( g_shrubbot_levels[l]->greeting_sound );
 	}
 
 	// welcome the player
-	if( g_shrubbot_levels[l]->greeting[0] ) {
+	if( *g_shrubbot_levels[l]->greeting ) {
 		greeting = Q_StrReplace( g_shrubbot_levels[l]->greeting,
 			"[n]", ent->client->pers.netname );
 
