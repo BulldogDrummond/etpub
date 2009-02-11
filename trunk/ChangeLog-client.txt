@@ -415,6 +415,7 @@ current
 * pheno:   added GeoIP country flags to the crosshair. That allows you to
            display players country flag when aiming on someone.
 * pheno:   added (reactivated) gib models
-* flms:    crosshair now can show both class as country
+* flms:    crosshair now can show both class and country
 * pheno:   fixed losing weapon selections on map changes and reworked
            client-side weapon restriction enforcement
+* pheno:   removed flamethrower chunks from players view if frozen

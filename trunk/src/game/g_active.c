@@ -1507,10 +1507,11 @@ void ClientThink_real( gentity_t *ent ) {
 	// tjw: don't allow players to use +attack when poisoned
 	//      this is not a good solution since client prediction
 	//      makes it look like the gun fires (may need clientmod)
-	if((g_poisonFlags.integer & POISF_NO_ATTACK) &&
-		client->pmext.poisoned &&
-		(ucmd->buttons & BUTTON_ATTACK)) {
-	
+	// pheno: don't allow frozen players to use +attack too
+	if( ( ( ( g_poisonFlags.integer & POISF_NO_ATTACK ) &&
+				client->pmext.poisoned ) ||
+			client->ps.pm_type == PM_FREEZE ) &&
+		( ucmd->buttons & BUTTON_ATTACK ) ) {
 		ucmd->buttons &= ~BUTTON_ATTACK;
 	}
 

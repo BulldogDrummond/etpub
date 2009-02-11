@@ -1718,6 +1718,12 @@ void G_Damage( gentity_t *targ, gentity_t *inflictor, gentity_t *attacker,  vec3
 	if ( !attacker ) {
 		attacker = &g_entities[ENTITYNUM_WORLD];
 	}
+
+	// pheno: don't receive damage in frozen state
+	if( targ->client && targ->client->frozen ) {
+		return;
+	}
+
 	// Chaos: don't inflict damage to self when g_misc contains 8
 	if( targ == attacker && g_misc.integer & MISC_NOSELFDMG ) {
 		return;

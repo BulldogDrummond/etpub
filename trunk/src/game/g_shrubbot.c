@@ -56,7 +56,7 @@ static const struct g_shrubbot_cmd g_shrubbot_cmds[] = {
 	// pheno: !freeze
 	{"freeze", G_shrubbot_freeze, 'F', SCMDF_TYRANNY,
 		"freezes player(s) move",
-		"(^3name|slot#^7) (^hreason^7)"},
+		"(^hname|slot#^7) (^hreason^7)"},
 	{"gib",		G_shrubbot_gib,		'g', SCMDF_TYRANNY,
 		"instantly gib a player", "[^3name|slot#^7]"},
   {"giba",  G_shrubbot_giba,    'Q', SCMDF_TYRANNY,
@@ -168,7 +168,7 @@ static const struct g_shrubbot_cmd g_shrubbot_cmds[] = {
 	// pheno: !unfreeze
 	{"unfreeze", G_shrubbot_unfreeze, 'F', SCMDF_TYRANNY,
 		"makes player(s) moving again",
-		"(^3name|slot#^7) (^hreason^7)"},
+		"(^hname|slot#^7) (^hreason^7)"},
 	{"unlock",	G_shrubbot_unlock,	'K', 0,
 		"unlock one or all locked teams",
 		"[^3r|b|s|all^7]"},
@@ -4363,7 +4363,8 @@ qboolean G_shrubbot_freeze( gentity_t *ent, int skiparg )
 			if( !_shrubbot_admin_higher( ent, vic ) ||
 				_shrubbot_immutable( ent, vic ) ||
 				!( vic->client->sess.sessionTeam == TEAM_AXIS ||
-					vic->client->sess.sessionTeam == TEAM_ALLIES ) ) {
+					vic->client->sess.sessionTeam == TEAM_ALLIES ) ||
+				vic->client->frozen ) {
 				continue;
 			}
 			vic->client->frozen = qtrue;
@@ -4396,6 +4397,11 @@ qboolean G_shrubbot_freeze( gentity_t *ent, int skiparg )
 	if( !( vic->client->sess.sessionTeam == TEAM_AXIS ||
 			vic->client->sess.sessionTeam == TEAM_ALLIES ) ) {
 		SPC( "^/freeze:^7 player must be on a team" );
+		return qfalse;
+	}
+
+	if( vic->client->frozen ) {
+		SPC( "^/freeze:^7 player is already frozen" );
 		return qfalse;
 	}
 	
@@ -4431,7 +4437,8 @@ qboolean G_shrubbot_unfreeze( gentity_t *ent, int skiparg )
 			if( !_shrubbot_admin_higher( ent, vic ) ||
 				_shrubbot_immutable( ent, vic ) ||
 				!( vic->client->sess.sessionTeam == TEAM_AXIS ||
-					vic->client->sess.sessionTeam == TEAM_ALLIES ) ) {
+					vic->client->sess.sessionTeam == TEAM_ALLIES ) ||
+				!vic->client->frozen ) {
 				continue;
 			}
 			vic->client->frozen = qfalse;
@@ -4464,6 +4471,11 @@ qboolean G_shrubbot_unfreeze( gentity_t *ent, int skiparg )
 	if( !( vic->client->sess.sessionTeam == TEAM_AXIS ||
 			vic->client->sess.sessionTeam == TEAM_ALLIES ) ) {
 		SPC( "^/unfreeze:^7 player must be on a team" );
+		return qfalse;
+	}
+
+	if( !vic->client->frozen ) {
+		SPC( "^/unfreeze:^7 player is not currently frozen" );
 		return qfalse;
 	}
 	

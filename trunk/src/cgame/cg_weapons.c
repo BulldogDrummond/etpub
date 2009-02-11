@@ -2651,7 +2651,8 @@ void CG_AddPlayerWeapon( refEntity_t *parent, playerState_t *ps, centity_t *cent
 	{
 		// ydnar: no flamethrower flame on prone moving
 		// ydnar: or dead players
-		if( firing && !(cent->currentState.eFlags & (EF_PRONE_MOVING | EF_DEAD)))
+		// pheno: or in frozen state
+		if( firing && !(cent->currentState.eFlags & (EF_PRONE_MOVING | EF_DEAD)) && cg.snap->ps.pm_type != PM_FREEZE )
 		{
 			// Ridah, Flamethrower effect
 			CG_FlamethrowerFlame( cent, flash.origin );

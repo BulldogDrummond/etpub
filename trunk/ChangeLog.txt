@@ -2034,3 +2034,8 @@
            if they choose a disabled weapon unless their last weapon is
 		   disabled too.
 * pheno:   !freeze (F) and !unfreeze (F) now available shrubbot commands
+* pheno:   fixed a bug where some weapons can inflict damage to a frozen player
+* pheno:   made additions to !freeze (F) and !unfreeze (F) shrubbot commands
+* pheno:   removed flamethrower chunks from third persons view if player is
+           frozen. To remove the chunks from players view you need to install
+		   the etpub client >= 20090211.
