@@ -418,4 +418,5 @@ current
 * flms:    crosshair now can show both class and country
 * pheno:   fixed losing weapon selections on map changes and reworked
            client-side weapon restriction enforcement
-* pheno:   removed flamethrower chunks from players view if frozen
+* pheno:   removed flamethrower flames from players view if frozen
+* pheno:   added scoreboard ready icons during intermission

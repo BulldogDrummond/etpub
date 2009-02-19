@@ -2039,3 +2039,5 @@
 * pheno:   removed flamethrower chunks from third persons view if player is
            frozen. To remove the chunks from players view you need to install
 		   the etpub client >= 20090211.
+* pheno:   modified foxX's code to update players ready state during
+           intermission

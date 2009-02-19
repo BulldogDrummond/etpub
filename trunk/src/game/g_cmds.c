@@ -5344,8 +5344,11 @@ void G_MakeReady( gentity_t* ent ) {
 	// rain - #105 - moved this set here
 	ent->client->pers.ready = qtrue;
 	// foxX: now notify the other clients (see CG_NewClientInfo) that this client became ready 
-	if (g_gamestate.integer == GS_WARMUP_COUNTDOWN || g_gamestate.integer == GS_WARMUP)
-		ClientUserinfoChanged(ent - g_entities);
+	if( g_gamestate.integer == GS_WARMUP_COUNTDOWN ||
+		g_gamestate.integer == GS_WARMUP ||
+		g_gamestate.integer == GS_INTERMISSION ) { // pheno
+		ClientUserinfoChanged( ent - g_entities );
+	}
 }
 
 void G_MakeUnready( gentity_t* ent ) {
@@ -5354,8 +5357,11 @@ void G_MakeUnready( gentity_t* ent ) {
 	// rain - #105 - moved this set here
 	ent->client->pers.ready = qfalse;
 	// foxX: now notify the other clients (see CG_NewClientInfo) that this client became not ready 
-	if (g_gamestate.integer == GS_WARMUP_COUNTDOWN || g_gamestate.integer == GS_WARMUP)
-		ClientUserinfoChanged(ent - g_entities); 
+	if( g_gamestate.integer == GS_WARMUP_COUNTDOWN ||
+		g_gamestate.integer == GS_WARMUP ||
+		g_gamestate.integer == GS_INTERMISSION ) { // pheno
+		ClientUserinfoChanged( ent - g_entities );
+	}
 }
 
 void Cmd_IntermissionReady_f ( gentity_t* ent ) {
