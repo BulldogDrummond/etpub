@@ -2262,9 +2262,8 @@ void ClientUserinfoChanged( int clientNum ) {
 #endif
 		// mcwf GeoIP
 		// quad: added support for latched classes
-		// foxX: added support for ready state
 		// quad: added support for ettv & shoutcaster
-		s = va( "n\\%s\\t\\%i\\c\\%i\\r\\%i\\m\\%s\\s\\%s\\dn\\%s\\dr\\%i\\w\\%i\\lw\\%i\\sw\\%i\\mu\\%i\\ref\\%i\\uci\\%u\\lc\\%i\\rd\\%i\\tv\\%i\\sc\\%i",
+		s = va( "n\\%s\\t\\%i\\c\\%i\\r\\%i\\m\\%s\\s\\%s\\dn\\%s\\dr\\%i\\w\\%i\\lw\\%i\\sw\\%i\\mu\\%i\\ref\\%i\\uci\\%u\\lc\\%i\\tv\\%i\\sc\\%i",
 			client->pers.netname, 
 			client->sess.sessionTeam, 
 			client->sess.playerType, 
@@ -2280,7 +2279,6 @@ void ClientUserinfoChanged( int clientNum ) {
 			client->sess.referee,
 			client->sess.uci, //mcwf GeoIP
 			client->sess.latchPlayerType,
-			(client->ps.eFlags & EF_READY) ? 1 : 0,
 			client->sess.ettv, 
 			client->sess.shoutcaster
 		);

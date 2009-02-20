@@ -190,10 +190,6 @@ void CG_NewClientInfo( int clientNum ) {
 	// shoutcaster
 	v = Info_ValueForKey( configstring, "sc" );
 	newInfo.shoutcaster = atoi( v );
-	
-	// foxX: the client ready state
-	v = Info_ValueForKey( configstring, "rd" ); 
-	newInfo.clientReady = (atoi(v) ? qtrue : qfalse); 
 
 	// rank
 	v = Info_ValueForKey( configstring, "r" );

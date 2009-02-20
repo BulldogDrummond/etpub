@@ -493,7 +493,7 @@ static void G_SendKR(gentity_t *ent)
 qboolean G_SendScore_Add(gentity_t *ent, int i, char *buf, int bufsize) 
 {
 	gclient_t *cl;
-	int ping, playerClass, respawnsLeft;
+	int ping, playerClass, respawnsLeft, miscScoreFlags;
 	char entry[128];
 	int totalXP = 0;
 	int j;
@@ -557,9 +557,20 @@ qboolean G_SendScore_Add(gentity_t *ent, int i, char *buf, int bufsize)
 		}
 	}
 
+	// pheno: set misc score flags
+	miscScoreFlags = 0;
+
+	if( cl->ps.eFlags & EF_READY ) {
+		miscScoreFlags |= MSF_READY;
+	}
+
+	if( g_entities[level.sortedClients[i]].r.svFlags & SVF_BOT ) {
+		miscScoreFlags |= MSF_BOT;
+	}
+
 	Com_sprintf(entry,
 		sizeof(entry),
-		" %i %i %i %i %i %i %i",
+		" %i %i %i %i %i %i %i%s",
 		level.sortedClients[i],
 		totalXP,
 		ping,
@@ -567,7 +578,11 @@ qboolean G_SendScore_Add(gentity_t *ent, int i, char *buf, int bufsize)
 		(level.time - cl->pers.enterTime - (level.time - level.intermissiontime)) / 60000,
 		g_entities[level.sortedClients[i]].s.powerups,
 		playerClass,
-		respawnsLeft);
+		respawnsLeft,
+		// pheno: send also misc score flags if
+		//        etpub client > 20090112 is installed
+		ent->client->pers.etpubc > 20090112 ?
+			va( " %i", miscScoreFlags ) : "" );
 
 	if((strlen(buf) + strlen(entry) + 1) > bufsize) {
 		return qfalse;
@@ -5343,12 +5358,6 @@ void G_MakeReady( gentity_t* ent ) {
 	ent->s.eFlags |= EF_READY;
 	// rain - #105 - moved this set here
 	ent->client->pers.ready = qtrue;
-	// foxX: now notify the other clients (see CG_NewClientInfo) that this client became ready 
-	if( g_gamestate.integer == GS_WARMUP_COUNTDOWN ||
-		g_gamestate.integer == GS_WARMUP ||
-		g_gamestate.integer == GS_INTERMISSION ) { // pheno
-		ClientUserinfoChanged( ent - g_entities );
-	}
 }
 
 void G_MakeUnready( gentity_t* ent ) {
@@ -5356,12 +5365,6 @@ void G_MakeUnready( gentity_t* ent ) {
 	ent->s.eFlags &= ~EF_READY;
 	// rain - #105 - moved this set here
 	ent->client->pers.ready = qfalse;
-	// foxX: now notify the other clients (see CG_NewClientInfo) that this client became not ready 
-	if( g_gamestate.integer == GS_WARMUP_COUNTDOWN ||
-		g_gamestate.integer == GS_WARMUP ||
-		g_gamestate.integer == GS_INTERMISSION ) { // pheno
-		ClientUserinfoChanged( ent - g_entities );
-	}
 }
 
 void Cmd_IntermissionReady_f ( gentity_t* ent ) {

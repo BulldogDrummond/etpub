@@ -665,6 +665,9 @@ typedef enum {
 	PERS_WOLFKICK
 } persEnum_t;
 
+// pheno: misc score flags
+#define MSF_READY	1	// player is ready
+#define MSF_BOT		2	// player is a bot
 
 // entityState_t->eFlags
 #define	EF_DEAD				0x00000001		// don't draw a foe marker over players with EF_DEAD

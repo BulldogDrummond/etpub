@@ -275,12 +275,9 @@ static void WM_DrawClientScore( int x, int y, score_t *score, float *color, floa
 			maxchars -= 2;
 		}
 		
-		// foxX: draw ready icon for appropriate players during warmup
-		// pheno: and during intermission
-		if( ( cgs.gamestate == GS_WARMUP ||
-				cgs.gamestate == GS_WARMUP_COUNTDOWN ||
-				cgs.gamestate == GS_INTERMISSION ) &&
-			ci->clientReady ) { 
+		// pheno: draw ready icon
+		if( score->miscScoreFlags & MSF_READY &&
+			cgs.gamestate != GS_PLAYING ) {
 			CG_DrawPic( tempx - 3, y + 1, 14, 14, cgs.media.hudSprintIcon );
 			offset += 14;
 			tempx += 14;
@@ -442,7 +439,13 @@ static void WM_DrawClientScore( int x, int y, score_t *score, float *color, floa
 		tempx += INFO_XP_WIDTH;
 	}
 
-	CG_DrawSmallString( tempx, y, va( "%4i", score->ping ), fade );
+	// pheno: mark bots
+	if( score->miscScoreFlags & MSF_BOT ) {
+		CG_DrawSmallString( tempx, y, " ^3BOT", fade );
+	} else {
+		CG_DrawSmallString( tempx, y, va( "%4i", score->ping ), fade );
+	}
+	
 	tempx += INFO_LATENCY_WIDTH;
 
 	if( cg_gameType.integer != GT_WOLF_LMS && show_lives ) {
@@ -513,6 +516,16 @@ static void WM_DrawClientScore_Small( int x, int y, score_t *score, float *color
 		if(cg_drawClassIcons.integer & CLASSICON_SCOREBOARD){
 			maxchars += 3;
 		}
+
+		// pheno: draw ready icon
+		if( score->miscScoreFlags & MSF_READY &&
+			cgs.gamestate != GS_PLAYING ) {
+			CG_DrawPic( tempx - 3, y + 1, 14, 14, cgs.media.hudSprintIcon );
+			offset += 14;
+			tempx += 14;
+			maxchars -= 2;
+		}
+
 		if ( ci->powerups & ( (1 << PW_REDFLAG) | (1 << PW_BLUEFLAG) ) ) {
 			// CHRUKER: b071 - Objective carrier icon missing on
 			//          compact scoreboard
@@ -683,7 +696,13 @@ static void WM_DrawClientScore_Small( int x, int y, score_t *score, float *color
 		tempx += INFO_XP_WIDTH;
 	}
 
-	CG_DrawStringExt( tempx, y, va( "%4i", score->ping ), hcolor, qfalse, qfalse, MINICHAR_WIDTH, MINICHAR_HEIGHT, 0 );
+	// pheno: mark bots
+	if( score->miscScoreFlags & MSF_BOT ) {
+		CG_DrawStringExt( tempx, y, " ^3BOT", hcolor, qfalse, qfalse, MINICHAR_WIDTH, MINICHAR_HEIGHT, 0 );
+	} else {
+		CG_DrawStringExt( tempx, y, va( "%4i", score->ping ), hcolor, qfalse, qfalse, MINICHAR_WIDTH, MINICHAR_HEIGHT, 0 );
+	}
+
 	tempx += INFO_LATENCY_WIDTH;
 
 	if( cg_gameType.integer != GT_WOLF_LMS && show_lives ) {

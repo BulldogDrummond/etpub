@@ -505,6 +505,8 @@ typedef struct {
 	int				respawnsLeft;		// NERVE - SMF
 	float			playerRating;
 	float			killRating;
+	// pheno
+	int				miscScoreFlags;
 } score_t;
 
 // each client has an associated clientInfo_t
@@ -580,9 +582,6 @@ typedef struct clientInfo_s {
 	int				latchClass;
 	int				ettv;
 	int				shoutcaster;
-	
-	// foxX:
-	qboolean		clientReady;
 } clientInfo_t;
 
 typedef enum {

@@ -167,7 +167,7 @@ CG_ParseScores
 static void CG_ParseScore( team_t team ) {
 	int		i, j, powerups;
 	int		numScores;
-	int		offset;
+	int		offset, rows;
 
 	if( team == TEAM_AXIS ) {
 		cg.numScores = 0;
@@ -186,13 +186,23 @@ static void CG_ParseScore( team_t team ) {
 	for(j = 0; j < numScores; j++) {
 		i = cg.numScores;
 
-		cg.scores[i].client = atoi(			CG_Argv( offset + 0 + (j*7)));
-		cg.scores[i].score = atoi(			CG_Argv( offset + 1 + (j*7)));
-		cg.scores[i].ping = atoi(			CG_Argv( offset + 2 + (j*7)));
-		cg.scores[i].time = atoi(			CG_Argv( offset + 3 + (j*7)));
-		powerups = atoi(					CG_Argv( offset + 4 + (j*7)));
-		cg.scores[i].playerClass = atoi(	CG_Argv( offset + 5 + (j*7)));
-		cg.scores[i].respawnsLeft = atoi(	CG_Argv( offset + 6 + (j*7)));
+		// pheno: added misc score flags with etpub >= 0.9.0
+		rows = cgs.etpub >= ETPUB_VERSION( 0, 9, 0 ) ? 8 : 7;
+
+		cg.scores[i].client = atoi(			CG_Argv( offset + 0 + ( j * rows ) ) );
+		cg.scores[i].score = atoi(			CG_Argv( offset + 1 + ( j * rows ) ) );
+		cg.scores[i].ping = atoi(			CG_Argv( offset + 2 + ( j * rows ) ) );
+		cg.scores[i].time = atoi(			CG_Argv( offset + 3 + ( j * rows ) ) );
+		powerups = atoi(					CG_Argv( offset + 4 + ( j * rows ) ) );
+		cg.scores[i].playerClass = atoi(	CG_Argv( offset + 5 + ( j * rows ) ) );
+		cg.scores[i].respawnsLeft = atoi(	CG_Argv( offset + 6 + ( j * rows ) ) );
+		
+		// pheno: parse misc score flags
+		if( cgs.etpub >= ETPUB_VERSION( 0, 9, 0 ) ) {
+			cg.scores[i].miscScoreFlags = atoi(	CG_Argv( offset + 7 + ( j * rows ) ) );
+		} else {
+			cg.scores[i].miscScoreFlags = 0;
+		}
 
 		if ( cg.scores[i].client < 0 || cg.scores[i].client >= MAX_CLIENTS ) {
 			cg.scores[i].client = 0;
