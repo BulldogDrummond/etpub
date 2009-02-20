@@ -4087,11 +4087,28 @@ static void PM_Weapon( void ) {
 			return;
 		}
 
-		if( pm->skill[SK_HEAVY_WEAPONS] >= 1 ) {
-			if (pm->cmd.serverTime - pm->ps->classWeaponTime < pm->soldierChargeTime * 0.66f)
+		// pheno: on enabled panzerwar mode allow to fire if charge bar
+		//        is half full (should prevent weapon auto switching)
+#ifdef GAMEDLL
+		if( g_panzerwar.integer ) {
+			if( pm->cmd.serverTime - pm->ps->classWeaponTime <
+					pm->soldierChargeTime * 0.5f ) {
 				return;
-		} else if (pm->cmd.serverTime - pm->ps->classWeaponTime < pm->soldierChargeTime)
-			return;
+			}
+		} else {
+#endif
+			if( pm->skill[SK_HEAVY_WEAPONS] >= 1 ) {
+				if( pm->cmd.serverTime - pm->ps->classWeaponTime <
+						pm->soldierChargeTime * 0.66f ) {
+					return;
+				}
+			} else if ( pm->cmd.serverTime - pm->ps->classWeaponTime <
+					pm->soldierChargeTime ) {
+				return;
+			}
+#ifdef GAMEDLL // pheno
+		}
+#endif
 	}
 
 	if( pm->ps->weapon == WP_GPG40 || pm->ps->weapon == WP_M7 ) {
