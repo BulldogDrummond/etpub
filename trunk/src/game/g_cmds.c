@@ -560,7 +560,7 @@ qboolean G_SendScore_Add(gentity_t *ent, int i, char *buf, int bufsize)
 	// pheno: set misc score flags
 	miscScoreFlags = 0;
 
-	if( cl->ps.eFlags & EF_READY ) {
+	if( g_entities[level.sortedClients[i]].client->pers.ready ) {
 		miscScoreFlags |= MSF_READY;
 	}
 
