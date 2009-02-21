@@ -19,9 +19,9 @@
 //#define NO_BOT_SUPPORT
 
 // IMPORTANT: when changed this has to be copied manually to GAMEVERSION (g_local.h)
-#define OMNIBOT_NAME "Omni-Bot:etmain"
+#define OMNIBOT_NAME "Omni-Bot:etmain" //cs: this appears to be unused
 
-#define OMNIBOT_MODNAME "etmain"
+#define OMNIBOT_MODNAME "etpub"
 #define OMNIBOT_MODVERSION "2.60"
 
 //////////////////////////////////////////////////////////////////////////
