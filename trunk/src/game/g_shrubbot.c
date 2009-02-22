@@ -891,6 +891,12 @@ void G_shrubbot_greeting(gentity_t *ent)
 		return;
 	}
 
+	// pheno: if configured do not welcome bots
+	if( ent->r.svFlags & SVF_BOT &&
+		g_OmniBotFlags.integer & BOT_FLAGS_DISABLE_GREETING ) {
+		return;
+	}
+
 	// Dens: someone who is hidden shouln't be announced
 	// pheno: incognito players should be announced as level 0 user
 	//        otherwise get the real level number

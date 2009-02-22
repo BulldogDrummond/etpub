@@ -2043,5 +2043,6 @@
            intermission
 * pheno:   reworked the way how ready state was sent to the client
 * pheno:   removed weapon auto switching on enabled panzerwar mode
-* pheno:   fixed a bug where the players loose their ready icon if they die in
-           warmup
+* pheno:   fixed a bug where the ready icon isn't drawn in warmup after player
+           died
+* pheno:   made it possible to disable bot greeting

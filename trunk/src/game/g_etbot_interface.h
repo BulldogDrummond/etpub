@@ -37,6 +37,8 @@ enum BotFlagOptions
 	// mod specific flags start from here
 	BOT_FLAGS_SHRUBBOT_IMMUTABLE	= OBF_NEXT_FLAG,			// Bit 17 - 2^16 = 65536
 	BOT_FLAGS_NO_KICKBAN			= (OBF_NEXT_FLAG << 1),		// Bit 18 - 2^17 = 131072
+	// pheno: do not welcome bots
+	BOT_FLAGS_DISABLE_GREETING		= ( OBF_NEXT_FLAG << 2 ),	// Bit 19 - 2^18 = 262144
 };
 //////////////////////////////////////////////////////////////////////////
 
