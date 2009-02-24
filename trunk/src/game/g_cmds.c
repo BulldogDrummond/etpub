@@ -557,7 +557,7 @@ qboolean G_SendScore_Add(gentity_t *ent, int i, char *buf, int bufsize)
 		}
 	}
 
-	// pheno: set misc score flags
+	// pheno: set misc scoreboard flags
 	miscScoreFlags = 0;
 
 	if( cl->pers.ready ) {
@@ -570,19 +570,18 @@ qboolean G_SendScore_Add(gentity_t *ent, int i, char *buf, int bufsize)
 
 	Com_sprintf(entry,
 		sizeof(entry),
-		" %i %i %i %i %i %i %i%s",
+		" %i %i %i %i %i %i %i",
 		level.sortedClients[i],
 		totalXP,
 		ping,
 		// CHRUKER: b094 - Playing time shown at debriefing keep increasing
 		(level.time - cl->pers.enterTime - (level.time - level.intermissiontime)) / 60000,
 		g_entities[level.sortedClients[i]].s.powerups,
-		playerClass,
-		respawnsLeft,
-		// pheno: send also misc score flags if
-		//        etpub client > 20090112 is installed
+		// pheno: send miscScoreFlags instead of playerClass if
+		//        etpubc > 20090112 is installed
 		ent->client->pers.etpubc > 20090112 ?
-			va( " %i", miscScoreFlags ) : "" );
+			miscScoreFlags : playerClass,
+		respawnsLeft);
 
 	if((strlen(buf) + strlen(entry) + 1) > bufsize) {
 		return qfalse;

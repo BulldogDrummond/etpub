@@ -2046,3 +2046,5 @@
 * pheno:   fixed a bug where the ready icon isn't drawn in warmup after player
            died
 * pheno:   made it possible to disable bot greeting
+* pheno:   reworked a second time the way how ready state was sent to the
+           client. This will fix the broken scoreboard on more than 30 players.

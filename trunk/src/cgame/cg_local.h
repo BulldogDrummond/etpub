@@ -501,12 +501,11 @@ typedef struct {
 	int				time;
 	int				powerUps;
 	int				team;
-	int				playerClass;		// NERVE - SMF
+//	int				playerClass;		// NERVE - SMF
+	int				miscScoreFlags;		// pheno
 	int				respawnsLeft;		// NERVE - SMF
 	float			playerRating;
 	float			killRating;
-	// pheno
-	int				miscScoreFlags;
 } score_t;
 
 // each client has an associated clientInfo_t

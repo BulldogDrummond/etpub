@@ -387,9 +387,9 @@ static void WM_DrawClientScore( int x, int y, score_t *score, float *color, floa
 	else if ( cg.snap->ps.persistant[PERS_TEAM] == ci->team || CG_mvMergedClientLocate(score->client) ) {
 		if(cg_drawClassIcons.integer & CLASSICON_SCOREBOARD){
 			CG_DrawPic(tempx+24, y+1, 14, 14,
-				cgs.media.skillPics[BG_ClassSkillForClass( score->playerClass )]);
+				cgs.media.skillPics[BG_ClassSkillForClass( ci->cls )]);
 		}else{
-			CG_DrawSmallString( tempx, y, CG_TranslateString( BG_ShortClassnameForNumber( score->playerClass ) ), fade );
+			CG_DrawSmallString( tempx, y, CG_TranslateString( BG_ShortClassnameForNumber( ci->cls ) ), fade );
 		}
 	}
 	
@@ -627,9 +627,9 @@ static void WM_DrawClientScore_Small( int x, int y, score_t *score, float *color
 	else if ( cg.snap->ps.persistant[PERS_TEAM] == ci->team ) {
 		if(cg_drawClassIcons.integer & CLASSICON_SCOREBOARD){
 			CG_DrawPic(tempx+24, y+1, 10, 10,
-				cgs.media.skillPics[BG_ClassSkillForClass( score->playerClass )]);
+				cgs.media.skillPics[BG_ClassSkillForClass( ci->cls )]);
 		}else{
-			CG_DrawStringExt(	tempx, y, CG_TranslateString( BG_ShortClassnameForNumber( score->playerClass ) ), hcolor, qfalse, qfalse, MINICHAR_WIDTH, MINICHAR_HEIGHT, 0 );
+			CG_DrawStringExt(	tempx, y, CG_TranslateString( BG_ShortClassnameForNumber( ci->cls ) ), hcolor, qfalse, qfalse, MINICHAR_WIDTH, MINICHAR_HEIGHT, 0 );
 		}
 	}
 	
