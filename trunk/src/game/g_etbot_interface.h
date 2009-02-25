@@ -21,7 +21,7 @@
 // IMPORTANT: when changed this has to be copied manually to GAMEVERSION (g_local.h)
 #define OMNIBOT_NAME "Omni-Bot:etmain" //cs: this appears to be unused
 
-#define OMNIBOT_MODNAME "etpub"
+#define OMNIBOT_MODNAME GAMEVERSION
 #define OMNIBOT_MODVERSION ETPUB_VERSION
 
 //////////////////////////////////////////////////////////////////////////
