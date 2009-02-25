@@ -22,7 +22,7 @@
 #define OMNIBOT_NAME "Omni-Bot:etmain" //cs: this appears to be unused
 
 #define OMNIBOT_MODNAME "etpub"
-#define OMNIBOT_MODVERSION "2.60"
+#define OMNIBOT_MODVERSION ETPUB_VERSION
 
 //////////////////////////////////////////////////////////////////////////
 // g_OmniBotFlags bits
