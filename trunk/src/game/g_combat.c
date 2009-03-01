@@ -456,6 +456,7 @@ void player_die( gentity_t *self, gentity_t *inflictor, gentity_t *attacker, int
 	if(attacker == self) {
 		if(self->client) {
 			self->client->pers.playerStats.suicides++;
+			self->client->sess.deaths++;
 			trap_PbStat ( self - g_entities , "suicide" , 
 				va("%d %d %d", self->client->sess.sessionTeam,
 				self->client->sess.playerType, weap)) ;
