@@ -1706,7 +1706,9 @@ qboolean G_LandmineSnapshotCallback( int entityNum, int clientNum ) {
 	// forty - Don't send the landmine if its not in our pvs.
 	//         This'll only benefit people with 2.56 and above.
 	//         Unpatched ET doesn't have SnapshotCallbacks.
-	if( !trap_InPVS(clEnt->r.currentOrigin, ent->r.currentOrigin) ) {
+	// pheno: NOTE - use ps.origin instead of r.currentOrigin
+	//        for client entities
+	if( !trap_InPVS( clEnt->client->ps.origin, ent->r.currentOrigin ) ) {
 		//G_Printf("Client: %d, Landmine not in PVS\n", clientNum);
 		return qfalse;
 	} 
