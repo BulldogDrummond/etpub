@@ -4350,10 +4350,10 @@ qboolean G_shrubbot_tspree(gentity_t *ent, int skiparg)
 qboolean G_shrubbot_freeze( gentity_t *ent, int skiparg )
 {
 	int pids[MAX_CLIENTS];
-	char name[MAX_NAME_LENGTH], *reason, err[MAX_STRING_CHARS];
+	char name[MAX_NAME_LENGTH], err[MAX_STRING_CHARS], *reason;
 	gentity_t *vic;
 	qboolean freezeAll = qfalse;
-	int	 count = 0;
+	int count = 0;
 
 	if( Q_SayArgc() < 2 + skiparg ) {
 		freezeAll = qtrue;
@@ -4362,14 +4362,13 @@ qboolean G_shrubbot_freeze( gentity_t *ent, int skiparg )
 	Q_SayArgv( 1 + skiparg, name, sizeof( name ) );
 	reason = Q_SayConcatArgs( 2 + skiparg );
 
-	if( !Q_stricmp( name, "-1" ) || freezeAll ) {
+	if( freezeAll ) {
 		int i;
 		for( i = 0; i < level.numConnectedClients; i++ ) {
 			vic = g_entities + level.sortedClients[i];
 			if( !_shrubbot_admin_higher( ent, vic ) ||
 				_shrubbot_immutable( ent, vic ) ||
-				!( vic->client->sess.sessionTeam == TEAM_AXIS ||
-					vic->client->sess.sessionTeam == TEAM_ALLIES ) ||
+				vic->client->sess.sessionTeam == TEAM_SPECTATOR ||
 				vic->client->frozen ) {
 				continue;
 			}
@@ -4400,8 +4399,7 @@ qboolean G_shrubbot_freeze( gentity_t *ent, int skiparg )
 		return qfalse;
 	}
 	
-	if( !( vic->client->sess.sessionTeam == TEAM_AXIS ||
-			vic->client->sess.sessionTeam == TEAM_ALLIES ) ) {
+	if( vic->client->sess.sessionTeam == TEAM_SPECTATOR ) {
 		SPC( "^/freeze:^7 player must be on a team" );
 		return qfalse;
 	}
@@ -4434,16 +4432,15 @@ qboolean G_shrubbot_unfreeze( gentity_t *ent, int skiparg )
 		unfreezeAll = qtrue;
 	}
 
-	Q_SayArgv( 1+ skiparg, name, sizeof( name ) );
+	Q_SayArgv( 1 + skiparg, name, sizeof( name ) );
 
-	if( !Q_stricmp( name, "-1" ) || unfreezeAll ) {
+	if( unfreezeAll ) {
 		int i;
 		for( i = 0; i < level.numConnectedClients; i++ ) {
 			vic = g_entities + level.sortedClients[i];
 			if( !_shrubbot_admin_higher( ent, vic ) ||
 				_shrubbot_immutable( ent, vic ) ||
-				!( vic->client->sess.sessionTeam == TEAM_AXIS ||
-					vic->client->sess.sessionTeam == TEAM_ALLIES ) ||
+				vic->client->sess.sessionTeam == TEAM_SPECTATOR ||
 				!vic->client->frozen ) {
 				continue;
 			}
@@ -4474,8 +4471,7 @@ qboolean G_shrubbot_unfreeze( gentity_t *ent, int skiparg )
 		return qfalse;
 	}
 
-	if( !( vic->client->sess.sessionTeam == TEAM_AXIS ||
-			vic->client->sess.sessionTeam == TEAM_ALLIES ) ) {
+	if( vic->client->sess.sessionTeam == TEAM_SPECTATOR ) {
 		SPC( "^/unfreeze:^7 player must be on a team" );
 		return qfalse;
 	}
