@@ -493,6 +493,16 @@ static int _et_G_AddSkillPoints(lua_State *L)
 	G_AddSkillPoints(ent, skill, points);
 	return 0;
 }
+
+// et.G_LoseSkillPoints( ent, skill, points )
+static int _et_G_LoseSkillPoints( lua_State *L )
+{
+	gentity_t *ent = g_entities + luaL_checkint( L, 1 );
+	int skill = luaL_checkint( L, 2 );
+	float points = luaL_checknumber( L, 3 );
+	G_LoseSkillPoints( ent, skill, points );
+	return 0;
+}
 // }}}
 
 // Entities {{{
@@ -1075,6 +1085,7 @@ static const luaL_Reg etlib[] = {
 	{"G_Damage", _et_G_Damage},
 	{"ClientIsFlooding", _et_ClientIsFlooding},
 	{"G_AddSkillPoints", _et_G_AddSkillPoints},
+	{"G_LoseSkillPoints", _et_G_LoseSkillPoints},
 	// Entities
 	{"G_Spawn", _et_G_Spawn},
 	{"G_TempEntity", _et_G_TempEntity},

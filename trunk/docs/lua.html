@@ -183,8 +183,16 @@ end</pre></dd>
 </dl>
 <p><b>*</b><i class="diff">et.G_AddSkillPoints( <strong>ent</strong>, <strong>skill</strong>, <strong>points</strong> )</i></p>
 <dl>
+	<dd>Note: To remove skill points you can also use negative <strong>points</strong> values.</dd>
+	<dd>&nbsp;</dd>
+	<dd>&nbsp;</dd>
 	<dd><h6>LUA CODE EXAMPLE</h6><pre>-- add 100.5 points to heavy weapons skill (skill = 5) of client #0
 et.G_AddSkillPoints(0, 5, 100.5)</pre></dd>
+</dl>
+<p><b>*</b><i class="diff">et.G_LoseSkillPoints( <strong>ent</strong>, <strong>skill</strong>, <strong>points</strong> )</i></p>
+<dl>
+	<dd><h6>LUA CODE EXAMPLE</h6><pre>-- remove 100.5 points from heavy weapons skill (skill = 5) of client #0
+et.G_LoseSkillPoints(0, 5, 100.5)</pre></dd>
 </dl>
 
 <a name="entities"></a><h3>Entities</h3>

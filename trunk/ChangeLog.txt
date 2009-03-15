@@ -2032,13 +2032,13 @@
 * flms:    fixed g_noSkillUpgrades
 * pheno:   reworked team_max* restrictions. Players stay on their last weapon
            if they choose a disabled weapon unless their last weapon is
-		   disabled too.
+           disabled too.
 * pheno:   !freeze (F) and !unfreeze (F) now available shrubbot commands
 * pheno:   fixed a bug where some weapons can inflict damage to a frozen player
 * pheno:   made additions to !freeze (F) and !unfreeze (F) shrubbot commands
 * pheno:   removed flamethrower flames from third persons view if player is
            frozen. To remove the flames from players view you need to install
-		   the etpub client > 20090112.
+           the etpub client > 20090112.
 * pheno:   modified foxX's code to update players ready state during
            intermission
 * pheno:   reworked the way how ready state was sent to the client
@@ -2048,3 +2048,5 @@
 * pheno:   made it possible to disable bot greeting
 * pheno:   reworked a second time the way how ready state was sent to the
            client. This will fix the broken scoreboard on more than 30 players.
+* pheno:   Lua API: added et.G_LoseSkillPoints( ent, skill, points )
+           library call
