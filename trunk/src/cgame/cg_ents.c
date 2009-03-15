@@ -1072,7 +1072,8 @@ static void CG_Missile( centity_t *cent ) {
 	ent.renderfx = weapon->missileRenderfx | RF_NOSHADOW;
 
 	if( cent->currentState.weapon == WP_LANDMINE ) {
-		if( cgs.clientinfo[ cg.clientNum ].team == TEAM_SPECTATOR ) {
+		if( cgs.clientinfo[cg.clientNum].team == TEAM_SPECTATOR &&
+			!cgs.clientinfo[cg.clientNum].shoutcaster ) { // pheno
 			return;
 		}
 
@@ -1087,6 +1088,22 @@ static void CG_Missile( centity_t *cent ) {
 				if(cent->currentState.density-1 == cg.snap->ps.clientNum) {
 					//ent.customShader = cgs.media.genericConstructionShaderModel;
 					ent.customShader = cgs.media.genericConstructionShader;
+				// pheno: shoutcasters can see landmines
+				} else if( cgs.clientinfo[cg.clientNum].shoutcaster ) {
+					int color = ( int )255 - ( 255 * fabs( sin( cg.time * 0.002 ) ) );
+					
+					if( cent->currentState.teamNum % 4 == TEAM_AXIS ) {
+						ent.shaderRGBA[0] = 255;
+						ent.shaderRGBA[1] = color;
+						ent.shaderRGBA[2] = color;
+					} else {
+						ent.shaderRGBA[0] = color;
+						ent.shaderRGBA[1] = color;
+						ent.shaderRGBA[2] = 255;
+					}
+
+					ent.shaderRGBA[3] = 255;
+					ent.customShader = cgs.media.shoutcastLandmineShader;
 				} else if (!cent->currentState.modelindex2) {
 					// see if we have the skill to see them and are close enough
 					if( cgs.clientinfo[cg.snap->ps.clientNum].skill[SK_BATTLE_SENSE] >= 4 ) {

@@ -1735,6 +1735,12 @@ qboolean G_LandmineSnapshotCallback( int entityNum, int clientNum ) {
 		return qtrue;
 	}
 
+	// pheno: shoutcasters can see landmines
+	if( clEnt->client->sess.sessionTeam == TEAM_SPECTATOR &&
+		clEnt->client->sess.shoutcaster ) {
+		return qtrue;
+	}
+
 	return qfalse;
 }
 

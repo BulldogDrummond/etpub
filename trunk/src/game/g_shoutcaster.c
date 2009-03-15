@@ -39,7 +39,7 @@ void G_sclogin_cmd( gentity_t *ent, unsigned int dwCommand, qboolean fValue )
 
 	trap_Argv( 0, cmd, sizeof( cmd ) );
 
-	if(	ClientIsFlooding( ent, qfalse ) ) {
+	if( ClientIsFlooding( ent, qfalse ) ) {
 		CP( va( "print \"^1Spam Protection: ^7dropping %s\n\"", cmd ) );
 		return;
 	}
@@ -94,7 +94,7 @@ void G_sclogout_cmd( gentity_t *ent, unsigned int dwCommand, qboolean fValue )
 
 	trap_Argv( 0, cmd, sizeof( cmd ) );
 
-	if(	ClientIsFlooding( ent, qfalse ) ) {
+	if( ClientIsFlooding( ent, qfalse ) ) {
 		CP( va( "print \"^1Spam Protection: ^7dropping %s\n\"", cmd ) );
 		return;
 	}

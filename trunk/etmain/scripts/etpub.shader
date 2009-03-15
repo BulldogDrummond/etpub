@@ -288,6 +288,23 @@ models/gibs/gibs
 	}
 }
 
+// Shoutcast landmine shader
+
+textures/sfx/shoutcast_landmine
+{
+	cull none
+	deformVertexes wave 1 sin -0.5 0 0 1
+	noPicmip
+	surfaceparm trans
+	{
+		map textures/sfx/construction.tga
+		blendFunc GL_SRC_ALPHA GL_ONE_MINUS_SRC_ALPHA
+		rgbGen entity
+		tcGen environment
+		tcMod scroll 0.025 -0.07625
+	}
+}
+
 // Machine gun bullet brass
 
 models/weapons2/shells/m_shell

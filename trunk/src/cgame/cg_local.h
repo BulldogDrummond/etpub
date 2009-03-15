@@ -1660,6 +1660,9 @@ typedef struct {
 	qhandle_t	alliedUniformShader;
 	qhandle_t	axisUniformShader;
 
+	// pheno: shoutcast landmine shader
+	qhandle_t	shoutcastLandmineShader;
+
 	sfxHandle_t	sfx_artilleryExp[3];
 	sfxHandle_t	sfx_artilleryDist;
 

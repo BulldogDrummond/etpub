@@ -423,3 +423,4 @@ current
 * pheno:   reworked ready icons code and made bots more visible on the
            scoreboard
 * pheno:   fixed broken scoreboard on more than 30 players
+* pheno:   shoutcasters can now see landmines
