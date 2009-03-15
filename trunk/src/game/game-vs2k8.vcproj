@@ -1559,6 +1559,10 @@
 				>
 			</File>
 			<File
+				RelativePath=".\g_shoutcaster.c"
+				>
+			</File>
+			<File
 				RelativePath="g_shrubbot.c"
 				>
 				<FileConfiguration

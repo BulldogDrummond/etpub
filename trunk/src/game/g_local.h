@@ -1911,6 +1911,13 @@ void G_WriteSessionData( qboolean restart );
 void G_CalcRank( gclient_t* client );
 
 //
+// pheno: g_shoutcast.c
+//
+
+void G_sclogin_cmd( gentity_t *ent, unsigned int dwCommand, qboolean fValue );
+void G_sclogout_cmd( gentity_t *ent, unsigned int dwCommand, qboolean fValue );
+
+//
 // g_bot.c
 //
 void G_InitBots( qboolean restart );
@@ -2359,6 +2366,7 @@ extern vmCvar_t g_maxConnsPerIP;
 
 // pheno
 extern vmCvar_t lua_allowedModules;
+extern vmCvar_t shoutcastPassword;
 
 // flms
 extern vmCvar_t g_flushItems;

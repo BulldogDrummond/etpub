@@ -2909,7 +2909,9 @@ static void CG_DrawSpectator(void) {
 	if(cg.bannerPrintTime)
 		alpha = 0.2f;
 	*/
-	s = va( "%s", CG_TranslateString("SPECTATOR") );
+	s = va( "%s", CG_TranslateString(
+		cgs.clientinfo[cg.clientNum].shoutcaster ? // pheno
+			"SHOUTCASTER" : "SPECTATOR" ) );
 	w = CG_DrawStrlen( s );
 	CG_DrawStringExt( 320 - w * cw/2, 32, s, colorWhite,  // Elf
 		qfalse, qtrue, cw, cw * 3 / 2, 0 );

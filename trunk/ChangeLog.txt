@@ -2050,3 +2050,6 @@
            client. This will fix the broken scoreboard on more than 30 players.
 * pheno:   Lua API: added et.G_LoseSkillPoints( ent, skill, points )
            library call
+* pheno:   added shoutcaster sclogin, sclogout, shoutcastlogin and
+           shoutcastlogout commands (NOTE: shoutcaster status is only available
+           with installed etpub client > 20090112)

@@ -229,6 +229,7 @@ static void WM_DrawClientScore( int x, int y, score_t *score, float *color, floa
 	vec4_t hcolor;
 	clientInfo_t *ci;
 	char buf[64];
+	qboolean	drawScore = qtrue;
 
 	if ( y + SMALLCHAR_HEIGHT >= 470 )
 		return;
@@ -372,16 +373,19 @@ static void WM_DrawClientScore( int x, int y, score_t *score, float *color, floa
 		w = CG_DrawStrlen( s ) * SMALLCHAR_WIDTH;*/
 		
 		// quad 
-		if (ci->ettv)
-			s = CG_TranslateString("^5ETTV"); 
-		else if (ci->shoutcaster)
-			s = CG_TranslateString("^dSHOUTCASTER");
-		else if (score->ping >=0 && score->ping < 999) 
-			s = CG_TranslateString("^3SPECT");
-		else
+		if( ci->ettv ) {
+			s = CG_TranslateString("^3ETTV"); 
+		} else if( ci->shoutcaster ) {
+			s = CG_TranslateString("^3SHOUTCASTER");
+		} else if( score->ping >=0 && score->ping < 999 ) { 
+			s = CG_TranslateString("^3SPECTATOR");
+		} else {
 			s = "";
-		
+		}
+
 		CG_DrawSmallString( tempx, y, s, fade );
+
+		drawScore = qfalse; // pheno: don't draw the score for spectators
 	}
 	// OSP - allow MV clients see the class of its merged client's on the scoreboard
 	else if ( cg.snap->ps.persistant[PERS_TEAM] == ci->team || CG_mvMergedClientLocate(score->client) ) {
@@ -423,15 +427,18 @@ static void WM_DrawClientScore( int x, int y, score_t *score, float *color, floa
 
 	tempx += INFO_CLASS_WIDTH;
 
-	if(cg_scoreboard.integer == SCOREBOARD_PR)
-		CG_DrawSmallString( tempx, y,
-			va("%.3f", score->playerRating), fade);
-	else if(cg_scoreboard.integer == SCOREBOARD_KR)
-		CG_DrawSmallString( tempx, y, 
-			va( "%.3f", score->killRating ), fade);
-	else if (!ci->shoutcaster)
-		CG_DrawSmallString( tempx, y, 
-			va( "%3i", score->score ), fade);
+	if( drawScore ) {
+		if( cg_scoreboard.integer == SCOREBOARD_PR ) {
+			CG_DrawSmallString( tempx, y,
+				va( "%.3f", score->playerRating ), fade );
+		} else if( cg_scoreboard.integer == SCOREBOARD_KR ) {
+			CG_DrawSmallString( tempx, y, 
+				va( "%.3f", score->killRating ), fade );
+		} else {
+			CG_DrawSmallString( tempx, y, 
+				va( "%3i", score->score ), fade );
+		}
+	}
 
 	if( cg_gameType.integer == GT_WOLF_LMS ) {
 		tempx += INFO_SCORE_WIDTH;
@@ -478,6 +485,7 @@ static void WM_DrawClientScore_Small( int x, int y, score_t *score, float *color
 	 // CHRUKER: b033 - Added to draw medals
 	int i, j;
 	char buf[64];
+	qboolean	drawScore = qtrue;
 
 	// CHRUKER: b033 - Was using the wrong char height for this
 	//          calculation
@@ -603,8 +611,9 @@ static void WM_DrawClientScore_Small( int x, int y, score_t *score, float *color
 	}
 
 	if ( ci->team == TEAM_SPECTATOR ) {
-		/*const char *s;
-		int w, totalwidth;
+		const char *s;
+
+		/*int w, totalwidth;
 
 		totalwidth = INFO_CLASS_WIDTH + INFO_SCORE_WIDTH + INFO_LATENCY_WIDTH - 8;
 
@@ -622,7 +631,21 @@ static void WM_DrawClientScore_Small( int x, int y, score_t *score, float *color
 		CG_DrawStringExt( tempx + totalwidth - w, y, s, hcolor, qfalse,
 			qfalse, MINICHAR_WIDTH, MINICHAR_HEIGHT, 0 );
 		return;*/
-		CG_DrawStringExt(	tempx, y, "^3SPECT", hcolor, qfalse, qfalse, MINICHAR_WIDTH, MINICHAR_HEIGHT, 0 );
+
+		// pheno
+		if( ci->ettv ) {
+			s = CG_TranslateString("^3ETTV"); 
+		} else if( ci->shoutcaster ) {
+			s = CG_TranslateString("^3SHOUTCASTER");
+		} else if( score->ping >=0 && score->ping < 999 ) { 
+			s = CG_TranslateString("^3SPECTATOR");
+		} else {
+			s = "";
+		}
+
+		CG_DrawStringExt( tempx, y, s, hcolor, qfalse, qfalse, MINICHAR_WIDTH, MINICHAR_HEIGHT, 0 );
+
+		drawScore = qfalse; // pheno: don't draw the score for spectators
 	}
 	else if ( cg.snap->ps.persistant[PERS_TEAM] == ci->team ) {
 		if(cg_drawClassIcons.integer & CLASSICON_SCOREBOARD){
@@ -674,21 +697,24 @@ static void WM_DrawClientScore_Small( int x, int y, score_t *score, float *color
 	tempx += INFO_CLASS_WIDTH;
 
 	//CG_DrawStringExt( tempx, y, va( "%3i", score->score ), hcolor, qfalse, qfalse, MINICHAR_WIDTH, MINICHAR_HEIGHT, 0 );
-	if(cg_scoreboard.integer == SCOREBOARD_PR)
-		CG_DrawStringExt(tempx, y,
-			va("%.3f", score->playerRating), 
-			hcolor, qfalse, qfalse,
-			MINICHAR_WIDTH, MINICHAR_HEIGHT, 0);
-	else if(cg_scoreboard.integer == SCOREBOARD_KR)
-		CG_DrawStringExt(tempx, y,
-			va("%.3f", score->killRating), 
-			hcolor, qfalse, qfalse,
-			MINICHAR_WIDTH, MINICHAR_HEIGHT, 0);
-	else
-		CG_DrawStringExt(tempx, y,
-			va("%3i", score->score), 
-			hcolor, qfalse, qfalse,
-			MINICHAR_WIDTH, MINICHAR_HEIGHT, 0);
+	if( drawScore ) {
+		if( cg_scoreboard.integer == SCOREBOARD_PR ) {
+			CG_DrawStringExt( tempx, y,
+				va( "%.3f", score->playerRating ), 
+				hcolor, qfalse, qfalse,
+				MINICHAR_WIDTH, MINICHAR_HEIGHT, 0 );
+		} else if( cg_scoreboard.integer == SCOREBOARD_KR ) {
+			CG_DrawStringExt( tempx, y,
+				va( "%.3f", score->killRating ), 
+				hcolor, qfalse, qfalse,
+				MINICHAR_WIDTH, MINICHAR_HEIGHT, 0 );
+		} else {
+			CG_DrawStringExt( tempx, y,
+				va( "%3i", score->score ), 
+				hcolor, qfalse, qfalse,
+				MINICHAR_WIDTH, MINICHAR_HEIGHT, 0 );
+		}
+	}
 
 	if( cg_gameType.integer == GT_WOLF_LMS ) {
 		tempx += INFO_SCORE_WIDTH;

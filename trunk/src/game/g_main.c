@@ -555,6 +555,7 @@ vmCvar_t g_maxConnsPerIP;
 
 // pheno
 vmCvar_t lua_allowedModules;
+vmCvar_t shoutcastPassword;
 
 // flms
 vmCvar_t g_flushItems;
@@ -1118,6 +1119,7 @@ cvarTable_t		gameCvarTable[] = {
 
 	// pheno
 	{ &lua_allowedModules, "lua_allowedModules", "", 0 },
+	{ &shoutcastPassword, "shoutcastPassword", "none", 0, 0, qfalse },
 
 	//flms
 	{ &g_flushItems, "g_flushItems", "1", 0},
