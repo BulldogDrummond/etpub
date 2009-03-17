@@ -40,6 +40,7 @@ cg_popupmessages.c
 cg_predict.c
 cg_scoreboard.c
 cg_servercmds.c
+cg_shoutcaster.c
 cg_snapshot.c
 cg_sound.c
 cg_spawn.c
