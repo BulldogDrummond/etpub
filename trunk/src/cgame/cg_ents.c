@@ -1094,14 +1094,13 @@ static void CG_Missile( centity_t *cent ) {
 					
 					if( cent->currentState.teamNum % 4 == TEAM_AXIS ) {
 						ent.shaderRGBA[0] = 255;
-						ent.shaderRGBA[1] = color;
 						ent.shaderRGBA[2] = color;
 					} else {
 						ent.shaderRGBA[0] = color;
-						ent.shaderRGBA[1] = color;
 						ent.shaderRGBA[2] = 255;
 					}
 
+					ent.shaderRGBA[1] = color;
 					ent.shaderRGBA[3] = 255;
 					ent.customShader = cgs.media.shoutcastLandmineShader;
 				} else if (!cent->currentState.modelindex2) {

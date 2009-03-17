@@ -1395,6 +1395,13 @@ static void CG_PlayerSprites( centity_t *cent ) {
 		return;
 	}
 
+	// pheno: add esp player name for shoutcasters
+	if( cgs.clientinfo[cg.clientNum].team == TEAM_SPECTATOR &&
+		cgs.clientinfo[cg.clientNum].shoutcaster ) {
+		CG_AddNameToESP( cent );
+		return;
+	}
+
 	if ( cent->currentState.powerups & (1<<PW_INVULNERABLE) ) {
 		CG_PlayerFloatSprite( cent, cgs.media.spawnInvincibleShader, 56 );
 		return;

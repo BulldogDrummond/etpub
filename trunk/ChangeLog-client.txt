@@ -424,3 +424,4 @@ current
            scoreboard
 * pheno:   fixed broken scoreboard on more than 30 players
 * pheno:   shoutcasters can now see landmines
+* pheno:   shoutcasters can now see player names

@@ -1211,6 +1211,10 @@
 				</FileConfiguration>
 			</File>
 			<File
+				RelativePath=".\cg_shoutcaster.c"
+				>
+			</File>
+			<File
 				RelativePath="cg_snapshot.c"
 				>
 				<FileConfiguration

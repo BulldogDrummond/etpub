@@ -2521,6 +2521,12 @@ static void CG_DrawCrosshairNames( void ) {
 		return;
 	}
 
+	// pheno: don't draw crosshair names in shoutcast mode
+	if( cgs.clientinfo[cg.clientNum].team == TEAM_SPECTATOR &&
+		cgs.clientinfo[cg.clientNum].shoutcaster ) {
+		return;
+	}
+
 	// Dens: dyna > mine
 	if ( cg.crosshairDyna > -1 ) {
 		color = CG_FadeColor( cg.crosshairDynaTime, 1000 );
@@ -5499,6 +5505,9 @@ static void CG_Draw2D( void ) {
 		CG_SpeakerEditorDraw();
 		return;
 	}
+
+	// pheno: draw shoutcaster esp
+	CG_DrawESP();
 
 	//bani - #127 - no longer cheat protected, we draw crosshair/reticle in non demoplayback
 	if ( cg_draw2D.integer == 0 ) {

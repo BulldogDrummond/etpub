@@ -875,7 +875,16 @@ typedef struct {
 	HudrectDef_t votefttext;
 	HudrectDef_t livesleft;
 } hudRect_t;
-	
+
+// pheno: shoutcaster esp names
+typedef struct espName_s
+{
+	const char	*string;
+	float		x;
+	float		y;
+	float		scale;
+} espName_t;
+
 typedef struct {
 	int			clientFrame;		// incremented each frame
 	
@@ -1345,6 +1354,10 @@ typedef struct {
 	dynamite_t		dynamiteplanted[2][MAXDYNAMITE];
 	int				dynamiteindex[2];
 	//int				axisDynamiteindex;
+
+	// pheno: shoutcaster esp names
+	espName_t		espNames[MAX_CLIENTS];
+	int				espNamesCount;
 
 	// forty - #279 - watermarks
 	// HOLLEMOD - START
@@ -3160,6 +3173,12 @@ void CG_parseBestShotsStats_cmd(qboolean doTop, void (txt_dump)(char *));
 void CG_parseTopShotsStats_cmd(qboolean doTop, void (txt_dump)(char *));
 void CG_scores_cmd(void);
 void CG_AddToTeamChat( const char *str, int clientnum );
+
+//
+// pheno: cg_shoutcaster.c
+//
+void CG_AddNameToESP( centity_t *cent );
+void CG_DrawESP( void );
 
 //
 // cg_playerstate.c
