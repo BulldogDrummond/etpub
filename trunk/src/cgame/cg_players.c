@@ -1395,7 +1395,7 @@ static void CG_PlayerSprites( centity_t *cent ) {
 		return;
 	}
 
-	// pheno: add esp player name for shoutcasters
+	// pheno: add player name to shoutcasters esp
 	if( cgs.clientinfo[cg.clientNum].team == TEAM_SPECTATOR &&
 		cgs.clientinfo[cg.clientNum].shoutcaster ) {
 		CG_AddNameToESP( cent );

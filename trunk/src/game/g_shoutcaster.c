@@ -54,7 +54,7 @@ void G_sclogin_cmd( gentity_t *ent, unsigned int dwCommand, qboolean fValue )
 	}
 
 	if( trap_Argc() < 2 ) {
-		CP( "print \"Usage: ... [password]\n\"" );
+		CP( va( "print \"Usage: %s [password]\n\"", cmd ) );
 		return;
 	}
 
