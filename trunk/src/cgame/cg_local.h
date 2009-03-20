@@ -883,6 +883,7 @@ typedef struct espName_s
 	float		x;
 	float		y;
 	float		scale;
+	float		alpha;
 } espName_t;
 
 typedef struct {
@@ -1355,9 +1356,10 @@ typedef struct {
 	int				dynamiteindex[2];
 	//int				axisDynamiteindex;
 
-	// pheno: shoutcaster esp names
+	// pheno: shoutcaster esp names and name times
 	espName_t		espNames[MAX_CLIENTS];
 	int				espNamesCount;
+	int				espNameTimes[MAX_CLIENTS];
 
 	// forty - #279 - watermarks
 	// HOLLEMOD - START

@@ -32,7 +32,7 @@ qboolean CG_WorldCoordToScreenCoordFloat( vec3_t worldCoord, float *x, float *y 
 	
 	transformed[0] = DotProduct( local, vright );
 	transformed[1] = DotProduct( local, vup );
-	transformed[2] = DotProduct( local, vfwd );	
+	transformed[2] = DotProduct( local, vfwd );
 
 	// Make sure Z is not negative.
 	if( transformed[2] < .01f ) {
@@ -50,13 +50,37 @@ qboolean CG_WorldCoordToScreenCoordFloat( vec3_t worldCoord, float *x, float *y 
 
 /*
 ================
+CG_PointIsVisible
+
+Is point visible from camera viewpoint?
+================
+*/
+qboolean CG_PointIsVisible( vec3_t origin )
+{
+	trace_t	trace;
+
+	CG_Trace( &trace, cg.refdef_current->vieworg, NULL, NULL,
+		origin, -1, CONTENTS_SOLID );
+
+	if( trace.fraction < 1.f ) {
+		return qfalse;
+	}
+
+	return qtrue;
+}
+
+/*
+================
 CG_AddNameToESP
+
+FIXME: In some cases the name won't fade out - it suddenly disappears
+       (depends on the viewing angle).
 ================
 */
 void CG_AddNameToESP( centity_t *cent )
 {
 	vec3_t			origin;
-	trace_t			trace;
+	qboolean		isVisible;
 	float			x, y, dist, scale;
 	clientInfo_t	*ci;
 	espName_t		*name;
@@ -82,10 +106,10 @@ void CG_AddNameToESP( centity_t *cent )
 		origin[2] -= 18;
 	}
 
-	CG_Trace( &trace, cg.refdef_current->vieworg, NULL, NULL,
-		origin, -1, CONTENTS_SOLID );
-
-	if( trace.fraction < 1.f ) {
+	isVisible = CG_PointIsVisible( origin );
+	
+	if( !isVisible &&
+		cg.time - cg.espNameTimes[cent->currentState.clientNum] > 1500 ) {
 		return;
 	}
 
@@ -105,6 +129,17 @@ void CG_AddNameToESP( centity_t *cent )
 		&cgs.media.font1 ) * .5f;
 	name->y = y;
 	name->scale = scale;
+	name->alpha = 1.f;
+
+	if( isVisible ) {
+		cg.espNameTimes[cent->currentState.clientNum] = cg.time;
+	} else {
+		float diff = cg.time - cg.espNameTimes[cent->currentState.clientNum];
+
+		if( diff > 500.f ) {
+			name->alpha -= ( diff - 500.f ) / 1000.f;
+		}
+	}
 
 	cg.espNamesCount++;
 }
@@ -112,14 +147,13 @@ void CG_AddNameToESP( centity_t *cent )
 /*
 ================
 CG_DrawESP
-
-TODO: do a great fadeout like ETPro
 ================
 */
 void CG_DrawESP( void )
 {
 	int			i;
 	espName_t	*name;
+	vec4_t		color = { 1.f, 1.f, 1.f, 1.f };
 
 	// draw player names
 	for( i = 0; i < cg.espNamesCount; i++ ) {
@@ -129,8 +163,10 @@ void CG_DrawESP( void )
 			break;
 		}
 
+		color[3] = name->alpha;
+
 		CG_Text_Paint_Ext( name->x, name->y, name->scale, name->scale,
-			colorWhite, name->string, 0, 0, 0, &cgs.media.font1 );
+			color, name->string, 0, 0, 0, &cgs.media.font1 );
 
 		memset( name, 0, sizeof( name ) );
 	}
