@@ -882,12 +882,12 @@ qboolean G_shrubbot_levelconnect_check(char *userinfo, char *reason)
 	return qtrue;
 }
 
-void G_shrubbot_greeting(gentity_t *ent)
+void G_shrubbot_greeting( gentity_t *ent )
 {
-	int i, l = 0;
-	char *greeting;
+	int		i, l = 0;
+	char	*sound, *greeting;
 
-	if(!ent || !ent->client){
+	if( !ent || !ent->client ) {
 		return;
 	}
 
@@ -905,20 +905,30 @@ void G_shrubbot_greeting(gentity_t *ent)
 			if( !Q_stricmp( ent->client->sess.guid,
 					g_shrubbot_admins[i]->guid ) ) {
 				l = g_shrubbot_admins[i]->level;
+				sound = g_shrubbot_admins[i]->greeting_sound;
+				greeting = g_shrubbot_admins[i]->greeting;
 				break;
 			}
 		}
 	}
 
+	// if needed override with level defaults
+	if( !sound[0] ) {
+		sound = g_shrubbot_levels[l]->greeting_sound;
+	}
+
+	if( !greeting[0] ) {
+		greeting = g_shrubbot_levels[l]->greeting;
+	}
+
 	// play the greeting sound
-	if( *g_shrubbot_levels[l]->greeting_sound ) {
-		G_globalSound( g_shrubbot_levels[l]->greeting_sound );
+	if( sound[0] ) {
+		G_globalSound( sound );
 	}
 
 	// welcome the player
-	if( *g_shrubbot_levels[l]->greeting ) {
-		greeting = Q_StrReplace( g_shrubbot_levels[l]->greeting,
-			"[n]", ent->client->pers.netname );
+	if( greeting[0] ) {
+		greeting = Q_StrReplace( greeting, "[n]", ent->client->pers.netname );
 
 		switch( g_greetingPos.integer ) {
 			case MSGPOS_CENTER:
