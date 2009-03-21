@@ -2324,6 +2324,8 @@ void CG_ResetPlayerEntity( centity_t *cent ) {
 	cent->pe.painAnimTorso = -1;
 	cent->pe.animSpeed = 1.0;
 
+	// pheno: reset esp name time
+	cg.espNameTimes[cent->currentState.clientNum] = 0;
 }
 
 void CG_GetBleedOrigin( vec3_t head_origin, vec3_t body_origin, int fleshEntityNum )

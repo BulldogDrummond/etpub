@@ -4,46 +4,33 @@
 
 /*
 ================
-CG_WorldCoordToScreenCoordFloat
+CG_WorldToScreen
 
 Take any world coord and convert it to a 2D virtual 640x480 screen coord
 ================
 */
-qboolean CG_WorldCoordToScreenCoordFloat( vec3_t worldCoord, float *x, float *y )
+qboolean CG_WorldToScreen( vec3_t point, float *x, float *y )
 {
-	float	xcenter, ycenter;
-	vec3_t	local, transformed;
-	vec3_t	vfwd;
-	vec3_t	vright;
-	vec3_t	vup;
-	float	xzi;
-	float	yzi;
+	vec3_t	trans;
+	float	z, xc, yc, px, py;
 
-	//xcenter = cg.refdef.width / 2; // gives screen coords adjusted for resolution
-	//ycenter = cg.refdef.height / 2; // gives screen coords adjusted for resolution
-	
-	// NOTE: did it this way because most draw functions expect virtual 640x480 coords
-	//       and adjust them for current resolution
-	xcenter = 640.f * .5f; // gives screen coords in virtual 640x480, to be adjusted when drawn
-	ycenter = 480.f * .5f; // gives screen coords in virtual 640x480, to be adjusted when drawn
-	
-	AngleVectors( cg.refdefViewAngles, vfwd, vright, vup );
-	VectorSubtract( worldCoord, cg.refdef.vieworg, local );
-	
-	transformed[0] = DotProduct( local, vright );
-	transformed[1] = DotProduct( local, vup );
-	transformed[2] = DotProduct( local, vfwd );
+	VectorSubtract( point, cg.refdef_current->vieworg, trans );
+	z = DotProduct( trans, cg.refdef_current->viewaxis[0] );
 
-	// Make sure Z is not negative.
-	if( transformed[2] < .01f ) {
+	if( z <= .001f ) {
 		return qfalse;
 	}
 
-	xzi = xcenter / transformed[2] * ( 90.f / cg.refdef.fov_x );
-	yzi = ycenter / transformed[2] * ( 90.f / cg.refdef.fov_y );
+	xc = 640.f / 2.f;
+	yc = 480.f / 2.f;
 
-	*x = xcenter + xzi * transformed[0];
-	*y = ycenter - yzi * transformed[1];
+	px = tan( cg.refdef_current->fov_x * M_PI / 360.f );
+	py = tan( cg.refdef_current->fov_y * M_PI / 360.f );
+
+	*x = xc - DotProduct( trans, cg.refdef_current->viewaxis[1] ) *
+		xc / ( z * px );
+	*y = yc - DotProduct( trans, cg.refdef_current->viewaxis[2] ) *
+		yc / ( z * py );
 
 	return qtrue;
 }
@@ -55,12 +42,12 @@ CG_PointIsVisible
 Is point visible from camera viewpoint?
 ================
 */
-qboolean CG_PointIsVisible( vec3_t origin )
+qboolean CG_PointIsVisible( vec3_t point )
 {
 	trace_t	trace;
 
 	CG_Trace( &trace, cg.refdef_current->vieworg, NULL, NULL,
-		origin, -1, CONTENTS_SOLID );
+		point, -1, CONTENTS_SOLID );
 
 	if( trace.fraction < 1.f ) {
 		return qfalse;
@@ -80,7 +67,7 @@ FIXME: In some cases the name won't fade out - it suddenly disappears
 void CG_AddNameToESP( centity_t *cent )
 {
 	vec3_t			origin;
-	qboolean		isVisible;
+	qboolean		visible;
 	float			x, y, dist, scale;
 	clientInfo_t	*ci;
 	espName_t		*name;
@@ -95,7 +82,7 @@ void CG_AddNameToESP( centity_t *cent )
 	}
 
 	VectorCopy( cent->lerpOrigin, origin );
-	origin[2] += 56;
+	origin[2] += 64;
 
 	// even lower if needed
 	if( cent->currentState.eFlags & EF_PRONE ||
@@ -106,14 +93,14 @@ void CG_AddNameToESP( centity_t *cent )
 		origin[2] -= 18;
 	}
 
-	isVisible = CG_PointIsVisible( origin );
+	visible = CG_PointIsVisible( origin );
 	
-	if( !isVisible &&
+	if( !visible &&
 		cg.time - cg.espNameTimes[cent->currentState.clientNum] > 1500 ) {
 		return;
 	}
 
-	if( !CG_WorldCoordToScreenCoordFloat( origin, &x, &y ) ) {
+	if( !CG_WorldToScreen( origin, &x, &y ) ) {
 		return;
 	}
 
@@ -131,7 +118,7 @@ void CG_AddNameToESP( centity_t *cent )
 	name->scale = scale;
 	name->alpha = 1.f;
 
-	if( isVisible ) {
+	if( visible ) {
 		cg.espNameTimes[cent->currentState.clientNum] = cg.time;
 	} else {
 		float diff = cg.time - cg.espNameTimes[cent->currentState.clientNum];
