@@ -109,6 +109,10 @@ void G_sclogout_cmd( gentity_t *ent, unsigned int dwCommand, qboolean fValue )
 	}
 
 	ent->client->sess.shoutcaster = 0;
-	ent->client->sess.spec_invite = 0;
+	
+	if( !ent->client->sess.referee ) { // don't remove referee's invitation
+		ent->client->sess.spec_invite = 0;
+	}
+	
 	ClientUserinfoChanged( ent - g_entities );
 }
