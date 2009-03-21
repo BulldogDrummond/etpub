@@ -1563,6 +1563,11 @@ void CG_InitConsoleCommands( void ) {
 	trap_AddCommand("nextteam");
 
 	trap_AddCommand("dropweapon"); // Terifire
+	trap_AddCommand("sclogin");
+	trap_AddCommand("sclogout");
+	trap_AddCommand("shoutcastlogin");
+	trap_AddCommand("shoutcastlogout");
+	trap_AddCommand("lua_status");
 
 	// tjw: remove engine commands
 	trap_RemoveCommand("+lookup");
