@@ -884,50 +884,85 @@ qboolean G_shrubbot_levelconnect_check(char *userinfo, char *reason)
 
 void G_shrubbot_greeting( gentity_t *ent )
 {
-	int		i, l = 0;
-	char	*sound, *greeting;
+	int			i, j, l;
+	char		*greeting = "";
+	qboolean	broadcast = qfalse, found = qfalse;
 
 	if( !ent || !ent->client ) {
 		return;
 	}
 
-	// pheno: if configured do not welcome bots
+	// if configured do not welcome bots
 	if( ent->r.svFlags & SVF_BOT &&
 		g_OmniBotFlags.integer & BOT_FLAGS_DISABLE_GREETING ) {
 		return;
 	}
 
-	// Dens: someone who is hidden shouln't be announced
-	// pheno: incognito players should be announced as level 0 user
-	//        otherwise get the real level number
 	if( !G_shrubbot_permission( ent, SBF_INCOGNITO ) ) {
 		for( i = 0; g_shrubbot_admins[i]; i++ ) {
 			if( !Q_stricmp( ent->client->sess.guid,
 					g_shrubbot_admins[i]->guid ) ) {
 				l = g_shrubbot_admins[i]->level;
-				sound = g_shrubbot_admins[i]->greeting_sound;
-				greeting = g_shrubbot_admins[i]->greeting;
+
+				// play the admin or level sound
+				if( *g_shrubbot_admins[i]->greeting_sound ) {
+					G_globalSound( g_shrubbot_admins[i]->greeting_sound );
+				} else {
+					for( j = 0; g_shrubbot_levels[j]; j++ ) {
+						if( g_shrubbot_levels[j]->level == l ) {
+							if( *g_shrubbot_levels[j]->greeting_sound ) {
+								G_globalSound(
+									g_shrubbot_levels[j]->greeting_sound );
+							}
+
+							break;
+						}
+					}
+				}
+
+				// get the admin or level greeting text
+				if( *g_shrubbot_admins[i]->greeting ) {
+					greeting = g_shrubbot_admins[i]->greeting;
+					broadcast = qtrue;
+				} else {
+					for( j = 0; g_shrubbot_levels[j]; j++ ) {
+						if( g_shrubbot_levels[j]->level == l ) {
+							if( *g_shrubbot_levels[j]->greeting ) {
+								greeting = g_shrubbot_levels[j]->greeting;
+								broadcast = qtrue;
+							}
+
+							break;
+						}
+					}
+				}
+
+				found = qtrue;
 				break;
 			}
 		}
 	}
 
-	// if needed override with level defaults
-	if( !sound[0] ) {
-		sound = g_shrubbot_levels[l]->greeting_sound;
+	// incognito admins and level 0 users will be announced too
+	if( !found ) {
+		for( i = 0; g_shrubbot_levels[i]; i++ ) {
+			if( g_shrubbot_levels[i]->level == 0 ) {
+				if( *g_shrubbot_levels[i]->greeting_sound ) {
+					G_globalSound( g_shrubbot_levels[i]->greeting_sound );
+				}
+
+				if( *g_shrubbot_levels[i]->greeting ) {
+					greeting = g_shrubbot_levels[i]->greeting;
+					broadcast = qtrue;
+				}
+
+				break;
+			}
+		}
 	}
 
-	if( !greeting[0] ) {
-		greeting = g_shrubbot_levels[l]->greeting;
-	}
-
-	// play the greeting sound
-	if( sound[0] ) {
-		G_globalSound( sound );
-	}
-
-	// welcome the player
-	if( greeting[0] ) {
+	// welcome the player with the given text
+	if( broadcast ) {
 		greeting = Q_StrReplace( greeting, "[n]", ent->client->pers.netname );
 
 		switch( g_greetingPos.integer ) {
@@ -952,7 +987,6 @@ void G_shrubbot_greeting( gentity_t *ent )
 
 	return;
 }
-
 
 qboolean G_shrubbot_cmd_check(gentity_t *ent)
 {
