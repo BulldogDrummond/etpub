@@ -130,7 +130,7 @@ lzio.c
 print.c
 """
 
-lua_list = scons_utils.BuildList( 'lua-5.1.3/src', lua_string )
+lua_list = scons_utils.BuildList( 'lua-5.1.4/src', lua_string )
 
 #botai_objs = []
 #for i in botai_list:
@@ -146,7 +146,7 @@ local_env.Append( CPPDEFINES = [ 'NO_BOT_SUPPORT' ] )
 
 local_env.Append( CPPDEFINES = [ 'THREADS' ] )
 
-local_env.Append( CPPPATH = [ '../../../../Omnibot/Common', '../../../../Omnibot/ET', '../../../lua-5.1.3/src', '../../../sha-1' ] )
+local_env.Append( CPPPATH = [ '../../../../Omnibot/Common', '../../../../Omnibot/ET', '../../../lua-5.1.4/src', '../../../sha-1' ] )
 
 # Omnibot
 local_env.Append( CXXFLAGS = [ '-fpermissive' ] )
