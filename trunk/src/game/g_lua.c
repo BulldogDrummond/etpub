@@ -1,6 +1,5 @@
 
 #include "g_lua.h"
-#include "g_sha1.h"
 
 // TODO: aiming for compatibility with ETPro lua mods
 // http://wolfwiki.anime.net/index.php/Lua_Mod_API
@@ -1145,7 +1144,7 @@ qboolean G_LuaInit()
 				trap_FS_Read(code, flen, f);
 				*(code + flen) = '\0';
 				trap_FS_FCloseFile(f);
-				signature = sha1(code);
+				signature = G_SHA1(code);
 
 				if ( Q_stricmp(lua_allowedModules.string, "") &&
 					 !strstr(lua_allowedModules.string, signature) ) {

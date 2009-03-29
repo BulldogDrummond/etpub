@@ -5247,7 +5247,7 @@ static void CG_DrawPlayerStats( void ) {
 							h = CG_Text_Height_Ext( ":00 ", cg_fontLimboScale.value, 0, &cgs.media.font4);
 							if(count == 0){
 								CG_Text_Paint_Ext( 4, 180, cg_fontLimboScale.value, cg_fontLimboScale.value,
-									team ? colorBlue : colorRed, team ? "Allies" : "Axis" , 0, 0, ITEM_TEXTSTYLE_NORMAL, &cgs.media.font4 );
+									team ? colorBlue : colorRed, team ? "Allies" : "Axis" , 0, 0, ITEM_TEXTSTYLE_SHADOWED, &cgs.media.font4 );
 							}
 							CG_Text_Paint_Ext( 4, 180 + ((count+1) * (h + 5)), cg_fontLimboScale.value, cg_fontLimboScale.value,
 								colorWhite, str, 0, 0, ITEM_TEXTSTYLE_SHADOWED, &cgs.media.font4 );

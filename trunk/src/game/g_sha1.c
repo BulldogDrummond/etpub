@@ -1,7 +1,10 @@
+// g_sha1.c
 
-#include "g_sha1.h"
+#include "g_local.h"
 
-char *sha1(char *string)
+#include <sha1.h>
+
+char *G_SHA1(char *string)
 {
 	SHA1Context sha;
 

@@ -1913,6 +1913,11 @@ void G_CalcRank( gclient_t* client );
 //
 // pheno: g_shoutcaster.c
 //
+char *G_SHA1( char *string );
+
+//
+// pheno: g_shoutcaster.c
+//
 void G_sclogin_cmd( gentity_t *ent, unsigned int dwCommand, qboolean fValue );
 void G_sclogout_cmd( gentity_t *ent, unsigned int dwCommand, qboolean fValue );
 

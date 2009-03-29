@@ -112,8 +112,8 @@ void CG_AddNameToESP( centity_t *cent )
 
 	// add player name to esp list
 	name->string = ci->name;
-	name->x = x - CG_Text_Width_Ext( ci->name, scale, 0,
-		&cgs.media.font1 ) * .5f;
+	name->x = x -
+		CG_Text_Width_Ext( ci->name, scale, 0, &cgs.media.font1 ) / 2.f;
 	name->y = y;
 	name->scale = scale;
 	name->alpha = 1.f;
