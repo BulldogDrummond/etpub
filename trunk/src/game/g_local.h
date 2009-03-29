@@ -1911,7 +1911,7 @@ void G_WriteSessionData( qboolean restart );
 void G_CalcRank( gclient_t* client );
 
 //
-// pheno: g_shoutcaster.c
+// pheno: g_sha1.c
 //
 char *G_SHA1( char *string );
 
