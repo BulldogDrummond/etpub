@@ -934,10 +934,18 @@ void player_die( gentity_t *self, gentity_t *inflictor, gentity_t *attacker, int
 	// pheno: reworked redeye's and balgo's goat sound code
 	//        etpro behavior - play sound for attacker and victim only
 	if( ( meansOfDeath == MOD_KNIFE || meansOfDeath == MOD_THROWN_KNIFE ) &&
+		attacker &&
 		g_knifeKillSound.string ) {
-		int	sound = G_SoundIndex( g_knifeKillSound.string );
-		G_AddEvent( self, EV_GENERAL_SOUND, sound );
-		G_AddEvent( attacker, EV_GENERAL_SOUND, sound );
+		gentity_t	*tent, *tent2;
+
+		tent = G_TempEntity( self->r.currentOrigin, EV_GLOBAL_CLIENT_SOUND );
+		tent->s.teamNum = ( self->client - level.clients );
+		tent->s.eventParm = G_SoundIndex( g_knifeKillSound.string );
+
+		tent2 = G_TempEntity( attacker->r.currentOrigin,
+			EV_GLOBAL_CLIENT_SOUND );
+		tent2->s.teamNum = ( attacker->client - level.clients );
+		tent2->s.eventParm = G_SoundIndex( g_knifeKillSound.string );
 	}
 
 	// redeye - firstblood message
