@@ -140,7 +140,6 @@ vmCvar_t		g_soldierChargeTime;
 
 // redeye
 vmCvar_t g_firstBloodSound;
-vmCvar_t g_knifeSound;
 
 // Gordon
 vmCvar_t		g_antilag;
@@ -887,7 +886,6 @@ cvarTable_t		gameCvarTable[] = {
 
 	// redeye
 	{ &g_firstBloodSound, "g_firstBloodSound",  "", 0 },
-	{ &g_knifeSound, "g_knifeSound",  "", 0 },
 
 	// Josh
 	{ &g_tactics, "g_tactics", "0", 0 },

@@ -2317,7 +2317,6 @@ extern vmCvar_t g_maxXPResetWarn;
 
 // redeye
 extern vmCvar_t g_firstBloodSound;
-extern vmCvar_t g_knifeSound;
 
 // Josh
 extern vmCvar_t g_logOptions;

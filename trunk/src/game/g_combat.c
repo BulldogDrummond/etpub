@@ -427,11 +427,6 @@ void player_die( gentity_t *self, gentity_t *inflictor, gentity_t *attacker, int
 		weap = BG_WeaponForMOD(self->client->lasthurt_mod);
 	else
 		weap = BG_WeaponForMOD(meansOfDeath);
-
-	// (Dens:) balgo: if player has someone killed by knife and the goat sound is
-	// set, we must play it.
-	if(meansOfDeath == MOD_KNIFE && !OnSameTeam(self, attacker) && g_knifeKillSound.string[0]) 
-		G_AddEvent(attacker, EV_GENERAL_SOUND, G_SoundIndex(g_knifeKillSound.string));
 	
 	// xkan, 1/13/2003 - record the time we died.
 	// tjw: moved this to death instead of limbo
@@ -936,19 +931,13 @@ void player_die( gentity_t *self, gentity_t *inflictor, gentity_t *attacker, int
 		self->die = body_die;
 	}
 
-	// redeye - goat sound
-	if ((meansOfDeath == MOD_KNIFE || meansOfDeath == MOD_THROWN_KNIFE) &&
-		attacker && g_knifeSound.string)
-	{
-// FIXME plays the sound at least also for the victim 
-		// to play only for the attacker
-		gentity_t *te = G_TempEntity(attacker->r.currentOrigin, EV_GLOBAL_CLIENT_SOUND);
-		te->s.teamNum = attacker->s.teamNum;
-		te->s.eventParm = G_SoundIndex(g_knifeSound.string);
-		te->r.svFlags |= SVF_SINGLECLIENT;
-
-		// play knife sound globally for all player (personal preferred method, should not be used)
-		// G_globalSound(g_knifeSound.string); 
+	// pheno: reworked redeye's and balgo's goat sound code
+	//        etpro behavior - play sound for attacker and victim only
+	if( ( meansOfDeath == MOD_KNIFE || meansOfDeath == MOD_THROWN_KNIFE ) &&
+		g_knifeKillSound.string ) {
+		int	sound = G_SoundIndex( g_knifeKillSound.string );
+		G_AddEvent( self, EV_GENERAL_SOUND, sound );
+		G_AddEvent( attacker, EV_GENERAL_SOUND, sound );
 	}
 
 	// redeye - firstblood message
