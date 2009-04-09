@@ -423,7 +423,6 @@ char *G_KillSpreeSanitize(char *text)
 void G_check_killing_spree(gentity_t *ent, int number)
 {
 	int i;
-	gentity_t *tent;
 	char name[MAX_NAME_LENGTH] = {"*unknown*"};
 	char *output;
 
@@ -489,9 +488,8 @@ void G_check_killing_spree(gentity_t *ent, int number)
 				if(g_killingSprees[i]->play[0] && !Q_stricmp(g_killingSprees[i]->play,"envi")){
 					G_AddEvent(ent, EV_GENERAL_SOUND,G_SoundIndex(va("%s",g_killingSprees[i]->sound)));
 				}else if(g_killingSprees[i]->play[0] && !Q_stricmp(g_killingSprees[i]->play,"player")){
-					tent = G_TempEntity(ent->r.currentOrigin,EV_GLOBAL_CLIENT_SOUND);
-					tent->s.teamNum = (ent->client - level.clients);
-					tent->s.eventParm = G_SoundIndex(va("%s",g_killingSprees[i]->sound));
+					G_ClientSound( ent,
+						G_SoundIndex( g_killingSprees[i]->sound ) );
 				}else{
 					G_globalSound(g_killingSprees[i]->sound);
 				}
@@ -516,7 +514,6 @@ void G_check_killing_spree_end(gentity_t *ent, gentity_t *other, int number, int
 	char pos[6];
 	char name[MAX_NAME_LENGTH] = {"*unknown*"};
 	char oname[MAX_NAME_LENGTH] = {"*unknown*"};
-	gentity_t *tent;
 
 	if(start > 0){
 		number = g_ks_ends[start-1]->number;
@@ -588,9 +585,7 @@ void G_check_killing_spree_end(gentity_t *ent, gentity_t *other, int number, int
 			if(g_ks_ends[i]->wkplay[0] && !Q_stricmp(g_ks_ends[i]->wkplay,"envi")){
 				G_AddEvent(ent, EV_GENERAL_SOUND,G_SoundIndex(va("%s",g_ks_ends[i]->wksound)));
 			}else if(g_ks_ends[i]->wkplay[0] && !Q_stricmp(g_ks_ends[i]->wkplay,"player")){
-				tent = G_TempEntity(ent->r.currentOrigin,EV_GLOBAL_CLIENT_SOUND);
-				tent->s.teamNum = (ent->client - level.clients);
-				tent->s.eventParm = G_SoundIndex(va("%s",g_ks_ends[i]->wksound));
+				G_ClientSound( ent, G_SoundIndex( g_ks_ends[i]->wksound ) );
 			}else{
 				G_globalSound(g_ks_ends[i]->wksound);
 			}
@@ -632,9 +627,7 @@ void G_check_killing_spree_end(gentity_t *ent, gentity_t *other, int number, int
 			if(g_ks_ends[i]->skplay[0] && !Q_stricmp(g_ks_ends[i]->skplay,"envi")){
 				G_AddEvent(ent, EV_GENERAL_SOUND,G_SoundIndex(va("%s",g_ks_ends[i]->sksound)));
 			}else if(g_ks_ends[i]->skplay[0] && !Q_stricmp(g_ks_ends[i]->skplay,"player")){
-				tent = G_TempEntity(ent->r.currentOrigin,EV_GLOBAL_CLIENT_SOUND);
-				tent->s.teamNum = (ent->client - level.clients);
-				tent->s.eventParm = G_SoundIndex(va("%s",g_ks_ends[i]->sksound));
+				G_ClientSound( ent, G_SoundIndex( g_ks_ends[i]->sksound ) );
 			}else{
 				G_globalSound(g_ks_ends[i]->sksound);
 			}
@@ -678,9 +671,7 @@ void G_check_killing_spree_end(gentity_t *ent, gentity_t *other, int number, int
 			if(g_ks_ends[i]->tkplay[0] && !Q_stricmp(g_ks_ends[i]->tkplay,"envi")){
 				G_AddEvent(ent, EV_GENERAL_SOUND,G_SoundIndex(va("%s",g_ks_ends[i]->tksound)));
 			}else if(g_ks_ends[i]->tkplay[0] && !Q_stricmp(g_ks_ends[i]->tkplay,"player")){
-				tent = G_TempEntity(ent->r.currentOrigin,EV_GLOBAL_CLIENT_SOUND);
-				tent->s.teamNum = (ent->client - level.clients);
-				tent->s.eventParm = G_SoundIndex(va("%s",g_ks_ends[i]->tksound));
+				G_ClientSound( ent, G_SoundIndex( g_ks_ends[i]->tksound ) );
 			}else{
 				G_globalSound(g_ks_ends[i]->tksound);
 			}
@@ -730,9 +721,7 @@ void G_check_killing_spree_end(gentity_t *ent, gentity_t *other, int number, int
 			if(g_ks_ends[i]->play[0] && !Q_stricmp(g_ks_ends[i]->play,"envi")){
 				G_AddEvent(ent, EV_GENERAL_SOUND,G_SoundIndex(va("%s",g_ks_ends[i]->sound)));
 			}else if(g_ks_ends[i]->play[0] && !Q_stricmp(g_ks_ends[i]->play,"player")){
-				tent = G_TempEntity(ent->r.currentOrigin,EV_GLOBAL_CLIENT_SOUND);
-				tent->s.teamNum = (ent->client - level.clients);
-				tent->s.eventParm = G_SoundIndex(va("%s",g_ks_ends[i]->sound));
+				G_ClientSound( ent, G_SoundIndex( g_ks_ends[i]->sound ) );
 			}else{
 				G_globalSound(g_ks_ends[i]->sound);
 			}
@@ -790,7 +779,6 @@ int G_highest_multikill(gentity_t *ent)
 void G_check_multikill(gentity_t *ent, int number)
 {
 	int i;
-	gentity_t *tent;
 	char name[MAX_NAME_LENGTH] = {"*unknown*"};
 	char *output;
 
@@ -856,9 +844,8 @@ void G_check_multikill(gentity_t *ent, int number)
 				if(g_multiKills[i]->play[0] && !Q_stricmp(g_multiKills[i]->play,"envi")){
 					G_AddEvent(ent, EV_GENERAL_SOUND,G_SoundIndex(va("%s",g_multiKills[i]->sound)));
 				}else if(g_multiKills[i]->play[0] && !Q_stricmp(g_multiKills[i]->play,"player")){
-					tent = G_TempEntity(ent->r.currentOrigin,EV_GLOBAL_CLIENT_SOUND);
-					tent->s.teamNum = (ent->client - level.clients);
-					tent->s.eventParm = G_SoundIndex(va("%s",g_multiKills[i]->sound));
+					G_ClientSound( ent,
+						G_SoundIndex( g_multiKills[i]->sound ) );
 				}else{
 					G_globalSound(g_multiKills[i]->sound);
 				}
@@ -931,7 +918,6 @@ void G_displayBanner(int loop)
 void G_check_revive_spree(gentity_t *ent, int number)
 {
 	int i;
-	gentity_t *tent;
 	char name[MAX_NAME_LENGTH] = {"*unknown*"};
 	char *output;
 
@@ -995,9 +981,8 @@ void G_check_revive_spree(gentity_t *ent, int number)
 				if(g_reviveSprees[i]->play[0] && !Q_stricmp(g_reviveSprees[i]->play,"envi")){
 					G_AddEvent(ent, EV_GENERAL_SOUND,G_SoundIndex(va("%s",g_reviveSprees[i]->sound)));
 				}else if(g_reviveSprees[i]->play[0] && !Q_stricmp(g_reviveSprees[i]->play,"player")){
-					tent = G_TempEntity(ent->r.currentOrigin,EV_GLOBAL_CLIENT_SOUND);
-					tent->s.teamNum = (ent->client - level.clients);
-					tent->s.eventParm = G_SoundIndex(va("%s",g_reviveSprees[i]->sound));
+					G_ClientSound( ent,
+						G_SoundIndex( g_reviveSprees[i]->sound ) );
 				}else{
 					G_globalSound(g_reviveSprees[i]->sound);
 				}

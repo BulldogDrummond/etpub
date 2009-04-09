@@ -1575,6 +1575,9 @@ void	G_AnimScriptSound( int soundIndex, vec3_t org, int client );
 void	G_FreeEntity( gentity_t *e );
 //qboolean	G_EntitiesFree( void );
 
+// pheno
+void G_ClientSound( gentity_t *ent, int soundIndex );
+
 void	G_TouchTriggers (gentity_t *ent);
 void	G_TouchSolids (gentity_t *ent);
 

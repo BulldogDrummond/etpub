@@ -936,16 +936,8 @@ void player_die( gentity_t *self, gentity_t *inflictor, gentity_t *attacker, int
 	if( ( meansOfDeath == MOD_KNIFE || meansOfDeath == MOD_THROWN_KNIFE ) &&
 		attacker &&
 		g_knifeKillSound.string ) {
-		gentity_t	*tent, *tent2;
-
-		tent = G_TempEntity( self->r.currentOrigin, EV_GLOBAL_CLIENT_SOUND );
-		tent->s.teamNum = ( self->client - level.clients );
-		tent->s.eventParm = G_SoundIndex( g_knifeKillSound.string );
-
-		tent2 = G_TempEntity( attacker->r.currentOrigin,
-			EV_GLOBAL_CLIENT_SOUND );
-		tent2->s.teamNum = ( attacker->client - level.clients );
-		tent2->s.eventParm = G_SoundIndex( g_knifeKillSound.string );
+		G_ClientSound( self, G_SoundIndex( g_knifeKillSound.string ) );
+		G_ClientSound( attacker, G_SoundIndex( g_knifeKillSound.string ) );
 	}
 
 	// redeye - firstblood message

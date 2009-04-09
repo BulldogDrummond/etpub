@@ -2053,3 +2053,5 @@
 * pheno:   added shoutcaster sclogin, sclogout, shoutcastlogin and
            shoutcastlogout commands (NOTE: shoutcaster status is only available
            with installed etpub client > 20090112)
+* pheno:   Lua API: added et.G_ClientSound( clientnum, soundindex )
+           library call

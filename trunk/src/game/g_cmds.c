@@ -230,10 +230,9 @@ void G_AdminChat(gentity_t *ent)
 			netname));
 
 		// Dens: play pm sound, although not really a private message
-		if (g_privateMessageSound.string[0]){
-			gentity_t *tent = G_TempEntity(other->r.currentOrigin, EV_GLOBAL_CLIENT_SOUND);
-			tent->s.teamNum = (other->client - level.clients);
-			tent->s.eventParm = G_SoundIndex(va("%s",g_privateMessageSound.string));
+		if( g_privateMessageSound.string[0] ) {
+			G_ClientSound( other,
+				G_SoundIndex( g_privateMessageSound.string ) );
 		}
 	}
 	unescape_string(msg); //mcwf
@@ -329,11 +328,11 @@ void G_PrivateMessage(gentity_t *ent)
 		CPx(pids[i], va("cp \"^%cprivate message from ^7%s^7\"",
 			color,
 			netname));
+
 		// Dens: play a sound
-		if (g_privateMessageSound.string[0]){
-			gentity_t *tent = G_TempEntity(tmpent->r.currentOrigin, EV_GLOBAL_CLIENT_SOUND);
-			tent->s.teamNum = pids[i];
-			tent->s.eventParm = G_SoundIndex(va("%s",g_privateMessageSound.string));
+		if( g_privateMessageSound.string[0] ) {
+			G_ClientSound( tmpent,
+				G_SoundIndex( g_privateMessageSound.string ) );
 		}
 	}
 
@@ -361,7 +360,6 @@ void G_PlaySound_Cmd(void) {
 	char err[MAX_STRING_CHARS];
 	int index;
 	gentity_t *victim;
-	gentity_t *tent;
 
 	if(trap_Argc() < 2) {
 		G_Printf("usage: playsound [name|slot#] sound\n");
@@ -396,10 +394,7 @@ void G_PlaySound_Cmd(void) {
 			G_AddEvent(victim, EV_GENERAL_SOUND, index);
 		}
 		else {
-			tent = G_TempEntity(victim->r.currentOrigin, 
-			       EV_GLOBAL_CLIENT_SOUND);
-			tent->s.teamNum = pids[0];
-			tent->s.eventParm = index;
+			G_ClientSound( victim, index );
 		}
 	}
 	else {
@@ -1930,9 +1925,8 @@ qboolean SetTeam( gentity_t *ent, char *s, qboolean force, weapon_t w1, weapon_t
 
 			for( i = 0; i < MAX_COMMANDER_TEAM_SOUNDS; i++ ) {
 				if( level.commanderSounds[ x ][ i ].index ) {
-					gentity_t* tent = G_TempEntity( client->ps.origin, EV_GLOBAL_CLIENT_SOUND ); 
-					tent->s.eventParm = level.commanderSounds[ x ][ i ].index - 1;
-					tent->s.teamNum = clientNum;
+					G_ClientSound( ent,
+						level.commanderSounds[ x ][ i ].index - 1 );
 				}
 			}
 		}

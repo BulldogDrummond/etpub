@@ -826,6 +826,22 @@ void G_Sound( gentity_t *ent, int soundIndex ) {
 
 /*
 =============
+G_ClientSound
+=============
+*/
+void G_ClientSound( gentity_t *ent, int soundIndex )
+{
+	if( ent && ent->client ) {
+		gentity_t	*te;
+
+		te = G_TempEntity( ent->client->ps.origin, EV_GLOBAL_CLIENT_SOUND );
+		te->s.teamNum = ( ent->client - level.clients );
+		te->s.eventParm = soundIndex;
+	}
+}
+
+/*
+=============
 G_AnimScriptSound
 =============
 */

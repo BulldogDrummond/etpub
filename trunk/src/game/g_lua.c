@@ -443,6 +443,15 @@ static int _et_G_Sound(lua_State *L)
 	G_Sound(g_entities + entnum, soundindex);
 	return 0;
 }
+
+// et.G_ClientSound( clientnum, soundindex )
+static int _et_G_ClientSound( lua_State *L )
+{
+	int clientnum = luaL_checkint( L, 1 );
+	int soundindex = luaL_checkint( L, 2 );
+	G_ClientSound( g_entities + clientnum, soundindex );
+	return 0;
+}
 // }}}
 
 // Miscellaneous {{{
@@ -1035,68 +1044,69 @@ static int _et_G_shrubbot_level(lua_State *L)
 // et library initialisation array
 static const luaL_Reg etlib[] = {
 	// ET Library Calls
-	{"RegisterModname", 	_et_RegisterModname},
-	{"FindSelf", 			_et_FindSelf},
-	{"FindMod",			_et_FindMod},
-	{"IPCSend",			_et_IPCSend},
+	{ "RegisterModname",			_et_RegisterModname			},
+	{ "FindSelf",					_et_FindSelf				},
+	{ "FindMod",					_et_FindMod					},
+	{ "IPCSend",					_et_IPCSend					},
 	// Printing
-	{"G_Print", 			_et_G_Print},
-	{"G_LogPrint",		_et_G_LogPrint},
+	{ "G_Print", 					_et_G_Print					},
+	{ "G_LogPrint",					_et_G_LogPrint				},
 	// Argument Handling
-	{"ConcatArgs", 		_et_ConcatArgs},
-	{"trap_Argc", 		_et_trap_Argc},
-	{"trap_Argv", 		_et_trap_Argv},
+	{ "ConcatArgs",					_et_ConcatArgs				},
+	{ "trap_Argc", 					_et_trap_Argc				},
+	{ "trap_Argv", 					_et_trap_Argv				},
 	// Cvars
-	{"trap_Cvar_Get",	_et_trap_Cvar_Get},
-	{"trap_Cvar_Set",	_et_trap_Cvar_Set},
+	{ "trap_Cvar_Get",				_et_trap_Cvar_Get			},
+	{ "trap_Cvar_Set",				_et_trap_Cvar_Set			},
 	// Config Strings
-	{"trap_GetConfigstring", _et_trap_GetConfigstring},
-	{"trap_SetConfigstring", _et_trap_SetConfigstring},
+	{ "trap_GetConfigstring",		_et_trap_GetConfigstring	},
+	{ "trap_SetConfigstring",		_et_trap_SetConfigstring	},
 	// Server
-	{"trap_SendConsoleCommand", _et_trap_SendConsoleCommand},
+	{ "trap_SendConsoleCommand",	_et_trap_SendConsoleCommand	},
 	// Clients
-	{"trap_DropClient",	_et_trap_DropClient},
-	{"trap_SendServerCommand",	_et_trap_SendServerCommand},
-	{"G_Say",	_et_G_Say},
-	{"ClientUserinfoChanged",	_et_ClientUserinfoChanged},
+	{ "trap_DropClient",			_et_trap_DropClient			},
+	{ "trap_SendServerCommand",		_et_trap_SendServerCommand	},
+	{ "G_Say",						_et_G_Say					},
+	{ "ClientUserinfoChanged",		_et_ClientUserinfoChanged	},
 	// Userinfo
-	{"trap_GetUserinfo", _et_trap_GetUserinfo},
-	{"trap_SetUserinfo", _et_trap_SetUserinfo},
+	{ "trap_GetUserinfo",			_et_trap_GetUserinfo		},
+	{ "trap_SetUserinfo",			_et_trap_SetUserinfo		},
 	// String Utility Functions
-	{"Info_RemoveKey", _et_Info_RemoveKey},
-	{"Info_SetValueForKey", _et_Info_SetValueForKey},
-	{"Info_ValueForKey", _et_Info_ValueForKey},
-	{"Q_CleanStr",		_et_Q_CleanStr},
+	{ "Info_RemoveKey",				_et_Info_RemoveKey			},
+	{ "Info_SetValueForKey",		_et_Info_SetValueForKey		},
+	{ "Info_ValueForKey",			_et_Info_ValueForKey		},
+	{ "Q_CleanStr",					_et_Q_CleanStr				},
 	// ET Filesystem
-	{"trap_FS_FOpenFile", _et_trap_FS_FOpenFile},
-	{"trap_FS_Read", _et_trap_FS_Read},
-	{"trap_FS_Write", _et_trap_FS_Write},
-	{"trap_FS_Rename", _et_trap_FS_Rename},
-	{"trap_FS_FCloseFile", _et_trap_FS_FCloseFile},
+	{ "trap_FS_FOpenFile",			_et_trap_FS_FOpenFile		},
+	{ "trap_FS_Read",				_et_trap_FS_Read			},
+	{ "trap_FS_Write",				_et_trap_FS_Write			},
+	{ "trap_FS_Rename",				_et_trap_FS_Rename			},
+	{ "trap_FS_FCloseFile",			_et_trap_FS_FCloseFile		},
 	// Indexes
-	{"G_SoundIndex", _et_G_SoundIndex},
-	{"G_ModelIndex", _et_G_ModelIndex},
+	{ "G_SoundIndex",				_et_G_SoundIndex			},
+	{ "G_ModelIndex",				_et_G_ModelIndex			},
 	// Sound
-	{"G_globalSound", _et_G_globalSound},
-	{"G_Sound", _et_G_Sound},
+	{ "G_globalSound",				_et_G_globalSound			},
+	{ "G_Sound",					_et_G_Sound					},
+	{ "G_ClientSound",				_et_G_ClientSound			},
 	// Miscellaneous
-	{"trap_Milliseconds", _et_trap_Milliseconds},
-	{"G_Damage", _et_G_Damage},
-	{"ClientIsFlooding", _et_ClientIsFlooding},
-	{"G_AddSkillPoints", _et_G_AddSkillPoints},
-	{"G_LoseSkillPoints", _et_G_LoseSkillPoints},
+	{ "trap_Milliseconds",			_et_trap_Milliseconds		},
+	{ "G_Damage",					_et_G_Damage				},
+	{ "ClientIsFlooding",			_et_ClientIsFlooding		},
+	{ "G_AddSkillPoints",			_et_G_AddSkillPoints		},
+	{ "G_LoseSkillPoints",			_et_G_LoseSkillPoints		},
 	// Entities
-	{"G_Spawn", _et_G_Spawn},
-	{"G_TempEntity", _et_G_TempEntity},
-	{"G_FreeEntity", _et_G_FreeEntity},
-	{"trap_LinkEntity", _et_trap_LinkEntity},
-	{"trap_UnlinkEntity", _et_trap_UnlinkEntity},
-	{"gentity_get", _et_gentity_get},
-	{"gentity_set", _et_gentity_set},
-	{"G_AddEvent", _et_G_AddEvent},
+	{ "G_Spawn",					_et_G_Spawn					},
+	{ "G_TempEntity",				_et_G_TempEntity			},
+	{ "G_FreeEntity",				_et_G_FreeEntity			},
+	{ "trap_LinkEntity",			_et_trap_LinkEntity			},
+	{ "trap_UnlinkEntity",			_et_trap_UnlinkEntity		},
+	{ "gentity_get",				_et_gentity_get				},
+	{ "gentity_set",				_et_gentity_set				},
+	{ "G_AddEvent",					_et_G_AddEvent				},
 	// Shrubbot
-	{"G_shrubbot_permission", _et_G_shrubbot_permission},
-	{"G_shrubbot_level", _et_G_shrubbot_level},
+	{ "G_shrubbot_permission",		_et_G_shrubbot_permission	},
+	{ "G_shrubbot_level",			_et_G_shrubbot_level		},
 
 	{ NULL },
 };

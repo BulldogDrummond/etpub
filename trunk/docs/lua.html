@@ -143,6 +143,17 @@ et.trap_FS_FCloseFile(fd)</pre></dd>
 et.trap_FS_FCloseFile(fd)</pre></dd>
 </dl>
 
+<a name="sound"></a><h3>Sound</h3>
+<p>et.G_ClientSound( <strong>clientnum</strong>, <strong>soundindex</strong> )</p>
+<dl>
+	<dd>Plays the sound <strong>soundindex</strong> for the client with <strong>clientnum</strong> only.</dd>
+	<dd>&nbsp;</dd>
+	<dd>&nbsp;</dd>
+	<dd><h6>LUA CODE EXAMPLE</h6><pre>-- play a sound for client #3 only
+local soundindex = et.G_SoundIndex("sound/world/alarm_01.wav")
+et.G_ClientSound(3, soundindex)</pre></dd>
+</dl>
+
 <a name="miscellaneous"></a><h3>Miscellaneous</h3>
 <p><strong>milliseconds</strong> = et.trap_Milliseconds()</p>
 <dl>
