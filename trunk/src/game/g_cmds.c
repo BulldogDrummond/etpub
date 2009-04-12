@@ -2976,7 +2976,7 @@ char *G_ShortcutSanitize(char *text)
 
 char *G_Shortcuts(gentity_t *ent, const char *text)
 {
-	static char out[MAX_SAY_TEXT];
+//	static char out[MAX_SAY_TEXT];
 	char a[MAX_NAME_LENGTH] = {"*unknown*"};
 	char d[MAX_NAME_LENGTH] = {"*unknown*"};
 	char g[32+1] = {"*unknown*"};
@@ -2998,7 +2998,7 @@ char *G_Shortcuts(gentity_t *ent, const char *text)
 	int ammo;
 	int i;
 
-	out[0] = '\0';
+//	out[0] = '\0';
 
 	if (ent) {
 		if(ent->client->pers.lastammo_client != -1) {
@@ -3134,8 +3134,8 @@ char *G_Shortcuts(gentity_t *ent, const char *text)
 	rep = Q_StrReplace(rep, "[w]", w);
 	rep = Q_StrReplace(rep, "[t]", t);
 
-	Q_strncpyz(out, rep, sizeof(out));
-	return out;
+//	Q_strncpyz(out, rep, sizeof(out));
+	return rep;
 }
 
 /*
