@@ -1054,9 +1054,6 @@ qboolean G_shrubbot_cmd_check(gentity_t *ent)
 				cmdLine = Q_StrReplace(cmdLine, va("[%i]", argIx), arg);
 			}
 
-			// pheno: only allowed length
-			Com_sprintf( cmdLine, MAX_STRING_CHARS, "%s", cmdLine );
-
 			if( ent && level.time - ent->client->pers.lastCommandTime < g_minCommandWaitTime.integer ) {
 				SPC(va("^/%s: ^7you have to wait %d %s between using commands",
 					g_shrubbot_commands[i]->command,

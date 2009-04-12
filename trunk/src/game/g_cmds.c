@@ -2952,7 +2952,8 @@ void G_EntitySoundNoCut(
 
 char *G_ShortcutSanitize(char *text)
 {
-	static char n[MAX_SAY_TEXT] = {""};
+	// pheno: increased 'n' for [command] command line
+	static char n[MAX_STRING_CHARS] = {""};
 
 	if(!text || !*text)
 		return n;
@@ -2976,7 +2977,8 @@ char *G_ShortcutSanitize(char *text)
 
 char *G_Shortcuts(gentity_t *ent, const char *text)
 {
-//	static char out[MAX_SAY_TEXT];
+	// pheno: increased 'out' for [command] command line
+	static char out[MAX_STRING_CHARS];
 	char a[MAX_NAME_LENGTH] = {"*unknown*"};
 	char d[MAX_NAME_LENGTH] = {"*unknown*"};
 	char g[32+1] = {"*unknown*"};
@@ -2998,7 +3000,7 @@ char *G_Shortcuts(gentity_t *ent, const char *text)
 	int ammo;
 	int i;
 
-//	out[0] = '\0';
+	out[0] = '\0';
 
 	if (ent) {
 		if(ent->client->pers.lastammo_client != -1) {
@@ -3134,8 +3136,8 @@ char *G_Shortcuts(gentity_t *ent, const char *text)
 	rep = Q_StrReplace(rep, "[w]", w);
 	rep = Q_StrReplace(rep, "[t]", t);
 
-//	Q_strncpyz(out, rep, sizeof(out));
-	return rep;
+	Q_strncpyz(out, rep, sizeof(out));
+	return out;
 }
 
 /*
