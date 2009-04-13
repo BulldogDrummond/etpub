@@ -2055,3 +2055,4 @@
            with installed etpub client > 20090112)
 * pheno:   Lua API: added et.G_ClientSound( clientnum, soundindex )
            library call
+* pheno:   fixed [command] element command line length

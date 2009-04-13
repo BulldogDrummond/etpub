@@ -2521,12 +2521,6 @@ static void CG_DrawCrosshairNames( void ) {
 		return;
 	}
 
-	// pheno: don't draw crosshair names in shoutcast mode
-	if( cgs.clientinfo[cg.clientNum].team == TEAM_SPECTATOR &&
-		cgs.clientinfo[cg.clientNum].shoutcaster ) {
-		return;
-	}
-
 	// Dens: dyna > mine
 	if ( cg.crosshairDyna > -1 ) {
 		color = CG_FadeColor( cg.crosshairDynaTime, 1000 );
@@ -2565,6 +2559,16 @@ static void CG_DrawCrosshairNames( void ) {
 
 	// scan the known entities to see if the crosshair is sighted on one
 	dist = CG_ScanForCrosshairEntity(&zChange, &hitClient );
+
+	// pheno: don't draw crosshair names in shoutcast mode
+	// pheno: moved it down here so text shortcuts related stuff
+	//        is updated for shoutcasters too
+	if( cgs.clientinfo[cg.clientNum].team == TEAM_SPECTATOR &&
+		cgs.clientinfo[cg.clientNum].shoutcaster &&
+		// shoutcasters can see tank and truck health
+		cg_entities[cg.crosshairClientNum].currentState.eType != ET_MOVER ) {
+		return;
+	}
 
 	if ( cg.renderingThirdPerson ) {
 		return;

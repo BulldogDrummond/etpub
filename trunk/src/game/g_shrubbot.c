@@ -1043,6 +1043,7 @@ qboolean G_shrubbot_cmd_check(gentity_t *ent)
 		if(_shrubbot_command_permission(ent, cmd)) {
 			char *cmdLine;
 			int argIx;
+			char execLine[MAX_STRING_CHARS] = {""};
 
 			// Replace shortcuts
 			cmdLine = G_Shortcuts(ent, g_shrubbot_commands[i]->exec);
@@ -1054,6 +1055,9 @@ qboolean G_shrubbot_cmd_check(gentity_t *ent)
 				cmdLine = Q_StrReplace(cmdLine, va("[%i]", argIx), arg);
 			}
 
+			// pheno: only the max allowed length after argument replacement
+			Q_strncpyz( execLine, cmdLine, sizeof( execLine ) );
+
 			if( ent && level.time - ent->client->pers.lastCommandTime < g_minCommandWaitTime.integer ) {
 				SPC(va("^/%s: ^7you have to wait %d %s between using commands",
 					g_shrubbot_commands[i]->command,
@@ -1062,7 +1066,7 @@ qboolean G_shrubbot_cmd_check(gentity_t *ent)
 				_shrubbot_log(ent, "attempted", skip-1);
 				return qfalse;
 			} else {
-				trap_SendConsoleCommand(EXEC_APPEND, cmdLine);
+				trap_SendConsoleCommand( EXEC_APPEND, execLine );
 				if( ent )
 					ent->client->pers.lastCommandTime = level.time;
 				_shrubbot_log(ent, cmd, skip);
