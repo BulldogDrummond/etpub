@@ -72,6 +72,12 @@ void CG_AddFloatingString( centity_t *cent, qboolean isCounter )
 	floatingString_t	*string;
 	char				*s;
 
+	// don't add following player name to string list
+	if( !isCounter &&
+		cent->currentState.clientNum == cg.snap->ps.clientNum ) {
+		return;
+	}
+
 	if( cg.floatingStringsCount >= MAX_FLOATING_STRINGS ) {
 		return;
 	}
