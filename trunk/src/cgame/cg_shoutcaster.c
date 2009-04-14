@@ -114,7 +114,8 @@ void CG_AddFloatingString( centity_t *cent, qboolean isCounter )
 	if( !isCounter ) {
 		s = cgs.clientinfo[cent->currentState.clientNum].name;
 	} else {
-		s = va( "%i", ( cg.time - cent->currentState.effect1Time ) / 1000 );
+		s = va( "%i",
+			30 - ( cg.time - cent->currentState.effect1Time ) / 1000 );
 	}
 
 	// add the string to the list
