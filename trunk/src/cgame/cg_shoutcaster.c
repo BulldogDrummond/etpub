@@ -58,82 +58,10 @@ qboolean CG_PointIsVisible( vec3_t point )
 
 /*
 ================
-CG_AddNameToESP
+CG_AddFloatingString
 
 FIXME: In some cases the name won't fade out - it suddenly disappears
        (depends on the viewing angle).
-================
-*/
-/*void CG_AddNameToESP( centity_t *cent )
-{
-	vec3_t			origin;
-	qboolean		visible;
-	float			x, y, dist, scale;
-	clientInfo_t	*ci;
-	espName_t		*name;
-
-	// don't add following player name
-	if( cent->currentState.clientNum == cg.snap->ps.clientNum ) {
-		return;
-	}
-
-	if( cg.espNamesCount >= MAX_CLIENTS ) {
-		return;
-	}
-
-	VectorCopy( cent->lerpOrigin, origin );
-	origin[2] += 64;
-
-	// even lower if needed
-	if( cent->currentState.eFlags & EF_PRONE ||
-		cent->currentState.eFlags & EF_DEAD ||
-		cent->currentState.eFlags & EF_PLAYDEAD ) {
-		origin[2] -= 45;
-	} else if( cent->currentState.eFlags & EF_CROUCHING ) {
-		origin[2] -= 18;
-	}
-
-	visible = CG_PointIsVisible( origin );
-	
-	if( !visible &&
-		cg.time - cg.espNameTimes[cent->currentState.clientNum] > 1500 ) {
-		return;
-	}
-
-	if( !CG_WorldToScreen( origin, &x, &y ) ) {
-		return;
-	}
-
-	dist = VectorDistance( cent->lerpOrigin, cg.refdef_current->vieworg );
-	scale = 2000.f / ( dist > 1500.f ? 1500.f : dist ) * .075f;
-
-	ci = &cgs.clientinfo[cent->currentState.clientNum];
-	name = &cg.espNames[cg.espNamesCount];
-
-	// add player name to esp list
-	name->string = ci->name;
-	name->x = x -
-		CG_Text_Width_Ext( ci->name, scale, 0, &cgs.media.font1 ) / 2.f;
-	name->y = y;
-	name->scale = scale;
-	name->alpha = 1.f;
-
-	if( visible ) {
-		cg.espNameTimes[cent->currentState.clientNum] = cg.time;
-	} else {
-		float diff = cg.time - cg.espNameTimes[cent->currentState.clientNum];
-
-		if( diff > 500.f ) {
-			name->alpha -= ( diff - 500.f ) / 1000.f;
-		}
-	}
-
-	cg.espNamesCount++;
-}*/
-
-/*
-================
-CG_AddFloatingString
 ================
 */
 void CG_AddFloatingString( centity_t *cent, qboolean isCounter )
