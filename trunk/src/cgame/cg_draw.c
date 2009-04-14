@@ -5510,8 +5510,8 @@ static void CG_Draw2D( void ) {
 		return;
 	}
 
-	// pheno: draw shoutcaster esp
-	CG_DrawESP();
+	// pheno: draw shoutcasters floating strings
+	CG_DrawFloatingStrings();
 
 	//bani - #127 - no longer cheat protected, we draw crosshair/reticle in non demoplayback
 	if ( cg_draw2D.integer == 0 ) {

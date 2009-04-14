@@ -1395,10 +1395,10 @@ static void CG_PlayerSprites( centity_t *cent ) {
 		return;
 	}
 
-	// pheno: add player name to shoutcasters esp
+	// pheno: add player name to floating string list
 	if( cgs.clientinfo[cg.clientNum].team == TEAM_SPECTATOR &&
 		cgs.clientinfo[cg.clientNum].shoutcaster ) {
-		CG_AddNameToESP( cent );
+		CG_AddFloatingString( cent, qfalse );
 		return;
 	}
 
@@ -2324,8 +2324,8 @@ void CG_ResetPlayerEntity( centity_t *cent ) {
 	cent->pe.painAnimTorso = -1;
 	cent->pe.animSpeed = 1.0;
 
-	// pheno: reset esp name time
-	cg.espNameTimes[cent->currentState.clientNum] = 0;
+	// pheno: reset floating string fade time
+	cent->floatingStringFadeTime = 0;
 }
 
 void CG_GetBleedOrigin( vec3_t head_origin, vec3_t body_origin, int fleshEntityNum )

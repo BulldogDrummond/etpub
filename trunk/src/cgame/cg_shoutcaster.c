@@ -64,7 +64,7 @@ FIXME: In some cases the name won't fade out - it suddenly disappears
        (depends on the viewing angle).
 ================
 */
-void CG_AddNameToESP( centity_t *cent )
+/*void CG_AddNameToESP( centity_t *cent )
 {
 	vec3_t			origin;
 	qboolean		visible;
@@ -72,7 +72,7 @@ void CG_AddNameToESP( centity_t *cent )
 	clientInfo_t	*ci;
 	espName_t		*name;
 
-	// don't add spectating player name
+	// don't add following player name
 	if( cent->currentState.clientNum == cg.snap->ps.clientNum ) {
 		return;
 	}
@@ -129,34 +129,106 @@ void CG_AddNameToESP( centity_t *cent )
 	}
 
 	cg.espNamesCount++;
+}*/
+
+/*
+================
+CG_AddFloatingString
+================
+*/
+void CG_AddFloatingString( centity_t *cent, qboolean isCounter )
+{
+	vec3_t				origin;
+	qboolean			visible;
+	float				x, y, dist, scale;
+	floatingString_t	*string;
+	char				*s;
+
+	if( cg.floatingStringsCount >= MAX_FLOATING_STRINGS ) {
+		return;
+	}
+
+	VectorCopy( cent->lerpOrigin, origin );
+
+	if( !isCounter ) {
+		origin[2] += 64;
+
+		// even lower if needed
+		if( cent->currentState.eFlags & EF_PRONE ||
+			cent->currentState.eFlags & EF_DEAD ||
+			cent->currentState.eFlags & EF_PLAYDEAD ) {
+			origin[2] -= 45;
+		}
+	} else {
+		origin[2] += 24;
+	}
+
+	visible = CG_PointIsVisible( origin );
+
+	if( !visible &&
+		cg.time - cent->floatingStringFadeTime > 1500 ) {
+		return;
+	}
+
+	if( !CG_WorldToScreen( origin, &x, &y ) ) {
+		return;
+	}
+
+	dist = VectorDistance( cent->lerpOrigin, cg.refdef_current->vieworg );
+	scale = 2000.f / ( dist > 1500.f ? 1500.f : dist ) * .05f;
+
+	if( !isCounter ) {
+		s = cgs.clientinfo[cent->currentState.clientNum].name;
+	} else {
+		s = va( "%i", ( cg.time - cent->currentState.effect1Time ) / 1000 );
+	}
+
+	// add the string to the list
+	string = &cg.floatingStrings[cg.floatingStringsCount];
+	string->string = s;
+	string->x = x - CG_Text_Width_Ext( s, scale, 0, &cgs.media.font1 ) / 2.f;
+	string->y = y;
+	string->scale = scale;
+	string->alpha = 1.f;
+
+	if( visible ) {
+		cent->floatingStringFadeTime = cg.time;
+	} else {
+		float diff = cg.time - cent->floatingStringFadeTime;
+
+		if( diff > 500.f ) {
+			string->alpha -= ( diff - 500.f ) / 1000.f;
+		}
+	}
+
+	cg.floatingStringsCount++;
 }
 
 /*
 ================
-CG_DrawESP
+CG_DrawFloatingStrings
 ================
 */
-void CG_DrawESP( void )
+void CG_DrawFloatingStrings( void )
 {
-	int			i;
-	espName_t	*name;
-	vec4_t		color = { 1.f, 1.f, 1.f, 1.f };
+	int					i;
+	floatingString_t	*string;
+	vec4_t				color = { 1.f, 1.f, 1.f, 1.f };
 
-	// draw player names
-	for( i = 0; i < cg.espNamesCount; i++ ) {
-		name = &cg.espNames[i];
+	for( i = 0; i < cg.floatingStringsCount; i++ ) {
+		string = &cg.floatingStrings[i];
 
-		if( !name ) {
+		if( !string ) {
 			break;
 		}
 
-		color[3] = name->alpha;
+		color[3] = string->alpha;
 
-		CG_Text_Paint_Ext( name->x, name->y, name->scale, name->scale,
-			color, name->string, 0, 0, 0, &cgs.media.font1 );
+		CG_Text_Paint_Ext( string->x, string->y, string->scale, string->scale,
+			color, string->string, 0, 0, 0, &cgs.media.font1 );
 
-		memset( name, 0, sizeof( name ) );
+		memset( string, 0, sizeof( string ) );
 	}
 
-	cg.espNamesCount = 0;
+	cg.floatingStringsCount = 0;
 }

@@ -426,3 +426,5 @@ current
 * pheno:   shoutcasters can now see landmines
 * pheno:   shoutcasters can now see player names
 * pheno:   shoutcasters can also see tank and truck health
+* pheno:   added floating dynamite counters for shoutcasters. Reduced also
+           the size of the floating strings.

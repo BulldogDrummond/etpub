@@ -138,6 +138,9 @@
 #define MV_PID				0x00FF	// Bits available for player IDs for MultiView windows
 #define MV_SELECTED			0x0100	// MultiView selected window flag is the 9th bit
 
+// pheno: max. shoutcaster floating strings
+#define MAX_FLOATING_STRINGS	128
+
 typedef struct {
 	vec4_t colorBorder;			// Window border color
 	vec4_t colorBackground;		// Window fill color
@@ -357,6 +360,9 @@ typedef struct centity_s {
 	tag_t			mountedMG42Flash;
 
 	qboolean		akimboFire;
+
+	// pheno
+	int				floatingStringFadeTime;
 
 	// Gordon: tagconnect cleanup..
 	int				tagParent;
@@ -876,15 +882,15 @@ typedef struct {
 	HudrectDef_t livesleft;
 } hudRect_t;
 
-// pheno: shoutcaster esp names
-typedef struct espName_s
+// pheno: shoutcaster floating strings
+typedef struct floatingString_s
 {
 	const char	*string;
 	float		x;
 	float		y;
 	float		scale;
 	float		alpha;
-} espName_t;
+} floatingString_t;
 
 typedef struct {
 	int			clientFrame;		// incremented each frame
@@ -1356,10 +1362,9 @@ typedef struct {
 	int				dynamiteindex[2];
 	//int				axisDynamiteindex;
 
-	// pheno: shoutcaster esp names and name times
-	espName_t		espNames[MAX_CLIENTS];
-	int				espNamesCount;
-	int				espNameTimes[MAX_CLIENTS];
+	// pheno: shoutcaster floating strings
+	floatingString_t	floatingStrings[MAX_FLOATING_STRINGS];
+	int					floatingStringsCount;
 
 	// forty - #279 - watermarks
 	// HOLLEMOD - START
@@ -3179,8 +3184,8 @@ void CG_AddToTeamChat( const char *str, int clientnum );
 //
 // pheno: cg_shoutcaster.c
 //
-void CG_AddNameToESP( centity_t *cent );
-void CG_DrawESP( void );
+void CG_AddFloatingString( centity_t *cent, qboolean isCounter );
+void CG_DrawFloatingStrings( void );
 
 //
 // cg_playerstate.c

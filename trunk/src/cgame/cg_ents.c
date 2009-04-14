@@ -1035,6 +1035,12 @@ static void CG_Missile( centity_t *cent ) {
 			if(cgs.clientinfo[cg.snap->ps.clientNum].team == cent->currentState.teamNum){
 				CG_ScanForCrosshairDyna(cent);
 			}
+
+			// pheno: add dynamite counter to floating string list
+			if( cgs.clientinfo[cg.clientNum].team == TEAM_SPECTATOR &&
+				cgs.clientinfo[cg.clientNum].shoutcaster ) {
+				CG_AddFloatingString( cent, qtrue );
+			}
 		}
 	}
 
