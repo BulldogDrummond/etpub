@@ -428,3 +428,4 @@ current
 * pheno:   shoutcasters can also see tank and truck health
 * pheno:   added floating dynamite counters for shoutcasters. Reduced also
            the size of the floating strings.
+* pheno:   fixed landmine drawing for shoutcasters in follow mode

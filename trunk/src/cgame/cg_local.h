@@ -3186,6 +3186,7 @@ void CG_AddToTeamChat( const char *str, int clientnum );
 //
 void CG_AddFloatingString( centity_t *cent, qboolean isCounter );
 void CG_DrawFloatingStrings( void );
+void CG_DrawLandmine( centity_t *cent, refEntity_t *ent );
 
 //
 // cg_playerstate.c

@@ -1702,6 +1702,7 @@ qboolean G_LandmineSnapshotCallback( int entityNum, int clientNum ) {
 	gentity_t* ent		= &g_entities[ entityNum ];
 	gentity_t* clEnt	= &g_entities[ clientNum ];
 	team_t team;
+	int i;
 
 	// forty - Don't send the landmine if its not in our pvs.
 	//         This'll only benefit people with 2.56 and above.
@@ -1711,7 +1712,25 @@ qboolean G_LandmineSnapshotCallback( int entityNum, int clientNum ) {
 	if( !trap_InPVS( clEnt->client->ps.origin, ent->r.currentOrigin ) ) {
 		//G_Printf("Client: %d, Landmine not in PVS\n", clientNum);
 		return qfalse;
-	} 
+	}
+
+	// pheno: shoutcasters can see landmines
+	if( clEnt->client->sess.sessionTeam == TEAM_SPECTATOR &&
+		clEnt->client->sess.shoutcaster ) {
+		return qtrue;
+	}
+
+	// pheno: check also following shoutcasters
+	for( i = 0; i < level.numConnectedClients; i++ ) {
+		gclient_t *cl = &level.clients[level.sortedClients[i]];
+
+		if( cl->sess.sessionTeam == TEAM_SPECTATOR &&
+			cl->sess.spectatorState == SPECTATOR_FOLLOW &&
+			cl->sess.spectatorClient == ( clEnt - g_entities ) &&
+			cl->sess.shoutcaster ) {
+			return qtrue;
+		}
+	}
 
 	if( clEnt->client->sess.skill[ SK_BATTLE_SENSE ] >= 4 ) {
 		return qtrue;
@@ -1732,12 +1751,6 @@ qboolean G_LandmineSnapshotCallback( int entityNum, int clientNum ) {
 
 	//bani - fix for covops spotting
 	if( clEnt->client->sess.playerType == PC_COVERTOPS && clEnt->client->ps.eFlags & EF_ZOOMING && ( clEnt->client->ps.stats[STAT_KEYS] & ( 1 << INV_BINOCS ) ) ) {
-		return qtrue;
-	}
-
-	// pheno: shoutcasters can see landmines
-	if( clEnt->client->sess.sessionTeam == TEAM_SPECTATOR &&
-		clEnt->client->sess.shoutcaster ) {
 		return qtrue;
 	}
 

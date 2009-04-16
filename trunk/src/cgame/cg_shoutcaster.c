@@ -167,3 +167,28 @@ void CG_DrawFloatingStrings( void )
 
 	cg.floatingStringsCount = 0;
 }
+
+/*
+================
+CG_DrawLandmine
+================
+*/
+void CG_DrawLandmine( centity_t *cent, refEntity_t *ent ) {
+	int color = ( int )255 - ( 255 * fabs( sin( cg.time * 0.002 ) ) );
+
+	if( cent->currentState.teamNum % 4 == TEAM_AXIS ) {
+		// red landmines
+		ent->shaderRGBA[0] = 255;
+		ent->shaderRGBA[1] = color;
+		ent->shaderRGBA[2] = color;
+		ent->shaderRGBA[3] = 255;
+	} else {
+		// blue landmines
+		ent->shaderRGBA[0] = color;
+		ent->shaderRGBA[1] = color;
+		ent->shaderRGBA[2] = 255;
+		ent->shaderRGBA[3] = 255;
+	}
+
+	ent->customShader = cgs.media.shoutcastLandmineShader;
+}

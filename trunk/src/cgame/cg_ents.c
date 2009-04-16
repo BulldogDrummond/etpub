@@ -1094,21 +1094,9 @@ static void CG_Missile( centity_t *cent ) {
 				if(cent->currentState.density-1 == cg.snap->ps.clientNum) {
 					//ent.customShader = cgs.media.genericConstructionShaderModel;
 					ent.customShader = cgs.media.genericConstructionShader;
-				// pheno: shoutcasters can see landmines
 				} else if( cgs.clientinfo[cg.clientNum].shoutcaster ) {
-					int color = ( int )255 - ( 255 * fabs( sin( cg.time * 0.002 ) ) );
-					
-					if( cent->currentState.teamNum % 4 == TEAM_AXIS ) {
-						ent.shaderRGBA[0] = 255;
-						ent.shaderRGBA[2] = color;
-					} else {
-						ent.shaderRGBA[0] = color;
-						ent.shaderRGBA[2] = 255;
-					}
-
-					ent.shaderRGBA[1] = color;
-					ent.shaderRGBA[3] = 255;
-					ent.customShader = cgs.media.shoutcastLandmineShader;
+					// pheno: shoutcasters can see landmines
+					CG_DrawLandmine( cent, &ent );
 				} else if (!cent->currentState.modelindex2) {
 					// see if we have the skill to see them and are close enough
 					if( cgs.clientinfo[cg.snap->ps.clientNum].skill[SK_BATTLE_SENSE] >= 4 ) {
@@ -1126,21 +1114,26 @@ static void CG_Missile( centity_t *cent ) {
 					CG_DrawMineMarkerFlag( cent, &ent, weapon );
 				}
 			} else {
-				// forty - mine ids
-				CG_ScanForCrosshairMine(cent);
-				CG_DrawMineMarkerFlag( cent, &ent, weapon );
-				/*if ( !cent->highlighted ) {
-					cent->highlighted = qtrue;
-					cent->highlightTime = cg.time;
-				}
+				if( cgs.clientinfo[cg.clientNum].shoutcaster ) {
+					// pheno: shoutcasters can see landmines
+					CG_DrawLandmine( cent, &ent );
+				} else {
+					// forty - mine ids
+					CG_ScanForCrosshairMine(cent);
+					CG_DrawMineMarkerFlag( cent, &ent, weapon );
+					/*if ( !cent->highlighted ) {
+						cent->highlighted = qtrue;
+						cent->highlightTime = cg.time;
+					}
 
- 				ent.hilightIntensity = 0.5f * sin((cg.time-cent->highlightTime)/1000.f) + 1.f;*/
+ 					ent.hilightIntensity = 0.5f * sin((cg.time-cent->highlightTime)/1000.f) + 1.f;*/
+				}
 			}
 		}
 
 		if(cent->currentState.teamNum >= 8) {
 			ent.origin[2] -= 8;
-			ent.oldorigin[2] -= 8;			
+			ent.oldorigin[2] -= 8;
 		}
 	}
 

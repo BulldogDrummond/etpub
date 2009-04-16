@@ -2056,3 +2056,4 @@
 * pheno:   Lua API: added et.G_ClientSound( clientnum, soundindex )
            library call
 * pheno:   fixed [command] element command line length
+* pheno:   fixed landmine snapshot callback for shoutcasters in follow mode
