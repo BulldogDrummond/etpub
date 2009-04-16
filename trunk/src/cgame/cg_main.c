@@ -875,7 +875,7 @@ void CG_RestoreProfile(void)
 
 	if(len > 0) {
 		if(trap_FS_FOpenFile(cfgPath, &cfg, FS_WRITE) < 0) {
-			CG_Printf("RestoreProfile: could not open %s\n",
+			CG_Printf("RestoreProfile: could not open %s.\n",
 				cfgPath);
 			trap_FS_FCloseFile(bak);
 			return;
@@ -890,7 +890,7 @@ void CG_RestoreProfile(void)
 		trap_FS_Delete(bakPath);
 	}
 	else {
-		CG_Printf("RestoreProfile: no backup %s found\n.",
+		CG_Printf("RestoreProfile: no backup %s found.\n",
 			bakPath);
 	}
 

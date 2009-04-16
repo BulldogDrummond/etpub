@@ -2391,6 +2391,7 @@ void G_UpdateCvars( void )
 					G_UpdateEtpubinfo();
 				}
 				// pheno: logout all currently logged in shoutcasters
+				//        when changing shoutcastPassword to '' or 'none'
 				else if( cv->vmCvar == &shoutcastPassword ) {
 					if( !Q_stricmp( shoutcastPassword.string, "none" ) ||
 						!shoutcastPassword.string[0] ) {
