@@ -1714,21 +1714,24 @@ qboolean G_LandmineSnapshotCallback( int entityNum, int clientNum ) {
 		return qfalse;
 	}
 
-	// pheno: shoutcasters can see landmines
-	if( clEnt->client->sess.sessionTeam == TEAM_SPECTATOR &&
-		clEnt->client->sess.shoutcaster ) {
-		return qtrue;
-	}
-
-	// pheno: check also following shoutcasters
-	for( i = 0; i < level.numConnectedClients; i++ ) {
-		gclient_t *cl = &level.clients[level.sortedClients[i]];
-
-		if( cl->sess.sessionTeam == TEAM_SPECTATOR &&
-			cl->sess.spectatorState == SPECTATOR_FOLLOW &&
-			cl->sess.spectatorClient == ( clEnt - g_entities ) &&
-			cl->sess.shoutcaster ) {
+	// pheno: shoutcasters can see landmines (check only if
+	//        shoutcaster status available!)
+	if( G_ShoutcasterStatusAvailable( clEnt ) ) { 
+		if( clEnt->client->sess.sessionTeam == TEAM_SPECTATOR &&
+			clEnt->client->sess.shoutcaster ) {
 			return qtrue;
+		}
+
+		// check also following shoutcasters
+		for( i = 0; i < level.numConnectedClients; i++ ) {
+			gclient_t *cl = &level.clients[level.sortedClients[i]];
+
+			if( cl->sess.sessionTeam == TEAM_SPECTATOR &&
+				cl->sess.spectatorState == SPECTATOR_FOLLOW &&
+				cl->sess.spectatorClient == ( clEnt - g_entities ) &&
+				cl->sess.shoutcaster ) {
+				return qtrue;
+			}
 		}
 	}
 

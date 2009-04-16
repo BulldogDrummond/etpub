@@ -9,17 +9,45 @@ G_ShoutcasterStatusAvailable
 */
 qboolean G_ShoutcasterStatusAvailable( gentity_t *ent )
 {
-	// NOTE: shoutcaster support will only be available with
-	//       installed etpub client > 20090112
-	if( ent->client->pers.etpubc > 20090112 &&
-		Q_stricmp( shoutcastPassword.string, "none" ) &&
+	if( !( ent->r.svFlags & SVF_BOT ) &&
+		// NOTE: shoutcaster support will only be available with
+		//       installed etpub client > 20090112
+		ent->client->pers.etpubc <= 20090112 ) {
+		return qfalse;
+	}
+
+	// check for available password
+	if( Q_stricmp( shoutcastPassword.string, "none" ) &&
 		shoutcastPassword.string[0] ) {
 		return qtrue;
 	}
 
-	CP( "print \"Sorry, shoutcaster status disabled on this server.\n\"" );
-
 	return qfalse;
+}
+
+/*
+================
+G_LogoutAllShoutcasters
+================
+*/
+void G_LogoutAllShoutcasters( void )
+{
+	int i;
+
+	for( i = 0; i < level.numConnectedClients; i++ ) {
+		gclient_t *cl = &level.clients[level.sortedClients[i]];
+
+		if( cl->sess.shoutcaster ) {
+			cl->sess.shoutcaster = 0;
+
+			// don't remove referee's invitation
+			if( !cl->sess.referee ) {
+				cl->sess.spec_invite = 0;
+			}
+
+			ClientUserinfoChanged( cl - level.clients );
+		}
+	}
 }
 
 /*
@@ -45,6 +73,7 @@ void G_sclogin_cmd( gentity_t *ent, unsigned int dwCommand, qboolean fValue )
 	}
 
 	if( !G_ShoutcasterStatusAvailable( ent ) ) {
+		CP( "print \"Sorry, shoutcaster status disabled on this server.\n\"" );
 		return;
 	}
 
@@ -100,6 +129,7 @@ void G_sclogout_cmd( gentity_t *ent, unsigned int dwCommand, qboolean fValue )
 	}
 
 	if( !G_ShoutcasterStatusAvailable( ent ) ) {
+		CP( "print \"Sorry, shoutcaster status disabled on this server.\n\"" );
 		return;
 	}
 

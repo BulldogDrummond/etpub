@@ -2390,6 +2390,13 @@ void G_UpdateCvars( void )
 				else if(G_IsEtpubinfoCvar(cv->vmCvar)) {
 					G_UpdateEtpubinfo();
 				}
+				// pheno: logout all currently logged in shoutcasters
+				else if( cv->vmCvar == &shoutcastPassword ) {
+					if( !Q_stricmp( shoutcastPassword.string, "none" ) ||
+						!shoutcastPassword.string[0] ) {
+						G_LogoutAllShoutcasters();
+					}
+				}
 				// quad - Lua API cvars
 				else if(cv->vmCvar == &lua_modules || cv->vmCvar == &lua_allowedModules) {
 					G_LuaShutdown();

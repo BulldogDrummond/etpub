@@ -1921,6 +1921,8 @@ char *G_SHA1( char *string );
 //
 // pheno: g_shoutcaster.c
 //
+qboolean G_ShoutcasterStatusAvailable( gentity_t *ent );
+void G_LogoutAllShoutcasters( void );
 void G_sclogin_cmd( gentity_t *ent, unsigned int dwCommand, qboolean fValue );
 void G_sclogout_cmd( gentity_t *ent, unsigned int dwCommand, qboolean fValue );
 
