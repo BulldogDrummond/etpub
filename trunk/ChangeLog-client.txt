@@ -429,3 +429,4 @@ current
 * pheno:   added floating dynamite counters for shoutcasters. Reduced also
            the size of the floating strings.
 * pheno:   fixed landmine drawing for shoutcasters in follow mode
+* pheno:   fixed class change on cancel bug
