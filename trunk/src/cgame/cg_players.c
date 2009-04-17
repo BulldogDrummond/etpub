@@ -262,9 +262,8 @@ void CG_NewClientInfo( int clientNum ) {
 				cgs.autoFireteamJoinEndTime = 0;
 			}
 
-			// pheno: moved it down to fix class change on cancel bug
 			// kw: autoexec team configs
-			/*if(newInfo.team != TEAM_FREE)
+			if(newInfo.team != TEAM_FREE)
 				CG_execFile( va("autoexec_%s", BG_TeamName(newInfo.team)) );
 
 			// clear these
@@ -278,7 +277,7 @@ void CG_NewClientInfo( int clientNum ) {
 				( newInfo.team != ci->team && ci->team == TEAM_SPECTATOR)) ) {
 
 			// kw: autoexec class configs // Dens: lowercase for linux
-			CG_execFile( va("autoexec_%s", BG_lwrcsClassName(newInfo.cls)) );*/
+			CG_execFile( va("autoexec_%s", BG_lwrcsClassName(newInfo.cls)) );
 		}
 
 
@@ -323,6 +322,7 @@ void CG_NewClientInfo( int clientNum ) {
 
 		}*/
 
+		// pheno: removed to fix class change on cancel bug
 		// CHRUKER: b020 - Make sure player class and primary weapons are correct for 
 		// subsequent calls to CG_LimboPanel_SendSetupMsg 
 		//CG_LimboPanel_Setup();
@@ -383,28 +383,6 @@ void CG_NewClientInfo( int clientNum ) {
 					CG_PriorityCenterPrint( va( "You have been rewarded with %s", bg_skillRewards[ i ][ newInfo.skill[i]-1 ]), CP_DEFAULTHEIGHT, SMALLCHAR_WIDTH, 99999 );
 				}
 			}
-		}
-
-		// pheno: moved to fix class change on cancel bug
-		if( newInfo.team != cgs.clientinfo[ cg.clientNum ].team ) {
-			// kw: autoexec team configs
-			if(newInfo.team != TEAM_FREE)
-				CG_execFile( va("autoexec_%s", BG_TeamName(newInfo.team)) );
-
-			// clear these
-			memset( cg.artilleryRequestPos, 0, sizeof(cg.artilleryRequestPos) );
-			memset( cg.artilleryRequestTime, 0, sizeof(cg.artilleryRequestTime) );
-		}
-
-		// pheno: moved to fix class change on cancel bug
-		//changed class or changed team from spec
-		if( newInfo.team != TEAM_SPECTATOR && 
-			( newInfo.cls != cgs.clientinfo[ cg.clientNum ].cls ||
-				( newInfo.team != ci->team && ci->team == TEAM_SPECTATOR)) ) {
-
-			// kw: autoexec class configs
-			// Dens: lowercase for linux
-			CG_execFile( va("autoexec_%s", BG_lwrcsClassName(newInfo.cls)) );
 		}
 
 		trap_Cvar_Set( "authLevel", va( "%i", newInfo.refStatus ) );
