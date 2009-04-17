@@ -153,13 +153,17 @@
 */
 #if defined(WIN32)
 
+#define LUA_API		extern
+
+/*
 #if defined(LUA_CORE) || defined(LUA_LIB)
 #define LUA_API __declspec(dllexport)
-#elif defined(CGAMEDLL)
+#elif defined(GAMEDLL)
 #define LUA_API		extern
 #else
 #define LUA_API __declspec(dllimport)
 #endif
+*/
 
 #else
 
