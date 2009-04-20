@@ -684,6 +684,7 @@ typedef enum eEntityClassGeneric
 	ENT_CLASS_GENERIC_JUMPPAD_TARGET,
 	ENT_CLASS_GENERIC_GOAL,
 	ENT_CLASS_EXPLODING_BARREL,
+	ENT_CLASS_GENERIC_WEAPON,
 } EntityClassGeneric;
 
 // enumerations: SoundType

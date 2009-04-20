@@ -247,6 +247,11 @@ struct ET_DisableBotPush
 	int			m_Push;
 };
 
+struct ET_GetWeaponTag
+{
+	int			m_WeaponTag;
+};
+
 #pragma pack(pop)
 
 #endif

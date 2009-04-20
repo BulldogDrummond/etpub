@@ -513,6 +513,8 @@ void G_DropWeapon( gentity_t *ent, weapon_t weapon )
 
 //	ent2->item->quantity = client->ps.ammoclip[BG_FindClipForWeapon(weapon)]; // Gordon: um, modifying an item is not a good idea
 	client->ps.ammoclip[BG_FindClipForWeapon(weapon)] = 0;
+
+	Bot_Event_RemoveWeapon(client->ps.clientNum, Bot_WeaponGameToBot(weapon));
 }
 
 void G_DropBinocs( gentity_t *ent )
@@ -763,6 +765,7 @@ int Pickup_Weapon( gentity_t *ent, gentity_t *other ) {
 		BotPickupWeapon( other->s.number, ent->item->giTag, alreadyHave );
 #endif
 
+	Bot_Event_AddWeapon(other->client->ps.clientNum, Bot_WeaponGameToBot(ent->item->giTag));
 	return -1;
 }
 

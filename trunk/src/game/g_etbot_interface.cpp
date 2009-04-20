@@ -1392,7 +1392,6 @@ static int _GetEntityClass(gentity_t *_ent)
 	case ET_PLAYER:
 		{
 			if (!_ent->client || (_ent->entstate == STATE_INVISIBLE) ||
-				(_ent->client->ps.pm_type == PM_SPECTATOR) ||
 				(_ent->client->sess.sessionTeam != TEAM_AXIS &&
 				_ent->client->sess.sessionTeam != TEAM_ALLIES))
 				return ENT_CLASS_GENERIC_SPECTATOR;
@@ -1416,6 +1415,8 @@ static int _GetEntityClass(gentity_t *_ent)
 				return ENT_CLASS_GENERIC_AMMO;
 			else if(!Q_stricmp(_ent->classname, "item_treasure")) 
 				return ET_CLASSEX_TREASURE;
+			else if (_ent->item && _ent->item->giType == IT_WEAPON)
+				return ENT_CLASS_GENERIC_WEAPON; 
 			break;
 		}
 	case ET_CORPSE:
@@ -2022,6 +2023,9 @@ public:
 		if(_input.m_ButtonFlags.CheckFlag(BOT_BUTTON_ATTACK2))
 			cmd.wbuttons |= WBUTTON_ATTACK2;
 
+		if(_input.m_ButtonFlags.CheckFlag(BOT_BUTTON_DROP))
+			cmd.wbuttons |= WBUTTON_DROP;
+
 		// if we have prone held
 		if(_input.m_ButtonFlags.CheckFlag(BOT_BUTTON_PRONE))
 		{
@@ -2423,6 +2427,8 @@ public:
 				else if(!Q_strncmp(pEnt->classname, "weapon_magicammo", strlen("weapon_magicammo")))
 					_category.SetFlag(ENT_CAT_PICKUP);
 				else if(!Q_stricmp(pEnt->classname, "item_treasure"))
+					_category.SetFlag(ENT_CAT_PICKUP);
+				else if(pEnt->item && pEnt->item->giType == IT_WEAPON)
 					_category.SetFlag(ENT_CAT_PICKUP);
 				else
 					res = InvalidEntity;
@@ -4313,7 +4319,13 @@ public:
 					if(pEnt && pEnt->client)
 					{
 						pMsg->m_Current = G_CountTeamLandmines(pEnt->client->sess.sessionTeam);
+#ifdef NOQUARTER
+						pMsg->m_Max = team_maxLandmines.integer;
+#elif defined ETPUB_VERSION
+						pMsg->m_Max = g_maxTeamLandmines.integer;
+#else
 						pMsg->m_Max = MAX_TEAM_LANDMINES;
+#endif
 					}
 				}
 				break;
@@ -4507,6 +4519,23 @@ public:
 					}
 				}
 				break;
+			}
+		case ET_MSG_GETWEAPONTAG: 
+			{ 
+				OB_GETMSG(ET_GetWeaponTag); 
+				if(pMsg) 
+				{ 
+					if(pEnt && pEnt->item && pEnt->item->giType == IT_WEAPON) 
+					{ 
+						if (pEnt->item->giTag) 
+							pMsg->m_WeaponTag = Bot_WeaponGameToBot(pEnt->item->giTag);
+						else
+							pMsg->m_WeaponTag = 0;
+					}
+					else
+						pMsg->m_WeaponTag = 0;
+				} 
+				break; 
 			}
 		default:
 			{
@@ -5038,6 +5067,18 @@ void Bot_Event_AddWeapon(int _client, int _weaponId)
 		}
 	}
 }
+
+void Bot_Event_RemoveWeapon(int _client, int _weaponId) 
+{ 
+	if(IsOmnibotLoaded()) 
+	{ 
+		if ( IsBot(&g_entities[_client]) ) 
+		{ 
+			Event_RemoveWeapon d = { _weaponId }; 
+			g_BotFunctions.pfnBotSendEvent(_client, MessageHelper(MESSAGE_REMOVEWEAPON, &d, sizeof(d))); 
+		} 
+	} 
+} 
 
 void Bot_Event_TakeDamage(int _client, gentity_t *_ent)
 {
