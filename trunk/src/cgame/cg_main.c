@@ -3026,6 +3026,9 @@ void CG_Init( int serverMessageNum, int serverCommandSequence, int clientNum, qb
 	// tjw: not used
 	//trap_Cvar_Set( "cg_etVersion", GAME_VERSION_DATED );	// So server can check
 
+	// pheno: make sure to set the etpubc version
+	trap_Cvar_Set( "cg_etpubc", ETPUBC_VERSION );
+
 	s = CG_ConfigString( CS_LEVEL_START_TIME );
 	cgs.levelStartTime = atoi( s );
 

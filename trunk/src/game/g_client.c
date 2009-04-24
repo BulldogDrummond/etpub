@@ -2121,7 +2121,7 @@ void ClientUserinfoChanged( int clientNum ) {
 	etpubc = atoi(Info_ValueForKey(userinfo, "cg_etpubc"));
 	if(etpubc > 0 && etpubc != ent->client->pers.etpubc) {
 		ent->client->pers.etpubc = etpubc;
-		CP(va("print \"^3server: detected etpubclient %i\n\"",
+		CP(va("print \"^3server: detected etpub client %i\n\"",
 			ent->client->pers.etpubc));
 	}
 
