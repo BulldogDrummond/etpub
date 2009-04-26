@@ -1716,7 +1716,7 @@ qboolean G_LandmineSnapshotCallback( int entityNum, int clientNum ) {
 
 	// pheno: shoutcasters can see landmines (check only if
 	//        shoutcaster status available!)
-	if( G_ShoutcasterStatusAvailable( clEnt ) ) { 
+	if( G_IsShoutcastStatusAvailable( clEnt ) ) { 
 		if( clEnt->client->sess.sessionTeam == TEAM_SPECTATOR &&
 			clEnt->client->sess.shoutcaster ) {
 			return qtrue;

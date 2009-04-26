@@ -1921,10 +1921,12 @@ char *G_SHA1( char *string );
 //
 // pheno: g_shoutcaster.c
 //
-qboolean G_ShoutcasterStatusAvailable( gentity_t *ent );
-void G_LogoutAllShoutcasters( void );
+qboolean G_IsShoutcastStatusAvailable( gentity_t *ent );
+void G_RemoveAllShoutcasters( void );
 void G_sclogin_cmd( gentity_t *ent, unsigned int dwCommand, qboolean fValue );
 void G_sclogout_cmd( gentity_t *ent, unsigned int dwCommand, qboolean fValue );
+void G_makesc_cmd( void );
+void G_removesc_cmd( void );
 
 //
 // g_bot.c

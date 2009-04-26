@@ -1771,7 +1771,23 @@ qboolean	ConsoleCommand( void ) {
 		G_shuffleTeams();
 		return qtrue;
 	}
-	
+
+	// pheno: shoutcast - rcon make commands
+	if( !Q_stricmp( cmd, "makeshoutcaster" ) ||
+		!Q_stricmp( cmd, "makeshoutcast" ) ||
+		!Q_stricmp( cmd, "makesc" ) ) {
+		G_makesc_cmd();
+		return qtrue;
+	}
+
+	// pheno: shoutcast - rcon remove commands
+	if( !Q_stricmp( cmd, "removeshoutcaster" ) ||
+		!Q_stricmp( cmd, "removeshoutcast" ) ||
+		!Q_stricmp( cmd, "removesc" ) ) {
+		G_removesc_cmd();
+		return qtrue;
+	}
+
 	// see if this is a a shrubbot command
 	if(G_shrubbot_cmd_check(NULL)) 
 		return qtrue;

@@ -2395,7 +2395,7 @@ void G_UpdateCvars( void )
 				else if( cv->vmCvar == &shoutcastPassword ) {
 					if( !Q_stricmp( shoutcastPassword.string, "none" ) ||
 						!shoutcastPassword.string[0] ) {
-						G_LogoutAllShoutcasters();
+						G_RemoveAllShoutcasters();
 					}
 				}
 				// quad - Lua API cvars

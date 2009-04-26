@@ -75,6 +75,19 @@ dt {
 
 <table border=1 cellpadding=5 cellspacing=0>
 <tr>
+<td colspan=4 align=center><b>server console commands</b></td>
+</tr><tr>
+<td><a href="#clearspreerecords">clearspreerecords</a></td>
+<td><a href="#lua_status">lua_status</a></td>
+<td><a href="#makeshoutcaster">makeshoutcaster</a></td>
+<td><a href="#removeshoutcaster">removeshoutcaster</a></td>
+</tr>
+</table>
+
+<br>
+
+<table border=1 cellpadding=5 cellspacing=0>
+<tr>
 <td colspan=4 align=center><b>shrubbot ! commands</b></td>
 </tr><tr>
 <td><a href="#!panzerwar">panzerwar</a></td>
@@ -86,19 +99,6 @@ dt {
 <td><a href="#!spreerecord">spreerecord</a></td>
 <td><a href="#!spree">spree</a></td>
 <td><a href="#!tspree">tspree</a></td>
-<td>&nbsp;</td>
-</tr>
-</table>
-
-<br>
-
-<table border=1 cellpadding=5 cellspacing=0>
-<tr>
-<td colspan=4 align=center><b>server console commands</b></td>
-</tr><tr>
-<td><a href="#lua_status">lua_status</a></td>
-<td>&nbsp;</td>
-<td>&nbsp;</td>
 <td>&nbsp;</td>
 </tr>
 </table>
@@ -3472,6 +3472,21 @@ intermission)</p>
 <dt>lua_status
 <dd>
 <p>Shows information about the scripts currently loaded by the Lua API engine.</p>
+
+<a name="makeshoutcaster"></a>
+<a name="makeshoutcast"></a>
+<a name="makesc"></a>
+<dt>makeshoutcaster [slot#|name]<br>makeshoutcast [slot#|name]<br>makesc [slot#|name]
+<dd>
+<p>Promotes the player to be a shoutcaster. Shoutcasters can see floating player names,
+dynamite counter, truck and tank health and all mines.</p>
+
+<a name="removeshoutcaster"></a>
+<a name="removeshoutcast"></a>
+<a name="removesc"></a>
+<dt>removeshoutcaster [slot#|name]<br>removeshoutcast [slot#|name]<br>removesc [slot#|name]
+<dd>
+<p>Removes players shoutcaster status.</p>
 
 </dl>
 
