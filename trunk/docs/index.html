@@ -4449,10 +4449,14 @@ As shown in !unlimitedpanzers, you can separate commands with a semicolon (;).
 
 <p>
 Starting with etpub 0.8.1 [command] elements can use shortcut characters
-as described in <a href="#g_shortcuts">g_shortcuts</a>.  Shortcuts will work
+as described in <a href="#g_shortcuts">g_shortcuts</a>. Shortcuts will work
 with [command] elements regardless of the <a href="#g_shortcuts">g_shortcuts</a>
-settings.  Here are some samples:
+settings. With etpub 0.9.1 you can use a new shortcut [i] to replace it with
+the player ID of the calling player.
 </p>
+
+<p>Here are some samples:</p>
+
 <pre>
 [command]
 command  = spec
@@ -4465,6 +4469,12 @@ command  = pizza
 exec     = cp "[n] ^7orders a big pizza for everyone except [d]^7!"
 desc     = Some message
 levels   = 3 4 5
+
+[command]
+command  = ms
+exec     = makeshoutcaster [i]
+desc     = Makes you a shoutcaster
+levels   = 5
 </pre>
 
 <p>Also starting with etpub 0.8.1 [command] elements can use up to 9

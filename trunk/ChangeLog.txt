@@ -2057,3 +2057,5 @@
            library call
 * pheno:   fixed [command] element command line length
 * pheno:   fixed landmine snapshot callback for shoutcasters in follow mode
+* pheno:   added shoutcaster console commands
+* pheno:   added [i] shortcut for shrubbot [command] elements only
