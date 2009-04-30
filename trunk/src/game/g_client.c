@@ -2095,9 +2095,11 @@ void ClientUserinfoChanged( int clientNum ) {
 	Q_strncpyz(ip, Info_ValueForKey(userinfo, "ip"), sizeof(ip));
 	Q_strncpyz(name, Info_ValueForKey(userinfo, "name"), sizeof(name));
 
-	reason = CheckSpoofing(client, guid, ip, name);
-	if(reason){
-		trap_DropClient( clientNum,va("^1%s", reason), 0);
+	if( !( ent->r.svFlags & SVF_BOT ) ) { // pheno: IGNORE BOTS
+		reason = CheckSpoofing( client, guid, ip, name );
+		if( reason ) {
+			trap_DropClient( clientNum, va( "^1%s", reason ), 0 );
+		}
 	}
 
 #ifndef DEBUG_STATS
