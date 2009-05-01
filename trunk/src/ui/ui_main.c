@@ -2914,6 +2914,9 @@ static void UI_BuildPlayerList() {
 				uiInfo.playerMuted[uiInfo.playerCount] = qfalse;
 			}
 			uiInfo.playerRefereeStatus[uiInfo.playerCount] = atoi(Info_ValueForKey( info, "ref" ));
+			// pheno: shoutcaster - player state
+			uiInfo.playerShoutcasterStatus[uiInfo.playerCount] =
+				atoi( Info_ValueForKey( info, "sc" ) );
 			uiInfo.playerCount++;
 			team2 = atoi(Info_ValueForKey(info, "t"));
 			if (team2 == team) {
@@ -3447,6 +3450,20 @@ qboolean UI_OwnerDrawVisible(int flags) {
 				vis = qfalse;
 			}
 			flags &= ~UI_SHOW_PLAYERREFEREE;
+		}
+
+		// pheno: shoutcaster - player state
+		if( flags & UI_SHOW_PLAYERNOSHOUTCASTER ) {
+			if( uiInfo.playerShoutcasterStatus[uiInfo.playerIndex] != 0 ) {
+				vis = qfalse;
+			}
+			flags &= ~UI_SHOW_PLAYERNOSHOUTCASTER;
+		}
+		if( flags & UI_SHOW_PLAYERSHOUTCASTER ) {
+			if( uiInfo.playerShoutcasterStatus[uiInfo.playerIndex] != 1 ) {
+				vis = qfalse;
+			}
+			flags &= ~UI_SHOW_PLAYERSHOUTCASTER;
 		}
 
 		if (flags & UI_SHOW_DEMOAVAILABLE) {
@@ -5213,6 +5230,34 @@ void UI_RunMenuScript(char **args) {
 		} else if (Q_stricmp(name, "rconRemoveReferee") == 0) {
 			if (uiInfo.playerIndex >= 0 && uiInfo.playerIndex < uiInfo.playerCount) {
 				trap_Cmd_ExecuteText( EXEC_APPEND, va("rcon removeReferee \"%s\"\n",uiInfo.playerNames[uiInfo.playerIndex]) );
+			}
+		// pheno: shoutcaster - referee commands
+		} else if( Q_stricmp( name, "refMakeShoutcaster" ) == 0 ) {
+			if( uiInfo.playerIndex >= 0 &&
+				uiInfo.playerIndex < uiInfo.playerCount ) {
+				trap_Cmd_ExecuteText( EXEC_APPEND,
+					va( "ref makeshoutcaster \"%s\"\n",
+						uiInfo.playerNames[uiInfo.playerIndex] ) );
+			}
+		} else if( Q_stricmp( name, "refRemoveShoutcaster" ) == 0 ) {
+			if( uiInfo.playerIndex >= 0 &&
+				uiInfo.playerIndex < uiInfo.playerCount ) {
+				trap_Cmd_ExecuteText( EXEC_APPEND,
+					va( "ref removeshoutcaster \"%s\"\n",
+						uiInfo.playerNames[uiInfo.playerIndex] ) );
+			}
+		// pheno: shoutcaster - console commands
+		} else if( Q_stricmp( name, "rconMakeShoutcaster" ) == 0 ) {
+			if( uiInfo.playerIndex >= 0 &&
+				uiInfo.playerIndex < uiInfo.playerCount ) {
+				trap_Cmd_ExecuteText( EXEC_APPEND,
+					va( "rcon makeshoutcaster %i\n", uiInfo.playerNumber ) );
+			}
+		} else if( Q_stricmp( name, "rconRemoveShoutcaster" ) == 0 ) {
+			if( uiInfo.playerIndex >= 0 &&
+				uiInfo.playerIndex < uiInfo.playerCount ) {
+				trap_Cmd_ExecuteText( EXEC_APPEND,
+					va( "rcon removeshoutcaster %i\n", uiInfo.playerNumber ) );
 			}
 		} else if (Q_stricmp(name, "rconMute") == 0) {
 			if (uiInfo.playerIndex >= 0 && uiInfo.playerIndex < uiInfo.playerCount) {

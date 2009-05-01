@@ -232,6 +232,12 @@ void G_makesc_cmd( void )
 		return;
 	}
 
+	// ignore bots
+	if( ent->r.svFlags & SVF_BOT ) {
+		G_Printf( "%s: Sorry, a bot can not be a shoutcaster.\n", cmd );
+		return;
+	}
+
 	if( ent->client->sess.shoutcaster ) {
 		G_Printf( "%s: Sorry, %s^7 is already a shoutcaster.\n",
 			cmd, ent->client->pers.netname );

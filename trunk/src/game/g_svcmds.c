@@ -1772,7 +1772,7 @@ qboolean	ConsoleCommand( void ) {
 		return qtrue;
 	}
 
-	// pheno: shoutcast - rcon make commands
+	// pheno: shoutcaster - console make commands
 	if( !Q_stricmp( cmd, "makeshoutcaster" ) ||
 		!Q_stricmp( cmd, "makeshoutcast" ) ||
 		!Q_stricmp( cmd, "makesc" ) ) {
@@ -1780,7 +1780,7 @@ qboolean	ConsoleCommand( void ) {
 		return qtrue;
 	}
 
-	// pheno: shoutcast - rcon remove commands
+	// pheno: shoutcaster - console remove commands
 	if( !Q_stricmp( cmd, "removeshoutcaster" ) ||
 		!Q_stricmp( cmd, "removeshoutcast" ) ||
 		!Q_stricmp( cmd, "removesc" ) ) {

@@ -849,6 +849,9 @@ typedef struct {
 	char teamNames[MAX_CLIENTS][MAX_NAME_LENGTH];
 	int teamClientNums[MAX_CLIENTS];
 
+	// pheno: shoutcaster - player state
+	int playerShoutcasterStatus[MAX_CLIENTS];
+
 	int mapCount;
 	mapInfo mapList[MAX_MAPS];
 

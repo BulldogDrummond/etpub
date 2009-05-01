@@ -147,6 +147,10 @@
 #define UI_SHOW_PLAYERNOREFEREE	0x04000000
 #define UI_SHOW_PLAYERREFEREE	0x08000000
 
+// pheno
+#define UI_SHOW_PLAYERNOSHOUTCASTER	0x10000000
+#define UI_SHOW_PLAYERSHOUTCASTER	0x20000000
+
 // owner draw types
 // ideally these should be done outside of this file but
 // this makes it much easier for the macro expansion to 
