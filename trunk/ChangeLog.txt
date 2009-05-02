@@ -2060,3 +2060,4 @@
 * pheno:   added shoutcaster console commands
 * pheno:   added [i] shortcut for shrubbot [command] elements only
 * pheno:   added shoutcaster referee commands
+* pheno:   added cointoss callvote command

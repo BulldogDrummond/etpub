@@ -192,6 +192,8 @@ vmCvar_t		vote_allow_poll;
 vmCvar_t		vote_allow_maprestart;
 vmCvar_t		vote_allow_shufflenorestart;
 vmCvar_t		vote_allow_putspec;
+// pheno: cointoss
+vmCvar_t		vote_allow_cointoss;
 vmCvar_t		vote_limit;
 vmCvar_t		vote_percent;
 vmCvar_t		z_serverflags;
@@ -745,6 +747,8 @@ cvarTable_t		gameCvarTable[] = {
 	{ &vote_allow_maprestart,	"vote_allow_maprestart", "1", 0, 0, qfalse, qfalse },
 	{ &vote_allow_shufflenorestart,	"vote_allow_shufflenorestart", "1", 0, 0, qfalse, qfalse },
 	{ &vote_allow_putspec,		"vote_allow_putspec", "1", 0, 0, qfalse, qfalse },
+	// pheno: cointoss
+	{ &vote_allow_cointoss,		"vote_allow_cointoss", "1", 0, 0, qfalse, qfalse },
 
 	{ &vote_limit,		"vote_limit", "5", 0, 0, qfalse, qfalse },
 	{ &vote_percent,	"vote_percent", "50", 0, 0, qfalse, qfalse },
@@ -2063,9 +2067,9 @@ void G_RegisterCvars( void )
 		trap_Cvar_Set("g_fixedphysicsfps", "333");
 }
 
-static qboolean G_IsVoteFlagCvar(cvarTable_t *cv)
+static qboolean G_IsVoteFlagCvar( cvarTable_t *cv )
 {
-	if(cv->vmCvar == &vote_allow_comp ||
+	if( cv->vmCvar == &vote_allow_comp ||
 		cv->vmCvar == &vote_allow_gametype ||
 		cv->vmCvar == &vote_allow_kick ||
 		cv->vmCvar == &vote_allow_map ||
@@ -2088,10 +2092,13 @@ static qboolean G_IsVoteFlagCvar(cvarTable_t *cv)
 		cv->vmCvar == &vote_allow_poll ||
 		cv->vmCvar == &vote_allow_maprestart ||
 		cv->vmCvar == &vote_allow_shufflenorestart ||
-		cv->vmCvar == &vote_allow_putspec) {
+		cv->vmCvar == &vote_allow_putspec ||
+		// pheno: cointoss
+		cv->vmCvar == &vote_allow_cointoss ) {
 
 		return qtrue;
 	}
+
 	return qfalse;
 }
 

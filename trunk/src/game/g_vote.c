@@ -86,6 +86,8 @@ static const vote_reference_t aVoteInfo[] = {
 		" ^7\n  Place players on each team according to ability." },
 	{ 0x1ff, "putspec", G_PutSpec_v, "PutSpec",
 		" <player_id>^7\n  Puts the player in the spectator team" },
+	// pheno: cointoss
+	{ 0x1ff, "cointoss", G_CoinToss_v, "Coin Toss", "" },
 	{ 0, 0, NULL, 0 }
 };
 
@@ -1258,6 +1260,28 @@ int G_Timelimit_v(gentity_t *ent, unsigned int dwVoteIndex, char *arg, char *arg
 	}
 
 	return(G_OK);
+}
+
+// pheno: cointoss
+int G_CoinToss_v( gentity_t *ent, unsigned int dwVoteIndex, char *arg, char *arg2, qboolean fRefereeCmd )
+{
+	// Vote request (vote is being initiated)
+	if( arg ) {
+		if( !vote_allow_cointoss.integer &&
+			ent &&
+			!ent->client->sess.referee ) {
+			G_voteDisableMessage( ent, arg );
+			return ( G_INVALID );
+		}
+	// Vote action (vote has passed)
+	} else {
+		char *side = rand() % 2 ? "HEADS" : "TAILS";
+
+		AP( va( "cp \"Coin toss comes up^3 %s^7!\"", side ) );
+		AP( va( "cpm \"Coin toss comes up^3 %s^7!\"", side ) );
+	}
+
+	return ( G_OK );
 }
 
 char *warmupType[] = { "None", "Enemies Only", "Everyone" };

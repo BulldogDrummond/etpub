@@ -454,6 +454,8 @@
 #define CV_SVF_MAPRESTART		2097152
 #define CV_SVF_SHUFFLENORESTART	4194304
 #define CV_SVF_PUTSPEC			8388608
+// pheno: cointoss
+#define CV_SVF_COINTOSS			16777216
 
 // referee level
 #define RL_NONE					0

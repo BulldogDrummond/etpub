@@ -2231,6 +2231,8 @@ extern vmCvar_t		vote_allow_poll;
 extern vmCvar_t		vote_allow_maprestart;
 extern vmCvar_t		vote_allow_shufflenorestart;
 extern vmCvar_t		vote_allow_putspec;
+// pheno: cointoss
+extern vmCvar_t		vote_allow_cointoss;
 extern vmCvar_t		vote_limit;
 extern vmCvar_t		vote_percent;
 extern vmCvar_t		z_serverflags;
@@ -3246,7 +3248,8 @@ int G_RestartCampaign_v(gentity_t *ent, unsigned int dwVoteIndex, char *arg, cha
 int G_NextCampaign_v(gentity_t *ent, unsigned int dwVoteIndex, char *arg, char *arg2, qboolean fRefereeCmd);
 int G_Poll_v(gentity_t *ent, unsigned int dwVoteIndex, char *arg, char *arg2, qboolean fRefereeCmd);
 int G_ShuffleNoRestart_v(gentity_t *ent, unsigned int dwVoteIndex, char *arg, char *arg2, qboolean fRefereeCmd);
-
+// pheno: cointoss
+int G_CoinToss_v( gentity_t *ent, unsigned int dwVoteIndex, char *arg, char *arg2, qboolean fRefereeCmd );
 
 void G_LinkDebris( void );
 void G_LinkDamageParents( void );

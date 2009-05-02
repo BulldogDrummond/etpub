@@ -95,11 +95,11 @@ void G_refHelp_cmd(gentity_t *ent)
 	G_voteHelp(ent, qfalse);
 	// CHRUKER: b038 - Removed non-existing restart command
 	// CHRUKER: b039 - Added <pid> parameter to remove command
-	G_refPrintf(ent,"^5allready         putallies^7 <pid>  ^5speclock         warmup");
-	G_refPrintf(ent,"^5lock             putaxis^7 <pid>    ^5makeshoutcaster^7 <pid>");
-	G_refPrintf(ent,"^5help             remove^7 <pid>     ^5removeshoutcaster^7 <pid>");
-	G_refPrintf(ent,"^5unlock           warn ^7<pid>       ^5pause            unpause");
-	G_refPrintf(ent,"^5specunlock");
+	G_refPrintf(ent,"^5allready         putallies^7 <pid>  ^5speclock");
+	G_refPrintf(ent,"^5lock             putaxis^7 <pid>    ^5specunlock");
+	G_refPrintf(ent,"^5help             remove^7 <pid>     ^5unlock");
+	G_refPrintf(ent,"^5warmup           warn ^7<pid>       ^5makeshoutcaster^7 <pid>");
+	G_refPrintf(ent,"^5pause            unpause          removeshoutcaster^7 <pid>");
 	G_refPrintf(ent,"------------------------------------------");
 	G_refPrintf(ent,"Usage: ^3\\ref <cmd> [params]\n");
 }

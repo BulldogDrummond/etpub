@@ -431,3 +431,4 @@ current
 * pheno:   fixed landmine drawing for shoutcasters in follow mode
 * pheno:   fixed class change on cancel bug
 * pheno:   added referee/rcon shoutcaster menu entries
+* pheno:   added cointoss vote menu entry
