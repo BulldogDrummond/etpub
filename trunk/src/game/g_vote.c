@@ -87,7 +87,7 @@ static const vote_reference_t aVoteInfo[] = {
 	{ 0x1ff, "putspec", G_PutSpec_v, "PutSpec",
 		" <player_id>^7\n  Puts the player in the spectator team" },
 	// pheno: cointoss
-	{ 0x1ff, "cointoss", G_CoinToss_v, "Coin Toss", "" },
+	{ 0x1ff, "cointoss", G_CoinToss_v, "Coin Toss", " ^7\n  Heads or Tails." },
 	{ 0, 0, NULL, 0 }
 };
 
