@@ -6,6 +6,9 @@
 //
 ////////////////////////////////////////////////////////////////////////////////
 
+#include <string.h>
+#include <stdlib.h>
+
 #include "BotExports.h"
 
 #pragma warning(disable:4530) //C++ exception handler used, but unwind semantics are not enabled. Specify /EHsc
