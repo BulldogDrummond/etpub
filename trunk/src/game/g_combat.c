@@ -1429,7 +1429,11 @@ void G_Hitsound(gentity_t *targ,
 	// vsay "hold your fire" on the first hit of a teammate
 	// only applies if the player has been hurt before
 	// and the match is not in warmup.
-	if(OnSameTeam(targ, attacker)) {
+	// pheno: don't blow enemy cover with hitsounds
+	if(	OnSameTeam(targ, attacker) ||
+		( targ->client->ps.powerups[PW_OPS_DISGUISED] &&
+			!( attacker->client->sess.skill[SK_SIGNALS] >= 4 &&
+				attacker->client->sess.playerType == PC_FIELDOPS ) ) ) {
 		if(!(g_hitsounds.integer & HSF_NO_TEAM_WARN) &&
 			(!client->lasthurt_mod || 
 			 client->lasthurt_client != attacker->s.number) &&

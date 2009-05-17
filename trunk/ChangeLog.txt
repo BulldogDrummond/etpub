@@ -2061,3 +2061,4 @@
 * pheno:   added [i] shortcut for shrubbot [command] elements only
 * pheno:   added shoutcaster referee commands
 * pheno:   added cointoss callvote command
+* pheno:   added friendly hitsounds for disguised coverts

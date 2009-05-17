@@ -2716,7 +2716,7 @@ static void CG_DrawCrosshairNames( void ) {
 			} else {
 				// rain - #480 - don't show the name after you look away, should this be
 				// a disguised covert
-				//cg.crosshairClientTime = 0;
+				cg.crosshairClientTime = 0;
 				return;
 			}
 		} else {
