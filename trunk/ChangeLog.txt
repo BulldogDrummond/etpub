@@ -2062,3 +2062,4 @@
 * pheno:   added shoutcaster referee commands
 * pheno:   added cointoss callvote command
 * pheno:   added friendly hitsounds for disguised coverts
+* pheno:   fixed class change with scoped weapon bug (prevents scoped sten)

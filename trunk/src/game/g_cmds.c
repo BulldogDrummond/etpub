@@ -4531,6 +4531,13 @@ qboolean G_ClassSteal(gentity_t *stealer, gentity_t *deadguy)
 	if(deadguy->activator) return qfalse; // already used corpse
 	if(BODY_TEAM(deadguy) > 2) return qfalse; //Perro: prevents stealing bug
 
+	// pheno: prevents scoped sten bug
+	if( BG_IsScopedWeapon( stealer->s.weapon ) ) {
+		CPx( stealer->s.number,
+			"cp \"You can't change your class with a scoped weapon\" 1" );
+		return qfalse;
+	}
+
 	if( BODY_VALUE(deadguy) < 250 ) {
 		if(BODY_VALUE(deadguy) == 0) {
 			CPx(stealer->s.number, "cp \"Switching Classes\" 1");
