@@ -2063,3 +2063,4 @@
 * pheno:   added cointoss callvote command
 * pheno:   added friendly hitsounds for disguised coverts
 * pheno:   fixed class change with scoped weapon bug (prevents scoped sten)
+* pheno:   added headshot mode (g_headshot [0|1])

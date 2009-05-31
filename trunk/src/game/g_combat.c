@@ -1979,6 +1979,14 @@ void G_Damage( gentity_t *targ, gentity_t *inflictor, gentity_t *attacker,  vec3
 	}
 
 	headShot = IsHeadShot(attacker, targ, dir, point, mod);
+
+	// pheno: don't take body damage in headshot mode
+	if( !headShot &&
+		g_headshot.integer &&
+		( targ->client && !( targ->client->ps.eFlags & EF_DEAD ) ) ) {
+		return;
+	}
+
 	if ( headShot ) {
 			// Perro: Allow tunables to work with both traditional and new damage code
 			if (g_dmgHeadShotMin.integer <= 0){

@@ -192,8 +192,6 @@ vmCvar_t		vote_allow_poll;
 vmCvar_t		vote_allow_maprestart;
 vmCvar_t		vote_allow_shufflenorestart;
 vmCvar_t		vote_allow_putspec;
-// pheno: cointoss
-vmCvar_t		vote_allow_cointoss;
 vmCvar_t		vote_limit;
 vmCvar_t		vote_percent;
 vmCvar_t		z_serverflags;
@@ -557,6 +555,8 @@ vmCvar_t g_maxConnsPerIP;
 // pheno
 vmCvar_t lua_allowedModules;
 vmCvar_t shoutcastPassword;
+vmCvar_t vote_allow_cointoss;
+vmCvar_t g_headshot;
 
 // flms
 vmCvar_t g_flushItems;
@@ -747,8 +747,6 @@ cvarTable_t		gameCvarTable[] = {
 	{ &vote_allow_maprestart,	"vote_allow_maprestart", "1", 0, 0, qfalse, qfalse },
 	{ &vote_allow_shufflenorestart,	"vote_allow_shufflenorestart", "1", 0, 0, qfalse, qfalse },
 	{ &vote_allow_putspec,		"vote_allow_putspec", "1", 0, 0, qfalse, qfalse },
-	// pheno: cointoss
-	{ &vote_allow_cointoss,		"vote_allow_cointoss", "1", 0, 0, qfalse, qfalse },
 
 	{ &vote_limit,		"vote_limit", "5", 0, 0, qfalse, qfalse },
 	{ &vote_percent,	"vote_percent", "50", 0, 0, qfalse, qfalse },
@@ -1122,6 +1120,8 @@ cvarTable_t		gameCvarTable[] = {
 	// pheno
 	{ &lua_allowedModules, "lua_allowedModules", "", 0 },
 	{ &shoutcastPassword, "shoutcastPassword", "none", 0, 0, qfalse },
+	{ &vote_allow_cointoss, "vote_allow_cointoss", "1", 0, 0, qfalse, qfalse },
+	{ &g_headshot, "g_headshot", "0", 0, 0, qtrue },
 
 	//flms
 	{ &g_flushItems, "g_flushItems", "1", 0},
@@ -2289,7 +2289,15 @@ void G_UpdateCvars( void )
 				cv->modificationCount = cv->vmCvar->modificationCount;
 
 				if ( cv->trackChange && !(cv->cvarFlags & CVAR_LATCH) ) {
-					trap_SendServerCommand( -1, va("print \"Server:[lof] %s [lon]changed to[lof] %s\n\"", cv->cvarName, cv->vmCvar->string ) );
+					if( cv->vmCvar == &g_headshot ) {
+						// pheno: announce headshot mode changes
+						G_globalSound( "sound/misc/referee.wav" );
+						AP( va( "cp \"^dMode Change^7: Headshot mode: %s\" 1",
+							g_headshot.integer ? "^2On" : "^1Off" ) );
+					} else {
+						trap_SendServerCommand( -1, va("print \"Server:[lof] %s [lon]changed to[lof] %s\n\"", cv->cvarName, cv->vmCvar->string ) );
+					}
+
 					if(cv->vmCvar == &g_panzerwar) {
 						G_PanzerWar();
 					} else if(cv->vmCvar == &g_sniperwar) {

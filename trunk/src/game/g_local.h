@@ -2231,8 +2231,6 @@ extern vmCvar_t		vote_allow_poll;
 extern vmCvar_t		vote_allow_maprestart;
 extern vmCvar_t		vote_allow_shufflenorestart;
 extern vmCvar_t		vote_allow_putspec;
-// pheno: cointoss
-extern vmCvar_t		vote_allow_cointoss;
 extern vmCvar_t		vote_limit;
 extern vmCvar_t		vote_percent;
 extern vmCvar_t		z_serverflags;
@@ -2382,6 +2380,8 @@ extern vmCvar_t g_maxConnsPerIP;
 // pheno
 extern vmCvar_t lua_allowedModules;
 extern vmCvar_t shoutcastPassword;
+extern vmCvar_t	vote_allow_cointoss;
+extern vmCvar_t g_headshot;
 
 // flms
 extern vmCvar_t g_flushItems;
