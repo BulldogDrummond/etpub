@@ -67,7 +67,7 @@ dt {
 <td><a href="#shoutcastPassword">shoutcastPassword</a></td>
 <td><a href="#vote_allow_cointoss">vote_allow_cointoss</a></td>
 <td><a href="#g_headshot">g_headshot</a></td>
-<td>&nbsp;</td>
+<td><a href="#g_instagibDamage">g_instagibDamage</a></td>
 </tr>
 </table>
 
@@ -3265,14 +3265,29 @@ the fake clients Denial of Service attack.</p>
 <dt>shoutcastPassword [string]
 <dd>
 <p>Enables shoutcaster status on the server.</p>
-<p>NOTE: Shoutcaster status is only available with installed etpub client > 20090112.</p>
+<p>NOTE: Shoutcaster status is only available with installed etpub client
+&gt; 20090112.</p>
 <p>Default is "none"</p>
 
 <a name="g_headshot"></a>
-<dt>g_headshot [0|1]
+<dt>g_headshot [bitflag]
 <dd>
-<p>Enables/Disables headshot mode. 1 is enabled, 0 is disabled</p>
+<p>Add these values together for custom headshot modes:</p>
+<dl>
+	<dt>1
+	<dd>Headshots only
+	<dt>2
+	<dd>Instagib damage (controlled by
+	<a href="#g_instagibDamage">g_instagibDamage</a>)
+</dl>
 <p>Default is 0</p>
+
+<a name="g_instagibDamage"></a>
+<dt>g_instagibDamage [integer]
+<dd>
+<p>Damage used for instagib headshot mode (e.g. set this to 160 so that a
+player can still be revived after being shot.).</p>
+<p>Default is 400</p>
 
 <hr>
 <a name="mapvoting"></a>

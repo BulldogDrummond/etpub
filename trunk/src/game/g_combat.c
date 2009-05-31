@@ -1982,7 +1982,7 @@ void G_Damage( gentity_t *targ, gentity_t *inflictor, gentity_t *attacker,  vec3
 
 	// pheno: don't take body damage in headshot mode
 	if( !headShot &&
-		g_headshot.integer &&
+		( g_headshot.integer & HSMF_HEADSHOT_ONLY ) &&
 		( targ->client && !( targ->client->ps.eFlags & EF_DEAD ) ) ) {
 		return;
 	}
@@ -2078,6 +2078,11 @@ void G_Damage( gentity_t *targ, gentity_t *inflictor, gentity_t *attacker,  vec3
 					attacker->client->pers.headshotDistance += dist;
 				}
 			}
+		}
+
+		// pheno: take instagib damage in headshot mode
+		if( g_headshot.integer & HSMF_INSTAGIB_DAMAGE ) {
+			take = g_instagibDamage.integer;
 		}
 
 		if( g_debugBullets.integer ) {

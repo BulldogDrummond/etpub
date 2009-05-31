@@ -2382,6 +2382,7 @@ extern vmCvar_t lua_allowedModules;
 extern vmCvar_t shoutcastPassword;
 extern vmCvar_t	vote_allow_cointoss;
 extern vmCvar_t g_headshot;
+extern vmCvar_t g_instagibDamage;
 
 // flms
 extern vmCvar_t g_flushItems;
@@ -3671,6 +3672,10 @@ void G_IntermissionVoteTally( gentity_t *ent );
 #define DMGBONUS_CUMULATIVE 4 // When multiple bonusses found, do count them all instead of just reducing damage once
 #define DMGBONUS_CHECK_ENEMY 8 // Also check the other team (do more damage when no engi in other team, etc.)
 #define DMGBONUS_DEBUG 16 // Print a lot of debug info
+
+// pheno: g_headshot flags
+#define HSMF_HEADSHOT_ONLY		1
+#define HSMF_INSTAGIB_DAMAGE	2
 
 // forty - canister kicking
 void G_CanisterKick();
