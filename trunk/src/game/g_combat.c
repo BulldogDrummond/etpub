@@ -2256,8 +2256,10 @@ void G_Damage( gentity_t *targ, gentity_t *inflictor, gentity_t *attacker,  vec3
 		targ->client->lasthurt_time = level.time;
 	}
 
-	// pheno: take instagib damage in headshot mode
-	if( g_headshot.integer & HSMF_INSTAGIB_DAMAGE ) {
+	// pheno: take instagib damage in headshot mode (w/o world damage)
+	if( targ->client &&
+		attacker->client &&
+		( g_headshot.integer & HSMF_INSTAGIB_DAMAGE ) ) {
 		take = g_instagibDamage.integer;
 	}
 
