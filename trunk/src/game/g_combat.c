@@ -2080,11 +2080,6 @@ void G_Damage( gentity_t *targ, gentity_t *inflictor, gentity_t *attacker,  vec3
 			}
 		}
 
-		// pheno: take instagib damage in headshot mode
-		if( g_headshot.integer & HSMF_INSTAGIB_DAMAGE ) {
-			take = g_instagibDamage.integer;
-		}
-
 		if( g_debugBullets.integer ) {
 			trap_SendServerCommand( attacker-g_entities, "print \"Head Shot\n\"\n");
 		}
@@ -2259,6 +2254,11 @@ void G_Damage( gentity_t *targ, gentity_t *inflictor, gentity_t *attacker,  vec3
 		targ->client->lasthurt_client = attacker->s.number;
 		targ->client->lasthurt_mod = mod;
 		targ->client->lasthurt_time = level.time;
+	}
+
+	// pheno: take instagib damage in headshot mode
+	if( g_headshot.integer & HSMF_INSTAGIB_DAMAGE ) {
+		take = g_instagibDamage.integer;
 	}
 
 	// do the damage
