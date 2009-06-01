@@ -2066,3 +2066,4 @@
 * pheno:   added headshot mode (g_headshot [0|1])
 * pheno:   added instagib damage (bitflag 2) to headshot mode. g_headshot is
            now a bitmask cvar.
+* pheno:   added goomba flag 32 - falling corpses won't cause damage

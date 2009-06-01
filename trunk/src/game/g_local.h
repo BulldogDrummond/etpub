@@ -3424,6 +3424,8 @@ extern g_shrubbot_ban_t *g_shrubbot_bans[MAX_SHRUBBOT_BANS];
 #define GBF_NO_SELF_DAMAGE 8
 // instagib goomba damage
 #define GBF_INSTAGIB 16
+// pheno: falling corpses won't cause damage
+#define GBF_NO_CORPSE_DAMAGE 32
 
 
 // josh: g_ATB

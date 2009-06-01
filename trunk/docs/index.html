@@ -638,12 +638,14 @@ the following flags are supported:
 	    (not necessary if 1 or 2 flag is set)
 	<dt>8
 	<dd>Falling player recieves no damage when landing on any other
-            player.  (default is to recieve 20% of the damage the fall
+            player. (default is to recieve 20% of the damage the fall
             would have given if not landing on a player).
 	<dt>16
-	<dd>Insta-gib goomba.  All goomba damage will be 500HP regardless
-            of fall distance.  The exception is hopping on anther player
+	<dd>Insta-gib goomba. All goomba damage will be 500HP regardless
+            of fall distance. The exception is hopping on anther player
             which still does 5HP of damage.
+	<dt>32
+	<dd>Falling corpses won't cause damage
 	</dl>
 </p>
 <p>
@@ -3278,7 +3280,7 @@ the fake clients Denial of Service attack.</p>
 	<dd>Headshots only
 	<dt>2
 	<dd>Instagib damage (controlled by
-	<a href="#g_instagibDamage">g_instagibDamage</a>)
+			<a href="#g_instagibDamage">g_instagibDamage</a>)
 </dl>
 <p>Default is 0</p>
 

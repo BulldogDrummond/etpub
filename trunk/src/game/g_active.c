@@ -894,6 +894,7 @@ void G_FallDamage(gentity_t *ent, int event)
 	int damage = 0;
 	int kb_time = 0;
 	gentity_t *victim;
+	int goombaDmg = 0; // pheno
 
 	if ( ent->s.eType != ET_PLAYER ) {
 		return;		// not in the player model
@@ -991,13 +992,18 @@ void G_FallDamage(gentity_t *ent, int event)
 		victim->client->ps.pm_flags |= PMF_TIME_KNOCKBACK;
 	}
 	// no normal pain sound
-	victim->pain_debounce_time = level.time + 200;	
-	if((g_goombaFlags.integer & GBF_INSTAGIB) && damage > 5) {
-		G_Damage(victim, ent, ent, NULL, NULL, 500, 0, MOD_GOOMBA);
+	victim->pain_debounce_time = level.time + 200;
+
+	// do goomba damage
+	goombaDmg = damage * g_goomba.integer;
+	if( ( g_goombaFlags.integer & GBF_INSTAGIB ) && damage > 5 ) {
+		goombaDmg = 500;
 	}
-	else {
-		G_Damage(victim, ent, ent, NULL, NULL,
-			(damage * g_goomba.integer), 0, MOD_GOOMBA);
+
+	// pheno: if set falling corpses won't cause damage
+	if( !( ( g_goombaFlags.integer & GBF_NO_CORPSE_DAMAGE ) &&
+		( ent->client && ( ent->client->ps.eFlags & EF_DEAD ) ) ) ) {
+		G_Damage( victim, ent, ent, NULL, NULL, goombaDmg, 0, MOD_GOOMBA );
 	}
 
 
