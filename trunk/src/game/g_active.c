@@ -720,7 +720,7 @@ qboolean ClientInactivityTimer( gclient_t *client ) {
 			client->inactivityWarning = qfalse;
 			client->inactivityTime = level.time + 60 * 1000;
 			if( client->sess.sessionTeam != TEAM_SPECTATOR ) {
-				// pheno: move afk shrubbot admins with flag '0'
+				// pheno: move also inactiv shrubbot admins with flag '0'
 				//        to spectators if shrubbot option '1' is set
 				if( !G_shrubbot_permission( ent, SBF_ACTIVITY ) ||
 					( g_shrubbotOptions.integer & SBO_NO_TEAM_INACTIVITY ) ) {

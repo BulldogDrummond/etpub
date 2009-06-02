@@ -2068,3 +2068,4 @@
            now a bitmask cvar.
 * pheno:   added goomba flag 32 - falling corpses won't cause damage
 * pheno:   added g_shrubbotOptions bitflag cvar (see docs)
+* pheno:   added death anim and medic call to playdead command
