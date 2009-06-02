@@ -2383,6 +2383,7 @@ extern vmCvar_t shoutcastPassword;
 extern vmCvar_t	vote_allow_cointoss;
 extern vmCvar_t g_headshot;
 extern vmCvar_t g_instagibDamage;
+extern vmCvar_t g_shrubbotOptions;
 
 // flms
 extern vmCvar_t g_flushItems;
@@ -3675,9 +3676,15 @@ void G_IntermissionVoteTally( gentity_t *ent );
 #define DMGBONUS_CHECK_ENEMY 8 // Also check the other team (do more damage when no engi in other team, etc.)
 #define DMGBONUS_DEBUG 16 // Print a lot of debug info
 
-// pheno: g_headshot flags
-#define HSMF_HEADSHOT_ONLY		1
-#define HSMF_INSTAGIB_DAMAGE	2
+// pheno: g_headshot
+// only headshots
+#define HSMF_HEADSHOT_ONLY 1
+// instagib damage (controlled by g_instagibDamage)
+#define HSMF_INSTAGIB_DAMAGE 2
+
+// pheno: g_shrubbotOptions
+// shrubbot flag '0' admins will be moved to spectators due to team inactivity
+#define SBO_NO_TEAM_INACTIVITY 1
 
 // forty - canister kicking
 void G_CanisterKick();

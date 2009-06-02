@@ -558,6 +558,7 @@ vmCvar_t shoutcastPassword;
 vmCvar_t vote_allow_cointoss;
 vmCvar_t g_headshot;
 vmCvar_t g_instagibDamage;
+vmCvar_t g_shrubbotOptions;
 
 // flms
 vmCvar_t g_flushItems;
@@ -1124,6 +1125,7 @@ cvarTable_t		gameCvarTable[] = {
 	{ &vote_allow_cointoss, "vote_allow_cointoss", "1", 0, 0, qfalse, qfalse },
 	{ &g_headshot, "g_headshot", "0", 0 },
 	{ &g_instagibDamage, "g_instagibDamage", "400", 0 },
+	{ &g_shrubbotOptions, "g_shrubbotOptions", "", 0 },
 
 	//flms
 	{ &g_flushItems, "g_flushItems", "1", 0},

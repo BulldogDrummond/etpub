@@ -714,37 +714,47 @@ qboolean ClientInactivityTimer( gclient_t *client ) {
 
 	} else if ( !client->pers.localClient ) {
 		if(level.time > client->inactivityTime && 
-			client->inactivityWarning &&
-			!G_shrubbot_permission(&g_entities[client-level.clients], SBF_ACTIVITY)) {
+			client->inactivityWarning /*&&
+			!G_shrubbot_permission(&g_entities[client-level.clients], SBF_ACTIVITY)*/) {
+			gentity_t *ent = &g_entities[client - level.clients]; // pheno
 			client->inactivityWarning = qfalse;
 			client->inactivityTime = level.time + 60 * 1000;
-			if (client->sess.sessionTeam != TEAM_SPECTATOR) {
-				client->inactivityTime = level.time + g_spectatorInactivity.integer * 1000;
-				SetTeam(&g_entities[client->ps.clientNum], "s", qtrue, -1, -1, qfalse);
-				AP(va("chat \"inactivity: %s^7 moved to spectators\" -1",
-					client->pers.netname));
-			} else {
-				// count the number of private slots in use
-				int i, privateSlotsUsed = 0;
-				qboolean isPrivate = client->ps.clientNum < sv_privateClients.integer;
-				for (i = 0; i < sv_privateClients.integer; ++i) {
-					if ( level.clients[i].pers.connected != CON_DISCONNECTED ) {
-						privateSlotsUsed++;
-					}
+			if( client->sess.sessionTeam != TEAM_SPECTATOR ) {
+				// pheno: move afk shrubbot admins with flag '0'
+				//        to spectators if shrubbot option '1' is set
+				if( !G_shrubbot_permission( ent, SBF_ACTIVITY ) ||
+					( g_shrubbotOptions.integer & SBO_NO_TEAM_INACTIVITY ) ) {
+					client->inactivityTime = level.time + g_spectatorInactivity.integer * 1000;
+					SetTeam(&g_entities[client->ps.clientNum], "s", qtrue, -1, -1, qfalse);
+					AP(va("chat \"inactivity: %s^7 moved to spectators\" -1",
+						client->pers.netname));
+					return qfalse;
 				}
-				// if the server is full, drop the client
-				if ((isPrivate && privateSlotsUsed == sv_privateClients.integer) ||
-						(level.numConnectedClients == level.maxclients - sv_privateClients.integer + privateSlotsUsed)) {
-					trap_DropClient(client - level.clients, "Dropped due to inactivity", 0 );
-				} else {
-					// otherwise give the client some more time until the server is full
-					client->inactivityTime = level.time + 60 * 1000;
-					CPx(client - level.clients, "cp \"^360 more seconds since server not full.\n\"");
-					CPx(client - level.clients, "print \"^360 more seconds since server not full.\n\"");
-					G_Printf("Server not Full: 60 more inactivity seconds for: %s\n", client->pers.netname);
+			} else {
+				// pheno: don't drop shrubbot admins with flag '0'
+				if( !G_shrubbot_permission( ent, SBF_ACTIVITY ) ) {
+					// count the number of private slots in use
+					int i, privateSlotsUsed = 0;
+					qboolean isPrivate = client->ps.clientNum < sv_privateClients.integer;
+					for (i = 0; i < sv_privateClients.integer; ++i) {
+						if ( level.clients[i].pers.connected != CON_DISCONNECTED ) {
+							privateSlotsUsed++;
+						}
+					}
+					// if the server is full, drop the client
+					if ((isPrivate && privateSlotsUsed == sv_privateClients.integer) ||
+							(level.numConnectedClients == level.maxclients - sv_privateClients.integer + privateSlotsUsed)) {
+						trap_DropClient(client - level.clients, "Dropped due to inactivity", 0 );
+					} else {
+						// otherwise give the client some more time until the server is full
+						client->inactivityTime = level.time + 60 * 1000;
+						CPx(client - level.clients, "cp \"^360 more seconds since server not full.\n\"");
+						CPx(client - level.clients, "print \"^360 more seconds since server not full.\n\"");
+						G_Printf("Server not Full: 60 more inactivity seconds for: %s\n", client->pers.netname);
+					}
+					return qfalse;
 				}
 			}
-			return(qfalse);
 		}
 
 		if ( !client->inactivityWarning && level.time > client->inactivityTime - 10000 ) {
