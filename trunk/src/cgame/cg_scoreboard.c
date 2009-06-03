@@ -378,27 +378,13 @@ static void WM_DrawClientScore( int x, int y, score_t *score, float *color, floa
 	}
 
 	if ( ci->team == TEAM_SPECTATOR ) {
-		const char *s = "";
-		
-		/*int w, totalwidth;
-		totalwidth = INFO_CLASS_WIDTH + INFO_SCORE_WIDTH + INFO_LATENCY_WIDTH - 8;
-		// CHRUKER: b031 -  Show connecting people as connecting
-		if (score->ping == -1) {
-			s = CG_TranslateString( "^3CONNECTING" );
-		} else if (score->ping == 999) {
-			s = CG_TranslateString( "^3ZOMBIE" );
-		} else {
-			s = CG_TranslateString( "^3SPECTATOR" );
-		}
-		w = CG_DrawStrlen( s ) * SMALLCHAR_WIDTH;*/
+		const char *s = CG_TranslateString( "^3SPECTATOR" );
 		
 		// quad 
 		if( ci->ettv ) {
-			s = CG_TranslateString("^3ETTV"); 
+			s = CG_TranslateString( "^3ETTV" ); 
 		} else if( ci->shoutcaster ) {
-			s = CG_TranslateString("^3SHOUTCASTER");
-		} else if( score->ping >=0 && score->ping < 999 ) { 
-			s = CG_TranslateString("^3SPECTATOR");
+			s = CG_TranslateString( "^3SHOUTCASTER" );
 		}
 
 		CG_DrawSmallString( tempx, y, s, fade );
@@ -620,34 +606,13 @@ static void WM_DrawClientScore_Small( int x, int y, score_t *score, float *color
 	}
 
 	if ( ci->team == TEAM_SPECTATOR ) {
-		const char *s = "";
-
-		/*int w, totalwidth;
-
-		totalwidth = INFO_CLASS_WIDTH + INFO_SCORE_WIDTH + INFO_LATENCY_WIDTH - 8;
-
-		// CHRUKER: b031 -  Show connecting people as connecting
-		if (score->ping == -1) {
-			s = CG_TranslateString( "^3CONNECTING" );
-		} else if (score->ping == 999) {
-			//forty - zombied out spectators.
-			s = CG_TranslateString( "^3ZOMBIE" );
-		} else {
-			s = CG_TranslateString( "^3SPECTATOR" );
-		}
-		w = CG_DrawStrlen( s ) * MINICHAR_WIDTH;
-		// CHRUKER: b034 - Using the mini char height
-		CG_DrawStringExt( tempx + totalwidth - w, y, s, hcolor, qfalse,
-			qfalse, MINICHAR_WIDTH, MINICHAR_HEIGHT, 0 );
-		return;*/
+		const char *s = CG_TranslateString( "^3SPECTATOR" );
 
 		// pheno
 		if( ci->ettv ) {
-			s = CG_TranslateString("^3ETTV"); 
+			s = CG_TranslateString( "^3ETTV" ); 
 		} else if( ci->shoutcaster ) {
-			s = CG_TranslateString("^3SHOUTCASTER");
-		} else if( score->ping >=0 && score->ping < 999 ) { 
-			s = CG_TranslateString("^3SPECTATOR");
+			s = CG_TranslateString( "^3SHOUTCASTER" );
 		}
 
 		CG_DrawStringExt( tempx, y, s, hcolor, qfalse, qfalse, MINICHAR_WIDTH, MINICHAR_HEIGHT, 0 );
