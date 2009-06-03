@@ -352,13 +352,33 @@ static void WM_DrawClientScore( int x, int y, score_t *score, float *color, floa
 
 	tempx += INFO_PLAYER_WIDTH - offset;
 
+	//forty - connecting and zombied out players
+	// pheno: moved up here to fix string location
+	if( score->ping == -1 || score->ping == 999 ) {
+		const char *s = "";
+		int w, totalwidth;
+
+		totalwidth = INFO_CLASS_WIDTH + INFO_SCORE_WIDTH + INFO_LATENCY_WIDTH - 8;
+
+		if( score->ping == -1 ) {
+			s = CG_TranslateString( "^3CONNECTING" );
+		} else if( score->ping == 999 ) {
+			s = CG_TranslateString( "^3ZOMBIE" );
+		}
+
+		w = CG_DrawStrlen( s ) * SMALLCHAR_WIDTH;
+		CG_DrawSmallString( tempx + totalwidth - w, y, s, fade );
+
+		return;
+	}
+
 	// Dens: add the extra room here
 	if(!show_lives){
 		tempx += INFO_LIVES_WIDTH;
 	}
 
 	if ( ci->team == TEAM_SPECTATOR ) {
-		const char *s;
+		const char *s = "";
 		
 		/*int w, totalwidth;
 		totalwidth = INFO_CLASS_WIDTH + INFO_SCORE_WIDTH + INFO_LATENCY_WIDTH - 8;
@@ -379,12 +399,9 @@ static void WM_DrawClientScore( int x, int y, score_t *score, float *color, floa
 			s = CG_TranslateString("^3SHOUTCASTER");
 		} else if( score->ping >=0 && score->ping < 999 ) { 
 			s = CG_TranslateString("^3SPECTATOR");
-		} else {
-			s = "";
 		}
 
 		CG_DrawSmallString( tempx, y, s, fade );
-
 		drawScore = qfalse; // pheno: don't draw the score for spectators
 	}
 	// OSP - allow MV clients see the class of its merged client's on the scoreboard
@@ -395,34 +412,6 @@ static void WM_DrawClientScore( int x, int y, score_t *score, float *color, floa
 		}else{
 			CG_DrawSmallString( tempx, y, CG_TranslateString( BG_ShortClassnameForNumber( ci->cls ) ), fade );
 		}
-	}
-	
-	//forty - connecting players
-	if ( score->ping == -1) {
-		const char *s;
-		int w, totalwidth;
-
-		totalwidth = INFO_CLASS_WIDTH + INFO_SCORE_WIDTH + INFO_LATENCY_WIDTH - 8;
-
-		s = CG_TranslateString( "^3CONNECTING" );
-		w = CG_DrawStrlen( s ) * SMALLCHAR_WIDTH;
-
-		CG_DrawSmallString( tempx + totalwidth - w, y, s, fade );
-		return;
-	}
-
-	//forty - zombied out players
-	if ( score->ping == 999) {
-		const char *s;
-		int w, totalwidth;
-
-		totalwidth = INFO_CLASS_WIDTH + INFO_SCORE_WIDTH + INFO_LATENCY_WIDTH - 8;
-
-		s = CG_TranslateString( "^3ZOMBIE" );
-		w = CG_DrawStrlen( s ) * SMALLCHAR_WIDTH;
-
-		CG_DrawSmallString( tempx + totalwidth - w, y, s, fade );
-		return;
 	}
 
 	tempx += INFO_CLASS_WIDTH;
@@ -605,13 +594,33 @@ static void WM_DrawClientScore_Small( int x, int y, score_t *score, float *color
 	tempx += INFO_PLAYER_WIDTH - offset;
 	// dhm - nerve
 
+	//forty - connecting and zombied out players
+	// pheno: moved up here to fix string location
+	if( score->ping == -1 || score->ping == 999 ) {
+		const char *s = "";
+		int w, totalwidth;
+
+		totalwidth = INFO_CLASS_WIDTH + INFO_SCORE_WIDTH + INFO_LATENCY_WIDTH - 8;
+
+		if( score->ping == -1 ) {
+			s = CG_TranslateString( "^3CONNECTING" );
+		} else if( score->ping == 999 ) {
+			s = CG_TranslateString( "^3ZOMBIE" );
+		}
+
+		w = CG_DrawStrlen( s ) * MINICHAR_WIDTH;
+		CG_DrawStringExt( tempx + totalwidth - w, y, s, hcolor, qfalse, qfalse, MINICHAR_WIDTH, MINICHAR_HEIGHT, 0 );
+
+		return;
+	}
+
 	// Dens: add the extra room here
 	if(!show_lives){
 		tempx += INFO_LIVES_WIDTH;
 	}
 
 	if ( ci->team == TEAM_SPECTATOR ) {
-		const char *s;
+		const char *s = "";
 
 		/*int w, totalwidth;
 
@@ -639,12 +648,9 @@ static void WM_DrawClientScore_Small( int x, int y, score_t *score, float *color
 			s = CG_TranslateString("^3SHOUTCASTER");
 		} else if( score->ping >=0 && score->ping < 999 ) { 
 			s = CG_TranslateString("^3SPECTATOR");
-		} else {
-			s = "";
 		}
 
 		CG_DrawStringExt( tempx, y, s, hcolor, qfalse, qfalse, MINICHAR_WIDTH, MINICHAR_HEIGHT, 0 );
-
 		drawScore = qfalse; // pheno: don't draw the score for spectators
 	}
 	else if ( cg.snap->ps.persistant[PERS_TEAM] == ci->team ) {
@@ -656,44 +662,6 @@ static void WM_DrawClientScore_Small( int x, int y, score_t *score, float *color
 		}
 	}
 	
-	//forty - connecting players
-	if ( score->ping == -1) {
-		const char *s;
-		int w, totalwidth;
-
-		// Dens: we don't want any changes here
-		if(!show_lives){
-			tempx -= INFO_LIVES_WIDTH;
-		}
-
-		totalwidth = INFO_CLASS_WIDTH + INFO_SCORE_WIDTH + INFO_LATENCY_WIDTH - 8;
-
-		s = CG_TranslateString( "^3CONNECTING" );
-		w = CG_DrawStrlen( s ) * SMALLCHAR_WIDTH;
-
-		CG_DrawSmallString( tempx + totalwidth - w, y, s, fade );
-		return;
-	}
-	
-	//forty - zombied out players
-	if ( score->ping == 999) {
-		const char *s;
-		int w, totalwidth;
-
-		// Dens: we don't want any changes here
-		if(!show_lives){
-			tempx -= INFO_LIVES_WIDTH;
-		}
-		
-		totalwidth = INFO_CLASS_WIDTH + INFO_SCORE_WIDTH + INFO_LATENCY_WIDTH - 8;
-		
-		s = CG_TranslateString( "^3ZOMBIE" );
-		w = CG_DrawStrlen( s ) * SMALLCHAR_WIDTH;
-		
-		CG_DrawSmallString( tempx + totalwidth - w, y, s, fade );
-		return;
-	}
-
 	tempx += INFO_CLASS_WIDTH;
 
 	//CG_DrawStringExt( tempx, y, va( "%3i", score->score ), hcolor, qfalse, qfalse, MINICHAR_WIDTH, MINICHAR_HEIGHT, 0 );
