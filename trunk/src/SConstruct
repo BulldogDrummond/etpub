@@ -100,6 +100,9 @@ else:
 		dll_cpu = cpu
 OS = commands.getoutput( 'uname -s' )
 
+if( OS == 'Darwin' ):
+	cpu = 'ppc'
+	dll_cpu = cpu
 print 'cpu: ' + cpu
 
 # end system detection ---------------------------
@@ -122,31 +125,6 @@ BUILDMPBIN = '0'
 BUILDBUNDLE = '0'
 
 # end default settings ---------------------------
-
-# arch detection ---------------------------------
-
-def gcc_major():
-	major = os.popen( CC + ' -dumpversion' ).read().strip()
-	print 'dumpversion: %s' % major
-	major = re.sub('^([^.]+)\\..*$', '\\1', major)
-	print 'gcc major: %s' % major
-	return major
-
-gcc3 = (gcc_major() != '2')
-
-def gcc_is_mingw():
-	mingw = os.popen( CC + ' -dumpmachine' ).read()
-	return re.search('mingw', mingw) != None
-
-if gcc_is_mingw():
-	g_os = 'win32'
-elif cpu == 'ppc':
-	g_os = 'Darwin'
-else:
-	g_os = 'Linux'
-print 'os: %s' % g_os
-
-# end arch detection -----------------------------
 
 # site settings ----------------------------------
 
@@ -175,6 +153,35 @@ for k in ARGUMENTS.keys():
 
 # end command line settings ----------------------
 
+# arch detection ---------------------------------
+
+def gcc_major():
+	major = os.popen( CC + ' -dumpversion' ).read().strip()
+	print 'dumpversion: %s' % major
+	major = re.sub('^([^.]+)\\..*$', '\\1', major)
+	print 'gcc major: %s' % major
+	return major
+
+gcc_major_ver = gcc_major()
+gcc3 = (gcc_major_ver != '2')
+
+def gcc_is_mingw():
+	mingw = os.popen( CC + ' -dumpmachine' ).read()
+	return re.search('mingw', mingw) != None
+
+if gcc_is_mingw():
+	g_os = 'win32'
+elif cpu == 'ppc':
+	g_os = 'Darwin'
+else:
+	g_os = 'Linux'
+
+print 'os: %s' % g_os
+
+win32_build = ( g_os == 'win32' )
+
+# end arch detection -----------------------------
+
 # save site configuration ----------------------
 
 if ( not ARGUMENTS.has_key( 'NOCONF' ) or ARGUMENTS['NOCONF'] != '1' ):
@@ -189,27 +196,12 @@ if ( not ARGUMENTS.has_key( 'NOCONF' ) or ARGUMENTS['NOCONF'] != '1' ):
 
 # end save site configuration ------------------
 
-# arch detection ---------------------------------
-
-def gcc_major():
-	major = os.popen( CC + ' -dumpversion' ).read().strip()
-	major = re.sub('^([^.]+)\\..*$', '\\1', major)
-	print 'gcc major: %s' % major
-	return major
-
-gcc3 = (gcc_major() != '2')
-
-def gcc_is_mingw():
-	mingw = os.popen( CC + ' -dumpmachine' ).read()
-	return re.search('mingw', mingw) != None
-
-win32_build = gcc_is_mingw()
-
-# end arch detection -----------------------------
-
 # general configuration, target selection --------
 
-g_build = BUILD_ROOT + '/' + BUILD
+if( win32_build ):
+	g_build = BUILD_ROOT + '-mingw/' + BUILD
+else:
+	g_build = BUILD_ROOT + '/' + BUILD
 
 SConsignFile( 'scons.signatures' )
 
@@ -236,7 +228,7 @@ OPTCPPFLAGS = [ ]
 
 if ( OS == 'Darwin' ):
 	# taken from xcode's default project settings
-	BASECPPFLAGS += [ '-D__MACOS__', '-Wno-long-double', '-arch', 'ppc', '-fasm-blocks', '-fpascal-strings', '-faltivec', '-mcpu=G4', '-mtune=G4', '-Wno-unknown-pragmas' ]
+	BASECPPFLAGS += [ '-D__MACOS__', '-Wno-long-double', '-arch', 'ppc', '-arch', 'i386', '-fasm-blocks', '-fpascal-strings', '-faltivec', '-Wno-unknown-pragmas' ]
 
 BASECPPFLAGS.append( '-pipe' )
 # warn all
@@ -261,7 +253,7 @@ elif ( BUILD == 'release' ):
 		# -fschedule-insns2: implicit at -O3
 		# -funroll-loops ?
 		# -mfpmath=sse -msse ?
-		OPTCPPFLAGS = [ '-O3', '-march=i686', '-Winline', '-ffast-math', '-fno-omit-frame-pointer', '-finline-functions', '-fschedule-insns2' ]
+		OPTCPPFLAGS = [ '-O3', '-march=i686', '-Winline', '-ffast-math', '-fomit-frame-pointer', '-finline-functions', '-fschedule-insns2' ]
 	elif ( OS == 'Darwin' ):
 		OPTCPPFLAGS = [ '-O3', '-falign-functions=16', '-falign-loops=16', '-finline' ]		
 else:
@@ -278,14 +270,9 @@ g_env['CPPFLAGS'] += OPTCPPFLAGS
 g_env['CPPFLAGS'] += CORECPPFLAGS
 g_env['LINKFLAGS'] += CORELINKFLAGS
 
-if ( OS == 'Linux' ):
-	g_env.Append(LINKFLAGS = '-rdynamic')
-	g_env.Append(LINKFLAGS = '-m32')
-	g_env.Append(CPPFLAGS = '-m32')
-
 if ( OS == 'Darwin' ):
 	# configure for dynamic bundle
-	g_env['SHLINKFLAGS'] = '$LINKFLAGS -bundle -flat_namespace -undefined suppress'
+	g_env['SHLINKFLAGS'] = '$LINKFLAGS -bundle -flat_namespace -undefined suppress -arch ppc -arch i386'
 	g_env['SHLIBSUFFIX'] = '.so'
 
 # maintain this dangerous optimization off at all times
@@ -297,7 +284,7 @@ if ( int(JOBS) > 1 ):
 
 # mark the globals
 
-GLOBALS = 'g_env OS g_os BUILD gcc3 cpu GAMERANGER'
+GLOBALS = 'g_env OS g_os BUILD gcc3 gcc_major_ver cpu GAMERANGER'
 
 # end general configuration ----------------------
 
@@ -325,7 +312,7 @@ if ( TARGET_GAME == '1' ):
 	Export( 'GLOBALS ' + GLOBALS )
 	BuildDir( g_build + '/game', '.', duplicate = 0 )
 	game = SConscript( g_build + '/game/SConscript.game' )
-	if ( g_os == 'win32' ):
+	if( win32_build == 1 ):
 		toplevel_targets.append( InstallAs( '#qagame_mp_x86.dll', game ) )
 	else:
 		toplevel_targets.append( InstallAs( '#qagame.mp.%s.so' % dll_cpu, game ) )
@@ -334,7 +321,7 @@ if ( TARGET_CGAME == '1' ):
 	Export( 'GLOBALS ' + GLOBALS )
 	BuildDir( g_build + '/cgame', '.', duplicate = 0 )
 	cgame = SConscript( g_build + '/cgame/SConscript.cgame' )
-	if ( g_os == 'win32' ):
+	if( win32_build == 1 ):
 		toplevel_targets.append( InstallAs( '#cgame_mp_x86.dll', cgame ) )
 	else:
 		toplevel_targets.append( InstallAs( '#cgame.mp.%s.so' % dll_cpu, cgame ) )
@@ -343,7 +330,7 @@ if ( TARGET_UI == '1' ):
 	Export( 'GLOBALS ' + GLOBALS )
 	BuildDir( g_build + '/ui', '.', duplicate = 0 )
 	ui = SConscript( g_build + '/ui/SConscript.ui' )
-	if ( g_os == 'win32' ):
+	if( win32_build == 1 ):
 		toplevel_targets.append( InstallAs( '#ui_mp_x86.dll', ui ) )
 	else:
 		toplevel_targets.append( InstallAs( '#ui.mp.%s.so' % dll_cpu, ui ) )

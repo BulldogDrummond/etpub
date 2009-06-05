@@ -14,6 +14,7 @@ cg_atmospheric.c
 cg_character.c
 cg_commandmap.c
 cg_consolecmds.c
+cg_crash.c
 cg_debriefing.c
 cg_draw.c
 cg_drawtools.c
