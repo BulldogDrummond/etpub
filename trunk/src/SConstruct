@@ -103,6 +103,7 @@ OS = commands.getoutput( 'uname -s' )
 if( OS == 'Darwin' ):
 	cpu = 'ppc'
 	dll_cpu = cpu
+
 print 'cpu: ' + cpu
 
 # end system detection ---------------------------

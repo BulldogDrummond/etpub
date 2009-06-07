@@ -1413,6 +1413,14 @@ void G_Hitsound(gentity_t *targ,
 		return;
 	if(targ->health <= 0 && (g_hitsounds.integer & HSF_SILENT_CORPSE))
 		return;
+	// pheno: don't blow enemy cover with hitsounds on FF disabled servers
+	if( !g_friendlyFire.integer &&
+		( OnSameTeam( targ, attacker ) ||
+			( targ->client->ps.powerups[PW_OPS_DISGUISED] &&
+				!( attacker->client->sess.skill[SK_SIGNALS] >= 4 &&
+					attacker->client->sess.playerType == PC_FIELDOPS ) ) ) ) {
+		return;
+	}
 
 	client = targ->client;
 
@@ -1430,7 +1438,7 @@ void G_Hitsound(gentity_t *targ,
 	// only applies if the player has been hurt before
 	// and the match is not in warmup.
 	// pheno: don't blow enemy cover with hitsounds
-	if(	OnSameTeam(targ, attacker) ||
+	if(	OnSameTeam( targ, attacker ) ||
 		( targ->client->ps.powerups[PW_OPS_DISGUISED] &&
 			!( attacker->client->sess.skill[SK_SIGNALS] >= 4 &&
 				attacker->client->sess.playerType == PC_FIELDOPS ) ) ) {
