@@ -1049,8 +1049,10 @@ qboolean G_shrubbot_cmd_check(gentity_t *ent)
 			cmdLine = G_Shortcuts(ent, g_shrubbot_commands[i]->exec);
 
 			// pheno: replace [i] shortcut with player ID
-			cmdLine = Q_StrReplace( cmdLine, "[i]",
-				va( "%i", ent->client->ps.clientNum ) );
+			if( ent && ent->client ) {
+				cmdLine = Q_StrReplace( cmdLine, "[i]",
+					va( "%i", ent->client->ps.clientNum ) );
+			}
 
 			// Replace arguments
 			for (argIx = 1; argIx <= 9; argIx++) {
