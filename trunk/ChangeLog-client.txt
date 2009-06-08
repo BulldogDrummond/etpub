@@ -432,3 +432,4 @@ current
 * pheno:   fixed class change on cancel bug
 * pheno:   added referee/rcon shoutcaster menu entries
 * pheno:   added cointoss vote menu entry
+* pheno:   fixed blowing enemy cover with health bar when FF is disabled
