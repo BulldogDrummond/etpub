@@ -421,6 +421,8 @@ void CG_ParseEtpubinfo( void ) {
 	// jaquboss - predict hitboxes
 	cgs.hitboxes = atoi(Info_ValueForKey(info, "HB"));
 
+	// pheno
+	cgs.friendlyFire = atoi( Info_ValueForKey( info, "g_friendlyFire" ) );
 
 	// forty - #303 - 
 	if (etpub < ETPUB_VERSION(0, 8, 0)) {

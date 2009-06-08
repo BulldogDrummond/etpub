@@ -2132,7 +2132,8 @@ qboolean G_IsEtpubinfoCvar(vmCvar_t *c)
 		c == &g_skillFieldOps||
 		c == &g_skillCovertOps ||
 		c == &g_skillBattleSense ||
-		c == &g_skillLightWeapons
+		c == &g_skillLightWeapons ||
+		c == &g_friendlyFire // pheno
 		);
 
 }
@@ -2199,6 +2200,10 @@ void G_UpdateEtpubinfo(void)
 		va("%s", g_skillBattleSense.string));
 	Info_SetValueForKey(cs, "skill_lightweapons",
 		va("%s", g_skillLightWeapons.string));
+
+	// pheno
+	Info_SetValueForKey( cs, "g_friendlyFire",
+		va( "%i", g_friendlyFire.integer ) );
 
 	trap_SetConfigstring(CS_ETPUBINFO, cs);
 }

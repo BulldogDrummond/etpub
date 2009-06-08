@@ -2309,6 +2309,9 @@ typedef struct {
 	// forty - #601 - Merge Jaquboss' client-side hitbox prediction code
 	// jaquboss predict nicely hitboxes
 	int					hitboxes;
+
+	// pheno
+	int friendlyFire;
 } cgs_t;
 
 //==============================================================================

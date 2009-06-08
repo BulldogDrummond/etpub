@@ -2854,6 +2854,16 @@ static void CG_DrawCrosshairNames( void ) {
 
 		barFrac = (float)playerHealth / maxHealth;
 
+		// pheno: don't blow enemy cover with health bar on FF disabled servers
+		if( !cgs.friendlyFire &&
+			( cg_entities[cg.crosshairClientNum].currentState.powerups &
+				( 1 << PW_OPS_DISGUISED ) ) &&
+			cgs.clientinfo[cg.snap->ps.clientNum].team != TEAM_SPECTATOR &&
+			!( cgs.clientinfo[cg.snap->ps.clientNum].skill[SK_SIGNALS] >= 4 &&
+				cgs.clientinfo[cg.snap->ps.clientNum].cls == PC_FIELDOPS ) ) {
+			barFrac = 1.0;
+		}
+
 		if ( barFrac > 1.0 )
 			barFrac = 1.0;
 		else if ( barFrac < 0 )
