@@ -5,7 +5,10 @@
 
 #include "g_local.h"
 #include "g_etbot_interface.h"
+
+#ifdef LUA_SUPPORT
 #include "g_lua.h"
+#endif // LUA_SUPPORT
 
 /*
 ==============================================================================
@@ -1173,16 +1176,18 @@ qboolean	ConsoleCommand( void ) {
 	char	cmd[MAX_TOKEN_CHARS];
 	
 	trap_Argv( 0, cmd, sizeof( cmd ) );
-	
-	if (Q_stricmp (cmd, "lua_status") == 0 ) {
-		G_LuaStatus(NULL);
+
+#ifdef LUA_SUPPORT
+	if( Q_stricmp( cmd, "lua_status" ) == 0 ) {
+		G_LuaStatus( NULL );
 		return qtrue;
 	}
 	
 	// Lua API callbacks
-	if (G_LuaHook_ConsoleCommand(cmd)) {
+	if( G_LuaHook_ConsoleCommand( cmd ) ) {
 		return qtrue;
 	}
+#endif // LUA_SUPPORT
 
 #ifdef SAVEGAME_SUPPORT
 	if (Q_stricmp (cmd, "savegame") == 0) {

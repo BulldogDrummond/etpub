@@ -1,8 +1,11 @@
 #include "g_local.h"
 #include "etpro_mdx.h"
 #include "g_http_client.h"
-#include "g_lua.h"
 #include "../ui/menudef.h" // Dens: needed for the ref level
+
+#ifdef LUA_SUPPORT
+#include "g_lua.h"
+#endif  // LUA_SUPPORT
 
 // Include the "External"/"Public" components of AI_Team
 #include "../botai/ai_teamX.h"
@@ -549,16 +552,20 @@ vmCvar_t g_damageBonusTotalMedics;
 // quad
 vmCvar_t g_noSkillUpgrades;
 vmCvar_t g_chargeType;
-vmCvar_t lua_modules;
 vmCvar_t g_maxConnsPerIP;
 
 // pheno
-vmCvar_t lua_allowedModules;
 vmCvar_t shoutcastPassword;
 vmCvar_t vote_allow_cointoss;
 vmCvar_t g_headshot;
 vmCvar_t g_instagibDamage;
 vmCvar_t g_shrubbotOptions;
+
+#ifdef LUA_SUPPORT
+// Lua API
+vmCvar_t lua_modules;
+vmCvar_t lua_allowedModules;
+#endif // LUA_SUPPORT
 
 // flms
 vmCvar_t g_flushItems;
@@ -1116,16 +1123,20 @@ cvarTable_t		gameCvarTable[] = {
 	//quad
 	{ &g_noSkillUpgrades, "g_noSkillUpgrades", "0", CVAR_ARCHIVE},
 	{ &g_chargeType, "g_chargeType", "2", CVAR_ARCHIVE},
-	{ &lua_modules, "lua_modules", "", 0},
 	{ &g_maxConnsPerIP, "g_maxConnsPerIP", "4", CVAR_SERVERINFO | CVAR_ARCHIVE},
 
 	// pheno
-	{ &lua_allowedModules, "lua_allowedModules", "", 0 },
 	{ &shoutcastPassword, "shoutcastPassword", "none", 0, 0, qfalse },
 	{ &vote_allow_cointoss, "vote_allow_cointoss", "1", 0, 0, qfalse, qfalse },
 	{ &g_headshot, "g_headshot", "0", 0 },
 	{ &g_instagibDamage, "g_instagibDamage", "400", 0 },
 	{ &g_shrubbotOptions, "g_shrubbotOptions", "", 0 },
+
+#ifdef LUA_SUPPORT
+	// Lua API
+	{ &lua_modules, "lua_modules", "", 0},
+	{ &lua_allowedModules, "lua_allowedModules", "", 0 },
+#endif // LUA_SUPPORT
 
 	//flms
 	{ &g_flushItems, "g_flushItems", "1", 0},
@@ -1246,10 +1257,11 @@ void QDECL G_Printf( const char *fmt, ... ) {
 	va_start (argptr, fmt);
 	Q_vsnprintf (text, sizeof(text), fmt, argptr);
 	va_end (argptr);
-	
+
+#ifdef LUA_SUPPORT
 	// Lua API callbacks
 	G_LuaHook_Print( text );
-	
+#endif // LUA_SUPPORT
 
 	trap_Printf( text );
 }
@@ -2414,10 +2426,13 @@ void G_UpdateCvars( void )
 						G_RemoveAllShoutcasters();
 					}
 				}
+#ifdef LUA_SUPPORT
 				// quad - Lua API cvars
-				else if(cv->vmCvar == &lua_modules || cv->vmCvar == &lua_allowedModules) {
+				else if( cv->vmCvar == &lua_modules ||
+					cv->vmCvar == &lua_allowedModules ) {
 					G_LuaShutdown();
 				}
+#endif // LUA_SUPPORT
 				// OSP - Update vote info for clients, if necessary
 				else if(!G_IsSinglePlayerGame()) {
 
@@ -3054,10 +3069,12 @@ void G_InitGame( int levelTime, int randomSeed, int restart ) {
 		G_Printf("g_fixedphysics is EXPERIMENTAL, enabled it at your own risk, as it may be BUGGY\n");
 		//FIXME - turn off pmove_fixed
 	}*/
-	
+
+#ifdef LUA_SUPPORT
 	// quad - Lua API
 	G_LuaInit();
-	G_LuaHook_InitGame(levelTime, randomSeed, restart);
+	G_LuaHook_InitGame( levelTime, randomSeed, restart );
+#endif // LUA_SUPPORT
 }
 
 
@@ -3067,11 +3084,13 @@ void G_InitGame( int levelTime, int randomSeed, int restart ) {
 G_ShutdownGame
 =================
 */
-void G_ShutdownGame( int restart ) {
-
+void G_ShutdownGame( int restart )
+{
+#ifdef LUA_SUPPORT
 	// quad - Lua API
-	G_LuaHook_ShutdownGame(restart);
+	G_LuaHook_ShutdownGame( restart );
 	G_LuaShutdown();
+#endif // LUA_SUPPORT
 
 	// Arnout: gametype latching
 	if	(
@@ -5688,9 +5707,11 @@ uebrgpiebrpgibqeripgubeqrpigubqifejbgipegbrtibgurepqgbn%i", level.time )
 	// Check if we are reloading, and times have expired
 	G_CheckReloadStatus();
 #endif // SAVEGAME_SUPPORT
-	
+
+#ifdef LUA_SUPPORT
 	// quad - Lua API callback
-	G_LuaHook_RunFrame(levelTime);
+	G_LuaHook_RunFrame( levelTime );
+#endif // LUA_SUPPORT
 }
 
 // Is this a single player type game - sp or coop?

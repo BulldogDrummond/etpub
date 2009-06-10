@@ -5855,17 +5855,19 @@ void ClientCommand( int clientNum ) {
 	}
 
 	trap_Argv( 0, cmd, sizeof( cmd ) );
-	
-	if (Q_stricmp (cmd, "lua_status") == 0) {
-		G_LuaStatus(ent);
+
+#ifdef LUA_SUPPORT
+	if( Q_stricmp( cmd, "lua_status" ) == 0 ) {
+		G_LuaStatus( ent );
 		return;
 	}
-	
+
 	// Lua API callbacks
-	if ( G_LuaHook_ClientCommand(clientNum, cmd) ) {
+	if( G_LuaHook_ClientCommand( clientNum, cmd ) ) {
 		return;
 	}
-	
+#endif // LUA_SUPPORT
+
 	if (Q_stricmp (cmd, "say") == 0) {
 		// forty - in mod flood protection
 		flooding = ClientIsFlooding(ent, qfalse);

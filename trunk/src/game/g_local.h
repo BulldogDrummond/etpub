@@ -2374,16 +2374,20 @@ extern vmCvar_t g_slashKill;
 // quad
 extern vmCvar_t g_noSkillUpgrades;
 extern vmCvar_t g_chargeType;
-extern vmCvar_t lua_modules;
 extern vmCvar_t g_maxConnsPerIP;
 
 // pheno
-extern vmCvar_t lua_allowedModules;
 extern vmCvar_t shoutcastPassword;
 extern vmCvar_t	vote_allow_cointoss;
 extern vmCvar_t g_headshot;
 extern vmCvar_t g_instagibDamage;
 extern vmCvar_t g_shrubbotOptions;
+
+#ifdef LUA_SUPPORT
+// Lua API
+extern vmCvar_t lua_modules;
+extern vmCvar_t lua_allowedModules;
+#endif // LUA_SUPPORT
 
 // flms
 extern vmCvar_t g_flushItems;
