@@ -1789,10 +1789,6 @@ public:
 
 		bot = &g_entities[_client];
 
-		// cs: experimental temp fix for crash related to immediate kicking of bots upon joining
-		if ( !IsBot(bot) )
-			return InvalidEntity;
-
 		// find a team if we didn't get one and we need one ;-)
 		if (_newteam != ET_TEAM_ALLIES && _newteam != ET_TEAM_AXIS)
 		{
