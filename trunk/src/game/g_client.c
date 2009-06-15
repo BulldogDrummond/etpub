@@ -2525,13 +2525,6 @@ char *ClientConnect( int clientNum, qboolean firstTime, qboolean isBot ) {
 		}
 	}
 
-#ifdef LUA_SUPPORT
-	// Lua API callbacks (check with Lua scripts)
-	if( G_LuaHook_ClientConnect( clientNum, firstTime, isBot, reason ) ) {
-		return reason;
-	}
-#endif // LUA_SUPPORT
-
 	// they can connect
 	ent->client = level.clients + clientNum;
 	client = ent->client;
@@ -2686,6 +2679,14 @@ char *ClientConnect( int clientNum, qboolean firstTime, qboolean isBot ) {
 		// unlink the entity - just in case they were already connected
 		trap_UnlinkEntity( ent );
 	}
+
+#ifdef LUA_SUPPORT
+	// Lua API callbacks
+	// pheno: moved down to make gclient entity fields available
+	if( G_LuaHook_ClientConnect( clientNum, firstTime, isBot, reason ) ) {
+		return reason;
+	}
+#endif // LUA_SUPPORT
 
 	// get and distribute relevent paramters
 	G_LogPrintf( "ClientConnect: %i\n", clientNum );

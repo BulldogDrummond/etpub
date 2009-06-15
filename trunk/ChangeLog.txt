@@ -2073,3 +2073,5 @@
            at server console
 * pheno:   added g_slashKill flag 8 - disable /kill when player is frozen
 * pheno:   a frozen player cannot switch teams for now
+* pheno:   Lua API: fixed a bug where gclient entity fields are not available
+           on et_ClientConnect() callback
