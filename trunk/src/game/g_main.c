@@ -2144,8 +2144,7 @@ qboolean G_IsEtpubinfoCvar(vmCvar_t *c)
 		c == &g_skillFieldOps||
 		c == &g_skillCovertOps ||
 		c == &g_skillBattleSense ||
-		c == &g_skillLightWeapons ||
-		c == &g_friendlyFire // pheno
+		c == &g_skillLightWeapons
 		);
 
 }
@@ -2440,6 +2439,13 @@ void G_UpdateCvars( void )
 						fVoteFlags = qtrue;
 					} else {
 						fToggles = (G_checkServerToggle(cv->vmCvar) || fToggles);
+					}
+
+					// pheno: fixed - update etpub info string when
+					//        g_friendlyFire is changed (don't check for
+					//        g_friendlyFire changes in G_IsEtpubinfoCvar()!)
+					if( cv->vmCvar == &g_friendlyFire ) {
+						G_UpdateEtpubinfo();
 					}
 				}
 			}

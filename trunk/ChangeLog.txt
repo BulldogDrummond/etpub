@@ -2075,3 +2075,4 @@
 * pheno:   a frozen player cannot switch teams for now
 * pheno:   Lua API: fixed a bug where gclient entity fields are not available
            on et_ClientConnect() callback
+* pheno:   fixed broken FF voting

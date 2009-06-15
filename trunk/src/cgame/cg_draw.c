@@ -2860,7 +2860,8 @@ static void CG_DrawCrosshairNames( void ) {
 				( 1 << PW_OPS_DISGUISED ) ) &&
 			cgs.clientinfo[cg.snap->ps.clientNum].team != TEAM_SPECTATOR &&
 			!( cgs.clientinfo[cg.snap->ps.clientNum].skill[SK_SIGNALS] >= 4 &&
-				cgs.clientinfo[cg.snap->ps.clientNum].cls == PC_FIELDOPS ) ) {
+				cgs.clientinfo[cg.snap->ps.clientNum].cls == PC_FIELDOPS ) &&
+			!isTank ) {
 			barFrac = 1.0;
 		}
 
