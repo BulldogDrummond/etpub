@@ -4429,7 +4429,7 @@ qboolean G_shrubbot_freeze( gentity_t *ent, int skiparg )
 			vic->client->frozen = qtrue;
 			count++;
 		}
-		AP( va( "chat \"^/freeze:^7 %d players frozen\"", count ) );
+		AP( va( "chat \"^/freeze:^7 %d players are frozen\"", count ) );
 		return qtrue;
 	}
 
@@ -4465,11 +4465,12 @@ qboolean G_shrubbot_freeze( gentity_t *ent, int skiparg )
 	
 	vic->client->frozen = qtrue;
 	
-	AP( va( "chat \"^/freeze:^7 %s^7 was frozen\"",
+	AP( va( "chat \"^/freeze:^7 %s^7 is frozen\"",
 		vic->client->pers.netname ) );
-	CPx( pids[0], va( "cp \"^7%s^7 froze you%s\n\"", 
+	CPx( pids[0], va( "cp \"^7%s^7 %s%s\n\"",
 		ent ? ent->client->pers.netname : "^3SERVER CONSOLE",
-		*reason ? va( "^7 because: %s", reason ) : "" ) );
+		*reason ? "has frozen you" : "has made you freeze",
+		*reason ? va( " because: %s", reason ) : "" ) );
 
 	return qtrue;
 }
@@ -4501,7 +4502,7 @@ qboolean G_shrubbot_unfreeze( gentity_t *ent, int skiparg )
 			vic->client->frozen = qfalse;
 			count++;
 		}
-		AP( va( "chat \"^/unfreeze:^7 %d players unfrozen\"", count ) );
+		AP( va( "chat \"^/unfreeze:^7 %d players are unfrozen\"", count ) );
 		return qtrue;
 	}
 
@@ -4537,9 +4538,9 @@ qboolean G_shrubbot_unfreeze( gentity_t *ent, int skiparg )
 	
 	vic->client->frozen = qfalse;
 	
-	AP( va( "chat \"^/unfreeze:^7 %s^7 was unfroze\"",
+	AP( va( "chat \"^/unfreeze:^7 %s^7 is no longer frozen\"",
 		vic->client->pers.netname ) );
-	CPx( pids[0], va( "cp \"^7%s^7 unfroze you\n\"",
+	CPx( pids[0], va( "cp \"^7%s^7 has made you thawed\"",
 		ent ? ent->client->pers.netname : "^3SERVER CONSOLE" ) );
 
 	return qtrue;

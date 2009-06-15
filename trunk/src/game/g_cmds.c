@@ -1320,24 +1320,29 @@ void Cmd_Kill_f( gentity_t *ent )
 {
 	gentity_t *attacker;
 
-	if(ent->health <= 0) {
-		SP("You must be alive to use /kill\n");
+	if( ent->health <= 0 ) {
+		CP( "cp \"You must be alive to use /kill.\"");
 		return;
 	}
 	if( g_maxSelfkills.integer == 0 ) {
-		SP("/kill is disabled on this server\n");
+		CP( "cp \"/kill is disabled on this server.\"" );
 		return;
 	}
-	if((g_slashKill.integer & SLASHKILL_NOPOISON) && 
-		ent->client->pmext.poisoned) {
-		SP("/kill is disabled when you are poisoned\n");
+	if( ( g_slashKill.integer & SLASHKILL_NOPOISON ) &&
+		ent->client->pmext.poisoned ) {
+		CP( "cp \"/kill is disabled as long as you are poisoned.\"" );
 		return;
 	}
-	if(g_maxSelfkills.integer > -1 &&
-		ent->client->pers.selfKills >= g_maxSelfkills.integer) {
-		SP(va("You have reached your maximum selfkills (%i)\n",
-		g_maxSelfkills.integer));
-		return; 
+	// pheno: no selfkill in frozen state
+	if( ( g_slashKill.integer & SLASHKILL_NOFROZEN ) && ent->client->frozen ) {
+		CP( "cp \"/kill is disabled as long as you are frozen.\"" );
+		return;
+	}
+	if( g_maxSelfkills.integer > -1 &&
+		ent->client->pers.selfKills >= g_maxSelfkills.integer ) {
+		CP( va( "cp \"You have reached your maximum selfkills (%i).\"",
+			g_maxSelfkills.integer ) );
+		return;
 	}
 	if(ent->client->sess.sessionTeam == TEAM_SPECTATOR ||
 	  (ent->client->ps.pm_flags & PMF_LIMBO) ||
@@ -1661,6 +1666,12 @@ qboolean SetTeam( gentity_t *ent, char *s, qboolean force, weapon_t w1, weapon_t
 	respawnsLeft = client->ps.persistant[ PERS_RESPAWNS_LEFT ];
 	
 	G_TeamDataForString( s, client - level.clients, &team, &specState, &specClient );
+
+	// pheno: player can't switch teams in frozen state
+	if( ent->client->frozen ) {
+		CP( "cp \"You cannot change teams because you are frozen.\"" );
+		return qfalse;
+	}
 
 	// gabriel: If the player is changing team within g_fear time, kill him via
 	// MOD_FEAR and cancel the team switch

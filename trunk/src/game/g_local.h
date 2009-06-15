@@ -3531,7 +3531,7 @@ extern wordDictionary censorNamesDictionary;
 #define SLASHKILL_HALFCHARGE 1
 #define SLASHKILL_ZEROCHARGE 2
 #define SLASHKILL_SAMECHARGE 4
-//#define SLASHKILL_NOKILL 8 // Set g_maxSelfkills 0 instead
+#define SLASHKILL_NOFROZEN 8 // pheno: no selfkill in frozen state
 #define SLASHKILL_NOPOISON 16
 
 // matt

@@ -1406,7 +1406,7 @@ void G_IntermissionMapVote( gentity_t *ent )
 	int voteRank = 0, i;
 
 	if ( g_gametype.integer != GT_WOLF_MAPVOTE ) {
-		CP(va("print \"^3Map voting not enabled!n\""));
+		CP(va("print \"^3Map voting not enabled!\n\""));
 		return;
 	}
 	

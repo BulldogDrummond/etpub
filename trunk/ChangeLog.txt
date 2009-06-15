@@ -2065,9 +2065,11 @@
 * pheno:   fixed class change with scoped weapon bug (prevents scoped sten)
 * pheno:   added headshot mode (g_headshot [0|1])
 * pheno:   added instagib damage (bitflag 2) to headshot mode. g_headshot is
-           now a bitmask cvar.
-* pheno:   added goomba flag 32 - falling corpses won't cause damage
+           now a bitflag cvar.
+* pheno:   added g_goombaFlags flag 32 - falling corpses won't cause damage
 * pheno:   added g_shrubbotOptions bitflag cvar (see docs)
 * pheno:   added death anim and medic call to playdead command
 * pheno:   fixed server crash when calling shrubbot command with [i] shortcut
            at server console
+* pheno:   added g_slashKill flag 8 - disable /kill when player is frozen
+* pheno:   a frozen player cannot switch teams for now

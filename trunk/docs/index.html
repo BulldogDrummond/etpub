@@ -70,9 +70,9 @@ dt {
 <td><a href="#g_instagibDamage">g_instagibDamage</a></td>
 </tr>
 <tr>
+<td><a href="#g_goombaFlags">g_goombaFlags</a></td>
 <td><a href="#g_shrubbotOptions">g_shrubbotOptions</a></td>
-<td>&nbsp;</td>
-<td>&nbsp;</td>
+<td><a href="#g_slashKill">g_slashKill</a></td>
 <td>&nbsp;</td>
 </tr>
 </table>
@@ -105,6 +105,12 @@ dt {
 <td><a href="#!spreerecord">spreerecord</a></td>
 <td><a href="#!spree">spree</a></td>
 <td><a href="#!tspree">tspree</a></td>
+<td><a href="#!freeze">freeze</a></td>
+</tr>
+<tr>
+<td><a href="#!unfreeze">unfreeze</a></td>
+<td>&nbsp;</td>
+<td>&nbsp;</td>
 <td>&nbsp;</td>
 </tr>
 </table>
@@ -1332,6 +1338,8 @@ Bitmask that controls the behavior of the /kill command.
 	<dt>4
 	<dd>Restores the charge bar to the same state it was in at the moment the
 player issued /kill (regardless of how long they were in limbo)
+	<dt>8
+	<dd>Disable /kill when player is frozen
 	<dt>16
 	<dd>Disable /kill when player is poisoned
 	</dl>
