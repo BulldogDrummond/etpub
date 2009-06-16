@@ -2076,3 +2076,4 @@
 * pheno:   Lua API: fixed a bug where gclient entity fields are not available
            on et_ClientConnect() callback
 * pheno:   fixed broken FF voting
+* pheno:   added ETPro map scripting delete statement. Thanks to NQ team!

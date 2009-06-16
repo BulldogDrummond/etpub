@@ -8,7 +8,7 @@
 
 #include "../game/g_local.h"
 #include "../game/q_shared.h"
-#include "g_etbot_interface.h"
+#include "../game/g_etbot_interface.h"
 
 /*
 Contains the code to handle the various commands available with an event script.
@@ -4614,4 +4614,81 @@ qboolean G_ScriptAction_Create( gentity_t *ent, char *params ) {
 	create = G_SpawnGEntityFromSpawnVars();
 	trap_LinkEntity(create);
 	return qtrue;
+}
+
+extern field_t fields[];
+
+// pheno: added for compatibility with etpro map scripts - thanks to NQ team
+qboolean G_ScriptAction_Delete ( gentity_t *ent, char *params ) {
+
+	gentity_t	*deleted;
+	qboolean	passedDeleteTestOld[MAX_GENTITIES];
+	qboolean	passedDeleteTest[MAX_GENTITIES];
+	char		*token;
+	char		*p;
+	char		key[MAX_TOKEN_CHARS], value[MAX_TOKEN_CHARS];
+	int			i, passedEnts;
+	field_t		critField;
+
+
+	for ( i=0;i<MAX_GENTITIES;i++ ){
+		if( i > 64 && g_entities[i].inuse )
+			passedDeleteTest[i] = qtrue;
+	}
+
+	p = params;
+
+	while( 1 ) {
+
+		token = COM_ParseExt( &p, qfalse );
+
+		if( !token[0] )
+			break;
+
+		strcpy( key, token );
+
+		token = COM_ParseExt( &p, qfalse );
+		if( !token[0] ) {
+			G_Error("key \"%s\" has no value", key);
+			break;
+		}
+
+		strcpy(value, token);
+
+		// find a field we're looking for
+		for ( i=0;fields[i].name;i++ ){
+			if( !Q_stricmp(fields[i].name, key ))
+				critField = fields[i];
+
+		}
+
+		passedEnts = 0;
+		deleted = NULL;
+
+		for ( i=0; i< MAX_GENTITIES; i++ ){
+			passedDeleteTestOld[i] = passedDeleteTest[i];
+			passedDeleteTest[i] = qfalse;
+		}
+
+		while ((deleted = G_Find( deleted, critField.ofs, key)) != NULL) {
+			if ( passedDeleteTestOld[deleted->s.number] ){
+				passedDeleteTest[deleted->s.number] = qtrue;
+				passedEnts++;
+			}
+		}
+
+		if ( passedEnts == 1 )
+		{
+			for ( i=0;i<MAX_GENTITIES;i++ ){
+				if ( passedDeleteTest[i] ) {
+					G_Printf( "Entity %i(%s) removed \n", i, g_entities[i].classname );
+					G_FreeEntity( &g_entities[i] );
+					return qtrue;
+				}
+			}
+		}
+
+	}
+
+	return qfalse;
 }

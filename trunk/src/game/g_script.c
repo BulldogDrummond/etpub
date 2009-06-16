@@ -117,6 +117,8 @@ qboolean G_ScriptAction_ConstructibleDuration( gentity_t *ent, char *params ) ;
 //bani
 qboolean etpro_ScriptAction_SetValues( gentity_t *ent, char *params );
 qboolean G_ScriptAction_Create( gentity_t *ent, char *params );
+// pheno
+qboolean G_ScriptAction_Delete( gentity_t *ent, char *params );
 
 // these are the actions that each event can call
 g_script_stack_action_t gScriptActions[] =
@@ -227,6 +229,9 @@ g_script_stack_action_t gScriptActions[] =
 	{ "constructible_weaponclass",		G_ScriptAction_ConstructibleWeaponclass },
 	{ "constructible_duration"	,		G_ScriptAction_ConstructibleDuration },
 	{ "create",							G_ScriptAction_Create },
+
+// pheno
+	{ "delete",							G_ScriptAction_Delete },
 	{NULL,								NULL}
 };
 
