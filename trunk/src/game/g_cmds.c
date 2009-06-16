@@ -2,6 +2,10 @@
 #include "g_http_client.h"
 #include "../ui/menudef.h"
 
+#ifdef LUA_SUPPORT
+#include "g_lua.h"
+#endif // LUA_SUPPORT
+
 void BotDebug(int clientNum);
 void GetBotAutonomies(int clientNum, int *weapAutonomy, int *moveAutonomy);	
 qboolean G_IsOnFireteam(int entityNum, fireteamData_t** teamNum);

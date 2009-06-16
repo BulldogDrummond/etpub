@@ -4,9 +4,9 @@
 #include "q_shared.h"
 #include "g_local.h"
 
-#include <lua.h>
-#include <lauxlib.h>
-#include <lualib.h>
+#include "lua.h"
+#include "lauxlib.h"
+#include "lualib.h"
 
 #define LUA_NUM_VM 16
 #define LUA_MAX_FSIZE 1024*1024 // 1MB
@@ -26,16 +26,15 @@
 #define FIELD_FLAG_READONLY	8 // read-only access
 
 // define HOSTARCH and EXTENSION depending on host architecture
-#if defined __linux__
-
+#ifdef __linux__
 #define HOSTARCH	"UNIX"
 #define EXTENSION	"so"
-
 #elif defined WIN32
-
 #define HOSTARCH	"WIN32"
 #define EXTENSION	"dll"
-
+#elif defined __MACOS__
+#define HOSTARCH	"MACOS"
+#define EXTENSION	"so"
 #endif
 
 // macros to register predefined constants

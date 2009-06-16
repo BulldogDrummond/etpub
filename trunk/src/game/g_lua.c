@@ -1247,87 +1247,102 @@ qboolean G_LuaGetNamedFunction(lua_vm_t *vm, char *name)
 /** G_LuaStartVM( vm )
  * Starts one individual virtual machine.
  */
-qboolean G_LuaStartVM(lua_vm_t* vm)
+qboolean G_LuaStartVM( lua_vm_t *vm )
 {
 	int res = 0;
-	char homepath[MAX_QPATH], gamepath[MAX_QPATH];
-	
+	char path[MAX_QPATH], gamepath[MAX_QPATH];
+	const char *luaPath, *luaCPath;
+
 	// Open a new lua state
 	vm->L = luaL_newstate();
-	if (! vm->L ) {
-		LOG("Lua API: Lua failed to initialise.\n");
+	if( !vm->L ) {
+		LOG( "Lua API: Lua failed to initialise.\n" );
 		return qfalse;
 	}
 
 	// Initialise the lua state
-	luaL_openlibs(vm->L);
-	
-	// set LUA_PATH and LUA_CPATH
-	// TODO: add "fs_basepath/fs_game/?.lua;" to LUA_PATH
-	//       and LUA_CPATH for linux machines
-	trap_Cvar_VariableStringBuffer("fs_homepath", homepath, sizeof(homepath));
-	trap_Cvar_VariableStringBuffer("fs_game", gamepath, sizeof(gamepath));
+	luaL_openlibs( vm->L );
 
-	lua_getglobal(vm->L, LUA_LOADLIBNAME);
-	if ( lua_istable(vm->L, -1) ) {
-		lua_pushstring(vm->L, va("%s%s%s%s?.lua;%s%s%s%slualib%slua%s?.lua",
-			homepath, LUA_DIRSEP, gamepath, LUA_DIRSEP,
-			homepath, LUA_DIRSEP, gamepath, LUA_DIRSEP, LUA_DIRSEP, LUA_DIRSEP));
-		lua_setfield(vm->L, -2, "path");
-		lua_pushstring(vm->L, va("%s%s%s%s?.%s;%s%s%s%slualib%sclibs%s?.%s",
-			homepath, LUA_DIRSEP, gamepath, LUA_DIRSEP, EXTENSION,
-			homepath, LUA_DIRSEP, gamepath, LUA_DIRSEP, LUA_DIRSEP, LUA_DIRSEP, EXTENSION));
-		lua_setfield(vm->L, -2, "cpath");
+	// set LUA_PATH and LUA_CPATH
+	trap_Cvar_VariableStringBuffer( "fs_homepath", path, sizeof( path ) );
+	trap_Cvar_VariableStringBuffer( "fs_game", gamepath, sizeof( gamepath ) );
+
+	luaPath = va( "%s%s%s%s?.lua;%s%s%s%slualibs%s?.lua",
+		path, LUA_DIRSEP, gamepath, LUA_DIRSEP,
+		path, LUA_DIRSEP, gamepath, LUA_DIRSEP, LUA_DIRSEP );
+
+	luaCPath = va( "%s%s%s%slualibs%s?.%s",
+		path, LUA_DIRSEP, gamepath, LUA_DIRSEP, LUA_DIRSEP, EXTENSION );
+
+#ifdef __linux__
+	// pheno: add "<fs_basepath>/<fs_game>/..." to
+	//        LUA_PATH and LUA_CPATH for linux machines
+	trap_Cvar_VariableStringBuffer( "fs_basepath", path, sizeof( path ) );
+
+	luaPath = va( "%s%s%s%s?.lua;%s%s%s%slualibs%s?.lua;%s",
+		path, LUA_DIRSEP, gamepath, LUA_DIRSEP,
+		path, LUA_DIRSEP, gamepath, LUA_DIRSEP, LUA_DIRSEP, luaPath );
+
+	luaCPath = va( "%s%s%s%slualibs%s?.%s;%s",
+		path, LUA_DIRSEP, gamepath, LUA_DIRSEP, LUA_DIRSEP, EXTENSION,
+		luaCPath );
+#endif
+
+	lua_getglobal( vm->L, LUA_LOADLIBNAME );
+	if( lua_istable( vm->L, -1 ) ) {
+		lua_pushstring( vm->L, luaPath );
+		lua_setfield( vm->L, -2, "path" );
+		lua_pushstring( vm->L, luaCPath );
+		lua_setfield( vm->L, -2, "cpath" );
 	}
-	lua_pop(vm->L, 1);
+	lua_pop( vm->L, 1 );
 	
 	// register globals
-	lua_registerglobal(vm->L, "LUA_PATH", va("%s%s%s%s?.lua;%s%s%s%slualib%slua%s?.lua",
-		homepath, LUA_DIRSEP, gamepath, LUA_DIRSEP,
-		homepath, LUA_DIRSEP, gamepath, LUA_DIRSEP, LUA_DIRSEP, LUA_DIRSEP));
-	lua_registerglobal(vm->L, "LUA_CPATH", va("%s%s%s%s?.%s;%s%s%s%slualib%sclibs%s?.%s",
-		homepath, LUA_DIRSEP, gamepath, LUA_DIRSEP, EXTENSION,
-		homepath, LUA_DIRSEP, gamepath, LUA_DIRSEP, LUA_DIRSEP, LUA_DIRSEP, EXTENSION));
-	lua_registerglobal(vm->L, "LUA_DIRSEP", LUA_DIRSEP);
+	lua_registerglobal( vm->L, "LUA_PATH", luaPath );
+	lua_registerglobal( vm->L, "LUA_CPATH", luaCPath );
+	lua_registerglobal( vm->L, "LUA_DIRSEP", LUA_DIRSEP );
 
 	// register predefined constants
-	lua_newtable(vm->L);
-	lua_regconstinteger(vm->L, CS_PLAYERS);
-	lua_regconstinteger(vm->L, EXEC_NOW);
-	lua_regconstinteger(vm->L, EXEC_INSERT);
-	lua_regconstinteger(vm->L, EXEC_APPEND);
-	lua_regconstinteger(vm->L, FS_READ);
-	lua_regconstinteger(vm->L, FS_WRITE);
-	lua_regconstinteger(vm->L, FS_APPEND);
-	lua_regconstinteger(vm->L, FS_APPEND_SYNC);
-	lua_regconstinteger(vm->L, SAY_ALL);
-	lua_regconstinteger(vm->L, SAY_TEAM);
-	lua_regconstinteger(vm->L, SAY_BUDDY);
-	lua_regconstinteger(vm->L, SAY_TEAMNL);
-	lua_regconststring(vm->L, HOSTARCH);
-	lua_setglobal(vm->L, "et");
+	lua_newtable( vm->L );
+	lua_regconstinteger( vm->L, CS_PLAYERS );
+	lua_regconstinteger( vm->L, EXEC_NOW );
+	lua_regconstinteger( vm->L, EXEC_INSERT );
+	lua_regconstinteger( vm->L, EXEC_APPEND );
+	lua_regconstinteger( vm->L, FS_READ );
+	lua_regconstinteger( vm->L, FS_WRITE );
+	lua_regconstinteger( vm->L, FS_APPEND );
+	lua_regconstinteger( vm->L, FS_APPEND_SYNC );
+	lua_regconstinteger( vm->L, SAY_ALL );
+	lua_regconstinteger( vm->L, SAY_TEAM );
+	lua_regconstinteger( vm->L, SAY_BUDDY );
+	lua_regconstinteger( vm->L, SAY_TEAMNL );
+	lua_regconststring(vm->L, HOSTARCH );
+	lua_setglobal( vm->L, "et" );
 
 	// register functions
-	luaL_register(vm->L, "et", etlib);
+	luaL_register( vm->L, "et", etlib );
 
 	// Load the code
-	res = luaL_loadbuffer(vm->L, vm->code, vm->code_size, vm->file_name);
-	if (res == LUA_ERRSYNTAX) {
-		LOG("Lua API: syntax error during pre-compilation: %s\n", lua_tostring(vm->L, -1));
-		lua_pop(vm->L, 1);
+	LOG( "Lua API: Loading %s\n", vm->file_name );
+
+	res = luaL_loadbuffer( vm->L, vm->code, vm->code_size, vm->file_name );
+	if( res == LUA_ERRSYNTAX ) {
+		LOG( "Lua API: syntax error during pre-compilation: %s\n",
+			lua_tostring( vm->L, -1 ) );
+		lua_pop( vm->L, 1 );
 		vm->err++;
 		return qfalse;
-	} else if (res == LUA_ERRMEM) {
-		LOG("Lua API: memory allocation error #1 ( %s )\n", vm->file_name);
+	} else if( res == LUA_ERRMEM ) {
+		LOG( "Lua API: memory allocation error #1 ( %s )\n", vm->file_name );
 		vm->err++;
 		return qfalse;
 	}
-	
+
 	// Execute the code
-	if (!G_LuaCall(vm, "G_LuaStartVM", 0, 0))
+	if( !G_LuaCall( vm, "G_LuaStartVM", 0, 0 ) ) {
 		return qfalse;
-	
-	LOG("Lua API: Loading %s\n", vm->file_name);
+	}
+
 	return qtrue;
 }
 

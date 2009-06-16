@@ -93,60 +93,31 @@ geoip.c
 ../../../../../Omnibot/Common/BotLoadLibrary.cpp
 """
 
-lua_string = """
-lapi.c
-lauxlib.c
-lbaselib.c
-lcode.c
-ldblib.c
-ldebug.c
-ldo.c
-ldump.c
-lfunc.c
-lgc.c
-linit.c
-liolib.c
-llex.c
-lmathlib.c
-lmem.c
-loadlib.c
-lobject.c
-lopcodes.c
-loslib.c
-lparser.c
-lstate.c
-lstring.c
-lstrlib.c
-ltable.c
-ltablib.c
-ltm.c
-luac.c
-lundump.c
-lvm.c
-lzio.c
-print.c
-"""
-
 #botai_objs = []
 #for i in botai_list:
 #	botlib_ai.append( botai_env.StaticObject( os.path.join( 'botlib', i ) ) )
 
 local_env = g_env.Copy()
 
-local_env.Append( CPPDEFINES = [ 'GAMEDLL' ] )
-local_env.Append( CPPDEFINES = [ 'USE_MDXFILE' ] )
-local_env.Append( CPPDEFINES = [ 'NO_BOT_SUPPORT' ] )
-local_env.Append( CPPDEFINES = [ 'THREADS' ] )
+local_env.Append( CPPDEFINES = ['GAMEDLL'] )
+local_env.Append( CPPDEFINES = ['USE_MDXFILE'] )
+local_env.Append( CPPDEFINES = ['NO_BOT_SUPPORT'] )
+local_env.Append( CPPDEFINES = ['THREADS'] )
 
-local_env.Append( CPPPATH = [ '../../../../Omnibot/Common', '../../../../Omnibot/ET', '../../../sha-1' ] )
+local_env.Append( CPPPATH = ['../../../../Omnibot/Common', '../../../../Omnibot/ET', '../../../sha-1'] )
 
 # Omnibot
-local_env.Append( CXXFLAGS = [ '-fpermissive' ] )
+local_env.Append( CXXFLAGS = ['-fpermissive'] )
 
 # build with Lua API support
 if( WITH_LUA_SUPPORT == '1' ):
-	local_env.Append( CPPDEFINES = [ 'LUA_SUPPORT' ] )
-	local_env.Append( CPPPATH = [ '../../../lua-5.1.4/src' ] )
+	local_env.Append( CPPDEFINES = ['LUA_SUPPORT'] )
+	local_env.Append( CPPPATH = ['../../../lua'] )
+	if( win32_build == 1 ):
+		local_env.Append( LINKFLAGS = ['-Llua/libs/win32'] )
+	else:
+		local_env.Append( LINKFLAGS = ['-Llua/libs/unix', '-Wl,-rpath=./'] )
+	local_env.Append( LINKFLAGS = ['-llua5.1'] )
 	qagame_string += """g_lua.c"""
 
 local_env['LINK'] = local_env['CXX']
@@ -154,10 +125,6 @@ local_env['LINK'] = local_env['CXX']
 source_list = botai_list
 source_list += scons_utils.BuildList( 'game', qagame_string )
 
-# build with Lua API support
-if( WITH_LUA_SUPPORT == '1' ):
-	source_list += scons_utils.BuildList( 'lua-5.1.4/src', lua_string )
-
 #ret = local_env.Program( target = 'et', source = source_list )
-ret = local_env.SharedLibrary( target = 'qagame', source = source_list)
+ret = local_env.SharedLibrary( target = 'qagame', source = source_list )
 Return( 'ret' )

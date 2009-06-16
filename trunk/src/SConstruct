@@ -289,7 +289,7 @@ if ( int(JOBS) > 1 ):
 
 # mark the globals
 
-GLOBALS = 'g_env OS g_os BUILD gcc3 gcc_major_ver cpu GAMERANGER WITH_LUA_SUPPORT'
+GLOBALS = 'g_env OS g_os win32_build BUILD gcc3 gcc_major_ver cpu GAMERANGER WITH_LUA_SUPPORT'
 
 # end general configuration ----------------------
 
