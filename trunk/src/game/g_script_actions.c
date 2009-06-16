@@ -4619,8 +4619,9 @@ qboolean G_ScriptAction_Create( gentity_t *ent, char *params ) {
 extern field_t fields[];
 
 // pheno: added for compatibility with etpro map scripts - thanks to NQ team
+// TODO: needs more testing before adding this again! :(
 qboolean G_ScriptAction_Delete ( gentity_t *ent, char *params ) {
-
+/*
 	gentity_t	*deleted;
 	qboolean	passedDeleteTestOld[MAX_GENTITIES];
 	qboolean	passedDeleteTest[MAX_GENTITIES];
@@ -4689,6 +4690,6 @@ qboolean G_ScriptAction_Delete ( gentity_t *ent, char *params ) {
 		}
 
 	}
-
+*/
 	return qfalse;
 }

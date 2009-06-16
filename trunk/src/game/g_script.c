@@ -614,7 +614,8 @@ void G_Script_ScriptParse( gentity_t *ent )
 
 				// Ikkyo - Parse for {}'s if this is a set command
 				if( !Q_stricmp( action->actionString, "set" ) ||
-					!Q_stricmp( action->actionString, "create")) {
+					!Q_stricmp( action->actionString, "create" ) ||
+					!Q_stricmp( action->actionString, "delete" ) ) { // pheno
 
 					token = COM_Parse( &pScript );
 					if( token[0] != '{' ) {
