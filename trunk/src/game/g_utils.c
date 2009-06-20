@@ -223,6 +223,68 @@ gentity_t *G_Find (gentity_t *from, int fieldofs, const char *match)
 
 /*
 =============
+G_FindEntity
+
+pheno: added for compatibility with etpro map scripts 'delete' command
+       rework of G_Find() for G_ScriptAction_Delete() in g_script_actions.c
+=============
+*/
+gentity_t *G_FindEntity( gentity_t *from, field_t *field, const char *match )
+{
+	char		*s;
+	gentity_t	*max = &g_entities[level.num_entities];
+
+	if( !from ) {
+		from = g_entities;
+	} else {
+		from++;
+	}
+
+	for( ; from < max ; from++) {
+		byte	*addr = ( ( byte * )from + field->ofs );
+
+		if( !from->inuse ) {
+			continue;
+		}
+
+		switch( field->type ) {
+			case F_LSTRING:
+				s = *( char ** )addr;
+				break;
+			case F_VECTOR:
+				s = va( "%i %i %i",
+					( int )( ( float * )addr )[0],
+					( int )( ( float * )addr )[1],
+					( int )( ( float * )addr )[2] );
+				break;
+			case F_INT:
+				s = va( "%i", *( int * )addr );
+				break;
+			case F_FLOAT:
+				s = va( "%f", *( float * )addr );
+				break;
+			case F_ANGLEHACK:
+				s = va( "%i", ( int )( ( float * )addr )[1] );
+				break;
+			case F_IGNORE:
+			default:
+				break;
+		}
+
+		if( !s ) {
+			continue;
+		}
+
+		if( !Q_stricmp( s, match ) ) {
+			return from;
+		}
+	}
+
+	return NULL;
+}
+
+/*
+=============
 G_FindByTargetname
 =============
 */

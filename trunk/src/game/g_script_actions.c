@@ -4618,78 +4618,56 @@ qboolean G_ScriptAction_Create( gentity_t *ent, char *params ) {
 
 extern field_t fields[];
 
-// pheno: added for compatibility with etpro map scripts - thanks to NQ team
-// TODO: needs more testing before adding this again! :(
-qboolean G_ScriptAction_Delete ( gentity_t *ent, char *params ) {
-/*
+// pheno: added for compatibility with etpro map scripts 'delete' command
+//        thanks to NQ team
+qboolean G_ScriptAction_Delete( gentity_t *ent, char *params )
+{
 	gentity_t	*deleted;
-	qboolean	passedDeleteTestOld[MAX_GENTITIES];
-	qboolean	passedDeleteTest[MAX_GENTITIES];
 	char		*token;
 	char		*p;
 	char		key[MAX_TOKEN_CHARS], value[MAX_TOKEN_CHARS];
-	int			i, passedEnts;
-	field_t		critField;
-
-
-	for ( i=0;i<MAX_GENTITIES;i++ ){
-		if( i > 64 && g_entities[i].inuse )
-			passedDeleteTest[i] = qtrue;
-	}
+	int			i;
 
 	p = params;
 
 	while( 1 ) {
-
 		token = COM_ParseExt( &p, qfalse );
-
-		if( !token[0] )
+		if( !token[0] ) {
 			break;
+		}
 
 		strcpy( key, token );
 
 		token = COM_ParseExt( &p, qfalse );
 		if( !token[0] ) {
-			G_Error("key \"%s\" has no value", key);
+			G_Error( "G_ScriptAction_Delete: key \"%s\" has no value", key );
 			break;
 		}
 
-		strcpy(value, token);
+		strcpy( value, token );
 
-		// find a field we're looking for
-		for ( i=0;fields[i].name;i++ ){
-			if( !Q_stricmp(fields[i].name, key ))
-				critField = fields[i];
-
+		for( i=0; fields[i].name; i++ ) {
+			if( !Q_stricmp( fields[i].name, key ) ) {
+				break;
+			}
 		}
 
-		passedEnts = 0;
+		if( !fields[i].name ) {
+			G_Error( "G_ScriptAction_Delete: non-existing key \"%s\"", key );
+			break;
+		}
+
 		deleted = NULL;
-
-		for ( i=0; i< MAX_GENTITIES; i++ ){
-			passedDeleteTestOld[i] = passedDeleteTest[i];
-			passedDeleteTest[i] = qfalse;
-		}
-
-		while ((deleted = G_Find( deleted, critField.ofs, key)) != NULL) {
-			if ( passedDeleteTestOld[deleted->s.number] ){
-				passedDeleteTest[deleted->s.number] = qtrue;
-				passedEnts++;
-			}
-		}
-
-		if ( passedEnts == 1 )
-		{
-			for ( i=0;i<MAX_GENTITIES;i++ ){
-				if ( passedDeleteTest[i] ) {
-					G_Printf( "Entity %i(%s) removed \n", i, g_entities[i].classname );
-					G_FreeEntity( &g_entities[i] );
-					return qtrue;
+		while( ( deleted = G_FindEntity( deleted, &fields[i], value ) ) != NULL ) {
+			if( !deleted->client ) { // pheno: ignore client entities
+				if( g_scriptDebug.integer ) { // pheno: only when debugging
+					G_Printf( "Entity %i removed: classname \"%s\"\n",
+						deleted->s.number, deleted->classname );
 				}
+				G_FreeEntity( deleted );
 			}
 		}
-
 	}
-*/
-	return qfalse;
+
+	return qtrue;
 }

@@ -1427,6 +1427,29 @@ typedef struct {
 //
 // g_spawn.c
 //
+
+// pheno: moved from g_spawn.c
+typedef enum {
+	F_INT, 
+	F_FLOAT,
+	F_LSTRING,			// string on disk, pointer in memory, TAG_LEVEL
+	F_GSTRING,			// string on disk, pointer in memory, TAG_GAME
+	F_VECTOR,
+	F_ANGLEHACK,
+	F_ENTITY,			// index on disk, pointer in memory
+	F_ITEM,				// index on disk, pointer in memory
+	F_CLIENT,			// index on disk, pointer in memory
+	F_IGNORE
+} fieldtype_t;
+
+typedef struct
+{
+	char		*name;
+	int			ofs;
+	fieldtype_t	type;
+	int			flags;
+} field_t;
+
 #define		G_SpawnString(		key, def, out ) G_SpawnStringExt	( key, def, out, __FILE__, __LINE__ )
 #define		G_SpawnFloat(		key, def, out ) G_SpawnFloatExt		( key, def, out, __FILE__, __LINE__ )
 #define		G_SpawnInt(			key, def, out ) G_SpawnIntExt		( key, def, out, __FILE__, __LINE__ )
@@ -1577,6 +1600,7 @@ void	G_FreeEntity( gentity_t *e );
 
 // pheno
 void G_ClientSound( gentity_t *ent, int soundIndex );
+gentity_t *G_FindEntity( gentity_t *from, field_t *field, const char *match );
 
 void	G_TouchTriggers (gentity_t *ent);
 void	G_TouchSolids (gentity_t *ent);
@@ -3717,27 +3741,5 @@ extern GeoIP * gidb;
 // yada
 void ConsolizeString(char *in, char *out);
 team_t TeamFromString(char *team);
-
-// pheno: moved from g_spawn.c
-typedef enum {
-	F_INT, 
-	F_FLOAT,
-	F_LSTRING,			// string on disk, pointer in memory, TAG_LEVEL
-	F_GSTRING,			// string on disk, pointer in memory, TAG_GAME
-	F_VECTOR,
-	F_ANGLEHACK,
-	F_ENTITY,			// index on disk, pointer in memory
-	F_ITEM,				// index on disk, pointer in memory
-	F_CLIENT,			// index on disk, pointer in memory
-	F_IGNORE
-} fieldtype_t;
-
-typedef struct
-{
-	char		*name;
-	int			ofs;
-	fieldtype_t	type;
-	int			flags;
-} field_t;
 
 #endif

@@ -2078,3 +2078,5 @@
 * pheno:   fixed broken FF voting
 * pheno:   Lua API: load API from external library
 * pheno:   fixed !rename if player has reached max name changes
+* pheno:   added support for ETPro's delete mapscript command
+* pheno:   fixed delete mascript command causes server crashes
