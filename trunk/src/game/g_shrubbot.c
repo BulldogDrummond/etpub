@@ -2758,6 +2758,7 @@ qboolean G_shrubbot_rename(gentity_t *ent, int skiparg)
 	int pids[MAX_CLIENTS];
 	char name[MAX_NAME_LENGTH], *newname, *oldname,err[MAX_STRING_CHARS];
 	char userinfo[MAX_INFO_STRING];
+	gentity_t *vic; // pheno
 
 	if(Q_SayArgc() < 3+skiparg) {
 		SPC("^/rename usage: ^7!rename [name] [newname]");
@@ -2788,6 +2789,15 @@ qboolean G_shrubbot_rename(gentity_t *ent, int skiparg)
 		newname));
 	Info_SetValueForKey( userinfo, "name", newname);
 	trap_SetUserinfo( pids[0], userinfo );
+
+	// pheno: to force shrubbot rename set counter to max - 1 if
+	//        player has reached max name changes
+	vic = &g_entities[pids[0]];
+	if( g_maxNameChanges.integer > -1 &&
+		vic->client->pers.nameChanges >= g_maxNameChanges.integer ) {
+		vic->client->pers.nameChanges = g_maxNameChanges.integer - 1;
+	}
+
 	ClientUserinfoChanged(pids[0]);
 	return qtrue;
 }
