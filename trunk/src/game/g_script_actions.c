@@ -4620,8 +4620,8 @@ extern field_t fields[];
 
 /*
 =============
-	pheno: added for compatibility with etpro map scripts 'delete' command
-	       (output only if g_scriptDebug is 1) - thanks to NQ team
+	pheno: added for compatibility with etpro
+	       map scripts 'delete' command - thanks to NQ team
 
 	core: Delete entities that match all the criteria provided in "params"
 =============
