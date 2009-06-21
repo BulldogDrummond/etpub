@@ -4621,7 +4621,8 @@ extern field_t fields[];
 /*
 =============
 	pheno: added for compatibility with etpro
-	       map scripts 'delete' command - thanks to NQ team
+	       map scripts 'delete' command - thanks to NQ team.
+		   Output only if g_scriptDebug is enabled
 
 	core: Delete entities that match all the criteria provided in "params"
 =============
@@ -4728,7 +4729,10 @@ qboolean G_ScriptAction_Delete( gentity_t *ent, char *params )
 			case F_IGNORE:
 			default:
 				// It's certain the test will fail now, so just abort..
-				G_Printf("G_ScriptAction_Delete: invalid key \"%s\"", key);
+				if( g_scriptDebug.integer ) {
+					G_Printf( "G_ScriptAction_Delete: invalid key \"%s\"",
+						key );
+				}
 				terminate = qtrue;
 				break;
 		}
@@ -4741,7 +4745,7 @@ qboolean G_ScriptAction_Delete( gentity_t *ent, char *params )
 	for ( i=MAX_GENTITIES-1; i>=MAX_CLIENTS; i--)
 		if ( pass[i] == count ) {
 			deleted++;
-			if( g_scriptDebug.integer ) { // pheno: only when debugging
+			if( g_scriptDebug.integer ) {
 				G_Printf( "G_ScriptAction_Delete: \"%s\" entity %i removed"
 					" (%s)\n", g_entities[i].classname, i, params );
 			}
@@ -4752,7 +4756,7 @@ qboolean G_ScriptAction_Delete( gentity_t *ent, char *params )
 	if ( deleted > 0 )
 		return qtrue;
 	else
-		if( g_scriptDebug.integer ) { // pheno: only when debugging
+		if( g_scriptDebug.integer ) {
 			G_Printf( "G_ScriptAction_Delete: no entities found (%s)\n",
 				params );
 		}
