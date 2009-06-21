@@ -222,62 +222,88 @@ gentity_t *G_Find (gentity_t *from, int fieldofs, const char *match)
 }
 
 /*
+core:
 =============
-G_FindEntity
-
-pheno: added for compatibility with etpro map scripts 'delete' command
-       rework of G_Find() for G_ScriptAction_Delete() in g_script_actions.c
+G_FindInt
+	Like G_Find, but searches for integer values..
 =============
 */
-gentity_t *G_FindEntity( gentity_t *from, field_t *field, const char *match )
+gentity_t *G_FindInt(gentity_t *from, int fieldofs, int match)
 {
-	char		*s;
-	gentity_t	*max = &g_entities[level.num_entities];
+	int	i;
+	gentity_t *max = &g_entities[level.num_entities];
 
-	if( !from ) {
+	if (!from)
 		from = g_entities;
-	} else {
+	else
 		from++;
+
+	for ( ; from < max ; from++) {
+		if (!from->inuse)
+			continue;
+		i = *(int *) ((byte *)from + fieldofs);
+		if ( i == match )
+			return from;
 	}
 
-	for( ; from < max ; from++) {
-		byte	*addr = ( ( byte * )from + field->ofs );
+	return NULL;
+}
 
-		if( !from->inuse ) {
+/*
+core:
+=============
+G_FindFloat
+	Like G_Find, but searches for float values..
+=============
+*/
+gentity_t *G_FindFloat(gentity_t *from, int fieldofs, float match)
+{
+	float	f;
+	gentity_t *max = &g_entities[level.num_entities];
+
+	if (!from)
+		from = g_entities;
+	else
+		from++;
+
+	for ( ; from < max ; from++) {
+		if (!from->inuse)
 			continue;
-		}
-
-		switch( field->type ) {
-			case F_LSTRING:
-				s = *( char ** )addr;
-				break;
-			case F_VECTOR:
-				s = va( "%i %i %i",
-					( int )( ( float * )addr )[0],
-					( int )( ( float * )addr )[1],
-					( int )( ( float * )addr )[2] );
-				break;
-			case F_INT:
-				s = va( "%i", *( int * )addr );
-				break;
-			case F_FLOAT:
-				s = va( "%f", *( float * )addr );
-				break;
-			case F_ANGLEHACK:
-				s = va( "%i", ( int )( ( float * )addr )[1] );
-				break;
-			case F_IGNORE:
-			default:
-				break;
-		}
-
-		if( !s ) {
-			continue;
-		}
-
-		if( !Q_stricmp( s, match ) ) {
+		f = *(float *) ((byte *)from + fieldofs);
+		if ( f == match )
 			return from;
-		}
+	}
+
+	return NULL;
+}
+
+/*
+core:
+=============
+G_FindVector
+	Like G_Find, but searches for vector values..
+=============
+*/
+gentity_t *G_FindVector(gentity_t *from, int fieldofs, const vec3_t match)
+{
+	vec3_t	vec;
+	gentity_t *max = &g_entities[level.num_entities];
+
+	if (!from)
+		from = g_entities;
+	else
+		from++;
+
+	for ( ; from < max ; from++) {
+		if (!from->inuse)
+			continue;
+	
+		vec[0] = *(vec_t *) ((byte *)from + fieldofs + 0);
+		vec[1] = *(vec_t *) ((byte *)from + fieldofs + 4);
+		vec[2] = *(vec_t *) ((byte *)from + fieldofs + 8);
+
+		if ( vec[0] == match[0] && vec[1] == match[1] && vec[2] == match[2] )
+			return from;
 	}
 
 	return NULL;

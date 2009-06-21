@@ -1600,7 +1600,9 @@ void	G_FreeEntity( gentity_t *e );
 
 // pheno
 void G_ClientSound( gentity_t *ent, int soundIndex );
-gentity_t *G_FindEntity( gentity_t *from, field_t *field, const char *match );
+gentity_t *G_FindInt(gentity_t *from, int fieldofs, int match);
+gentity_t *G_FindFloat(gentity_t *from, int fieldofs, float match);
+gentity_t *G_FindVector(gentity_t *from, int fieldofs, const vec3_t match);
 
 void	G_TouchTriggers (gentity_t *ent);
 void	G_TouchSolids (gentity_t *ent);
