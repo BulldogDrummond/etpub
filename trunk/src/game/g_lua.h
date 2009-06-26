@@ -32,9 +32,6 @@
 #elif defined WIN32
 #define HOSTARCH	"WIN32"
 #define EXTENSION	"dll"
-#elif defined __MACOS__
-#define HOSTARCH	"MACOS"
-#define EXTENSION	"so"
 #endif
 
 // macros to register predefined constants
