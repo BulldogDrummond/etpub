@@ -385,6 +385,12 @@ int G_Kick_v( gentity_t *ent, unsigned int dwVoteIndex, char *arg, char *arg2, q
 			return G_INVALID;
 		}
 
+		// pheno: prevent ettv slaves from being callvote kicked 
+		if( g_ettvFlags.integer & ETTV_IMMUNITY ) {
+			G_refPrintf( ent, "Can't vote to kick ettv slaves!" );
+			return G_INVALID;
+		}
+
 		if( !fRefereeCmd && ent ) {
 			if( level.clients[ pid ].sess.sessionTeam != TEAM_SPECTATOR && level.clients[ pid ].sess.sessionTeam != ent->client->sess.sessionTeam ) {
 				G_refPrintf( ent, "Can't vote to kick players on opposing team!" );

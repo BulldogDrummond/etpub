@@ -354,7 +354,7 @@ static void WM_DrawClientScore( int x, int y, score_t *score, float *color, floa
 
 	//forty - connecting and zombied out players
 	// pheno: moved up here to fix string location
-	if( score->ping == -1 || score->ping == 999 ) {
+	if( score->ping == -1 || score->ping == 999 || ci->ettv ) {
 		const char *s = "";
 		int w, totalwidth;
 
@@ -364,6 +364,9 @@ static void WM_DrawClientScore( int x, int y, score_t *score, float *color, floa
 			s = CG_TranslateString( "^3CONNECTING" );
 		} else if( score->ping == 999 ) {
 			s = CG_TranslateString( "^3ZOMBIE" );
+		} else if( ci->ettv ) { // pheno: mark ettv slaves
+			s = CG_TranslateString( va( "^5TV^7|^3%s", 
+				ci->shoutcaster ? "SHOUTCASTER" : "SPECTATOR" ) );
 		}
 
 		w = CG_DrawStrlen( s ) * SMALLCHAR_WIDTH;
@@ -381,9 +384,7 @@ static void WM_DrawClientScore( int x, int y, score_t *score, float *color, floa
 		const char *s = CG_TranslateString( "^3SPECTATOR" );
 		
 		// quad 
-		if( ci->ettv ) {
-			s = CG_TranslateString( "^3ETTV" ); 
-		} else if( ci->shoutcaster ) {
+		if( ci->shoutcaster ) {
 			s = CG_TranslateString( "^3SHOUTCASTER" );
 		}
 
@@ -582,7 +583,7 @@ static void WM_DrawClientScore_Small( int x, int y, score_t *score, float *color
 
 	//forty - connecting and zombied out players
 	// pheno: moved up here to fix string location
-	if( score->ping == -1 || score->ping == 999 ) {
+	if( score->ping == -1 || score->ping == 999 || ci->ettv ) {
 		const char *s = "";
 		int w, totalwidth;
 
@@ -592,6 +593,9 @@ static void WM_DrawClientScore_Small( int x, int y, score_t *score, float *color
 			s = CG_TranslateString( "^3CONNECTING" );
 		} else if( score->ping == 999 ) {
 			s = CG_TranslateString( "^3ZOMBIE" );
+		} else if( ci->ettv ) { // pheno: mark ettv slaves
+			s = CG_TranslateString( va( "^5TV^7|^3%s", 
+				ci->shoutcaster ? "SHOUTCASTER" : "SPECTATOR" ) );
 		}
 
 		w = CG_DrawStrlen( s ) * MINICHAR_WIDTH;
@@ -609,9 +613,7 @@ static void WM_DrawClientScore_Small( int x, int y, score_t *score, float *color
 		const char *s = CG_TranslateString( "^3SPECTATOR" );
 
 		// pheno
-		if( ci->ettv ) {
-			s = CG_TranslateString( "^3ETTV" ); 
-		} else if( ci->shoutcaster ) {
+		if( ci->shoutcaster ) {
 			s = CG_TranslateString( "^3SHOUTCASTER" );
 		}
 

@@ -398,8 +398,11 @@ void G_InitSessionData( gclient_t *client, char *userinfo ) {
 	sess->need_greeting = qtrue; // redeye - moved greeting message to ClientBegin
 	
 	// quad - shoutcaster & ettv
-	sess->ettv = (atoi(Info_ValueForKey(userinfo, "protocol")) == 284);
-	sess->shoutcaster = sess->ettv;
+	sess->ettv = ( atoi( Info_ValueForKey( userinfo, "protocol" ) ) == 284 );
+	// pheno: grant shoutcaster status to ettv slave
+	if( g_ettvFlags.integer & ETTV_SHOUTCASTER ) {
+		sess->shoutcaster = sess->ettv;
+	}
 
 	G_WriteClientSessionData( client, qfalse );
 }

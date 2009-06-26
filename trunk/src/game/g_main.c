@@ -560,6 +560,7 @@ vmCvar_t vote_allow_cointoss;
 vmCvar_t g_headshot;
 vmCvar_t g_instagibDamage;
 vmCvar_t g_shrubbotOptions;
+vmCvar_t g_ettvFlags;
 
 #ifdef LUA_SUPPORT
 // Lua API
@@ -1131,6 +1132,7 @@ cvarTable_t		gameCvarTable[] = {
 	{ &g_headshot, "g_headshot", "0", 0 },
 	{ &g_instagibDamage, "g_instagibDamage", "400", 0 },
 	{ &g_shrubbotOptions, "g_shrubbotOptions", "", 0 },
+	{ &g_ettvFlags, "g_ettvFlags", "3", 0 },
 
 #ifdef LUA_SUPPORT
 	// Lua API

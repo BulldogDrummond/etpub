@@ -2408,6 +2408,7 @@ extern vmCvar_t	vote_allow_cointoss;
 extern vmCvar_t g_headshot;
 extern vmCvar_t g_instagibDamage;
 extern vmCvar_t g_shrubbotOptions;
+extern vmCvar_t g_ettvFlags;
 
 #ifdef LUA_SUPPORT
 // Lua API
@@ -3715,6 +3716,12 @@ void G_IntermissionVoteTally( gentity_t *ent );
 // pheno: g_shrubbotOptions
 // shrubbot flag '0' admins will be moved to spectators due to team inactivity
 #define SBO_NO_TEAM_INACTIVITY 1
+
+// pheno: g_ettvFlags
+// prevent ettv slaves from being callvote kicked
+#define ETTV_IMMUNITY 1
+// grant shoutcaster status to ettv slaves
+#define ETTV_SHOUTCASTER 2
 
 // forty - canister kicking
 void G_CanisterKick();
