@@ -400,9 +400,8 @@ void G_InitSessionData( gclient_t *client, char *userinfo ) {
 	// quad - shoutcaster & ettv
 	sess->ettv = ( atoi( Info_ValueForKey( userinfo, "protocol" ) ) == 284 );
 	// pheno: grant shoutcaster status to ettv slave
-	if( g_ettvFlags.integer & ETTV_SHOUTCASTER ) {
-		sess->shoutcaster = sess->ettv;
-	}
+	sess->shoutcaster = ( sess->ettv &&
+		( g_ettvFlags.integer & ETTV_SHOUTCASTER ) );
 
 	G_WriteClientSessionData( client, qfalse );
 }
