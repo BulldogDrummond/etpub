@@ -78,7 +78,7 @@ void CG_AddFloatingString( centity_t *cent, qboolean isCounter )
 		return;
 	}
 
-	if( cg.floatingStringsCount >= MAX_FLOATING_STRINGS ) {
+	if( cg.floatingStringCount >= MAX_FLOATING_STRINGS ) {
 		return;
 	}
 
@@ -119,7 +119,7 @@ void CG_AddFloatingString( centity_t *cent, qboolean isCounter )
 	}
 
 	// add the string to the list
-	string = &cg.floatingStrings[cg.floatingStringsCount];
+	string = &cg.floatingStrings[cg.floatingStringCount];
 	string->string = s;
 	string->x = x - CG_Text_Width_Ext( s, scale, 0, &cgs.media.font1 ) / 2.f;
 	string->y = y;
@@ -136,7 +136,7 @@ void CG_AddFloatingString( centity_t *cent, qboolean isCounter )
 		}
 	}
 
-	cg.floatingStringsCount++;
+	cg.floatingStringCount++;
 }
 
 /*
@@ -150,7 +150,7 @@ void CG_DrawFloatingStrings( void )
 	floatingString_t	*string;
 	vec4_t				color = { 1.f, 1.f, 1.f, 1.f };
 
-	for( i = 0; i < cg.floatingStringsCount; i++ ) {
+	for( i = 0; i < cg.floatingStringCount; i++ ) {
 		string = &cg.floatingStrings[i];
 
 		if( !string ) {
@@ -165,7 +165,7 @@ void CG_DrawFloatingStrings( void )
 		memset( string, 0, sizeof( string ) );
 	}
 
-	cg.floatingStringsCount = 0;
+	cg.floatingStringCount = 0;
 }
 
 /*

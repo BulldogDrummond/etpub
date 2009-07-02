@@ -1364,7 +1364,7 @@ typedef struct {
 
 	// pheno: shoutcaster floating strings
 	floatingString_t	floatingStrings[MAX_FLOATING_STRINGS];
-	int					floatingStringsCount;
+	int					floatingStringCount;
 
 	// forty - #279 - watermarks
 	// HOLLEMOD - START
