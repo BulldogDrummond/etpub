@@ -286,6 +286,23 @@ static int _et_ClientUserinfoChanged(lua_State *L)
 	ClientUserinfoChanged(clientnum);
 	return 0;
 }
+
+// clientnum = et.ClientNumberFromString( string )
+// redeye - searches for one partial match with 'string', if one is found the clientnum
+// is returned, if there is none or more than one match -1 is returned
+static int _et_ClientNumberFromString(lua_State *L)
+{
+	const char *search = luaL_checkstring(L, 1);
+	int pids[MAX_CLIENTS];
+
+	// only send exact matches, otherwise -1
+	if ( ClientNumbersFromString((char *) search, pids) == 1 )
+		lua_pushinteger(L, pids[0]);
+	else
+		lua_pushinteger(L, -1);
+
+	return 1;
+}
 // }}}
 
 // Userinfo {{{
@@ -1074,6 +1091,7 @@ static const luaL_Reg etlib[] = {
 	{ "trap_SendServerCommand",		_et_trap_SendServerCommand	},
 	{ "G_Say",						_et_G_Say					},
 	{ "ClientUserinfoChanged",		_et_ClientUserinfoChanged	},
+	{ "ClientNumberFromString",		_et_ClientNumberFromString	},
 	// Userinfo
 	{ "trap_GetUserinfo",			_et_trap_GetUserinfo		},
 	{ "trap_SetUserinfo",			_et_trap_SetUserinfo		},

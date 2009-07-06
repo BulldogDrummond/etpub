@@ -2081,3 +2081,4 @@
 * pheno:   added support for ETPro's delete mapscript command
 * pheno:   fixed delete mascript command causes server crashes
 * pheno:   added g_ettvFlags bitflag cvar (see docs)
+* pheno:   Lua API: added redeye's et.ClientNumberFromString() library call
