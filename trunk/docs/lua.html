@@ -59,6 +59,14 @@ h6 {
 <h2>ETPUB LUA API DOCUMENTATION</h2>
 <p><b>*</b><i class="diff">Marks differences between ETPro's and ETPub's Lua API</i></p>
 
+<a name="commands"></a><h2>INSTALLATION</h2>
+
+<a name="installation_win32"></a><h3>Windows</h3>
+<p>Coming soon ...</p>
+
+<a name="installation_unix"></a><h3>Linux</h3>
+<p>Coming soon ...</p>
+
 <a name="commands"></a><h2>COMMANDS</h2>
 
 <a name="client_commands"></a><h3>Client Commands</h3>
@@ -82,12 +90,29 @@ h6 {
 <dl>
 	<dd>Space separated list of lua modules for ETPub to load. Modules will be run in the order listed.</dd>
 	<dd>&nbsp;</dd>
-	<dd><i>Default is ""</i></dd>
+	<dd><i>Default is "" (Disabled)</i></dd>
+</dl>
+
+<a name="lua_allowedmodules"></a><p><strong>lua_allowedModules</strong></p>
+<dl>
+	<dd>If set, only lua modules with the matching sha1 signatures listed in this cvar will be allowed to load.</dd>
+	<dd>&nbsp;</dd>
+	<dd><i>Default is "" (Disabled)</i></dd>
 </dl>
 
 <p>Changing either cvar will cause all currently loaded modules to quit and be unloaded until the next <i>map_restart</i>, <i>reset_match</i> or map change.</p>
 
 <a name="et_library_calls"></a><h2>ET LIBRARY CALLS</h2>
+
+<a name="clients"></a><h3>Clients</h3>
+<p><p><b>*</b><i class="diff"><strong>clientnum</strong> = et.G_ClientNumberFromString( <strong>string</strong> )</i></p>
+<dl>
+	<dd>Searches for one partial match with <strong>string</strong>. If one is found the <strong>clientnum</strong> is returned. If there is none or more than one match <strong>-1</strong> is returned.</dd>
+	<dd>&nbsp;</dd>
+	<dd>&nbsp;</dd>
+	<dd><h6>LUA CODE EXAMPLE</h6><pre>-- get number from client with partial name match 'ETPla'
+clientnum = et.G_ClientNumberFromString("ETPla")</pre></dd>
+</dl>
 
 <a name="et_filesystem"></a><h3>ET Filesystem</h3>
 <p><strong>fd</strong>, <strong>len</strong> = et.trap_FS_FOpenFile( <strong>filename</strong>, <strong>mode</strong> )</p>
@@ -144,13 +169,13 @@ et.trap_FS_FCloseFile(fd)</pre></dd>
 </dl>
 
 <a name="sound"></a><h3>Sound</h3>
-<p>et.G_ClientSound( <strong>clientnum</strong>, <strong>soundindex</strong> )</p>
+<p><p><b>*</b><i class="diff">et.G_ClientSound( <strong>clientnum</strong>, <strong>soundindex</strong> )</i></p>
 <dl>
 	<dd>Plays the sound <strong>soundindex</strong> for the client with <strong>clientnum</strong> only.</dd>
 	<dd>&nbsp;</dd>
 	<dd>&nbsp;</dd>
 	<dd><h6>LUA CODE EXAMPLE</h6><pre>-- play a sound for client #3 only
-local soundindex = et.G_SoundIndex("sound/world/alarm_01.wav")
+soundindex = et.G_SoundIndex("sound/world/alarm_01.wav")
 et.G_ClientSound(3, soundindex)</pre></dd>
 </dl>
 
@@ -298,13 +323,13 @@ et.HOSTARCH</p>
 <dl>
 	<dd>Set to WIN32 or UNIX depending on the host architecture qagame is running on.</dd>
 </dl>
-<p>LUA_PATH</p>
+<p><b>*</b><i class="diff">LUA_PATH</i></p>
 <dl>
-	<dd>Set to <i>fs_homepath/fs_game/?.lua;fs_homepath/fs_game/lualib/lua/?.lua</i> in order to ease use of the <a href="http://www.lua.org/pil/8.1.html" title="http://www.lua.org/pil/8.1.html" rel="nofollow" target="_blank">require</a> function.</dd>
+	<dd>Set to <i>fs_homepath/fs_game/?.lua;fs_homepath/fs_game/lualibs/?.lua</i> in order to ease use of the <a href="http://www.lua.org/pil/8.1.html" title="http://www.lua.org/pil/8.1.html" rel="nofollow" target="_blank">require</a> function. Depending on the configuration <i>fs_basepath/fs_game/?.lua;fs_basepath/fs_game/lualibs/?.lua</i> will be added to the LUA_PATH.</dd>
 </dl>
 <p><b>*</b><i class="diff">LUA_CPATH</i></p>
 <dl>
-	<dd>Set to <i>fs_homepath/fs_game/?.dll;fs_homepath/fs_game/lualib/clibs/?.dll</i> in order to ease use of the <a href="http://www.lua.org/pil/8.1.html" title="http://www.lua.org/pil/8.1.html" rel="nofollow" target="_blank">require</a> function.</dd>
+	<dd>Set to <i>fs_homepath/fs_game/lualibs/?.(so|dll)</i> in order to ease use of the <a href="http://www.lua.org/pil/8.1.html" title="http://www.lua.org/pil/8.1.html" rel="nofollow" target="_blank">require</a> function. Depending on the configuration <i>fs_basepath/fs_game/lualibs/?.(so|dll)</i> will be added to the LUA_CPATH.</dd>
 </dl>
 <p><b>*</b><i class="diff">LUA_DIRSEP</i></p>
 <dl>

@@ -1268,7 +1268,9 @@ qboolean G_LuaGetNamedFunction(lua_vm_t *vm, char *name)
 qboolean G_LuaStartVM( lua_vm_t *vm )
 {
 	int res = 0;
-	char path[MAX_QPATH], gamepath[MAX_QPATH];
+	char basepath[MAX_QPATH];
+	char homepath[MAX_QPATH];
+	char gamepath[MAX_QPATH];
 	const char *luaPath, *luaCPath;
 
 	// Open a new lua state
@@ -1282,29 +1284,27 @@ qboolean G_LuaStartVM( lua_vm_t *vm )
 	luaL_openlibs( vm->L );
 
 	// set LUA_PATH and LUA_CPATH
-	trap_Cvar_VariableStringBuffer( "fs_homepath", path, sizeof( path ) );
+	trap_Cvar_VariableStringBuffer( "fs_basepath", basepath, sizeof( basepath ) );
+	trap_Cvar_VariableStringBuffer( "fs_homepath", homepath, sizeof( homepath ) );
 	trap_Cvar_VariableStringBuffer( "fs_game", gamepath, sizeof( gamepath ) );
 
 	luaPath = va( "%s%s%s%s?.lua;%s%s%s%slualibs%s?.lua",
-		path, LUA_DIRSEP, gamepath, LUA_DIRSEP,
-		path, LUA_DIRSEP, gamepath, LUA_DIRSEP, LUA_DIRSEP );
+		homepath, LUA_DIRSEP, gamepath, LUA_DIRSEP,
+		homepath, LUA_DIRSEP, gamepath, LUA_DIRSEP, LUA_DIRSEP );
 
 	luaCPath = va( "%s%s%s%slualibs%s?.%s",
-		path, LUA_DIRSEP, gamepath, LUA_DIRSEP, LUA_DIRSEP, EXTENSION );
+		homepath, LUA_DIRSEP, gamepath, LUA_DIRSEP, LUA_DIRSEP, EXTENSION );
 
-#ifdef __linux__
-	// pheno: add "<fs_basepath>/<fs_game>/..." to
-	//        LUA_PATH and LUA_CPATH for linux machines
-	trap_Cvar_VariableStringBuffer( "fs_basepath", path, sizeof( path ) );
+	// add fs_basepath if different from fs_homepath
+	if( Q_stricmp( basepath, homepath ) ) {
+		luaPath = va( "%s%s%s%s?.lua;%s%s%s%slualibs%s?.lua;%s",
+			basepath, LUA_DIRSEP, gamepath, LUA_DIRSEP,
+			basepath, LUA_DIRSEP, gamepath, LUA_DIRSEP, LUA_DIRSEP, luaPath );
 
-	luaPath = va( "%s%s%s%s?.lua;%s%s%s%slualibs%s?.lua;%s",
-		path, LUA_DIRSEP, gamepath, LUA_DIRSEP,
-		path, LUA_DIRSEP, gamepath, LUA_DIRSEP, LUA_DIRSEP, luaPath );
-
-	luaCPath = va( "%s%s%s%slualibs%s?.%s;%s",
-		path, LUA_DIRSEP, gamepath, LUA_DIRSEP, LUA_DIRSEP, EXTENSION,
-		luaCPath );
-#endif
+		luaCPath = va( "%s%s%s%slualibs%s?.%s;%s",
+			basepath, LUA_DIRSEP, gamepath, LUA_DIRSEP, LUA_DIRSEP, EXTENSION,
+			luaCPath );
+	}
 
 	lua_getglobal( vm->L, LUA_LOADLIBNAME );
 	if( lua_istable( vm->L, -1 ) ) {
