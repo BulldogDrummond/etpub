@@ -435,3 +435,4 @@ current
 * pheno:   fixed blowing enemy cover with health bar when FF is disabled
 * pheno:   fixed full tank health bar when FF is disabled
 * pheno:   fireteam members are now autoselected when joining the fireteam
+* pheno:   renamed cvar cg_fireTeamOptions to cg_autoSelectFTMembers

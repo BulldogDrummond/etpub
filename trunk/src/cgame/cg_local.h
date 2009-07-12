@@ -2600,7 +2600,7 @@ extern	vmCvar_t		cg_maxEnemyDynas;
 // Dens: log banners, centerprints etc. to the console
 extern vmCvar_t			cg_logConsole;
 
-extern vmCvar_t			cg_fireTeamOptions;
+extern vmCvar_t			cg_autoSelectFTMembers;
 extern vmCvar_t			cg_hitSounds;
 extern vmCvar_t			cg_damageKick;
 extern vmCvar_t			cg_spawnTimer_period;

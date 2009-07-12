@@ -1770,7 +1770,7 @@ void CG_DrawActiveFrame( int serverTime, stereoFrame_t stereoView, qboolean demo
 
 	// Dens: autoselect all the fireteam members
 	// pheno: moved this from cg_main.c CG_Init()
-	if( CG_IsOnFireteam( cg.clientNum ) && cg_fireTeamOptions.integer ) {
+	if( CG_IsOnFireteam( cg.clientNum ) && cg_autoSelectFTMembers.integer ) {
 		clientInfo_t *ci;
 
 		for( i = 0; i < MAX_FIRETEAM_MEMBERS; i++ ) {

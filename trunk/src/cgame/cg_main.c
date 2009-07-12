@@ -366,7 +366,7 @@ vmCvar_t	cg_dynoCounter;
 vmCvar_t	cg_maxTeamDynas; 
 vmCvar_t	cg_maxEnemyDynas;
 
-vmCvar_t	cg_fireTeamOptions;
+vmCvar_t	cg_autoSelectFTMembers;
 vmCvar_t	cg_hitSounds; // Elf
 vmCvar_t	cg_damageKick; // Terifire
 vmCvar_t	cg_spawnTimer_set;//quad
@@ -669,7 +669,7 @@ cvarTable_t		cvarTable[] = {
 	{ &cg_drawClassIcons, "cg_drawClassIcons", "7", CVAR_ARCHIVE },
 	{ &cg_countryFlags, "cg_countryFlags", "3", CVAR_ARCHIVE }, //mcwf GeoIP
 	{ &cg_drawCrosshairHP, "cg_drawCrosshairHP", "0", CVAR_ARCHIVE },
-	{ &cg_fireTeamOptions, "cg_fireTeamOptions", "0", CVAR_ARCHIVE },
+	{ &cg_autoSelectFTMembers, "cg_autoSelectFTMembers", "0", CVAR_ARCHIVE },
 	{ &cg_hitSounds, "cg_hitSounds", "1", CVAR_ARCHIVE | CVAR_USERINFO }, // Elf
 	{ &cg_damageKick, "cg_damageKick", "1", CVAR_ARCHIVE },	// Terifire
 	{ &cg_spawnTimer_set, "cg_spawnTimer_set", "-1", CVAR_TEMP }, //quad
