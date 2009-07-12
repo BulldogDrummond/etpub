@@ -1725,7 +1725,7 @@ Generates and draws a game scene and status information at the given time.
 qboolean CG_CalcMuzzlePoint( int entityNum, vec3_t muzzle );
 
 void CG_DrawActiveFrame( int serverTime, stereoFrame_t stereoView, qboolean demoPlayback ) {
-	int		inwater;
+	int		inwater, i;
 		
 #ifdef DEBUGTIME_ENABLED
 	int dbgTime=trap_Milliseconds(),elapsed;
@@ -1750,8 +1750,6 @@ void CG_DrawActiveFrame( int serverTime, stereoFrame_t stereoView, qboolean demo
 	CG_UpdateCvars();
 
 	if(cg.forcecvar) {
-		int i = 0;
-
 		if(CG_BackupProfile()) {
 			for(i = 0; i < cg.forceCvarCount; i++) {
 				CG_Printf("server forcing cvar %s to %s\n",
@@ -1768,6 +1766,22 @@ void CG_DrawActiveFrame( int serverTime, stereoFrame_t stereoView, qboolean demo
 			CG_RestoreProfile();
 		}
 		cg.forcecvar = qfalse;
+	}
+
+	// Dens: autoselect all the fireteam members
+	// pheno: moved this from cg_main.c CG_Init()
+	if( CG_IsOnFireteam( cg.clientNum ) && cg_fireTeamOptions.integer ) {
+		clientInfo_t *ci;
+
+		for( i = 0; i < MAX_FIRETEAM_MEMBERS; i++ ) {
+			ci = CG_SortedFireTeamPlayerForPosition( i );
+
+			if( !ci ) {
+				break;  // there was no-one in this position
+			}
+
+			ci->selected = qtrue;
+		}
 	}
 
 	DEBUGTIME

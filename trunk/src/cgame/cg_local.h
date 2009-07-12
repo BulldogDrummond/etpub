@@ -2607,8 +2607,6 @@ extern vmCvar_t			cg_spawnTimer_period;
 extern vmCvar_t			cg_spawnTimer_set;
 extern vmCvar_t			cg_locations;
 
-#define FTOPTS_AUTO_MEMBER_SELECT 1
-
 #define CONLOG_BANNERS 1
 #define CONLOG_CENTER 2
 

@@ -43,7 +43,7 @@ menuDef {
 	MULTI( 8, 84, (SUBWINDOW_WIDTH)-4, 10, "Obituaries:", .2, 8, "cg_obituary", cvarFloatList {"Left" 0 "Chat" 1 "Left w/Alt TK" 2 "Chat w/Alt TK" 3}, "Where death messages should be displayed, if server is sending EV_OBITUARY to the client" )
 	MULTI( 8, 96, (SUBWINDOW_WIDTH)-4, 10, "Console Logging:", .2, 8, "cg_logConsole", cvarFloatList {"No" 0 "Centerprints" 1 "Banners" 2 "Center + Banners" 3}, "What should be logged to your console" )
 	YESNO( 8, 108, (SUBWINDOW_WIDTH)-4, 10, "AltFire Reloads:", .2, 8, "cg_weapaltReloads", "Hitting AltFire should reload the gun if there is no alternative weapon" )
-	MULTI( 8, 120, (SUBWINDOW_WIDTH)-4, 10, "Autoselect FT members:", .2, 8, "cg_fireTeamOptions", cvarFloatList {"No" 0 "Yes" 1}, "Fireteam members are autoselected at mapstart" )
+	MULTI( 8, 120, (SUBWINDOW_WIDTH)-4, 10, "Autoselect FT members:", .2, 8, "cg_fireTeamOptions", cvarFloatList {"No" 0 "Yes" 1}, "Fireteam members are autoselected" )
 	
 // Controls //
 	SUBWINDOW( 6, 136, (SUBWINDOW_WIDTH), 76, "CONTROLS" )

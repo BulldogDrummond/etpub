@@ -2914,7 +2914,6 @@ Will perform callbacks to make the loading info screen update.
 void CG_Init( int serverMessageNum, int serverCommandSequence, int clientNum, qboolean demoPlayback ) {
 	const char	*s;
 	int			i;
-	clientInfo_t* ci;
 #ifdef _DEBUG
 	DEBUG_INITPROFILE_INIT
 #endif // _DEBUG
@@ -3172,18 +3171,6 @@ void CG_Init( int serverMessageNum, int serverCommandSequence, int clientNum, qb
 	cg.crosshairMine = -1;
 	cg.crosshairDyna = -1;
 
-	// Dens: autoselect all the fireteam members
-	if (CG_IsOnFireteam( cg.clientNum ) && 
-		cg_fireTeamOptions.integer & FTOPTS_AUTO_MEMBER_SELECT){
-		for(i = 0; i < MAX_FIRETEAM_MEMBERS; i++) {
-			ci = CG_SortedFireTeamPlayerForPosition( i );
-			if(!ci) {
-				break; // there was no-one in this position
-			}
-			ci->selected = qtrue;
-		}
-	}
-	
 	// tjw: clean up the config backup if one exists
 	CG_RestoreProfile();
 
