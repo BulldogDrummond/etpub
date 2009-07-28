@@ -2249,17 +2249,14 @@ void G_PanzerWar()
 		trap_Cvar_Set( "g_panzersSpeed", "2000" );
 	} else {
 		char buffer[MAX_CVAR_VALUE_STRING];
-		int maxammo, nextShotTime, fireDelayTime, dmgpanzer, panzerSpeed;
+		int dmgpanzer, panzerSpeed;
 
 		// restore weapon data
 		trap_Cvar_VariableStringBuffer( va( "%s_panzerwar", GAMEVERSION ),
 			buffer, sizeof( buffer ) );
-		sscanf( buffer, "%i %i %i %i %i", &maxammo, &nextShotTime,
-			&fireDelayTime, &dmgpanzer, &panzerSpeed );
-
-		panzer->maxammo = maxammo;
-		panzer->nextShotTime = nextShotTime;
-		panzer->fireDelayTime = fireDelayTime;
+		sscanf( buffer, "%i %i %i %i %i", &panzer->maxammo,
+			&panzer->nextShotTime, &panzer->fireDelayTime, &dmgpanzer,
+			&panzerSpeed );
 
 		trap_Cvar_Set( "g_dmgpanzer", va( "%i", dmgpanzer ) );
 		trap_Cvar_Set( "g_panzerSpeed", va( "%i", panzerSpeed ) );
@@ -2289,15 +2286,13 @@ void G_SniperWar()
 		trap_Cvar_Set( "g_dmgSniper", "70" );
 	} else {
 		char buffer[MAX_CVAR_VALUE_STRING];
-		int garandMaxAmmo, k43MaxAmmo, dmgSniper;
+		int dmgSniper;
 
 		// restore weapon data
 		trap_Cvar_VariableStringBuffer( va( "%s_sniperwar", GAMEVERSION ),
 			buffer, sizeof( buffer ) );
-		sscanf( buffer, "%i %i %i", &garandMaxAmmo, &k43MaxAmmo, &dmgSniper );
-
-		garand->maxammo = garandMaxAmmo;
-		k43->maxammo = k43MaxAmmo;
+		sscanf( buffer, "%i %i %i", &garand->maxammo, &k43->maxammo,
+			&dmgSniper );
 
 		trap_Cvar_Set( "g_dmgSniper", va( "%i", dmgSniper ) );
 	}
@@ -2324,18 +2319,12 @@ void G_RifleWar()
 		gpg40->maxammo = 200;
 	} else {
 		char buffer[MAX_CVAR_VALUE_STRING];
-		int carbineMaxAmmo, m7MaxAmmo, kar98MaxAmmo, gpg40MaxAmmo;
 
 		// restore weapon data
 		trap_Cvar_VariableStringBuffer( va( "%s_riflewar", GAMEVERSION ),
 			buffer, sizeof( buffer ) );
-		sscanf( buffer, "%i %i %i %i", &carbineMaxAmmo, &m7MaxAmmo,
-			&kar98MaxAmmo, &gpg40MaxAmmo );
-
-		carbine->maxammo = carbineMaxAmmo;
-		m7->maxammo = m7MaxAmmo;
-		kar98->maxammo = kar98MaxAmmo;
-		gpg40->maxammo = gpg40MaxAmmo;
+		sscanf( buffer, "%i %i %i %i", &carbine->maxammo, &m7->maxammo,
+			&kar98->maxammo, &gpg40->maxammo );
 	}
 }
 
