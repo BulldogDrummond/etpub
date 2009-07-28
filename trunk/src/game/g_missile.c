@@ -1605,7 +1605,7 @@ void G_LandmineThink( gentity_t *self ) {
 	vec3_t range = {LANDMINE_TRIGGER_DIST, LANDMINE_TRIGGER_DIST, LANDMINE_TRIGGER_DIST};
 	vec3_t mins, maxs;
 	qboolean trigger = qfalse;
-	gentity_t* ent;
+	gentity_t* ent = NULL;
 
 	self->nextthink = level.time + FRAMETIME;
 

@@ -1,5 +1,6 @@
 #include "g_local.h"
 #include "../ui/menudef.h"
+#include "g_etbot_interface.h"
 
 #ifdef LUA_SUPPORT
 #include "g_lua.h"
@@ -1496,7 +1497,7 @@ qboolean _SetCovertSpawnWeapons(gclient_t *client)
 	return qtrue;
 }
 
-qboolean G_SetPanzerOnly(gclient_t *client)
+void G_SetPanzerOnly(gclient_t *client)
 {
   AddWeaponToPlayer(client, WP_PANZERFAUST, 0, 9999, qtrue);
   AddWeaponToPlayer(client, WP_KNIFE, 0, 0, qfalse);
@@ -1505,10 +1506,9 @@ qboolean G_SetPanzerOnly(gclient_t *client)
   } else {
     AddWeaponToPlayer(client, WP_GRENADE_PINEAPPLE, 0, 45, qfalse);
   }
-  return qtrue;
 }
 
-qboolean G_SetSniperOnly(gclient_t *client)
+void G_SetSniperOnly(gclient_t *client)
 {
   weapon_t w, ws;
   int maxammo = 390, startclip;
@@ -1525,10 +1525,9 @@ qboolean G_SetSniperOnly(gclient_t *client)
   }
   AddWeaponToPlayer(client, w, 0, 0, qtrue);
   AddWeaponToPlayer(client, ws, maxammo, startclip, qfalse);
-  return qtrue;
 }
 
-qboolean G_SetRifleOnly(gclient_t *client)
+void G_SetRifleOnly(gclient_t *client)
 {
   weapon_t w, ws;
   int maxammo = 200, startclip;
@@ -1545,7 +1544,6 @@ qboolean G_SetRifleOnly(gclient_t *client)
   }
   AddWeaponToPlayer(client, w, 200, 10, qtrue);
   AddWeaponToPlayer(client, ws, maxammo, startclip, qfalse);
-  return qtrue;
 }
 
 void G_SetKnifeOnly(gclient_t *client, int pc)
@@ -1677,23 +1675,27 @@ void SetWolfSpawnWeapons( gclient_t *client )
 
 	client->ps.weaponstate = WEAPON_READY;
 
-	if(g_knifeonly.integer) {
-		G_SetKnifeOnly(client, pc);
+	if( g_knifeonly.integer ) {
+		G_SetKnifeOnly( client, pc );
+		return;
 	}
 
-  if(g_panzerwar.integer) {
-    G_SetKnifeOnly(client, pc);
-    return G_SetPanzerOnly(client);
-  }
+	if( g_panzerwar.integer ) {
+		G_SetKnifeOnly( client, pc );
+		G_SetPanzerOnly( client );
+		return;
+	}
 
-  if(g_sniperwar.integer) {
-    G_SetKnifeOnly(client, pc);
-    return G_SetSniperOnly(client);
-  }
-	
-	if(g_riflewar.integer) {
-		G_SetKnifeOnly(client, pc);
-		return G_SetRifleOnly(client);
+	if( g_sniperwar.integer ) {
+		G_SetKnifeOnly( client, pc );
+		G_SetSniperOnly( client );
+		return;
+	}
+
+	if( g_riflewar.integer ) {
+		G_SetKnifeOnly( client, pc );
+		G_SetRifleOnly( client );
+		return;
 	}
 
 	switch(pc) {
@@ -1871,7 +1873,7 @@ const char *GetParsedIP(const char *ipadd)
 	if ( (b1 | b2 | b3 | b4) > 255 || port > 65535) 
 		return NULL;
 	if (strspn(ipadd, "0123456789.:") < strlen(ipadd))
-		return -1;
+		return NULL;
 	sprintf(ipge, "%u.%u.%u.%u", b1, b2, b3, b4);
 	return ipge;
 }
@@ -2352,7 +2354,7 @@ char *ClientConnect( int clientNum, qboolean firstTime, qboolean isBot ) {
 	char		*userinfoReason;
 	char 		name[MAX_NETNAME];
 	int			conn_per_ip;
-	char		ip[20], *ip2;
+	char		ip[20], ip2[20];
 
 
 	ent = &g_entities[ clientNum ];
@@ -2392,7 +2394,7 @@ char *ClientConnect( int clientNum, qboolean firstTime, qboolean isBot ) {
 			userinfo2,
 			sizeof(userinfo2));
 		value = Info_ValueForKey (userinfo2, "ip");
-		ip2 = GetParsedIP(value);
+		Q_strncpyz(ip2, GetParsedIP(value), sizeof(ip2));
 		if (strcmp(ip, ip2)==0) {
 			conn_per_ip++;
 		}
@@ -2684,7 +2686,7 @@ char *ClientConnect( int clientNum, qboolean firstTime, qboolean isBot ) {
 	// Lua API callbacks
 	// pheno: moved down to make gclient entity fields available
 	if( G_LuaHook_ClientConnect( clientNum, firstTime, isBot, reason ) ) {
-		return reason;
+		return va( "%s\n", reason );
 	}
 #endif // LUA_SUPPORT
 
