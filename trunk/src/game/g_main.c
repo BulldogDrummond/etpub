@@ -2268,44 +2268,75 @@ void G_PanzerWar()
 
 void G_SniperWar()
 {
-  ammotable_t *garand, *k43;
-  // Already enabled;
-  garand = GetAmmoTableData(WP_GARAND);
-  k43 = GetAmmoTableData(WP_K43);
-  if (g_sniperwar.integer) {
-    garand->maxammo = 400;
-    k43->maxammo = 400;
-    trap_Cvar_Set("g_dmg_garand_scope", "70");
-    trap_Cvar_Set("g_dmg_k43_scope", "70");
-  } else {
-  	// TODO: Make sure this fits with the g_weapons flag for equalising
-  	// the weapon constants.  (quad)
-    garand->maxammo = 24;
-    k43->maxammo = 30;
-    trap_Cvar_Set("g_dmg_garand_scope", "50");
-    trap_Cvar_Set("g_dmg_k43_scope", "50");
-  }
+	ammotable_t *garand = GetAmmoTableData( WP_GARAND );
+	ammotable_t *k43 = GetAmmoTableData( WP_K43 );
+
+	// pheno: reworked - store and restore weapon data over map changes
+	if( g_sniperwar.integer) {
+		char dmgSniper[MAX_CVAR_VALUE_STRING];
+		
+		// store weapon data
+		trap_Cvar_VariableStringBuffer( "g_dmgSniper", dmgSniper,
+			sizeof( dmgSniper ) );
+		
+		trap_Cvar_Set( va( "%s_sniperwar", GAMEVERSION ),
+			va( "%i %i %s", garand->maxammo, k43->maxammo, dmgSniper ) );
+
+		// set war values
+		garand->maxammo = 400;
+		k43->maxammo = 400;
+
+		trap_Cvar_Set( "g_dmgSniper", "70" );
+	} else {
+		char buffer[MAX_CVAR_VALUE_STRING];
+		int garandMaxAmmo, k43MaxAmmo, dmgSniper;
+
+		// restore weapon data
+		trap_Cvar_VariableStringBuffer( va( "%s_sniperwar", GAMEVERSION ),
+			buffer, sizeof( buffer ) );
+		sscanf( buffer, "%i %i %i", &garandMaxAmmo, &k43MaxAmmo, &dmgSniper );
+
+		garand->maxammo = garandMaxAmmo;
+		k43->maxammo = k43MaxAmmo;
+
+		trap_Cvar_Set( "g_dmgSniper", va( "%i", dmgSniper ) );
+	}
 }
 
 void G_RifleWar()
 {
-  ammotable_t *carbine, *m7, *kar98, *gpg40;
-  // Already enabled;
-  carbine = GetAmmoTableData(WP_CARBINE);
-  m7 = GetAmmoTableData(WP_M7);
-  kar98 = GetAmmoTableData(WP_KAR98);
-  gpg40 = GetAmmoTableData(WP_GPG40);
-  if (g_riflewar.integer) {
-    carbine->maxammo = 200;
-    m7->maxammo = 200;
+	ammotable_t *carbine = GetAmmoTableData( WP_CARBINE );
+	ammotable_t *m7 = GetAmmoTableData( WP_M7 );
+	ammotable_t *kar98 = GetAmmoTableData( WP_KAR98 );
+	ammotable_t *gpg40 = GetAmmoTableData( WP_GPG40 );
+
+	// pheno: reworked - store and restore weapon data over map changes
+	if( g_riflewar.integer ) {
+		// store weapon data
+		trap_Cvar_Set( va( "%s_riflewar", GAMEVERSION ),
+			va( "%i %i %i %i", carbine->maxammo, m7->maxammo, kar98->maxammo,
+				gpg40->maxammo ) );
+
+		// set war values
+		carbine->maxammo = 200;
+		m7->maxammo = 200;
 		kar98->maxammo = 200;
 		gpg40->maxammo = 200;
-  } else {
-    carbine->maxammo = 30;
-    m7->maxammo = 200;
-		kar98->maxammo = 4;
-		gpg40->maxammo = 4;
-  }
+	} else {
+		char buffer[MAX_CVAR_VALUE_STRING];
+		int carbineMaxAmmo, m7MaxAmmo, kar98MaxAmmo, gpg40MaxAmmo;
+
+		// restore weapon data
+		trap_Cvar_VariableStringBuffer( va( "%s_riflewar", GAMEVERSION ),
+			buffer, sizeof( buffer ) );
+		sscanf( buffer, "%i %i %i %i", &carbineMaxAmmo, &m7MaxAmmo,
+			&kar98MaxAmmo, &gpg40MaxAmmo );
+
+		carbine->maxammo = carbineMaxAmmo;
+		m7->maxammo = m7MaxAmmo;
+		kar98->maxammo = kar98MaxAmmo;
+		gpg40->maxammo = gpg40MaxAmmo;
+	}
 }
 
 /*
