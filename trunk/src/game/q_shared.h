@@ -49,6 +49,7 @@
 #pragma warning(disable : 4201)
 #pragma warning(disable : 4214)
 #pragma warning(disable : 4244)
+#pragma warning(disable : 4706)		// "=" in conditions
 //#pragma warning(disable	: 4142)		// benign redefinition
 #pragma warning(disable : 4305)		// truncation from const double to float
 //#pragma warning(disable : 4310)		// cast truncates constant value

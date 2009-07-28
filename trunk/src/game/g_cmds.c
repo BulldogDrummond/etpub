@@ -1,6 +1,7 @@
 #include "g_local.h"
 #include "g_http_client.h"
 #include "../ui/menudef.h"
+#include "g_etbot_interface.h"
 
 #ifdef LUA_SUPPORT
 #include "g_lua.h"

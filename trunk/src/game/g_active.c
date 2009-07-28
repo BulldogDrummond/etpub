@@ -1,5 +1,6 @@
 #include "g_local.h"
 #include "etpro_mdx.h"
+#include "g_etbot_interface.h"
 /*
 ===============
 G_DamageFeedback

@@ -509,7 +509,7 @@ void G_check_killing_spree_end(gentity_t *ent, gentity_t *other, int number, int
 	int i;
 	int structure = -1;
 	int highest = 0;
-	char *output;
+	char *output = "";
 	qboolean entOnly = qfalse;
 	char pos[6];
 	char name[MAX_NAME_LENGTH] = {"*unknown*"};

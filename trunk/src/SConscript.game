@@ -56,7 +56,6 @@ g_mover.c
 g_multiview.c
 g_props.c
 g_referee.c
-g_save.c
 g_script.c
 g_script_actions.c
 g_session.c
