@@ -3000,7 +3000,7 @@ char *G_ShortcutSanitize(char *text)
 	return n;
 }
 
-char *G_Shortcuts(gentity_t *ent, const char *text)
+char *G_Shortcuts(gentity_t *ent, char *text)
 {
 	// pheno: increased 'out' for [command] command line
 	static char out[MAX_STRING_CHARS];
@@ -3248,7 +3248,7 @@ void G_Say( gentity_t *ent, gentity_t *target, int mode, const char *chatText ) 
 	char		*loc;
 	char		*shortcuts;
 
-	unescape_string(chatText); //mcwf
+	unescape_string( ( char * )chatText ); //mcwf
 
 	Q_strncpyz( text, chatText, sizeof(text) );
 	if ((g_censor.string[0] || g_censorNeil.integer) &&
@@ -3424,7 +3424,7 @@ void G_VoiceTo( gentity_t *ent, gentity_t *other, int mode, const char *id, qboo
 	// redeye - replace shortcuts in customvoicechats
 	if(g_shortcuts.integer) {
 		char *shortcuts;
-		shortcuts = G_Shortcuts(ent, id);
+		shortcuts = G_Shortcuts( ent, ( char * )id );
 		Q_strncpyz(text, shortcuts, sizeof(text));
 	} else {
 		Q_strncpyz(text, id, sizeof(text));
