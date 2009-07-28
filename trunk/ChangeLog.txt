@@ -2082,3 +2082,5 @@
 * pheno:   fixed delete mascript command causes server crashes
 * pheno:   added g_ettvFlags bitflag cvar (see docs)
 * pheno:   Lua API: added redeye's et.ClientNumberFromString() library call
+* pheno:   reworked inactivity code and renamed g_shrubbotOptions bitflag
+           cvar to g_inactivityOptions (see docs)

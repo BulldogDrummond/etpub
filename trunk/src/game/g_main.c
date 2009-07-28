@@ -559,7 +559,7 @@ vmCvar_t shoutcastPassword;
 vmCvar_t vote_allow_cointoss;
 vmCvar_t g_headshot;
 vmCvar_t g_instagibDamage;
-vmCvar_t g_shrubbotOptions;
+vmCvar_t g_inactivityOptions;
 vmCvar_t g_ettvFlags;
 
 #ifdef LUA_SUPPORT
@@ -1131,7 +1131,7 @@ cvarTable_t		gameCvarTable[] = {
 	{ &vote_allow_cointoss, "vote_allow_cointoss", "1", 0, 0, qfalse, qfalse },
 	{ &g_headshot, "g_headshot", "0", 0 },
 	{ &g_instagibDamage, "g_instagibDamage", "400", 0 },
-	{ &g_shrubbotOptions, "g_shrubbotOptions", "", 0 },
+	{ &g_inactivityOptions, "g_inactivityOptions", "3", 0 },
 	{ &g_ettvFlags, "g_ettvFlags", "3", 0 },
 
 #ifdef LUA_SUPPORT

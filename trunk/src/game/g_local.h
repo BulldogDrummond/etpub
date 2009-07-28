@@ -2407,7 +2407,7 @@ extern vmCvar_t shoutcastPassword;
 extern vmCvar_t	vote_allow_cointoss;
 extern vmCvar_t g_headshot;
 extern vmCvar_t g_instagibDamage;
-extern vmCvar_t g_shrubbotOptions;
+extern vmCvar_t g_inactivityOptions;
 extern vmCvar_t g_ettvFlags;
 
 #ifdef LUA_SUPPORT
@@ -3713,9 +3713,15 @@ void G_IntermissionVoteTally( gentity_t *ent );
 // instagib damage (controlled by g_instagibDamage)
 #define HSMF_INSTAGIB_DAMAGE 2
 
-// pheno: g_shrubbotOptions
+// pheno: g_inactivityOptions
+// don't drop shoutcasters
+#define IO_DONT_DROP_SHOUTCASTERS 1
+// don't drop spectators when in following mode
+#define IO_DONT_DROP_FOLLOWERS 2
+// ETmain inactivity behavior (don't wait for a full server)
+#define IO_ETMAIN_BEHAVIOR 4
 // shrubbot flag '0' admins will be moved to spectators due to team inactivity
-#define SBO_NO_TEAM_INACTIVITY 1
+#define IO_NO_SBF_TEAM_INACTIVITY 8
 
 // pheno: g_ettvFlags
 // prevent ettv slaves from being callvote kicked

@@ -71,7 +71,7 @@ dt {
 </tr>
 <tr>
 <td><a href="#g_goombaFlags">g_goombaFlags</a></td>
-<td><a href="#g_shrubbotOptions">g_shrubbotOptions</a></td>
+<td><a href="#g_inactivityOptions">g_inactivityOptions</a></td>
 <td><a href="#g_slashKill">g_slashKill</a></td>
 <td><a href="#g_ettvFlags">g_ettvFlags</a></td>
 </tr>
@@ -3305,15 +3305,21 @@ the fake clients Denial of Service attack.</p>
 still be revived after being shot.).</p>
 <p>Default is 400</p>
 
-<a name="g_shrubbotOptions"></a>
-<dt>g_shrubbotOptions [integer]
+<a name="g_inactivityOptions"></a>
+<dt>g_inactivityOptions [integer]
 <dd>
 <p>This is a bitflag cvar that supports the following values</p>
 <dl>
 	<dt>1
+	<dd>Don't drop shoutcasters
+	<dt>2
+	<dd>Don't drop spectators when in following mode
+	<dt>4
+	<dd>ETmain inactivity behavior (don't wait for a full server)
+	<dt>8
 	<dd>Shrubbot flag '0' admins will be moved to spectators due to team inactivity
 </dl>
-<p>Default is 0</p>
+<p>Default is 3</p>
 
 <a name="g_ettvFlags"></a>
 <dt>g_ettvFlags [integer]

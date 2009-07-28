@@ -684,88 +684,116 @@ ClientInactivityTimer
 Returns qfalse if the client is dropped
 =================
 */
-qboolean ClientInactivityTimer( gclient_t *client ) {
+qboolean ClientInactivityTimer( gclient_t *client )
+{
 	// OSP - modified
-	if( ( g_inactivity.integer == 0 && client->sess.sessionTeam != TEAM_SPECTATOR ) || ( g_spectatorInactivity.integer == 0 && client->sess.sessionTeam == TEAM_SPECTATOR ) ) {
-
+	if( ( g_inactivity.integer == 0 &&
+			client->sess.sessionTeam != TEAM_SPECTATOR ) ||
+		( g_spectatorInactivity.integer == 0 &&
+			client->sess.sessionTeam == TEAM_SPECTATOR ) ||
+		( client->sess.shoutcaster &&
+			( g_inactivityOptions.integer & IO_DONT_DROP_SHOUTCASTERS ) ) ||
+		( client->sess.spectatorState == SPECTATOR_FOLLOW &&
+			( g_inactivityOptions.integer & IO_DONT_DROP_FOLLOWERS ) ) ||
+		// never drop ettv slaves!
+		client->sess.ettv ) {
 		// give everyone some time, so if the operator sets g_inactivity during
 		// gameplay, everyone isn't kicked
 		client->inactivityTime = level.time + 60 * 1000;
 		client->inactivityWarning = qfalse;
-	} else if ( 
-		client->pers.cmd.forwardmove || 
+	} else if( client->pers.cmd.forwardmove || 
 		client->pers.cmd.rightmove || 
 		client->pers.cmd.upmove ||
-		(client->pers.cmd.wbuttons & WBUTTON_ATTACK2) ||
-		(client->pers.cmd.buttons & BUTTON_ATTACK) ||
-		(client->pers.cmd.wbuttons & WBUTTON_LEANLEFT) ||
-		(client->pers.cmd.wbuttons & WBUTTON_LEANRIGHT) ||
+		( client->pers.cmd.wbuttons & WBUTTON_ATTACK2 ) ||
+		( client->pers.cmd.buttons & BUTTON_ATTACK ) ||
+		( client->pers.cmd.wbuttons & WBUTTON_LEANLEFT ) ||
+		( client->pers.cmd.wbuttons & WBUTTON_LEANRIGHT ) ||
 		client->ps.pm_type == PM_DEAD ||
-		(client->ps.pm_flags & PMF_LIMBO) ||
+		( client->ps.pm_flags & PMF_LIMBO ) ||
 		// forty - #515 - g_inactivity moves MG42 although player is active
-		(client->ps.eFlags & EF_PRONE && client->ps.weapon == WP_MOBILE_MG42_SET)
-	) {
-
+		( client->ps.eFlags & EF_PRONE &&
+			client->ps.weapon == WP_MOBILE_MG42_SET ) ) {
 		client->inactivityWarning = qfalse;
 		client->inactivityTime = level.time + 1000 *
-				((client->sess.sessionTeam != TEAM_SPECTATOR) ?
-				g_inactivity.integer :
-				g_spectatorInactivity.integer);
+			( ( client->sess.sessionTeam != TEAM_SPECTATOR ) ?
+			g_inactivity.integer : g_spectatorInactivity.integer);
+	} else if( !client->pers.localClient ) {
+		int i, privateSlotsUsed = 0;
+		qboolean isPrivate = client->ps.clientNum < sv_privateClients.integer;
 
-	} else if ( !client->pers.localClient ) {
-		if(level.time > client->inactivityTime && 
-			client->inactivityWarning /*&&
-			!G_shrubbot_permission(&g_entities[client-level.clients], SBF_ACTIVITY)*/) {
-			gentity_t *ent = &g_entities[client - level.clients]; // pheno
-			client->inactivityWarning = qfalse;
-			client->inactivityTime = level.time + 60 * 1000;
-			if( client->sess.sessionTeam != TEAM_SPECTATOR ) {
-				// pheno: move also inactive shrubbot admins with flag '0'
-				//        to spectators if shrubbot option '1' is set
-				if( !G_shrubbot_permission( ent, SBF_ACTIVITY ) ||
-					( g_shrubbotOptions.integer & SBO_NO_TEAM_INACTIVITY ) ) {
-					client->inactivityTime = level.time + g_spectatorInactivity.integer * 1000;
-					SetTeam(&g_entities[client->ps.clientNum], "s", qtrue, -1, -1, qfalse);
-					AP(va("chat \"inactivity: %s^7 moved to spectators\" -1",
-						client->pers.netname));
-					return qfalse;
-				}
-			} else {
-				// pheno: don't drop shrubbot admins with flag '0'
-				if( !G_shrubbot_permission( ent, SBF_ACTIVITY ) ) {
-					// count the number of private slots in use
-					int i, privateSlotsUsed = 0;
-					qboolean isPrivate = client->ps.clientNum < sv_privateClients.integer;
-					for (i = 0; i < sv_privateClients.integer; ++i) {
-						if ( level.clients[i].pers.connected != CON_DISCONNECTED ) {
-							privateSlotsUsed++;
-						}
-					}
-					// if the server is full, drop the client
-					if ((isPrivate && privateSlotsUsed == sv_privateClients.integer) ||
-							(level.numConnectedClients == level.maxclients - sv_privateClients.integer + privateSlotsUsed)) {
-						trap_DropClient(client - level.clients, "Dropped due to inactivity", 0 );
-					} else {
-						// otherwise give the client some more time until the server is full
-						client->inactivityTime = level.time + 60 * 1000;
-						CPx(client - level.clients, "cp \"^360 more seconds since server not full.\n\"");
-						CPx(client - level.clients, "print \"^360 more seconds since server not full.\n\"");
-						G_Printf("Server not Full: 60 more inactivity seconds for: %s\n", client->pers.netname);
-					}
-					return qfalse;
-				}
+		// count the number of private slots in use
+		for( i = 0; i < sv_privateClients.integer; ++i ) {
+			if( level.clients[i].pers.connected != CON_DISCONNECTED ) {
+				privateSlotsUsed++;
 			}
 		}
 
-		if ( !client->inactivityWarning && level.time > client->inactivityTime - 10000 ) {
-			CPx(client - level.clients, "cp \"^310 seconds until inactivity drop!\n\"");
-			CPx(client - level.clients, "print \"^310 seconds until inactivity drop!\n\"");
-			G_Printf("10s inactivity warning issued to: %s\n", client->pers.netname);
+		if( ( g_inactivityOptions.integer & IO_ETMAIN_BEHAVIOR ) ||
+			( isPrivate && privateSlotsUsed == sv_privateClients.integer ) ||
+			( level.maxclients - sv_privateClients.integer +
+				privateSlotsUsed == level.numConnectedClients ) ) {
+			if( client->inactivityWarning &&
+				level.time > client->inactivityTime ) {
+				gentity_t *ent = &g_entities[client - level.clients];
+				
+				client->inactivityWarning = qfalse;
+				client->inactivityTime = level.time + 60 * 1000;
+				
+				if( client->sess.sessionTeam != TEAM_SPECTATOR ) {
+					if( !G_shrubbot_permission( ent, SBF_ACTIVITY ) ||
+						( g_inactivityOptions.integer &
+							IO_NO_SBF_TEAM_INACTIVITY ) ) {
+						client->inactivityTime = level.time +
+							g_spectatorInactivity.integer * 1000;
+						
+						SetTeam( &g_entities[client->ps.clientNum], "s",
+							qtrue, -1, -1, qfalse );
+						AP( va( "chat \"inactivity: %s^7 moved to "
+							"spectators\" -1", client->pers.netname ) );
+					}
+				} else {
+					if( !G_shrubbot_permission( ent, SBF_ACTIVITY ) ) {
+						trap_DropClient( client - level.clients,
+							"Dropped due to inactivity", 0 );
+					}
+				}
 
-			client->inactivityWarning = qtrue;
-			client->inactivityTime = level.time + 10000;	// Just for safety
+				return qfalse;
+			} else if( !client->inactivityWarning &&
+				level.time > client->inactivityTime -
+					g_inactivity.integer * 500 &&
+				client->sess.sessionTeam != TEAM_SPECTATOR &&
+				g_inactivity.integer ) {
+				CPx( client - level.clients, va( "cp \"^3%i seconds until moving "
+					"to spectators for inactivity!\n\"", g_inactivity.integer / 2 ) );
+				CPx( client - level.clients, va( "print \"^3%i seconds until moving "
+					"to spectators for inactivity!\n\"", g_inactivity.integer / 2 ) );
+				G_Printf( "%is inactivity warning issued to: %s\n",
+					g_inactivity.integer / 2, client->pers.netname );
+
+				client->inactivityWarning = qtrue;
+				client->inactivityTime = level.time + g_inactivity.integer * 500; // Just for safety
+			} else if( !client->inactivityWarning &&
+				level.time > client->inactivityTime -
+					g_spectatorInactivity.integer * 500 &&
+				client->sess.sessionTeam == TEAM_SPECTATOR &&
+				g_spectatorInactivity.integer ) {
+				CPx( client - level.clients, va( "cp \"^3%i seconds until "
+					"inactivity drop!\n\"", g_spectatorInactivity.integer / 2 ) );
+				CPx( client - level.clients, va( "print \"^3%i seconds until "
+					"inactivity drop!\n\"", g_spectatorInactivity.integer / 2 ) );
+				G_Printf( "%is spectator inactivity warning issued to: %s\n",
+					g_spectatorInactivity.integer / 2, client->pers.netname );
+
+				client->inactivityWarning = qtrue;
+				client->inactivityTime = level.time + g_spectatorInactivity.integer * 500; // Just for safety
+			}
+		} else {
+			// otherwise give the client some more time
+			client->inactivityTime = level.time + 60 * 1000;
 		}
 	}
+
 	return qtrue;
 }
 
