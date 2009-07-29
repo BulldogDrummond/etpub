@@ -1767,7 +1767,8 @@ void CG_VoiceChatLocal( int mode, qboolean voiceOnly, int clientNum, int color, 
 char *CG_Args(int start, int end)
 {
 	int i;
-	char *s, *arg;
+	char *s;
+	const char *arg;
 
 	i = start;
 	arg = CG_Argv(i++);
@@ -1830,7 +1831,8 @@ void CG_VoiceChat( int mode ) {
 		}
 	}
 
-	CG_VoiceChatLocal( mode, voiceOnly, clientNum, color, cmd, msg, origin );
+	CG_VoiceChatLocal( mode, voiceOnly, clientNum, color, cmd,
+		( char * )msg, origin );
 }
 // -NERVE - SMF
 
@@ -2578,7 +2580,7 @@ static void CG_ServerCommand( void ) {
 			s = CG_Argv( 1 );
 		}
 
-		unescape_string(s); //mcwf
+		unescape_string( ( char * )s ); //mcwf
 
 		Q_strncpyz( text, s, MAX_SAY_TEXT );
 		CG_RemoveChatEscapeChar( text );
@@ -2601,7 +2603,7 @@ static void CG_ServerCommand( void ) {
 			s = CG_Argv( 1 );
 		}
 
-		unescape_string(s); //mcwf
+		unescape_string( ( char * )s ); //mcwf
 
 		Q_strncpyz( text, s, MAX_SAY_TEXT );
 		CG_RemoveChatEscapeChar( text );
