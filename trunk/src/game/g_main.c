@@ -2227,38 +2227,38 @@ void G_PanzerWar()
 
 	// pheno: reworked - store and restore weapon data over map changes
 	if( g_panzerwar.integer ) {
-		char dmgpanzer[MAX_CVAR_VALUE_STRING];
+		char dmgPanzer[MAX_CVAR_VALUE_STRING];
 		char panzersSpeed[MAX_CVAR_VALUE_STRING];
 		
 		// store weapon data
-		trap_Cvar_VariableStringBuffer( "g_dmgpanzer", dmgpanzer,
-			sizeof( dmgpanzer ) );
+		trap_Cvar_VariableStringBuffer( "g_dmgPanzer", dmgPanzer,
+			sizeof( dmgPanzer ) );
 		trap_Cvar_VariableStringBuffer( "g_panzersSpeed", panzersSpeed,
 			sizeof( panzersSpeed ) );
 		
 		trap_Cvar_Set( va( "%s_panzerwar", GAMEVERSION ),
 			va( "%i %i %i %s %s", panzer->maxammo, panzer->nextShotTime,
-				panzer->fireDelayTime, dmgpanzer, panzersSpeed ) );
+				panzer->fireDelayTime, dmgPanzer, panzersSpeed ) );
 
 		// set war values
 		panzer->maxammo = 9999;
 		panzer->nextShotTime = 800;
 		panzer->fireDelayTime = 0;
 
-		trap_Cvar_Set( "g_dmgpanzer", "133" );
+		trap_Cvar_Set( "g_dmgPanzer", "133" );
 		trap_Cvar_Set( "g_panzersSpeed", "2000" );
 	} else {
 		char buffer[MAX_CVAR_VALUE_STRING];
-		int dmgpanzer, panzerSpeed;
+		int dmgPanzer, panzerSpeed;
 
 		// restore weapon data
 		trap_Cvar_VariableStringBuffer( va( "%s_panzerwar", GAMEVERSION ),
 			buffer, sizeof( buffer ) );
 		sscanf( buffer, "%i %i %i %i %i", &panzer->maxammo,
-			&panzer->nextShotTime, &panzer->fireDelayTime, &dmgpanzer,
+			&panzer->nextShotTime, &panzer->fireDelayTime, &dmgPanzer,
 			&panzerSpeed );
 
-		trap_Cvar_Set( "g_dmgpanzer", va( "%i", dmgpanzer ) );
+		trap_Cvar_Set( "g_dmgPanzer", va( "%i", dmgPanzer ) );
 		trap_Cvar_Set( "g_panzerSpeed", va( "%i", panzerSpeed ) );
 	}
 }

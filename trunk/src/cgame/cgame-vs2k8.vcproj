@@ -47,6 +47,7 @@
 			/>
 			<Tool
 				Name="VCCLCompilerTool"
+				AdditionalOptions="/D &quot;_CRT_SECURE_NO_DEPRECATE&quot;"
 				Optimization="0"
 				PreprocessorDefinitions="_DEBUG;WIN32;_WINDOWS;CGAMEDLL;USE_MDXFILE"
 				RuntimeLibrary="1"
@@ -143,6 +144,7 @@
 			/>
 			<Tool
 				Name="VCCLCompilerTool"
+				AdditionalOptions="/D &quot;_CRT_SECURE_NO_DEPRECATE&quot;"
 				Optimization="2"
 				InlineFunctionExpansion="1"
 				PreprocessorDefinitions="NDEBUG;WIN32;_WINDOWS;CGAMEDLL;USE_MDXFILE"
@@ -154,7 +156,7 @@
 				AssemblerListingLocation=".\Release/"
 				ObjectFile=".\Release/"
 				ProgramDataBaseFileName=".\Release/"
-				WarningLevel="4"
+				WarningLevel="3"
 				SuppressStartupBanner="true"
 			/>
 			<Tool
@@ -239,6 +241,7 @@
 			/>
 			<Tool
 				Name="VCCLCompilerTool"
+				AdditionalOptions="/D &quot;_CRT_SECURE_NO_DEPRECATE&quot;"
 				Optimization="2"
 				InlineFunctionExpansion="1"
 				PreprocessorDefinitions="NDEBUG;WIN32;_WINDOWS;CGAMEDLL;USE_MDXFILE"
@@ -250,7 +253,7 @@
 				AssemblerListingLocation=".\Release LUA/"
 				ObjectFile=".\Release LUA/"
 				ProgramDataBaseFileName=".\Release LUA/"
-				WarningLevel="4"
+				WarningLevel="3"
 				SuppressStartupBanner="true"
 			/>
 			<Tool

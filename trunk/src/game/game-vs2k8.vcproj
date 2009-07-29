@@ -47,7 +47,7 @@
 			/>
 			<Tool
 				Name="VCCLCompilerTool"
-				AdditionalOptions="/D &quot;NO_BOT_SUPPORT&quot; /D &quot;THREADS&quot; /D &quot;LUA_SUPPORT&quot;"
+				AdditionalOptions="/D &quot;NO_BOT_SUPPORT&quot; /D &quot;THREADS&quot; /D &quot;LUA_SUPPORT&quot; /D &quot;_CRT_SECURE_NO_DEPRECATE&quot;"
 				Optimization="0"
 				AdditionalIncludeDirectories="&quot;..\..\Omnibot\ET&quot;;&quot;..\..\Omnibot\Common&quot;;&quot;..\lua&quot;;&quot;..\sha-1&quot;"
 				PreprocessorDefinitions="WIN32;_DEBUG;_WINDOWS;BUILDING_REF_GL;DEBUG;GAMEDLL;USE_MDXFILE"
@@ -158,7 +158,7 @@
 				ObjectFile=".\Release/"
 				ProgramDataBaseFileName=".\Release/"
 				BrowseInformation="1"
-				WarningLevel="4"
+				WarningLevel="3"
 				SuppressStartupBanner="true"
 				DebugInformationFormat="1"
 			/>
@@ -259,7 +259,7 @@
 				ObjectFile=".\Release LUA/"
 				ProgramDataBaseFileName=".\Release LUA/"
 				BrowseInformation="1"
-				WarningLevel="4"
+				WarningLevel="3"
 				SuppressStartupBanner="true"
 				DebugInformationFormat="1"
 			/>
