@@ -32,9 +32,6 @@ static void G_Obituary(int mod, int target, int attacker);
 
 extern vec3_t muzzleTrace;
 
-// redeye - firsblood message state
-qboolean firstblood;
-
 /*
 ============
 AddScore
@@ -942,15 +939,18 @@ void player_die( gentity_t *self, gentity_t *inflictor, gentity_t *attacker, int
 	// pheno: reworked redeye's and balgo's goat sound code
 	//        etpro behavior - play sound for attacker and victim only
 	if( ( meansOfDeath == MOD_KNIFE || meansOfDeath == MOD_THROWN_KNIFE ) &&
+		self &&
+		self->client &&
 		attacker &&
-		g_knifeKillSound.string ) {
+		attacker->client &&
+		g_knifeKillSound.string[0] )
+	{
 		G_ClientSound( self, G_SoundIndex( g_knifeKillSound.string ) );
 		G_ClientSound( attacker, G_SoundIndex( g_knifeKillSound.string ) );
 	}
 
 	// redeye - firstblood message
-	if ( !firstblood &&
-		self &&
+	if( self &&
 		self->client &&
 		attacker &&
 		attacker->client &&
@@ -958,15 +958,14 @@ void player_die( gentity_t *self, gentity_t *inflictor, gentity_t *attacker, int
 		attacker->s.number != ENTITYNUM_WORLD &&
 		attacker != self &&
 		g_gamestate.integer == GS_PLAYING &&
-		! OnSameTeam(attacker, self))
+		!OnSameTeam( attacker, self ) )
 	{
-		if (g_firstBloodSound.string[0])
-			G_globalSound(g_firstBloodSound.string);
-		
-		AP(va("cpm \"^7%s ^7drew ^1FIRST BLOOD ^7from ^7%s^7!\" -1",
-			attacker->client->pers.netname, self->client->pers.netname));
+		if( !firstblood && g_firstBloodMsg.string[0] ) {
+			G_FirstBloodMessage( attacker, self );
+		}
 
-		firstblood = qtrue;
+		// pheno: save clientnum for lastblood message
+		level.lastBloodClient = attacker->client->ps.clientNum;
 	}
 
 	if( meansOfDeath == MOD_MACHINEGUN ) {

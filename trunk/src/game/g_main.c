@@ -561,6 +561,9 @@ vmCvar_t g_headshot;
 vmCvar_t g_instagibDamage;
 vmCvar_t g_inactivityOptions;
 vmCvar_t g_ettvFlags;
+vmCvar_t g_firstBloodMsg;
+vmCvar_t g_firstBloodMsgPos;
+vmCvar_t g_lastBloodMsg;
 
 #ifdef LUA_SUPPORT
 // Lua API
@@ -1133,6 +1136,9 @@ cvarTable_t		gameCvarTable[] = {
 	{ &g_instagibDamage, "g_instagibDamage", "400", 0 },
 	{ &g_inactivityOptions, "g_inactivityOptions", "3", 0 },
 	{ &g_ettvFlags, "g_ettvFlags", "3", 0 },
+	{ &g_firstBloodMsg, "g_firstBloodMsg", "^7[a] ^7drew ^1FIRST BLOOD ^7from [v]^7!", 0 },
+	{ &g_firstBloodMsgPos, "g_firstBloodMsgPos", "2", 0 },
+	{ &g_lastBloodMsg, "g_lastBloodMsg", "^8And the final kill of this round goes to [a]^8!", 0 },
 
 #ifdef LUA_SUPPORT
 	// Lua API
@@ -4357,6 +4363,10 @@ void CheckIntermissionExit( void ) {
 	if(!(fActions & EOM_MATCHINFO) && level.time - level.intermissiontime > 800) {
 		G_matchInfoDump(EOM_MATCHINFO);
 		fActions |= EOM_MATCHINFO;
+
+		// pheno: display lastblood message
+		G_LastBloodMessage();
+
 		if( (g_weapons.integer & WPF_DROP_BINOCS) &&
 				(g_misc.integer & MISC_BINOC_MASTER) ) {
 			G_BinocMasters(qtrue);

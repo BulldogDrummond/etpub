@@ -1407,6 +1407,9 @@ typedef struct {
 
 	int sniperDamage;
 
+	// pheno: lastblood clientnum
+	int lastBloodClient;
+
 	//Omni-bot time triggers
 	qboolean	twoMinute;
 	qboolean	thirtySecond;
@@ -1929,6 +1932,12 @@ void G_InitMemory( void );
 void Svcmd_GameMem_f( void );
 
 //
+// g_message.c
+//
+void G_FirstBloodMessage( gentity_t *attacker, gentity_t *victim );
+void G_LastBloodMessage();
+
+//
 // g_session.c
 //
 void G_ReadSessionData( gclient_t *client );
@@ -2409,6 +2418,9 @@ extern vmCvar_t g_headshot;
 extern vmCvar_t g_instagibDamage;
 extern vmCvar_t g_inactivityOptions;
 extern vmCvar_t g_ettvFlags;
+extern vmCvar_t g_firstBloodMsg;
+extern vmCvar_t g_firstBloodMsgPos;
+extern vmCvar_t g_lastBloodMsg;
 
 #ifdef LUA_SUPPORT
 // Lua API

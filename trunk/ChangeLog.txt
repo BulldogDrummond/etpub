@@ -2079,8 +2079,10 @@
 * pheno:   Lua API: load API from external library
 * pheno:   fixed !rename if player has reached max name changes
 * pheno:   added support for ETPro's delete mapscript command
-* pheno:   fixed delete mascript command causes server crashes
+* pheno:   fixed delete mapscript command causes server crashes
 * pheno:   added g_ettvFlags bitflag cvar (see docs)
 * pheno:   Lua API: added redeye's et.ClientNumberFromString() library call
 * pheno:   reworked inactivity code and renamed g_shrubbotOptions bitflag
            cvar to g_inactivityOptions (see docs)
+* pheno:   firstblood message - added configurable message and position
+* pheno:   added lastblood message
