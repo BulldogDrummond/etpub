@@ -25,8 +25,8 @@ void G_TopKillersMessage(gentity_t *ent) {
 	}
 
 	if (session_ent) {
-		CP(va("chat \"^fOverall Top Killer: ^7%s^7 "
-					"^fKR K/D: ^3%.3f\" -1",
+		CP(va("chat \"^fOverall Top Killer^7: %s^7 "
+					"^fKR K/D^7: ^3%.3f\" -1",
 			session_ent->client->pers.netname,
 			session_top));
 	}
@@ -53,7 +53,7 @@ void G_TopPlayerMessage(gentity_t *ent) {
 	}
 
 	if (top_ent) {
-		CP(va("chat \"^fTop Player: ^7%s^7 ^fRating: ^3%.3f\" -1",
+		CP(va("chat \"^fTop Player^7: %s ^fRating^7: ^3%.3f\" -1",
 			top_ent->client->pers.netname,
 			top));
 	}

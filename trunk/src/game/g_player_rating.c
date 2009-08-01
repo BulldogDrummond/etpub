@@ -440,11 +440,11 @@ void UpdateWinProbabilityModel( team_t winner, win_probability_model_t *model) {
 
 		if (g_playerRating.integer & PLAYER_RATING_VISIBLE) {
 			CPx(cl - level.clients, 
-				va("chat \"^3Player Rating Points: %s ^3%.3f%s\" -1",
+				va("chat \"^3Player Rating Points^7: %s ^3%.3f%s\" -1",
 				cl->pers.netname,
 				ratingPoints,
 				(cl->sess.hero && winner==cl->sess.sessionTeam)
-				? " Hero!" : ""));
+				? " ^7- ^1Hero^7!" : ""));
 		}
 		if (g_playerRating.integer & PLAYER_RATING_DEBUG) {
 			G_LogPrintf( "PLAYER_RATING_DEBUG: "
@@ -452,7 +452,7 @@ void UpdateWinProbabilityModel( team_t winner, win_probability_model_t *model) {
 				cl->pers.netname,
 				ratingPoints,
 				(cl->sess.hero && cl->sess.sessionTeam==winner)
-				? " Hero!" : "");
+				? " - Hero!" : "");
 		}
 	}
 	// Update disconnects

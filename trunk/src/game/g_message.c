@@ -100,7 +100,6 @@ void G_LastBloodMessage()
 {
 	gentity_t *ent = &g_entities[level.lastBloodClient];
 	char name[MAX_NAME_LENGTH] = {"*unknown*"};
-	char *message;
 
 	if( !g_lastBloodMsg.string[0] ) {
 		return;
@@ -110,6 +109,5 @@ void G_LastBloodMessage()
 		Q_strncpyz( name, ent->client->pers.netname, sizeof( name ) );
 	}
 
-	message = Q_StrReplace( g_lastBloodMsg.string, "[a]", name );
-	G_PrintMessage( message, 0 );
+	G_PrintMessage( Q_StrReplace( g_lastBloodMsg.string, "[a]", name ), 0 );
 }
