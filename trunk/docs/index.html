@@ -75,6 +75,12 @@ dt {
 <td><a href="#g_slashKill">g_slashKill</a></td>
 <td><a href="#g_ettvFlags">g_ettvFlags</a></td>
 </tr>
+<tr>
+<td><a href="#g_firstBloodMsg">g_firstBloodMsg</a></td>
+<td><a href="#g_firstBloodMsgPos">g_firstBloodMsgPos</a></td>
+<td><a href="#g_lastBloodMsg">g_lastBloodMsg</a></td>
+<td>&nbsp;</td>
+</tr>
 </table>
 
 <br>
@@ -3332,6 +3338,31 @@ still be revived after being shot.).</p>
 	<dd>Grant shoutcaster status to ettv slaves
 </dl>
 <p>Default is 3</p>
+
+<a name="g_firstBloodMsg"></a>
+<dt>g_firstBloodMsg [string]
+<dd>
+<p>Displays the first kill of the round. <strong>[a]</strong> will be replaced
+by the name of the <strong>a</strong>ttacker and <strong>[v]</strong> will be
+replaced by the name of the <strong>v</strong>ictim.</p>
+<p>Note: To disable this message set this cvar to &quot;&quot;.</p>
+<p>Default is "^7[a] ^7drew ^1FIRST BLOOD ^7from [v]"</p>
+
+<a name="g_firstBloodMsgPos"></a>
+<dt>g_firstBloodMsgPos [integer]
+<dd>
+<p>Location where the first blood message should be displayed. This can be
+0 (chat area), 1 (center area), 2 (popup area), 3 (banner area) or
+4 (console only).</p>
+<p>Default is 2</p>
+
+<a name="g_firstBloodMsg"></a>
+<dt>g_lastBloodMsg [string]
+<dd>
+<p>Displays the last kill of the round in intermission. <strong>[a]</strong>
+will be replaced by the name of the <strong>a</strong>ttacker.</p>
+<p>Note: To disable this message set this cvar to &quot;&quot;.</p>
+<p>Default is "^8And the final kill of this round goes to [a]^8!"</p>
 
 <hr>
 <a name="mapvoting"></a>

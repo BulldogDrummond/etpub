@@ -472,7 +472,7 @@ static void CG_Obituary( entityState_t *ent ) {
 			tk = qtrue;
 			if ( cg_obituary.integer < 2 ) {
 				message = "^7was killed by ^1TEAMMATE^7";
-				message2="";
+				message2 = "";
 			}
 		}
 
