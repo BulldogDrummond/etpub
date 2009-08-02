@@ -138,8 +138,8 @@ void G_PlayDead(gentity_t *ent)
 		ent->client->ps.weapon = ent->client->limboDropWeapon;
 	}
 	else {
-		// pheno: call a medic and play death anim before playdead
-		G_AddEvent( ent, EV_MEDIC_CALL, 0 );
+		// pheno: play death anim before playdead
+		//G_AddEvent( ent, EV_MEDIC_CALL, 0 );
 		ent->client->ps.pm_time = BG_AnimScriptEvent( &ent->client->ps,
 			ent->client->pers.character->animModelInfo,
 			ANIM_ET_DEATH, qfalse, qtrue );
