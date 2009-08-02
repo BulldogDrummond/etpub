@@ -101,7 +101,7 @@ void G_LastBloodMessage()
 	gentity_t *ent = &g_entities[level.lastBloodClient];
 	char name[MAX_NAME_LENGTH] = {"*unknown*"};
 
-	if( !g_lastBloodMsg.string[0] ) {
+	if( !level.lastBloodClient || !g_lastBloodMsg.string[0] ) {
 		return;
 	}
 
