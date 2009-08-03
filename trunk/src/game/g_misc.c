@@ -2872,8 +2872,6 @@ void G_MapLongStreak(qboolean endOfMatch)
 
 // pheno: ----------------------------------------
 
-qboolean firstblood; // firstblood state
-
 /*
 ================
 G_PrintMessage
@@ -2931,6 +2929,7 @@ char *G_FirstBloodSanitize( char *name )
 G_FirstBloodMessage
 ================
 */
+qboolean firstblood; // firstblood state
 void G_FirstBloodMessage( gentity_t *attacker, gentity_t *victim )
 {
 	char aname[MAX_NAME_LENGTH] = {"*unknown*"};
