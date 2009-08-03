@@ -1726,6 +1726,10 @@ void mg42_fire( gentity_t *other );
 void mg42_stopusing( gentity_t *self );
 void aagun_fire( gentity_t *other );
 
+// pheno
+void G_FirstBloodMessage( gentity_t *attacker, gentity_t *victim );
+void G_LastBloodMessage();
+
 
 //
 // g_weapon.c
@@ -1930,12 +1934,6 @@ void G_UnevenTeamCheck(void);
 void *G_Alloc( int size );
 void G_InitMemory( void );
 void Svcmd_GameMem_f( void );
-
-//
-// g_message.c
-//
-void G_FirstBloodMessage( gentity_t *attacker, gentity_t *victim );
-void G_LastBloodMessage();
 
 //
 // g_session.c

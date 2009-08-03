@@ -50,7 +50,6 @@ g_items.c
 g_main.c
 g_match.c
 g_mem.c
-g_message.c
 g_misc.c
 g_missile.c
 g_mover.c

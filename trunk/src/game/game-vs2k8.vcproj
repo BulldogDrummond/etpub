@@ -1796,10 +1796,6 @@
 				</FileConfiguration>
 			</File>
 			<File
-				RelativePath=".\g_message.c"
-				>
-			</File>
-			<File
 				RelativePath="g_misc.c"
 				>
 				<FileConfiguration
