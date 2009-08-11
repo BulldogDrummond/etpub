@@ -2086,3 +2086,4 @@
            cvar to g_inactivityOptions (see docs)
 * pheno:   firstblood message - added configurable message and position
 * pheno:   added lastblood message
+* pheno:   fixed g_teamDamageRestriction won't kick players bug

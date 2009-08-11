@@ -2578,7 +2578,7 @@ void ClientEndFrame( gentity_t *ent ) {
 		if (
 			ent->client->sess.hits >= g_minHits.integer &&
 			teamHitPct > g_teamDamageRestriction.integer
-			&& !ent->r.svFlags & SVF_BOT
+			&& !( ent->r.svFlags & SVF_BOT )
 		) {
 		
 			if (
