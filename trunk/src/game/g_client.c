@@ -2075,9 +2075,11 @@ void ClientUserinfoChanged( int clientNum ) {
 
 	client->ps.clientNum = clientNum;
 	
-	reason = CheckUserinfo(clientNum);
-	if(reason){
-		trap_DropClient( clientNum,va("^1%s", reason), 0);
+	if( !(ent->r.svFlags & SVF_BOT) ) {
+		reason = CheckUserinfo(clientNum);
+		if(reason){
+			trap_DropClient( clientNum,va("^1%s", reason), 0);
+		}
 	}
 	
 	client->medals = 0;
@@ -2088,7 +2090,7 @@ void ClientUserinfoChanged( int clientNum ) {
 	trap_GetUserinfo( clientNum, userinfo, sizeof( userinfo ) );
 
 	// check for malformed or illegal info strings
-	if ( !Info_Validate(userinfo) ) {
+	if ( !(ent->r.svFlags & SVF_BOT) && !Info_Validate(userinfo) ) {
 		// Dens: this makes not much sense: game found a weird char in the
 		// userinfo, so let's make the userinfo useless for the game...
 		// better just drop the client
