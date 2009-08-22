@@ -267,7 +267,7 @@
 
 	void win32_dllinfo() {
 		G_LogPrintf("DLL Information:\n");
-		pfnSymEnumerateModules(GetCurrentProcess( ), EnumModules, NULL);
+		pfnSymEnumerateModules(GetCurrentProcess(), (PSYM_ENUMMODULES_CALLBACK)EnumModules, NULL);
 	}
 
 	void win32_backtrace(LPEXCEPTION_POINTERS e) {

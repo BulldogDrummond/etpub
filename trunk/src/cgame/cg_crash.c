@@ -303,7 +303,7 @@ void win32_exceptioninfo(LPEXCEPTION_POINTERS e) {
 
 void win32_dllinfo(void) {
 	Crash_Printf("DLL Information:\n");
-	pfnSymEnumerateModules(GetCurrentProcess( ), EnumModules, NULL);
+	pfnSymEnumerateModules(GetCurrentProcess(), (PSYM_ENUMMODULES_CALLBACK)EnumModules, NULL);
 }
 
 #if 1
