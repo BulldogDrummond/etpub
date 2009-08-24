@@ -2187,7 +2187,7 @@ void ClientUserinfoChanged( int clientNum ) {
 	ClientCleanName( s, client->pers.netname, sizeof(client->pers.netname) );
 
 	if ( client->pers.connected == CON_CONNECTED ) {
-		if ( strcmp( oldname, client->pers.netname ) ) {
+		if ( !(ent->r.svFlags & SVF_BOT) && strcmp( oldname, client->pers.netname ) ) {
 			if (g_censorNames.string[0] || g_censorNamesNeil.integer) {
 				// returns true if they're kicked
 				if (G_CensorName(
@@ -2199,7 +2199,8 @@ void ClientUserinfoChanged( int clientNum ) {
 			}
 			// Dens: if a user has too many namechanges, reset his old name
 			// and stop the namechange
-			if(g_maxNameChanges.integer > -1 &&
+			if( !(ent->r.svFlags & SVF_BOT) && 
+				g_maxNameChanges.integer > -1 &&
 				client->pers.nameChanges >= g_maxNameChanges.integer){
 				Q_strncpyz( client->pers.netname, oldname, sizeof( client->pers.netname ) );
 				Info_SetValueForKey( userinfo, "name", oldname);
