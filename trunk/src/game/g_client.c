@@ -2689,16 +2689,17 @@ char *ClientConnect( int clientNum, qboolean firstTime, qboolean isBot ) {
 	// Lua API callbacks
 	// pheno: moved down to make gclient entity fields available
 	if( G_LuaHook_ClientConnect( clientNum, firstTime, isBot, reason ) ) {
-		return va( "%s\n", reason );
+		if ( !isBot && !(ent->r.svFlags & SVF_BOT) )
+			return va( "%s\n", reason );
 	}
 #endif // LUA_SUPPORT
 
 	// get and distribute relevent paramters
 	G_LogPrintf( "ClientConnect: %i\n", clientNum );
 	G_UpdateCharacter( client );
-	ClientUserinfoChanged( clientNum );
-
 	Bot_Event_ClientConnected(clientNum, isBot);
+
+	ClientUserinfoChanged( clientNum );
 
 	if (g_gametype.integer == GT_SINGLE_PLAYER) {
 #ifndef NO_BOT_SUPPORT
