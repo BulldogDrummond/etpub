@@ -243,7 +243,8 @@ void G_UpdateCharacter( gclient_t *client )
 	int				characterIndex;
 	bg_character_t	*character;
 
-	trap_GetUserinfo( client->ps.clientNum, infostring, sizeof( infostring ) );
+	trap_GetUserinfo( client - level.clients, infostring,
+		sizeof( infostring ) );
 	s = Info_ValueForKey( infostring, "ch" );
 	if( *s ) {
 		characterIndex = atoi(s);

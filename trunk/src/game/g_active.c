@@ -1279,7 +1279,7 @@ void WolfFindMedic( gentity_t *self ) {
 		dist = VectorNormalize( end );
 
 		if ( dist < bestdist ) {
-			medic = cl->ps.clientNum;
+			medic = cl - level.clients;
 #if 0 // rain - not sure what the point of this is
 			vectoangles( end, temp );
 			self->client->ps.stats[STAT_DEAD_YAW] = temp[YAW];

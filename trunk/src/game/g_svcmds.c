@@ -913,7 +913,7 @@ static void Svcmd_Kick_f( void ) {
 					char userinfo[MAX_INFO_STRING];
 
 					// Dens: use stored IP to prevent spoofing
-					trap_GetUserinfo( cl->ps.clientNum, userinfo, sizeof( userinfo ) );
+					trap_GetUserinfo( cl - level.clients, userinfo, sizeof( userinfo ) );
 					if(!(g_spoofOptions.integer & SPOOFOPT_USERINFO_IP)){
 						ip = cl->sess.ip;
 					}else{
@@ -924,32 +924,32 @@ static void Svcmd_Kick_f( void ) {
 					if (USE_ENGINE_BANLIST) { 
 						
 						// kick but dont ban bots, they arent that lame
-						if ( (g_entities[cl->ps.clientNum].r.svFlags & SVF_BOT) ) {
+						if( ( g_entities[cl - level.clients].r.svFlags & SVF_BOT ) ) {
 							timeout = 0;
 						}
 
-						trap_DropClient(cl->ps.clientNum, "player kicked", timeout);
+						trap_DropClient( cl - level.clients, "player kicked", timeout );
 					} else {
-						trap_DropClient(cl->ps.clientNum, "player kicked", 0);
+						trap_DropClient( cl - level.clients, "player kicked", 0 );
 						
 						// kick but dont ban bots, they arent that lame
-						if ( !(g_entities[cl->ps.clientNum].r.svFlags & SVF_BOT) )
+						if( !( g_entities[cl - level.clients].r.svFlags & SVF_BOT ) )
 							AddIPBan( ip );
 					}
 
 				} else {
-					trap_DropClient(cl->ps.clientNum, "player kicked", 0);				
+					trap_DropClient( cl - level.clients, "player kicked", 0 );				
 				}
 			}
 		}
 #ifndef NO_BOT_SUPPORT
 		else if ( !Q_stricmp(name, "allbots") ) {
 			for (i = 0, cl = level.clients; i < level.numConnectedClients; i++, cl++) {
-				if ( !(g_entities[cl->ps.clientNum].r.svFlags & SVF_BOT) ) {
+				if( !( g_entities[cl - level.clients].r.svFlags & SVF_BOT ) ) {
 					continue;
 				}
 				// kick but dont ban bots, they arent that lame
-				trap_DropClient(cl->ps.clientNum, "player kicked", 0);
+				trap_DropClient( cl - level.clients, "player kicked", 0 );
 			}
 		}
 #endif
@@ -966,7 +966,7 @@ static void Svcmd_Kick_f( void ) {
 			char userinfo[MAX_INFO_STRING];
 
 			// Dens: use stored IP to prevent spoofing
-			trap_GetUserinfo( cl->ps.clientNum, userinfo, sizeof( userinfo ) );
+			trap_GetUserinfo( cl - level.clients, userinfo, sizeof( userinfo ) );
 			if(!(g_spoofOptions.integer & SPOOFOPT_USERINFO_IP)){
 				ip = cl->sess.ip;
 			}else{
@@ -977,20 +977,20 @@ static void Svcmd_Kick_f( void ) {
 			if (USE_ENGINE_BANLIST) { 
 				
 				// kick but dont ban bots, they arent that lame
-				if ( (g_entities[cl->ps.clientNum].r.svFlags & SVF_BOT) ) {
+				if( ( g_entities[cl - level.clients].r.svFlags & SVF_BOT ) ) {
 					timeout = 0;
 				}
-				trap_DropClient(cl->ps.clientNum, "player kicked", timeout);
+				trap_DropClient( cl - level.clients, "player kicked", timeout );
 			} else {
-				trap_DropClient(cl->ps.clientNum, "player kicked", 0);
+				trap_DropClient( cl - level.clients, "player kicked", 0 );
 				
 				// kick but dont ban bots, they arent that lame
-				if ( !(g_entities[cl->ps.clientNum].r.svFlags & SVF_BOT) )
+				if( !( g_entities[cl - level.clients].r.svFlags & SVF_BOT ) )
 					AddIPBan( ip );
 			}
 
 		} else {
-			trap_DropClient(cl->ps.clientNum, "player kicked", 0);				
+			trap_DropClient( cl - level.clients, "player kicked", 0 );				
 		}
 	}
 }
@@ -1042,7 +1042,7 @@ static void Svcmd_KickNum_f( void ) {
 	}
 				
 	// Dens: use stored IP to prevent spoofing
-	trap_GetUserinfo( cl->ps.clientNum, userinfo, sizeof( userinfo ) );
+	trap_GetUserinfo( cl - level.clients, userinfo, sizeof( userinfo ) );
 	if(!(g_spoofOptions.integer & SPOOFOPT_USERINFO_IP)){
 		ip = cl->sess.ip;
 	}else{
@@ -1053,15 +1053,15 @@ static void Svcmd_KickNum_f( void ) {
 	if (USE_ENGINE_BANLIST) { 
 
 		// kick but dont ban bots, they arent that lame
-		if ( (g_entities[cl->ps.clientNum].r.svFlags & SVF_BOT) ) {
+		if( ( g_entities[cl - level.clients].r.svFlags & SVF_BOT ) ) {
 			timeout = 0;
 		}
-		trap_DropClient(cl->ps.clientNum, "player kicked", timeout);
+		trap_DropClient( cl - level.clients, "player kicked", timeout );
 	} else {
-		trap_DropClient(cl->ps.clientNum, "player kicked", 0);
+		trap_DropClient( cl - level.clients, "player kicked", 0 );
 
 		// kick but dont ban bots, they arent that lame
-		if ( !(g_entities[cl->ps.clientNum].r.svFlags & SVF_BOT) )
+		if( !( g_entities[cl - level.clients].r.svFlags & SVF_BOT ) )
 			AddIPBan( ip );
 	}
 }
