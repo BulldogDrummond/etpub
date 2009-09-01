@@ -2087,5 +2087,7 @@
 * pheno:   firstblood message - added configurable message and position
 * pheno:   added lastblood message
 * pheno:   fixed g_teamDamageRestriction won't kick players bug
+* pheno:   fixed wrong GUID in !listplayers output when following an bot
+* pheno:   fixed no inactivity moving if g_inactivityOptions flag 2 was set
 * pheno:   added shrubbot flag '&' - can rename himself regardless of
            g_maxNameChanges limit (see docs)
