@@ -2275,7 +2275,7 @@ void G_SniperWar()
 	ammotable_t *k43 = GetAmmoTableData( WP_K43 );
 
 	// pheno: reworked - store and restore weapon data over map changes
-	if( g_sniperwar.integer) {
+	if( g_sniperwar.integer ) {
 		char dmgSniper[MAX_CVAR_VALUE_STRING];
 		
 		// store weapon data

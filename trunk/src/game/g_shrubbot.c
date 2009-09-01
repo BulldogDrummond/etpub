@@ -2175,7 +2175,7 @@ qboolean G_shrubbot_listplayers(gentity_t *ent, int skiparg)
 			continue;
 		}
 
-		if( g_entities[i].r.svFlags & SVF_BOT ) {
+		if( g_entities[p - level.clients].r.svFlags & SVF_BOT ) {
 			Q_strncpyz( guid_stub, "OMNIBOT*", sizeof( guid_stub ) );
 		} else {
 			for( j = 0; j <= 8; j++ ) {

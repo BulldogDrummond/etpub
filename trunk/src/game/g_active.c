@@ -694,7 +694,8 @@ qboolean ClientInactivityTimer( gclient_t *client )
 			client->sess.sessionTeam == TEAM_SPECTATOR ) ||
 		( client->sess.shoutcaster &&
 			( g_inactivityOptions.integer & IO_DONT_DROP_SHOUTCASTERS ) ) ||
-		( client->sess.spectatorState == SPECTATOR_FOLLOW &&
+		( client->sess.sessionTeam == TEAM_SPECTATOR &&
+			client->sess.spectatorState == SPECTATOR_FOLLOW &&
 			( g_inactivityOptions.integer & IO_DONT_DROP_FOLLOWERS ) ) ||
 		// never drop ettv slaves!
 		client->sess.ettv ) {
@@ -702,8 +703,8 @@ qboolean ClientInactivityTimer( gclient_t *client )
 		// gameplay, everyone isn't kicked
 		client->inactivityTime = level.time + 60 * 1000;
 		client->inactivityWarning = qfalse;
-	} else if( client->pers.cmd.forwardmove || 
-		client->pers.cmd.rightmove || 
+	} else if( client->pers.cmd.forwardmove ||
+		client->pers.cmd.rightmove ||
 		client->pers.cmd.upmove ||
 		( client->pers.cmd.wbuttons & WBUTTON_ATTACK2 ) ||
 		( client->pers.cmd.buttons & BUTTON_ATTACK ) ||
@@ -720,7 +721,8 @@ qboolean ClientInactivityTimer( gclient_t *client )
 			g_inactivity.integer : g_spectatorInactivity.integer);
 	} else if( !client->pers.localClient ) {
 		int i, privateSlotsUsed = 0;
-		qboolean isPrivate = client->ps.clientNum < sv_privateClients.integer;
+		qboolean isPrivate = ( client - level.clients ) <
+			sv_privateClients.integer;
 
 		// count the number of private slots in use
 		for( i = 0; i < sv_privateClients.integer; ++i ) {
@@ -747,8 +749,7 @@ qboolean ClientInactivityTimer( gclient_t *client )
 						client->inactivityTime = level.time +
 							g_spectatorInactivity.integer * 1000;
 						
-						SetTeam( &g_entities[client->ps.clientNum], "s",
-							qtrue, -1, -1, qfalse );
+						SetTeam( ent, "s", qtrue, -1, -1, qfalse );
 						AP( va( "chat \"inactivity: %s^7 moved to "
 							"spectators\" -1", client->pers.netname ) );
 					}
@@ -765,29 +766,35 @@ qboolean ClientInactivityTimer( gclient_t *client )
 					g_inactivity.integer * 500 &&
 				client->sess.sessionTeam != TEAM_SPECTATOR &&
 				g_inactivity.integer ) {
-				CPx( client - level.clients, va( "cp \"^3%i seconds until moving "
-					"to spectators for inactivity!\n\"", g_inactivity.integer / 2 ) );
-				CPx( client - level.clients, va( "print \"^3%i seconds until moving "
-					"to spectators for inactivity!\n\"", g_inactivity.integer / 2 ) );
+				CPx( client - level.clients, va( "cp \"^3%i seconds until "
+					"moving to spectators for inactivity!\n\"",
+					g_inactivity.integer / 2 ) );
+				CPx( client - level.clients, va( "print \"^3%i seconds until "
+					"moving to spectators for inactivity!\n\"",
+					g_inactivity.integer / 2 ) );
 				G_Printf( "%is inactivity warning issued to: %s\n",
 					g_inactivity.integer / 2, client->pers.netname );
 
 				client->inactivityWarning = qtrue;
-				client->inactivityTime = level.time + g_inactivity.integer * 500; // Just for safety
+				client->inactivityTime = level.time +
+					g_inactivity.integer * 500; // Just for safety
 			} else if( !client->inactivityWarning &&
 				level.time > client->inactivityTime -
 					g_spectatorInactivity.integer * 500 &&
 				client->sess.sessionTeam == TEAM_SPECTATOR &&
 				g_spectatorInactivity.integer ) {
 				CPx( client - level.clients, va( "cp \"^3%i seconds until "
-					"inactivity drop!\n\"", g_spectatorInactivity.integer / 2 ) );
+					"inactivity drop!\n\"",
+					g_spectatorInactivity.integer / 2 ) );
 				CPx( client - level.clients, va( "print \"^3%i seconds until "
-					"inactivity drop!\n\"", g_spectatorInactivity.integer / 2 ) );
+					"inactivity drop!\n\"",
+					g_spectatorInactivity.integer / 2 ) );
 				G_Printf( "%is spectator inactivity warning issued to: %s\n",
 					g_spectatorInactivity.integer / 2, client->pers.netname );
 
 				client->inactivityWarning = qtrue;
-				client->inactivityTime = level.time + g_spectatorInactivity.integer * 500; // Just for safety
+				client->inactivityTime = level.time +
+					g_spectatorInactivity.integer * 500; // Just for safety
 			}
 		} else {
 			// otherwise give the client some more time
