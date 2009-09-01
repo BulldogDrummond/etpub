@@ -47,6 +47,8 @@
 #define SBF_INCOGNITO '@'
 #define SBF_ADMINTEST_OTHER '$'
 #define SBF_ADMINCHAT '~'
+// pheno: can rename himself regardless of g_maxNameChanges limit
+#define SBF_NO_RENAME_LIMIT '&'
 
 // tjw: used by g_shrubbot_cmd.cmdFlags
 #define SCMDF_TYRANNY 1

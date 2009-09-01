@@ -2199,9 +2199,10 @@ void ClientUserinfoChanged( int clientNum ) {
 			}
 			// Dens: if a user has too many namechanges, reset his old name
 			// and stop the namechange
-			if( !(ent->r.svFlags & SVF_BOT) && 
+			if( !( ent->r.svFlags & SVF_BOT ) && 
 				g_maxNameChanges.integer > -1 &&
-				client->pers.nameChanges >= g_maxNameChanges.integer){
+				client->pers.nameChanges >= g_maxNameChanges.integer &&
+				!G_shrubbot_permission( ent, SBF_NO_RENAME_LIMIT ) ) {
 				Q_strncpyz( client->pers.netname, oldname, sizeof( client->pers.netname ) );
 				Info_SetValueForKey( userinfo, "name", oldname);
 				trap_SetUserinfo( clientNum, userinfo );

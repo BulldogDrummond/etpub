@@ -2087,3 +2087,5 @@
 * pheno:   firstblood message - added configurable message and position
 * pheno:   added lastblood message
 * pheno:   fixed g_teamDamageRestriction won't kick players bug
+* pheno:   added shrubbot flag '&' - can rename himself regardless of
+           g_maxNameChanges limit (see docs)
