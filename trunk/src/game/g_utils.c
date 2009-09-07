@@ -690,19 +690,19 @@ gentity_t *G_Spawn( void ) {
 G_EntitiesFree
 =================
 */
-qboolean G_EntitiesFree( void ) {
+int G_EntitiesFree( void ) {
 	int			i;
 	gentity_t	*e;
+	int			entities=64;
 
 	e = &g_entities[MAX_CLIENTS];
 	for ( i = MAX_CLIENTS; i < level.num_entities; i++, e++) {
 		if ( e->inuse ) {
-			continue;
+			entities++;
 		}
-		// slot available
-		return qtrue;
 	}
-	return qfalse;
+
+	return 1024-entities;
 }
 
 /*

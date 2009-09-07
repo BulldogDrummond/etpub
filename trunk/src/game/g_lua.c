@@ -1,6 +1,9 @@
 
 #include "g_lua.h"
 
+// IlDuca - needs to define the fields array
+extern field_t fields[];
+
 // TODO: aiming for compatibility with ETPro lua mods
 // http://wolfwiki.anime.net/index.php/Lua_Mod_API
 
@@ -599,6 +602,7 @@ static const gentity_field_t gclient_fields[] = {
 	_et_gclient_addfield(		sess.team_kills,											FIELD_INT,			0										),
 	_et_gclient_addfield(		sess.team_damage_given,										FIELD_INT,			0										),
 	_et_gclient_addfield(		sess.team_damage_received,									FIELD_INT,			0										),
+	_et_gclient_addfield(		sess.uci,													FIELD_INT,			FIELD_FLAG_READONLY						),
 	// TODO: sess.aWeaponStats
 	//_et_gclient_addfield(sess.aWeaponStats, FIELD_?_ARRAY, 0),
 	
@@ -873,9 +877,157 @@ static int _et_G_FreeEntity(lua_State *L)
 	return 0;
 }
 
-// TODO:
+// et.G_EntitiesFree()
+static int _et_G_EntitiesFree(lua_State *L)
+{
+	return G_EntitiesFree();
+}
+
+// IlDuca - add G_GetSpawnVar
 // spawnval = et.G_GetSpawnVar( entnum, key )
+// This function works with fields ( g_spawn.c @ 72 )
+int _et_G_GetSpawnVar(lua_State *L)
+{
+	gentity_t *ent;
+	int entnum = luaL_checkint(L, 1);
+	const char *key = luaL_checkstring(L, 2);
+	int			index = GetFieldIndex( (char *)key );
+	fieldtype_t	type = GetFieldType( (char *)key );
+	int			ofs;
+
+	// break on invalid gentity field
+	if ( index == -1 ) {
+		luaL_error(L, "field \"%s\" index is -1", key);
+		return 0;
+	}
+
+	if ( entnum < 0 || entnum >= MAX_GENTITIES ) {
+		luaL_error(L, "entnum \"%d\" is out of range", entnum);
+		return 0;
+	}
+
+	ent = &g_entities[entnum];
+
+	// If the entity is not in use, return nil
+	if ( !ent->inuse ) {
+		lua_pushnil(L);
+		return 1;
+	}
+
+	ofs = fields[index].ofs;
+
+	switch( type ) {
+		case F_INT:
+			lua_pushinteger(L, *(int *) ((byte *)ent + ofs));
+			return 1;
+			break;
+		case F_FLOAT:
+			lua_pushnumber(L, *(float *) ((byte *)ent + ofs));
+			return 1;
+			break;
+		case F_LSTRING:
+		case F_GSTRING:
+			if ( fields[index].flags & FIELD_FLAG_NOPTR ) {
+				lua_pushstring(L, (char *) ((byte *)ent + ofs));
+			} else {
+				lua_pushstring(L, *(char **) ((byte *)ent + ofs));
+			}
+			return 1;
+			break;
+		case F_VECTOR:
+		case F_ANGLEHACK:
+			_et_gentity_getvec3(L, *(vec3_t *)((byte *)ent + ofs));
+			return 1;
+			break;
+		case F_ENTITY:
+		case F_ITEM:
+		case F_CLIENT:
+		case F_IGNORE:
+		default:
+			lua_pushnil(L);
+			return 1;
+			break;
+	}
+	return 0;
+}
+
+// IlDuca - add G_SetSpawnVar
 // et.G_SetSpawnVar( entnum, key, value )
+// This function works with fields ( g_spawn.c @ 72 )
+static int _et_G_SetSpawnVar(lua_State *L)
+{
+	gentity_t *ent;
+	int entnum = luaL_checkint(L, 1);
+	const char *key = luaL_checkstring(L, 2);
+	int			index = GetFieldIndex( (char *)key );
+	fieldtype_t	type = GetFieldType( (char *)key );
+	int			ofs;
+	const char *buffer;
+
+	// break on invalid gentity field
+	if ( index == -1 ) {
+		luaL_error(L, "field \"%s\" index is -1", key);
+		return 0;
+	}
+
+	if ( entnum < 0 || entnum >= MAX_GENTITIES ) {
+		luaL_error(L, "entnum \"%d\" is out of range", entnum);
+		return 0;
+	}
+
+	ent = &g_entities[entnum];
+
+	// If the entity is not in use, return nil
+	if ( !ent->inuse ) {
+		lua_pushnil(L);
+		return 1;
+	}
+
+	ofs = fields[index].ofs;
+
+	switch( type ) {
+		case F_INT:
+			*(int *) ((byte *)ent + ofs) = luaL_checkint(L, 3);
+			return 1;
+			break;
+		case F_FLOAT:
+			*(float *) ((byte *)ent + ofs) = (float)luaL_checknumber(L, 3);
+			return 1;
+			break;
+		case F_LSTRING:
+		case F_GSTRING:
+			buffer = luaL_checkstring(L, 3);
+			if ( fields[index].flags & FIELD_FLAG_NOPTR ) {
+				Q_strncpyz( (char *)((byte *)ent + ofs), buffer, MAX_STRING_CHARS );
+			} else {
+				free(*(char **)((byte *)ent + ofs));
+				*(char **)((byte *)ent + ofs) = malloc(strlen(buffer));
+				Q_strncpyz(*(char **)((byte *)ent + ofs), buffer, strlen(buffer));
+			}
+			return 1;
+			break;
+		case F_VECTOR:
+		case F_ANGLEHACK:
+			_et_gentity_setvec3(L, (vec3_t *)((byte *)ent + ofs));
+			return 1;
+			break;
+		case F_ENTITY:
+			*(gentity_t **)((byte *)ent + ofs) = g_entities + luaL_checkint(L, 3);
+			return 1;
+			break;
+		case F_ITEM:
+		case F_CLIENT:
+		case F_IGNORE:
+		default:
+			lua_pushnil(L);
+			return 1;
+			break;
+	}
+
+	return 0;
+}
+
+// TODO:
 // integer entnum = et.G_SpawnGEntityFromSpawnVars( string spawnvar, string spawnvalue, ... )
 
 // et.trap_LinkEntity( entnum )
@@ -1123,6 +1275,10 @@ static const luaL_Reg etlib[] = {
 	{ "G_Spawn",					_et_G_Spawn					},
 	{ "G_TempEntity",				_et_G_TempEntity			},
 	{ "G_FreeEntity",				_et_G_FreeEntity			},
+	{ "G_EntitiesFree",				_et_G_EntitiesFree			},
+	// IlDuca - add G_GetSpawnVar and G_SetSpawnVar
+	{ "G_GetSpawnVar",				_et_G_GetSpawnVar			},
+	{ "G_SetSpawnVar",				_et_G_SetSpawnVar			},
 	{ "trap_LinkEntity",			_et_trap_LinkEntity			},
 	{ "trap_UnlinkEntity",			_et_trap_UnlinkEntity		},
 	{ "gentity_get",				_et_gentity_get				},

@@ -1472,6 +1472,9 @@ qboolean G_CallSpawn( gentity_t *ent );
 // done.
 char *G_AddSpawnVarToken( const char *string );
 void G_ParseField( const char *key, const char *value, gentity_t *ent );
+// IlDuca - add core's functions definitions defined in g_spawn.c
+int GetFieldIndex( char *fieldname );
+fieldtype_t GetFieldType( char *fieldname );
 
 //
 // g_cmds.c
@@ -1599,7 +1602,7 @@ gentity_t* G_PopupMessage( popupMessageType_t type );
 void	G_Sound( gentity_t *ent, int soundIndex );
 void	G_AnimScriptSound( int soundIndex, vec3_t org, int client );
 void	G_FreeEntity( gentity_t *e );
-//qboolean	G_EntitiesFree( void );
+int		G_EntitiesFree( void );
 
 // pheno
 void G_ClientSound( gentity_t *ent, int soundIndex );

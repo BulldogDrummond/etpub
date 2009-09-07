@@ -1060,3 +1060,27 @@ void SP_func_fakebrush( gentity_t *ent ) {
 	return;
 }
 
+//===============================================================
+// core:
+// Some helper functions for entity property handling..
+// these functions are used by Lua.
+
+// return the index in the fiels[] array of the given fieldname,
+// return -1 if not found..
+int GetFieldIndex( char *fieldname ) {
+	int i;
+	for ( i=0; fields[i].name; i++ )
+		if ( !Q_stricmp(fields[i].name, fieldname) )
+			return i;
+	return -1;
+}
+
+// return the fieldType of the given fieldname..
+// return F_IGNORE if the field is not found.
+fieldtype_t GetFieldType( char *fieldname ) {
+	int index = GetFieldIndex( fieldname );
+	if ( index == -1 ) return F_IGNORE;
+	return fields[index].type;
+}
+//===============================================================
+
