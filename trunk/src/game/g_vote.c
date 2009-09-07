@@ -386,7 +386,7 @@ int G_Kick_v( gentity_t *ent, unsigned int dwVoteIndex, char *arg, char *arg2, q
 		}
 
 		// pheno: prevent ettv slaves from being callvote kicked 
-		if( ent->client->sess.ettv &&
+		if( level.clients[pid].sess.ettv &&
 			( g_ettvFlags.integer & ETTV_IMMUNITY ) ) {
 			G_refPrintf( ent, "Can't vote to kick ettv slaves!" );
 			return G_INVALID;
