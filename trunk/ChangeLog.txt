@@ -2091,3 +2091,6 @@
 * pheno:   fixed no inactivity moving if g_inactivityOptions flag 2 was set
 * pheno:   added shrubbot flag '&' - can rename himself regardless of
            g_maxNameChanges limit (see docs)
+* pheno:   fixed kick callvote won't kick players bug
+* pheno:   Lua API: added IlDuca's and core's Lua API additions -
+           et.G_EntitiesFree(), et.G_GetSpawnVar() and et.G_SetSpawnVar()
