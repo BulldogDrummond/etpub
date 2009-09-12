@@ -1,6 +1,7 @@
 #include "q_shared.h"
 #include "bg_public.h"
 #include "bg_classes.h"
+#include "bg_local.h"
 
 bg_playerclass_t bg_allies_playerclasses[NUM_PLAYER_CLASSES] = {
 	{	
@@ -59,6 +60,25 @@ bg_playerclass_t bg_allies_playerclasses[NUM_PLAYER_CLASSES] = {
 			WP_GARAND,
 		},	
 	},
+};
+
+// pheno: mode - class for allies with all weapons
+bg_playerclass_t bg_allies_modeallweaponsclass = {
+	0,
+	"",
+	"",
+	"",
+	{
+		WP_THOMPSON,
+		WP_MOBILE_MG42,
+		WP_FLAMETHROWER,
+		WP_PANZERFAUST,
+		WP_MORTAR,
+		WP_CARBINE,
+		WP_STEN,
+		WP_FG42,
+		WP_GARAND
+	}
 };
 
 bg_playerclass_t bg_axis_playerclasses[NUM_PLAYER_CLASSES] = {
@@ -120,6 +140,25 @@ bg_playerclass_t bg_axis_playerclasses[NUM_PLAYER_CLASSES] = {
 	},
 };
 
+// pheno: mode - class for axis with all weapons
+bg_playerclass_t bg_axis_modeallweaponsclass = {
+	0,
+	"",
+	"",
+	"",
+	{
+		WP_MP40,
+		WP_MOBILE_MG42,
+		WP_FLAMETHROWER,
+		WP_PANZERFAUST,
+		WP_MORTAR,
+		WP_KAR98,
+		WP_STEN,
+		WP_FG42,
+		WP_K43
+	}
+};
+
 bg_playerclass_t* BG_GetPlayerClassInfo( int team, int cls ) {
 	bg_playerclass_t* teamList;
 
@@ -149,6 +188,11 @@ qboolean BG_ClassHasWeapon(bg_playerclass_t* classInfo, weapon_t weap) {
 
 	if(!weap) {
 		return qfalse;
+	}
+
+	// pheno: mode - players can pick up any weapon on the ground
+	if( g_mode.integer & MODE_ALLWEAPONS ) {
+		return qtrue;
 	}
 
 	for( i = 0; i < MAX_WEAPS_PER_CLASS; i++) {

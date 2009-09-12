@@ -1126,16 +1126,18 @@ void G_AddClassSpecificTools(gclient_t *client)
 			client->ps.stats[STAT_KEYS] |= ( 1 << INV_BINOCS );
 		}
 	}
-	//// Josh: adren in different classes when level 4
-	if( (client->sess.playerType != PC_MEDIC
-		  && (g_skills.integer & SKILLS_ADREN))
-		  && client->sess.skill[SK_FIRST_AID] >= 4 )
-		AddWeaponToPlayer(client,
+	// Josh: adren in different classes when level 4
+	// pheno: mode - each class receives adrenaline
+	if( ( ( client->sess.playerType != PC_MEDIC &&
+			( g_skills.integer & SKILLS_ADREN ) ) &&
+			client->sess.skill[SK_FIRST_AID] >= 4 ) ||
+		( g_mode.integer & MODE_ADRENALINE ) ) {
+		AddWeaponToPlayer( client,
 			WP_MEDIC_ADRENALINE,
 			GetAmmoTableData(WP_MEDIC_ADRENALINE)->defaultStartingAmmo,
 			GetAmmoTableData(WP_MEDIC_ADRENALINE)->defaultStartingClip,
-			qfalse);
-
+			qfalse );
+	}
 }
 
 qboolean _SetSoldierSpawnWeapons(gclient_t *client) 

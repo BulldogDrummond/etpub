@@ -902,6 +902,17 @@ typedef enum {
 #define MISC_OLD_PRONE 512 // forty - http://etpub.org/e107_plugins/forum/forum_viewtopic.php?11646
 #define MISC_OLD_MAXZ 1024 // forty - http://etpub.org/e107_plugins/forum/forum_viewtopic.php?11646
 
+// pheno: mode - g_mode flags
+#define MODE_MAXMODES 4
+// players spawn instantly
+#define MODE_INSTANTSPAWN 1
+// each class receives adrenaline
+#define MODE_ADRENALINE 2
+// no damage on players
+#define MODE_NODAMAGE 4
+// players can pick up any weapon on the ground
+#define MODE_ALLWEAPONS 8
+
 // matt: g_medics flags
 // Medics can't pick up their own med packs to heal poisoning
 #define MEDIC_NOSELFPACKPOISON 1
@@ -2242,6 +2253,9 @@ void BG_DisableWeaponForAllClasses( int weapon );
 
 extern bg_playerclass_t bg_allies_playerclasses[NUM_PLAYER_CLASSES];
 extern bg_playerclass_t bg_axis_playerclasses[NUM_PLAYER_CLASSES];
+// pheno: mode - class with all weapons for both teams
+extern bg_playerclass_t bg_allies_modeallweaponsclass;
+extern bg_playerclass_t bg_axis_modeallweaponsclass;
 
 #define MAX_PATH_CORNERS		512
 

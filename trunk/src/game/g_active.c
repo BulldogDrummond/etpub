@@ -2040,8 +2040,11 @@ void SpectatorClientEndFrame( gentity_t *ent )
 			ent->client->pers.lastReinforceTime);
 		*/
 		// Players can respawn quickly in warmup
-		if(g_gamestate.integer != GS_PLAYING && ent->client->respawnTime <= level.timeCurrent &&
-		  ent->client->sess.sessionTeam != TEAM_SPECTATOR) {
+		// pheno: mode - players spawn instantly
+		if( ( g_gamestate.integer != GS_PLAYING ||
+				( g_mode.integer & MODE_INSTANTSPAWN ) ) &&
+			ent->client->respawnTime <= level.timeCurrent &&
+			ent->client->sess.sessionTeam != TEAM_SPECTATOR ) {
 			do_respawn = qtrue;
 		// forty - switching teams back and forth causes instant respawns
 		} else if(ent->client->sess.sessionTeam == TEAM_AXIS) {

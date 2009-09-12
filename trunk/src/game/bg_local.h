@@ -87,4 +87,7 @@ extern vmCvar_t g_medics;
 // flms
 extern vmCvar_t g_mg42;
 
+// pheno
+extern vmCvar_t g_mode;
+
 #endif

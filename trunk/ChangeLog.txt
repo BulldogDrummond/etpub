@@ -2096,3 +2096,4 @@
            et.G_EntitiesFree(), et.G_GetSpawnVar() and et.G_SetSpawnVar()
 * pheno:   added core's fix for airstrike-cans getting kicked after plane
            knows its targets
+* pheno:   added g_mode bitflag cvar (see docs)

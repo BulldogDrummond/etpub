@@ -400,6 +400,12 @@ weapon_t G_GetPrimaryWeaponForClient( gclient_t *client )
 	}
 
 	classInfo = &bg_allies_playerclasses[client->sess.playerType];
+
+	// pheno: mode - allies can pick up any weapon on the ground
+	if( g_mode.integer & MODE_ALLWEAPONS ) {
+		classInfo = &bg_allies_modeallweaponsclass;
+	}
+
 	for( i = 0; i < MAX_WEAPS_PER_CLASS; i++) {
 		if( classInfo->classWeapons[i] == WP_MP40 || classInfo->classWeapons[i] == WP_THOMPSON )
 			continue;
@@ -410,6 +416,12 @@ weapon_t G_GetPrimaryWeaponForClient( gclient_t *client )
 	}
 
 	classInfo = &bg_axis_playerclasses[client->sess.playerType];
+
+	// pheno: mode - axis can pick up any weapon on the ground
+	if( g_mode.integer & MODE_ALLWEAPONS ) {
+		classInfo = &bg_axis_modeallweaponsclass;
+	}
+
 	for( i = 0; i < MAX_WEAPS_PER_CLASS; i++) {
 		if( classInfo->classWeapons[i] == WP_MP40 || classInfo->classWeapons[i] == WP_THOMPSON )
 			continue;

@@ -17,6 +17,9 @@ wordDictionary censorNamesDictionary;
 
 level_locals_t	level;
 
+// pheno: mode - stores last g_mode value
+int g_mode_lastValue;
+
 typedef struct {
 	vmCvar_t	*vmCvar;
 	char		*cvarName;
@@ -564,6 +567,7 @@ vmCvar_t g_ettvFlags;
 vmCvar_t g_firstBloodMsg;
 vmCvar_t g_firstBloodMsgPos;
 vmCvar_t g_lastBloodMsg;
+vmCvar_t g_mode;
 
 #ifdef LUA_SUPPORT
 // Lua API
@@ -1139,6 +1143,7 @@ cvarTable_t		gameCvarTable[] = {
 	{ &g_firstBloodMsg, "g_firstBloodMsg", "^7[a] ^7drew ^1FIRST BLOOD ^7from [v]", 0 },
 	{ &g_firstBloodMsgPos, "g_firstBloodMsgPos", "2", 0 },
 	{ &g_lastBloodMsg, "g_lastBloodMsg", "^8And the final kill of this round goes to [a]^8!", 0 },
+	{ &g_mode, "g_mode", "0", 0 },
 
 #ifdef LUA_SUPPORT
 	// Lua API
@@ -2089,6 +2094,9 @@ void G_RegisterCvars( void )
 		trap_Cvar_Set("g_fixedphysicsfps", "60");
 	else if(g_fixedphysicsfps.integer > 333)
 		trap_Cvar_Set("g_fixedphysicsfps", "333");
+
+	// pheno: mode - get current g_mode value
+	g_mode_lastValue = g_mode.integer;
 }
 
 static qboolean G_IsVoteFlagCvar( cvarTable_t *cv )
@@ -2335,6 +2343,69 @@ void G_RifleWar()
 }
 
 /*
+================
+G_ChangeMode
+
+pheno: change mode and announce the changes
+================
+*/
+const char modes[MODE_MAXMODES][3][32] =
+{
+	{ "Instant Spawn",	"^2on",			"^1off"		},
+	{ "Adrenaline",		"^2on",			"^1off"		},
+	{ "No Damage",		"^2on",			"^1off"		},
+	{ "Weapon",			"^2unlocked",	"^1locked"	}
+};
+
+void G_ChangeMode()
+{
+	int i;
+	char message[128];
+
+	if( g_mode.integer == g_mode_lastValue ) {
+		return;
+	}
+
+	for( i = 0; i < MODE_MAXMODES; i++ ) {
+		if( ( g_mode.integer & ( 1 << i ) ) !=
+				( g_mode_lastValue & ( 1 << i ) ) ) {
+			Com_sprintf( message, 128, "^1** ^3%s ^7mode %s %s", modes[i][0],
+				( 1 << i ) == MODE_ALLWEAPONS ? "changed to" : "is now",
+				modes[i][g_mode_lastValue & ( 1 << i ) ? 2 : 1] );
+
+			if( ( 1 << i ) == MODE_ALLWEAPONS &&
+				!( g_mode.integer & MODE_ALLWEAPONS ) ) {
+				int j, count = 0;
+				gentity_t *ent;
+
+				for( j = 0; j < level.numConnectedClients; j++ ) {
+					ent = g_entities + level.sortedClients[j];
+
+					if( !( ent->client->sess.sessionTeam == TEAM_AXIS ||
+							ent->client->sess.sessionTeam == TEAM_ALLIES ) ) {
+						continue;
+					}
+
+					// respawn the player
+					G_DropItems( ent );
+					ClientSpawn( ent, qfalse, qfalse, qtrue );
+
+					count++;
+				}
+
+				if( count > 0 ) {
+					Com_sprintf( message, 128,
+						"%s ^7(^3%d ^7player%s respawned)",
+						message, count, count > 1 ? "s" : "" );
+				}
+			}
+
+			G_PrintMessage( message, 2 );
+		}
+	}
+}
+
+/*
 =================
 G_UpdateCvars
 =================
@@ -2471,6 +2542,11 @@ void G_UpdateCvars( void )
 						!shoutcastPassword.string[0] ) {
 						G_RemoveAllShoutcasters();
 					}
+				}
+				// pheno: mode - check for g_mode changes
+				else if( cv->vmCvar == &g_mode ) {
+					G_ChangeMode();
+					g_mode_lastValue = g_mode.integer;
 				}
 #ifdef LUA_SUPPORT
 				// quad - Lua API cvars

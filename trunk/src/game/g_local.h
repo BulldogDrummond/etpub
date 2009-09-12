@@ -1730,6 +1730,7 @@ void mg42_stopusing( gentity_t *self );
 void aagun_fire( gentity_t *other );
 
 // pheno
+void G_PrintMessage( char *message, int position );
 void G_FirstBloodMessage( gentity_t *attacker, gentity_t *victim );
 void G_LastBloodMessage();
 
@@ -2422,6 +2423,7 @@ extern vmCvar_t g_ettvFlags;
 extern vmCvar_t g_firstBloodMsg;
 extern vmCvar_t g_firstBloodMsgPos;
 extern vmCvar_t g_lastBloodMsg;
+extern vmCvar_t g_mode;
 
 #ifdef LUA_SUPPORT
 // Lua API

@@ -79,7 +79,7 @@ dt {
 <td><a href="#g_firstBloodMsg">g_firstBloodMsg</a></td>
 <td><a href="#g_firstBloodMsgPos">g_firstBloodMsgPos</a></td>
 <td><a href="#g_lastBloodMsg">g_lastBloodMsg</a></td>
-<td>&nbsp;</td>
+<td><a href="#g_mode">g_mode</a></td>
 </tr>
 </table>
 
@@ -3294,7 +3294,7 @@ the fake clients Denial of Service attack.</p>
 <a name="g_headshot"></a>
 <dt>g_headshot [integer]
 <dd>
-<p>This is a bitflag cvar that supports the following values</p>
+<p>This is a bitflag cvar that supports the following values:</p>
 <dl>
 	<dt>1
 	<dd>Headshots only
@@ -3314,7 +3314,7 @@ still be revived after being shot.).</p>
 <a name="g_inactivityOptions"></a>
 <dt>g_inactivityOptions [integer]
 <dd>
-<p>This is a bitflag cvar that supports the following values</p>
+<p>This is a bitflag cvar that supports the following values:</p>
 <dl>
 	<dt>1
 	<dd>Don't drop shoutcasters
@@ -3330,7 +3330,7 @@ still be revived after being shot.).</p>
 <a name="g_ettvFlags"></a>
 <dt>g_ettvFlags [integer]
 <dd>
-<p>This is a bitflag cvar that supports the following values</p>
+<p>This is a bitflag cvar that supports the following values:</p>
 <dl>
 	<dt>1
 	<dd>Prevent ettv slaves from being callvote kicked
@@ -3363,6 +3363,23 @@ replaced by the name of the <strong>v</strong>ictim.</p>
 will be replaced by the name of the <strong>a</strong>ttacker.</p>
 <p>Note: To disable this message set this cvar to &quot;&quot;.</p>
 <p>Default is "^8And the final kill of this round goes to [a]^8!"</p>
+
+<a name="g_mode"></a>
+<dt>g_mode [integer]
+<dd>
+<p>This is a bitflag cvar that supports the following values:</p>
+<dl>
+	<dt>1
+	<dd>Players will spawn instantly
+	<dt>2
+	<dd>Each class receives adrenaline
+	<dt>4
+	<dd>No damage on players
+	<dt>8
+	<dd>Players can pick up any weapon on the ground (Removing this
+bitflag will force all players to respawn!)</p>
+</dl>
+<p>Default is 0</p>
 
 <hr>
 <a name="mapvoting"></a>
