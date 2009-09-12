@@ -5378,11 +5378,17 @@ void G_CanisterKick( gentity_t *ent )
 			VectorScale(forward, g_canisterKick.integer * 10, traceEnt->s.pos.trDelta);
 			SnapVector(traceEnt->s.pos.trDelta);
 
-			if(g_canisterKickOwner.integer) {
-				// canister owner gets set to kicker.
-				traceEnt->parent = ent;
-				traceEnt->r.ownerNum = ent->s.number;
-				traceEnt->s.teamNum = ent->client->sess.sessionTeam;
+			if( g_canisterKickOwner.integer ) {
+				// core: fix for airstrike-cans getting kicked after plane knows its targets,
+				// and owner got crazy..
+				if( ( traceEnt->s.weapon == WP_SMOKE_MARKER &&
+						!traceEnt->active ) ||
+					traceEnt->s.weapon != WP_SMOKE_MARKER ) {
+					// canister owner gets set to kicker.
+					traceEnt->parent = ent;
+					traceEnt->r.ownerNum = ent->s.number;
+					traceEnt->s.teamNum = ent->client->sess.sessionTeam;
+				}
 			}
 
 		}

@@ -1951,7 +1951,7 @@
 * josh:    Updated the xpsave.cfg php viewers to reflect KR change.
 * josh:    Major bugfix to new kill rating system. Anyone who started using it
            already may want to delete distance_rating, distance_variance, and
-	   kill_* from their xpsave .cfg.
+		   kill_* from their xpsave .cfg.
 * josh:    Fixed etpub_stats.pl to work with new kill rating.
 * stephan: added healthdepending speed cvars g_healthSpeedStart and
            g_healthSpeedBottom. See docs for more info
@@ -2094,3 +2094,5 @@
 * pheno:   fixed kick callvote won't kick players bug
 * pheno:   Lua API: added IlDuca's and core's Lua API additions -
            et.G_EntitiesFree(), et.G_GetSpawnVar() and et.G_SetSpawnVar()
+* pheno:   added core's fix for airstrike-cans getting kicked after plane
+           knows its targets
