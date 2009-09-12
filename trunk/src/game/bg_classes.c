@@ -191,9 +191,11 @@ qboolean BG_ClassHasWeapon(bg_playerclass_t* classInfo, weapon_t weap) {
 	}
 
 	// pheno: mode - players can pick up any weapon on the ground
+#ifdef GAMEDLL
 	if( g_mode.integer & MODE_ALLWEAPONS ) {
 		return qtrue;
 	}
+#endif
 
 	for( i = 0; i < MAX_WEAPS_PER_CLASS; i++) {
 		if(classInfo->classWeapons[i] == weap) {
