@@ -3994,7 +3994,8 @@ void func_explosive_use( gentity_t *self, gentity_t *other, gentity_t *activator
 	if(level.testEndRound)
 		return;
 	// tjw: make the parent (trigger) die too
-	if(self->parent)
+	// cs: only do this for etpro map script created ents. this fixes double triggering on maps like stalingrad
+	if(self->s.eFlags & EF_FAKEBMODEL && self->parent)
 		G_Script_ScriptEvent(self->parent, "death", "");
 	func_explosive_explode(self, self, other, self->damage, 0);
 }
@@ -4202,7 +4203,6 @@ void SP_func_explosive (gentity_t *ent)
 		ent->use = func_explosive_use;
 		ent->AIScript_AlertEntity = func_explosive_alert;
 	}
-
 
 	if (ent->spawnflags & EXPLOSIVE_TOUCHABLE)	// touchable
 		ent->touch = func_explosive_touch;
