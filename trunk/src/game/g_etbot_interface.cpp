@@ -1740,7 +1740,8 @@ public:
 			PrintError(va("Could not connect bot: %s", s));
 			num = -1;
 		}
-		return num;
+		// bad hack to prevent unhandled errors being returned as successful connections
+		return bot && bot->inuse ? num : -1;
 	}
 
 	void RemoveBot(const MessageHelper &_data)
