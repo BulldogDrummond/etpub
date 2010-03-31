@@ -2490,7 +2490,8 @@ char *ClientConnect( int clientNum, qboolean firstTime, qboolean isBot ) {
 	// Gordon: porting q3f flag bug fix
 	// If a player reconnects quickly after a disconnect, the client 
 	// disconnect may never be called, thus flag can get lost in the ether
-	if( ent->inuse ) {
+	// cs: kicking bots here causes all sorts of problems
+	if( ent->inuse && !isBot && !(ent->r.svFlags & SVF_BOT)) {
 		G_LogPrintf( "Forcing disconnect on active client: %i\n", ent-g_entities );
 		// so lets just fix up anything that should happen on a disconnect
 		ClientDisconnect( ent-g_entities );
