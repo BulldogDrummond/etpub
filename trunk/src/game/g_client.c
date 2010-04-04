@@ -2370,169 +2370,172 @@ char *ClientConnect( int clientNum, qboolean firstTime, qboolean isBot ) {
 	value = Info_ValueForKey(userinfo, "cl_guid");
 	Q_strncpyz(guid, value, sizeof(guid));
 	
-
-	// Dens: check for bad userinfo
-	userinfoReason = CheckUserinfo(clientNum);
-	if(userinfoReason){
-		return userinfoReason;
-	}
-
-	// IP filtering
-	// https://zerowing.idsoftware.com/bugzilla/show_bug.cgi?id=500
-	// recommanding PB based IP / GUID banning, the builtin system is pretty limited
-	// check to see if they are on the banned IP list
-	value = Info_ValueForKey (userinfo, "ip");
-	if ( G_FilterIPBanPacket( value ) ) {
-		return "You are banned from this server.";
-	}
-	
-	// quad: check for maximum connections per IP
-	// based on reyalp's combinedfixes.lua and Invaderzim's patch
-	// (prevents fakeplayers DOS http://aluigi.altervista.org/fakep.htm )
-	conn_per_ip = 1;
-	// value = Info_ValueForKey (userinfo, "ip"); // Dens: value is already the ip
-	Q_strncpyz(ip, GetParsedIP(value), sizeof(ip));
-	for (i=0; i<level.numConnectedClients; i++) {
-		clientNum2 = level.sortedClients[i];
-		if(clientNum == clientNum2) continue;
-		if(isBot || g_entities[clientNum2].r.svFlags & SVF_BOT) continue; // IGNORE BOTS
-		trap_GetUserinfo(clientNum2, 
-			userinfo2,
-			sizeof(userinfo2));
-		value = Info_ValueForKey (userinfo2, "ip");
-		Q_strncpyz(ip2, GetParsedIP(value), sizeof(ip2));
-		if (strcmp(ip, ip2)==0) {
-			conn_per_ip++;
-		}
-	}
-	if (conn_per_ip > g_maxConnsPerIP.integer) {
-		G_LogPrintf("ETPub: Possible DoS attack, rejecting client from %s "
-					"(%d connections already)\n", ip, g_maxConnsPerIP.integer);
-		return "Too many connections from your IP.";
-	}
-
-	value = Info_ValueForKey (userinfo, "name");
-	Q_strncpyz( name, value, sizeof(name) );
-	// redeye/IRATA - ext. ASCII chars check
-	for (i = 0; i < strlen(name); i++)
+	// cs: don't kick bots for any reason in clientconnect
+	if (!isBot && !(ent->r.svFlags & SVF_BOT))
 	{
-		if (name[i] < 0) // extended ASCII chars have values between -128 and 0 (signed char)
-			return "Bad Name: Extended ASCII Characters. Please change your name.";
-	}
-
-	// josh: censor names
-	if (g_censorNames.string[0] || g_censorNamesNeil.integer) {
-		char censoredName[MAX_NETNAME];
-		SanitizeString(name, censoredName, qtrue);
-		if (G_CensorText(censoredName,&censorNamesDictionary)) {
-			Info_SetValueForKey( userinfo, "name", censoredName);
-			trap_SetUserinfo( clientNum, userinfo );
-			if (g_censorPenalty.integer & CNSRPNLTY_KICK) { 
-				return "Name censor: Please change your name.";
-			}
-		}
-	}
-
-	// check for shrubbot ban
-	if(G_shrubbot_ban_check(userinfo, reason)) {
-
-		// forty - Display connection attempts by banned players
-		if(
-			g_logOptions.integer & LOGOPTS_BAN_CONN 
-		) {
-			value = Info_ValueForKey(userinfo, "name");
-			AP(va("cpm \"Banned player: %s^7, tried to connect.\"", value));
+		// Dens: check for bad userinfo
+		userinfoReason = CheckUserinfo(clientNum);
+		if(userinfoReason){
+			return userinfoReason;
 		}
 
-		// forty - Tell them why and how long...
-		return va("You are banned from this server.\n%s\n%s\n", reason, g_dropMsg.string);
-
-	}
-
-	// Dens: Only check when it's greater than 0 to prevent
-	// level 0 users from being kicked
-	if(g_minConnectLevel.integer > 0){
-		if(G_shrubbot_levelconnect_check(userinfo, reason)) {
-			return va("%s\n", reason);
+		// IP filtering
+		// https://zerowing.idsoftware.com/bugzilla/show_bug.cgi?id=500
+		// recommanding PB based IP / GUID banning, the builtin system is pretty limited
+		// check to see if they are on the banned IP list
+		value = Info_ValueForKey (userinfo, "ip");
+		if ( G_FilterIPBanPacket( value ) ) {
+			return "You are banned from this server.";
 		}
-	}
 
-	// Xian - check for max lives enforcement ban
-	if( g_gametype.integer != GT_WOLF_LMS ) {
-		if( g_enforcemaxlives.integer && (g_maxlives.integer > 0 || g_axismaxlives.integer > 0 || g_alliedmaxlives.integer > 0) ) {
-			if( trap_Cvar_VariableIntegerValue( "sv_punkbuster" ) ) {
-				if ( G_FilterMaxLivesPacket ( guid ) ) {
-					return "Max Lives Enforcement Temp Ban. You will be able to reconnect when the next round starts. This ban is enforced to ensure you don't reconnect to get additional lives.";
-				}
-			} else {
-				value = Info_ValueForKey ( userinfo, "ip" );	// this isn't really needed, oh well.
-				if ( G_FilterMaxLivesIPPacket ( value ) ) {
-					return "Max Lives Enforcement Temp Ban. You will be able to reconnect when the next round starts. This ban is enforced to ensure you don't reconnect to get additional lives.";
-				}
-			}
-		}
-	}
-	// End Xian
-	
-	// we don't check password for bots and local client
-	// NOTE: local client <-> "ip" "localhost"
-	//   this means this client is not running in our current process
-	if ( !isBot && !( ent->r.svFlags & SVF_BOT ) && (strcmp(Info_ValueForKey ( userinfo, "ip" ), "localhost") != 0)) {
-		// check for a password
-		value = Info_ValueForKey (userinfo, "password");
-		if ( g_password.string[0] && Q_stricmp( g_password.string, "none" ) && strcmp( g_password.string, value) != 0) {
-			if( !sv_privatepassword.string[ 0 ] || strcmp( sv_privatepassword.string, value ) ) {
-				return "Invalid password";
-			}
-		}
-	}
-
-	// Gordon: porting q3f flag bug fix
-	// If a player reconnects quickly after a disconnect, the client 
-	// disconnect may never be called, thus flag can get lost in the ether
-	// cs: kicking bots here causes all sorts of problems
-	if( ent->inuse && !isBot && !(ent->r.svFlags & SVF_BOT)) {
-		G_LogPrintf( "Forcing disconnect on active client: %i\n", ent-g_entities );
-		// so lets just fix up anything that should happen on a disconnect
-		ClientDisconnect( ent-g_entities );
-	}
-
-	// tjw: if the client has crashed, force disconnect of previous
-	//      session so that the XP can be reclaimed
-	// tjw: this interferes with sv_wwwDlDisconnected
-	if((g_XPSave.integer & XPSF_ENABLE) &&
-		firstTime &&
-		(!trap_Cvar_VariableIntegerValue("sv_wwwDlDisconnected") ||
-		 (g_XPSave.integer & XPSF_WIPE_DUP_GUID))) {
-
-		for (i = 0; i < level.numConnectedClients; i++) {
+		// quad: check for maximum connections per IP
+		// based on reyalp's combinedfixes.lua and Invaderzim's patch
+		// (prevents fakeplayers DOS http://aluigi.altervista.org/fakep.htm )
+		conn_per_ip = 1;
+		// value = Info_ValueForKey (userinfo, "ip"); // Dens: value is already the ip
+		Q_strncpyz(ip, GetParsedIP(value), sizeof(ip));
+		for (i=0; i<level.numConnectedClients; i++) {
 			clientNum2 = level.sortedClients[i];
 			if(clientNum == clientNum2) continue;
-			if(isBot || g_entities[clientNum2].r.svFlags & SVF_BOT) continue; 
-			trap_GetUserinfo(clientNum2,
+			if(isBot || g_entities[clientNum2].r.svFlags & SVF_BOT) continue; // IGNORE BOTS
+			trap_GetUserinfo(clientNum2, 
 				userinfo2,
 				sizeof(userinfo2));
-			value = Info_ValueForKey (userinfo2, "cl_guid");
-			if(!Q_stricmp(guid, value)) { 
-				G_LogPrintf( "Forcing disconnect of "
-					"duplicate guid %s for client %i\n",
-					guid,
-					clientNum2);
-				// tjw: we need to disconnect the old
-				//      clientNum, not the connecting client
-				//return va(
-				//	"Duplicate guid %s for client %i",
-				//	guid,
-				//	clientNum2);
-				//ClientDisconnect(clientNum2);
-				trap_DropClient(clientNum2, va(
-					"disconnected duplicate "
-					"guid for client %i",
-					clientNum2),
-					0);
+			value = Info_ValueForKey (userinfo2, "ip");
+			Q_strncpyz(ip2, GetParsedIP(value), sizeof(ip2));
+			if (strcmp(ip, ip2)==0) {
+				conn_per_ip++;
 			}
 		}
-	}
+		if (conn_per_ip > g_maxConnsPerIP.integer) {
+			G_LogPrintf("ETPub: Possible DoS attack, rejecting client from %s "
+						"(%d connections already)\n", ip, g_maxConnsPerIP.integer);
+			return "Too many connections from your IP.";
+		}
+
+		value = Info_ValueForKey (userinfo, "name");
+		Q_strncpyz( name, value, sizeof(name) );
+		// redeye/IRATA - ext. ASCII chars check
+		for (i = 0; i < strlen(name); i++)
+		{
+			if (name[i] < 0) // extended ASCII chars have values between -128 and 0 (signed char)
+				return "Bad Name: Extended ASCII Characters. Please change your name.";
+		}
+
+		// josh: censor names
+		if (g_censorNames.string[0] || g_censorNamesNeil.integer) {
+			char censoredName[MAX_NETNAME];
+			SanitizeString(name, censoredName, qtrue);
+			if (G_CensorText(censoredName,&censorNamesDictionary)) {
+				Info_SetValueForKey( userinfo, "name", censoredName);
+				trap_SetUserinfo( clientNum, userinfo );
+				if (g_censorPenalty.integer & CNSRPNLTY_KICK) { 
+					return "Name censor: Please change your name.";
+				}
+			}
+		}
+
+		// check for shrubbot ban
+		if(G_shrubbot_ban_check(userinfo, reason)) {
+
+			// forty - Display connection attempts by banned players
+			if(
+				g_logOptions.integer & LOGOPTS_BAN_CONN 
+			) {
+				value = Info_ValueForKey(userinfo, "name");
+				AP(va("cpm \"Banned player: %s^7, tried to connect.\"", value));
+			}
+
+			// forty - Tell them why and how long...
+			return va("You are banned from this server.\n%s\n%s\n", reason, g_dropMsg.string);
+
+		}
+
+		// Dens: Only check when it's greater than 0 to prevent
+		// level 0 users from being kicked
+		if(g_minConnectLevel.integer > 0){
+			if(G_shrubbot_levelconnect_check(userinfo, reason)) {
+				return va("%s\n", reason);
+			}
+		}
+
+		// Xian - check for max lives enforcement ban
+		if( g_gametype.integer != GT_WOLF_LMS ) {
+			if( g_enforcemaxlives.integer && (g_maxlives.integer > 0 || g_axismaxlives.integer > 0 || g_alliedmaxlives.integer > 0) ) {
+				if( trap_Cvar_VariableIntegerValue( "sv_punkbuster" ) ) {
+					if ( G_FilterMaxLivesPacket ( guid ) ) {
+						return "Max Lives Enforcement Temp Ban. You will be able to reconnect when the next round starts. This ban is enforced to ensure you don't reconnect to get additional lives.";
+					}
+				} else {
+					value = Info_ValueForKey ( userinfo, "ip" );	// this isn't really needed, oh well.
+					if ( G_FilterMaxLivesIPPacket ( value ) ) {
+						return "Max Lives Enforcement Temp Ban. You will be able to reconnect when the next round starts. This ban is enforced to ensure you don't reconnect to get additional lives.";
+					}
+				}
+			}
+		}
+		// End Xian
+
+		// we don't check password for bots and local client
+		// NOTE: local client <-> "ip" "localhost"
+		//   this means this client is not running in our current process
+		if ( strcmp(Info_ValueForKey ( userinfo, "ip" ), "localhost") != 0) {
+			// check for a password
+			value = Info_ValueForKey (userinfo, "password");
+			if ( g_password.string[0] && Q_stricmp( g_password.string, "none" ) && strcmp( g_password.string, value) != 0) {
+				if( !sv_privatepassword.string[ 0 ] || strcmp( sv_privatepassword.string, value ) ) {
+					return "Invalid password";
+				}
+			}
+		}
+
+		// Gordon: porting q3f flag bug fix
+		// If a player reconnects quickly after a disconnect, the client 
+		// disconnect may never be called, thus flag can get lost in the ether
+		if( ent->inuse ) {
+			G_LogPrintf( "Forcing disconnect on active client: %i\n", ent-g_entities );
+			// so lets just fix up anything that should happen on a disconnect
+			ClientDisconnect( ent-g_entities );
+		}
+
+		// tjw: if the client has crashed, force disconnect of previous
+		//      session so that the XP can be reclaimed
+		// tjw: this interferes with sv_wwwDlDisconnected
+		if((g_XPSave.integer & XPSF_ENABLE) &&
+			firstTime &&
+			(!trap_Cvar_VariableIntegerValue("sv_wwwDlDisconnected") ||
+			(g_XPSave.integer & XPSF_WIPE_DUP_GUID))) {
+
+			for (i = 0; i < level.numConnectedClients; i++) {
+				clientNum2 = level.sortedClients[i];
+				if(clientNum == clientNum2) continue;
+				if(isBot || g_entities[clientNum2].r.svFlags & SVF_BOT) continue; 
+				trap_GetUserinfo(clientNum2,
+					userinfo2,
+					sizeof(userinfo2));
+				value = Info_ValueForKey (userinfo2, "cl_guid");
+				if(!Q_stricmp(guid, value)) { 
+					G_LogPrintf( "Forcing disconnect of "
+						"duplicate guid %s for client %i\n",
+						guid,
+						clientNum2);
+					// tjw: we need to disconnect the old
+					//      clientNum, not the connecting client
+					//return va(
+					//	"Duplicate guid %s for client %i",
+					//	guid,
+					//	clientNum2);
+					//ClientDisconnect(clientNum2);
+					trap_DropClient(clientNum2, va(
+						"disconnected duplicate "
+						"guid for client %i",
+						clientNum2),
+						0);
+				}
+			}
+		}
+
+	} // if (!isBot || !(ent->r.svFlags & SVF_BOT))
 
 	// they can connect
 	ent->client = level.clients + clientNum;
@@ -2645,32 +2648,10 @@ char *ClientConnect( int clientNum, qboolean firstTime, qboolean isBot ) {
 	}
 
 	if( isBot ) {
-#ifndef NO_BOT_SUPPORT
-		// Set up the name for the bot client before initing the bot
-		value = Info_ValueForKey ( userinfo, "scriptName" );
-		if (value && value[0]) {
-			Q_strncpyz( client->pers.botScriptName, value, sizeof( client->pers.botScriptName ) );
-			ent->scriptName = client->pers.botScriptName;
-		}
-		ent->aiName = ent->scriptName;
-#endif
 		ent->s.number = clientNum;
 
 		ent->r.svFlags |= SVF_BOT;
 		ent->inuse = qtrue;
-#ifndef NO_BOT_SUPPORT
-		// if this bot is reconnecting, and they aren't supposed to respawn, then dont let it in
-		if (!firstTime) {
-			value = Info_ValueForKey (userinfo, "respawn");
-			if (value && value[0] && (!Q_stricmp(value, "NO") || !Q_stricmp(value, "DISCONNECT"))) {
-				return "BotConnectFailed (no respawn)";
-			}
-		}
-
-		if( !G_BotConnect( clientNum, !firstTime ) ) {
-			return "BotConnectfailed";
-		}
-#endif
 	}
 	else if( g_gametype.integer == GT_COOP || g_gametype.integer == GT_SINGLE_PLAYER ) {
 		// RF, in single player, enforce team = ALLIES
@@ -2704,26 +2685,6 @@ char *ClientConnect( int clientNum, qboolean firstTime, qboolean isBot ) {
 	Bot_Event_ClientConnected(clientNum, isBot);
 
 	ClientUserinfoChanged( clientNum );
-
-	if (g_gametype.integer == GT_SINGLE_PLAYER) {
-#ifndef NO_BOT_SUPPORT
-		if (!isBot) {
-#endif
-			ent->scriptName = "player";
-
-// START	Mad Doctor I changes, 8/14/2002
-			// We must store this here, so that BotFindEntityForName can find the
-			// player.
-			ent->aiName = "player";
-// END		Mad Doctor I changes, 8/12/2002
-
-			G_Script_ScriptParse( ent );
-			G_Script_ScriptEvent( ent, "spawn", "" );
-#ifndef NO_BOT_SUPPORT
-		}
-#endif
-	}
-
 
 	// don't do the "xxx connected" messages if they were caried over from previous level
 	//		TAT 12/10/2002 - Don't display connected messages in single player
