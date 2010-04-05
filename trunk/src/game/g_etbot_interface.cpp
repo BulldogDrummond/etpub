@@ -1706,7 +1706,11 @@ class ETInterface : public IEngineInterface
 {
 public:
 	int AddBot(const MessageHelper &_data)
-	{		
+	{
+		// wait until everything settles before adding bots
+		if ( level.time - level.startTime < 10000 )
+			return -1;
+
 		OB_GETMSG(Msg_Addbot);
 
 		int num;
@@ -1740,6 +1744,9 @@ public:
 			PrintError(va("Could not connect bot: %s", s));
 			num = -1;
 		}
+
+		//G_LogPrintf( "AddBot: %s\n", bot && bot->inuse ? "success" : "fail" );
+
 		// bad hack to prevent unhandled errors being returned as successful connections
 		return bot && bot->inuse ? num : -1;
 	}
@@ -3480,6 +3487,9 @@ public:
 			info.m_Players[i].m_Class = GetEntityClass(ge);
 			info.m_Players[i].m_Controller = IsBot(&g_entities[i])?
 				obPlayerInfo::Bot : obPlayerInfo::Human;
+
+			//G_Printf("PlayerInfo: NUM: %i TEAM:%i CLASS:%i HUMAN:%i\n", 
+			//		i, info.m_Players[i].m_Team, info.m_Players[i].m_Class, info.m_Players[i].m_Controller);
 		}
 	}
 
