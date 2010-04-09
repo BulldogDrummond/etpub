@@ -185,7 +185,7 @@ Called on a reconnect
 */
 void G_ReadSessionData( gclient_t *client )
 {
-	int mvc_l, mvc_h;
+	int mvc_l, mvc_h, need_greeting;
 	char s[MAX_STRING_CHARS];
 	qboolean test;
 	qboolean load = qfalse;
@@ -235,11 +235,13 @@ void G_ReadSessionData( gclient_t *client )
 		client->sess.guid,
 		client->sess.ip,
 		&client->sess.uci, //mcwf GeoIP
-		&client->sess.need_greeting,
+		&need_greeting,
 		// quad: shoutcaster and ettv
 		&client->sess.shoutcaster,
 		&client->sess.ettv
 		);
+
+	client->sess.need_greeting = (need_greeting == 1) ? qtrue : qfalse;
 
 	// OSP -- reinstate MV clients
 	client->pers.mvReferenceList = (mvc_h << 16) | mvc_l;

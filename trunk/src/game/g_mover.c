@@ -5169,7 +5169,7 @@ void SP_func_constructible( gentity_t *ent ) {
 	if( i > 0 && i <= NUM_CONSTRUCTIBLE_CLASSES ) {
 		ent->constructibleStats = g_constructible_classes[i];
 		// CHRUKER: b014 - This was using integers when it should use floats
-		G_SpawnFloat( "constructible_chargebarreq", va( "%i", ent->constructibleStats.chargebarreq ), &ent->constructibleStats.chargebarreq );
+		G_SpawnFloat( "constructible_chargebarreq", va( "%f", ent->constructibleStats.chargebarreq ), &ent->constructibleStats.chargebarreq );
 		G_SpawnFloat( "constructible_constructxpbonus", va( "%f", ent->constructibleStats.constructxpbonus ), &ent->constructibleStats.constructxpbonus );
 		G_SpawnFloat( "constructible_destructxpbonus", va( "%f", ent->constructibleStats.destructxpbonus ), &ent->constructibleStats.destructxpbonus );
 		G_SpawnInt( "constructible_health", va( "%i", ent->constructibleStats.health ), &ent->constructibleStats.health );

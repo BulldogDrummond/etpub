@@ -276,7 +276,7 @@ const char *OB_VA(const char* _msg, ...)
 
 #include <dlfcn.h>
 #define GetProcAddress dlsym
-#define NULL 0
+//#define NULL 0
 
 //////////////////////////////////////////////////////////////////////////	
 void *g_BotLibrary = NULL;

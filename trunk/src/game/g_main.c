@@ -5929,6 +5929,8 @@ void InitSkillLevelStructure( skillType_t skillType )
 		Q_strncpyz( newLevels, g_skillLightWeapons.string,
 			sizeof(g_skillLightWeapons.string) );
 		break;
+	case SK_NUM_SKILLS:
+		break;
 	}
 
 	nextLevel = strtok(newLevels," ");

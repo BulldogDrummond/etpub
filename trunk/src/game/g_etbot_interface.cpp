@@ -1739,7 +1739,7 @@ public:
 		trap_SetUserinfo(num, userinfo);
 
 		const char *s = 0;
-		if(s = ClientConnect(num, qtrue, qtrue)) 
+		if((s = ClientConnect(num, qtrue, qtrue))) 
 		{
 			PrintError(va("Could not connect bot: %s", s));
 			num = -1;
