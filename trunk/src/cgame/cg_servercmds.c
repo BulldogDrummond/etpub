@@ -326,6 +326,8 @@ static void InitSkillLevelStructure( skillType_t skillType )
 		Q_strncpyz( newLevels, cgs.skill_lightweapons, 
 			sizeof(cgs.skill_lightweapons) );
 		break;
+	case SK_NUM_SKILLS:
+		break;
 	}
 
 	nextLevel = strtok(newLevels," ");
@@ -1794,34 +1796,29 @@ CG_VoiceChat
 =================
 */
 void CG_VoiceChat( int mode ) {
-	const char *cmd, *msg = NULL;
-	int clientNum, color, i;
-	qboolean voiceOnly;
+	qboolean voiceOnly = atoi(CG_Argv(1));
+	int clientNum = atoi(CG_Argv(2));
+	int color = atoi(CG_Argv(3));
+	const char *cmd = va("%s", CG_Argv(4));
+	const char *msg = NULL;
+	int i;
 	vec3_t origin;			// NERVE - SMF
 
 	switch(mode) {
 		case SAY_ALL:
-			voiceOnly = atoi(CG_Argv(1));
-			clientNum = atoi(CG_Argv(2));
-			color = atoi(CG_Argv(3));
-			cmd = va( "%s", CG_Argv(4) );
 			if (trap_Argc() > 5) {
 				msg = CG_Args(5, -1); // the chat text
 			}
 		break;
 		case SAY_TEAM:
 		case SAY_BUDDY:
-			voiceOnly = atoi(CG_Argv(1));
-			clientNum = atoi(CG_Argv(2));
-			color = atoi(CG_Argv(3));
-			cmd = va( "%s", CG_Argv(4) );
 			for (i = 0; i < 3; ++i) {
 				origin[i] = atoi(CG_Argv(trap_Argc() - 3 + i));
 			}
 			if (trap_Argc() > 8) {
 				msg = CG_Args(5, trap_Argc() - 4);
 			}
-		break;	
+		break;
 	}
 	if (cg_noTaunt.integer != 0) {
 		if (!strcmp(cmd, VOICECHAT_KILLINSULT)  || !strcmp(cmd, VOICECHAT_TAUNT) || \

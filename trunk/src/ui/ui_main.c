@@ -5731,7 +5731,7 @@ void UI_RunMenuScript(char **args) {
 			}
 		}	
 		else if (!Q_stricmp(name, "updateFonts")) {
-			int i = 0;
+//			int i = 0;
 
 			UI_LoadFonts();
 			UI_MenuSelectFonts();
