@@ -119,6 +119,11 @@ if( WITH_LUA_SUPPORT == '1' ):
 	local_env.Append( LINKFLAGS = ['-llua5.1'] )
 	qagame_string += """g_lua.c"""
 
+# Jaybird - these lines are used to statically link c++'s dependencies
+# redeye - but only if we are not using gcc4
+if( g_os == 'Linux' and gcc_major_ver != '4' ):
+	local_env.Append( LINKFLAGS = ['misc/libstdc++.a', '-static-libgcc', '-L./misc/'] )
+
 local_env['LINK'] = local_env['CXX']
 
 source_list = botai_list
