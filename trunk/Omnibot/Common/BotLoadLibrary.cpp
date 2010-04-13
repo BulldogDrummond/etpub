@@ -220,7 +220,9 @@ eomnibot_error Omnibot_LoadLibrary(int version, const char *lib, const char *pat
 				r = g_BotFunctions.pfnBotInitialise(g_InterfaceFunctions, version);
 				g_IsOmnibotLoaded = (r == BOT_ERROR_NONE);
 			}
-			else
+			
+			// print interface errors too
+			if(r != BOT_ERROR_NONE)
 			{
 				Omnibot_Load_PrintErr(OB_VA("Omni-bot Failed with Error: %s", Omnibot_ErrorString(r)));
 				Omnibot_FreeLibrary();

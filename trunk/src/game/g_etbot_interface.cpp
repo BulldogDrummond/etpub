@@ -937,7 +937,7 @@ static int _choosePriWeap(gentity_t *bot, int playerClass, int team)
 				int wpns[] = 
 				{
 					// add shit as needed
-					//ET_WP_THOMPSON/ET_WP_MP40, // pointless?
+					ET_WP_THOMPSON/ET_WP_MP40, // pointless? cs: not if all the others are disabled it isnt
 					ET_WP_PANZERFAUST,
 					ET_WP_MOBILE_MG42,
 					ET_WP_FLAMETHROWER,

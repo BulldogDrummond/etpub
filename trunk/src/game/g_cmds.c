@@ -1928,7 +1928,6 @@ qboolean SetTeam( gentity_t *ent, char *s, qboolean force, weapon_t w1, weapon_t
 	}
 
 	G_verifyMatchState(oldTeam);
-	BotRecordTeamChange( clientNum );
 
 	/*
 	// Reset stats when changing teams

@@ -751,7 +751,10 @@ qboolean G_xpsave_load(gentity_t *ent)
 		agestr));
 
 	// josh: check and update if disconnect found
-	Reconnect(x,ent);
+	// cs: not for bots since it is pointless for them, plus we never want SetTeam failing for them
+	if (!(ent->r.svFlags & SVF_BOT)) {
+		Reconnect(x,ent);
+	}
 	return qtrue;
 }
 
