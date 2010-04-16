@@ -1501,12 +1501,7 @@ qboolean	ConsoleCommand( void ) {
 	}
 
 	if(!Q_stricmp(cmd, "writexp")) {
-		int i = 0;
-
-		for( i = 0; i < level.numConnectedClients; i++ ) {
-			G_xpsave_add(&g_entities[level.sortedClients[i]],qfalse);
-		}
-		G_xpsave_writeconfig();
+		G_xpsave_writexp();
 		return qtrue;
 	}
 

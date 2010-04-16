@@ -870,6 +870,8 @@ void G_xpsave_resetSpreeRecords()
 		g_mapstats[i]->spreeRecord = 0;
 		g_mapstats[i]->spreeName[0] = '\0';
 	}
+
+	G_xpsave_writexp(); // pheno: rewrite xpsave file
 }
 
 g_mapstat_t *G_xpsave_mapstat(char *mapname)
@@ -921,4 +923,16 @@ void G_xpsave_cleanup()
 
 g_serverstat_t *G_xpsave_serverstat() {
 	return &g_serverstat;
+}
+
+// pheno
+void G_xpsave_writexp()
+{
+	int i = 0;
+
+	for( i = 0; i < level.numConnectedClients; i++ ) {
+		G_xpsave_add( &g_entities[level.sortedClients[i]], qfalse );
+	}
+
+	G_xpsave_writeconfig();
 }
