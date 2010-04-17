@@ -6085,11 +6085,11 @@ void G_mapvoteinfo_read()
 	return;
 }
 
-// pheno: tell us more about the running server version
+// pheno: tell us more about the running client and/or server version
 void etpub_version( gentity_t *ent )
 {
-	const char *s = ETPUB_VERSION;
-	char a[4], b[4], c[4];
+	const char *etpubcbuild, *s = ETPUB_VERSION;
+	char userinfo[MAX_INFO_STRING], a[4], b[4], c[4];
 	int i = 0;
 
 	while( *s++ ) {
@@ -6114,7 +6114,26 @@ void etpub_version( gentity_t *ent )
 		c[i++] = *s;
 	}
 
-	G_refPrintf( ent, "^3Server Version^7: ETpub %s (%i) %s %s",
-		ETPUB_VERSION, (atoi(a) << 16) + (atoi(b) << 8) + atoi(c),
+	G_refPrintf( ent, "^7etpub information");
+	G_refPrintf( ent, "^3---------------- --------------"
+		" -----------------------------------");
+	G_refPrintf( ent, "^nserver^7: etpub    %-14s %s %s",
+		va( "%s (%i)", ETPUB_VERSION,
+			(atoi(a) << 16) + (atoi(b) << 8) + atoi(c)),
 		ARCH, __DATE__ );
+
+	if( ent ) {
+		trap_GetUserinfo( ent - g_entities, userinfo, sizeof( userinfo ) );
+		etpubcbuild = Info_ValueForKey( userinfo, "cg_etpubcbuild" );
+
+		G_refPrintf( ent, "^nclient^7: %-10s %-16s %s",
+			( ent->client->pers.etpubc ) ? "^7etpubc" : "^9none",
+			( ent->client->pers.etpubc ) ?
+				va( "^7%i", ent->client->pers.etpubc ) : "^9na",
+			Q_stricmp( etpubcbuild, "" ) ?
+				va( "^7%s", etpubcbuild ) : "^9na" );
+	}
+
+	G_refPrintf( ent, "^3---------------- --------------"
+		" -----------------------------------");
 }
