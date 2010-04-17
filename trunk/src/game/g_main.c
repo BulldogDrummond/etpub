@@ -6084,3 +6084,37 @@ void G_mapvoteinfo_read()
 
 	return;
 }
+
+// pheno: tell us more about the running server version
+void etpub_version( gentity_t *ent )
+{
+	const char *s = ETPUB_VERSION;
+	char a[4], b[4], c[4];
+	int i = 0;
+
+	while( *s++ ) {
+		if( *s == '.' || i == sizeof( a ) )
+			break;
+		a[i++] = *s;
+	}
+
+	i = 0;
+
+	while( *s++ ) {
+		if( *s == '.' || i == sizeof( b ) )
+			break;
+		b[i++] = *s;
+	}
+
+	i = 0;
+
+	while( *s++ ) {
+		if( *s == '.' || i == sizeof( c ) )
+			break;
+		c[i++] = *s;
+	}
+
+	G_refPrintf( ent, "^3Server Version^7: ETpub %s (%i) %s %s",
+		ETPUB_VERSION, (atoi(a) << 16) + (atoi(b) << 8) + atoi(c),
+		ARCH, __DATE__ );
+}

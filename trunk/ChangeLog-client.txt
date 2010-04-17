@@ -437,3 +437,4 @@ current
 * pheno:   fireteam members are now autoselected when joining the fireteam
 * pheno:   renamed cvar cg_fireTeamOptions to cg_autoSelectFTMembers
 * pheno:   fixed fireteam latched class indicator bug on older servers
+* pheno:   added etpub_version console command

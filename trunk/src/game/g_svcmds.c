@@ -1788,6 +1788,12 @@ qboolean	ConsoleCommand( void ) {
 		return qtrue;
 	}
 
+	// pheno: etpub version command
+	if( !Q_stricmp( cmd, "etpub_version" ) ) {
+		etpub_version( NULL );
+		return qtrue;
+	}
+
 	// see if this is a a shrubbot command
 	if(G_shrubbot_cmd_check(NULL)) 
 		return qtrue;

@@ -1568,6 +1568,7 @@ void CG_InitConsoleCommands( void ) {
 	trap_AddCommand("shoutcastlogin");
 	trap_AddCommand("shoutcastlogout");
 	trap_AddCommand("lua_status");
+	trap_AddCommand("etpub_version");
 
 	// tjw: remove engine commands
 	trap_RemoveCommand("+lookup");

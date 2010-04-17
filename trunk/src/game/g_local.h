@@ -1880,6 +1880,8 @@ void LogExit( const char *string );
 void G_ShutdownGame( int restart );
 void G_mapvoteinfo_write( void );
 void G_mapvoteinfo_read( void );
+// pheno
+void etpub_version( gentity_t *ent );
 
 //
 // g_client.c

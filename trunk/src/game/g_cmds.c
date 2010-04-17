@@ -6179,7 +6179,22 @@ void ClientCommand( int clientNum ) {
 	else if (!Q_stricmp (cmd, "adrenother")) {
 		// josh: use revive needle to adren
 		G_AdrenOther(ent);
-	} 
+	}
+	// pheno: etpub version command
+	else if( !Q_stricmp( cmd, "etpub_version" ) ) {
+		char userinfo[MAX_INFO_STRING];
+		const char *etpubcbuild;
+
+		trap_GetUserinfo( ent - g_entities, userinfo, sizeof( userinfo ) );
+		etpubcbuild = Info_ValueForKey( userinfo, "cg_etpubcbuild" );
+
+		// tell us more about the running client version
+		G_refPrintf( ent, "^3Client Version^7: ETpubc %i%s",
+			ent->client->pers.etpubc,
+			Q_stricmp( etpubcbuild, "" ) ? va( " %s", etpubcbuild ) : "" );
+
+		etpub_version( ent );
+	}
 	else {
 		trap_SendServerCommand( clientNum, va("print \"unknown cmd[lof] %s\n\"", cmd ) );
 	}

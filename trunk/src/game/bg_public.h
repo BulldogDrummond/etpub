@@ -26,6 +26,13 @@
 #define _attribute(x)
 #endif
 
+// pheno
+#if defined __linux__
+#define ARCH "linux-i386"
+#elif defined WIN32
+#define ARCH "win-x86"
+#endif
+
 //#define SAVEGAME_SUPPORT	// uncomment to enable savegames
 							// enabling this requires you to run extractfuncs.bat as well before compiling qagame
 

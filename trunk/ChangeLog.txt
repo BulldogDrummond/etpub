@@ -2097,3 +2097,4 @@
 * pheno:   added core's fix for airstrike-cans getting kicked after plane
            knows its targets
 * pheno:   added g_mode bitflag cvar (see docs)
+* pheno:   added etpub_version console command

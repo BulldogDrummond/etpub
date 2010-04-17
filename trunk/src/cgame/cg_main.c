@@ -622,6 +622,9 @@ cvarTable_t		cvarTable[] = {
 	{ &cg_lagometerAlpha, "cg_lagometerAlpha", "1.0", CVAR_ARCHIVE},
 	{ &cg_specAlpha, "cg_specAlpha", "1.0", CVAR_ARCHIVE},
 
+	// pheno
+	{ NULL,	"cg_etpubcbuild", ARCH " " __DATE__, CVAR_USERINFO | CVAR_ROM },
+
 	// tjw
 	{ NULL,	"cg_etpubc", ETPUBC_VERSION, CVAR_USERINFO | CVAR_ROM },
 	{ &cg_font1, "cg_font1", "ariblk", CVAR_ARCHIVE },
