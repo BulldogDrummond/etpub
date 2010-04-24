@@ -436,5 +436,6 @@ current
 * pheno:   fixed full tank health bar when FF is disabled
 * pheno:   fireteam members are now autoselected when joining the fireteam
 * pheno:   renamed cvar cg_fireTeamOptions to cg_autoSelectFTMembers
-* pheno:   fixed fireteam latched class indicator bug on older servers
+* pheno:   fixed fireteam latched class indicator bug with servers < 0.9.0
 * pheno:   added etpub_version console command
+* pheno:   fixed scoreboard bot identification bug with servers < 0.9.0
