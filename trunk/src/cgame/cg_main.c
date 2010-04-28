@@ -623,7 +623,7 @@ cvarTable_t		cvarTable[] = {
 	{ &cg_specAlpha, "cg_specAlpha", "1.0", CVAR_ARCHIVE},
 
 	// pheno
-	{ NULL,	"cg_etpubcbuild", ARCH " " __DATE__, CVAR_USERINFO | CVAR_ROM },
+	{ NULL,	"cg_etpubcbuild", CPUSTRING " " __DATE__, CVAR_USERINFO | CVAR_ROM },
 
 	// tjw
 	{ NULL,	"cg_etpubc", ETPUBC_VERSION, CVAR_USERINFO | CVAR_ROM },
