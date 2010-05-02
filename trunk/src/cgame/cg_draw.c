@@ -5337,7 +5337,7 @@ static void CG_DrawPlayerStats( void ) {
 	}
 
 	if(cg.hud.xp[0] >= 0) {
-		str = va( "%i", cg.snap->ps.stats[STAT_XP] );
+		str = va( "%i", ( 32768 * cg.snap->ps.stats[STAT_XP_OVERFLOW] ) + cg.snap->ps.stats[STAT_XP] ); // redeye - XP overflow fix
 		scaleVal = cg.hud.xp[2]/100.f;
 		w = CG_Text_Width_Ext( str, scaleVal, 0, &cgs.media.font1 );
 		CG_Text_Paint_Ext( cg.hud.xp[0] - w, cg.hud.xp[1], scaleVal, scaleVal, clr, str, 0, 0, ITEM_TEXTSTYLE_SHADOWED, &cgs.media.font1 );

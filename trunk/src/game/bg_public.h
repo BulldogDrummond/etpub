@@ -630,14 +630,14 @@ typedef enum {
 	STAT_CAPTUREHOLD_RED,			// JPW NERVE - red team score
 	STAT_CAPTUREHOLD_BLUE,			// JPW NERVE - blue team score
 	STAT_XP,						// Gordon: "realtime" version of xp that doesnt need to go thru the scoreboard
-	// josh: these are used to tell the client to snap to the auto-aimed at
-        //       target.
-        //       Well, actually, that's done server-side. These can be used to
-        //       make it smoother, maybe. Might not need them though.
-	STAT_AIMING,		//Neil Toronto (josh) - g_tactics auto-aiming - aiming
-	//STAT_AIMING_PITCH,	//Neil Toronto (josh) - g_tactics auto-aiming - pitch
-	//STAT_AIMING_YAW,	//Neil Toronto (josh) - g_tactics auto-aiming - yaw
-
+									// josh: these are used to tell the client to snap to the auto-aimed at
+									//       target.
+									//       Well, actually, that's done server-side. These can be used to
+									//       make it smoother, maybe. Might not need them though.
+	STAT_AIMING,					// Neil Toronto (josh) - g_tactics auto-aiming - aiming
+	//STAT_AIMING_PITCH,			// Neil Toronto (josh) - g_tactics auto-aiming - pitch
+	//STAT_AIMING_YAW,				// Neil Toronto (josh) - g_tactics auto-aiming - yaw
+	STAT_XP_OVERFLOW				// redeye - count XP overflow(every 2^15)
 } statIndex_t;
 
 // player_state->persistant[] indexes
