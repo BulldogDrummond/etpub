@@ -6119,7 +6119,7 @@ void etpub_version( gentity_t *ent )
 		"-----------------" );
 	G_refPrintf( ent, " ^7etpub  ^1: ^7%-12s %s %s",
 		va( "%s (%i)", ETPUB_VERSION,
-			(atoi(a) << 16) + (atoi(b) << 8) + atoi(c) ),
+			( atoi( a ) << 16 ) + ( atoi( b ) << 8 ) + atoi( c ) ),
 		CPUSTRING, __DATE__ );
 
 	if( ent && ent->client->pers.etpubc ) {
@@ -6129,7 +6129,8 @@ void etpub_version( gentity_t *ent )
 		trap_GetUserinfo( ent - g_entities, userinfo, sizeof( userinfo ) );
 		s2 = Info_ValueForKey( userinfo, "cg_etpubcbuild" );
 
-		G_refPrintf( ent, " ^7etpubc ^1: ^7%-12i %s", ent->client->pers.etpubc, s2 );
+		G_refPrintf( ent, " ^7etpubc ^1: ^7%-12i %s",
+			ent->client->pers.etpubc, s2 );
 	}
 
 	G_refPrintf( ent, "" );

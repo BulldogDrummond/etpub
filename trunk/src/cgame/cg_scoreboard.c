@@ -223,7 +223,7 @@ int WM_DrawObjectives( int x, int y, int width, float fade ) {
 }
 
 static void WM_DrawClientScore( int x, int y, score_t *score, float *color, float fade, qboolean show_lives ) {
-	int maxchars, offset;
+	int maxchars = 16, offset = 0;
 	int i, j;
 	float tempx;
 	vec4_t hcolor;
@@ -253,12 +253,9 @@ static void WM_DrawClientScore( int x, int y, score_t *score, float *color, floa
 	hcolor[3] = fade;
 
 	// Dens: if we don't show the lives in non-LMS, let the name be a bit longer
-	if(show_lives){
-		maxchars = 16;
-	}else{
+	if( cg_gameType.integer != GT_WOLF_LMS && !show_lives ) {
 		maxchars = 18;
 	}
-	offset = 0;
 
 	if ( ci->team != TEAM_SPECTATOR ) {
 		if(cg_drawClassIcons.integer & CLASSICON_SCOREBOARD){
@@ -376,7 +373,7 @@ static void WM_DrawClientScore( int x, int y, score_t *score, float *color, floa
 	}
 
 	// Dens: add the extra room here
-	if(!show_lives){
+	if( cg_gameType.integer != GT_WOLF_LMS && !show_lives ) {
 		tempx += INFO_LIVES_WIDTH;
 	}
 
@@ -454,7 +451,7 @@ const char* WM_TimeToString( float msec ) {
 }
 
 static void WM_DrawClientScore_Small( int x, int y, score_t *score, float *color, float fade, qboolean show_lives ) {
-	int maxchars, offset;
+	int maxchars = 16, offset = 0;
 	float tempx;
 	vec4_t hcolor;
 	clientInfo_t *ci;
@@ -489,12 +486,9 @@ static void WM_DrawClientScore_Small( int x, int y, score_t *score, float *color
 
 	// CHRUKER: b033 - Corrected to draw medals
 	// Dens: if we don't show the lives in non-LMS, let the name be a bit longer
-	if(show_lives){
-		maxchars = 16;
-	}else{
+	if( cg_gameType.integer != GT_WOLF_LMS && !show_lives ) {
 		maxchars = 18;
 	}
-	offset = 0;
 
 	if ( ci->team != TEAM_SPECTATOR ) {	
 		if(cg_drawClassIcons.integer & CLASSICON_SCOREBOARD){
@@ -605,7 +599,7 @@ static void WM_DrawClientScore_Small( int x, int y, score_t *score, float *color
 	}
 
 	// Dens: add the extra room here
-	if(!show_lives){
+	if( cg_gameType.integer != GT_WOLF_LMS && !show_lives ) {
 		tempx += INFO_LIVES_WIDTH;
 	}
 
@@ -881,7 +875,8 @@ static int WM_TeamScoreboard( int x, int y, team_t team, float fade, int maxrows
 	CG_DrawSmallString( tempx, y, CG_TranslateString( "Name" ), fade );
 	tempx += INFO_PLAYER_WIDTH;
 
-	if(!show_lives){
+	// pheno: if we don't show the lives in non-LMS, add some extra room here 
+	if( cg_gameType.integer != GT_WOLF_LMS && !show_lives ) {
 		tempx += INFO_LIVES_WIDTH;
 	}
 
