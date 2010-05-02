@@ -2098,3 +2098,4 @@
            knows its targets
 * pheno:   added g_mode bitflag cvar (see docs)
 * pheno:   added etpub_version console command
+* pheno:   added redeye's XP overflow fix

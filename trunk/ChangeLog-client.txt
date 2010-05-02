@@ -440,3 +440,4 @@ current
 * pheno:   added etpub_version console command
 * pheno:   fixed scoreboard bot identification bug with servers < 0.9.0
 * pheno:   fixed broken scoreboard alignment when in g_gametype 5 mode (LMS)
+* pheno:   added redeye's XP overflow fix

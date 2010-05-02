@@ -435,7 +435,8 @@ qboolean CG_LoadDefaultHud()
 	cg.hud.healthbar[0] = 20;
 	cg.hud.healthbar[1] = 388;
 	cg.hud.healthbar[2] = 12;
-	cg.hud.hp[0] = 84;
+	cg.hud.hp[0] = 62;	// pheno: move HP to the left by default to have a
+						//        better XP view if XP >= 10000
 	cg.hud.hp[1] = 476;
 	cg.hud.hp[2] = 25;
 	cg.hud.lagometer[0] = 592;
