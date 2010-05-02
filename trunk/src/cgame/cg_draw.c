@@ -5187,7 +5187,7 @@ static void CG_DrawPlayerStats( void ) {
 		scaleVal = cg.hud.hp[2]/100.f;
 		w = CG_Text_Width_Ext( str, scaleVal, 0, &cgs.media.font1 );
 		CG_Text_Paint_Ext( cg.hud.hp[0] - w, cg.hud.hp[1], scaleVal, scaleVal, colorWhite, str, 0, 0, ITEM_TEXTSTYLE_SHADOWED, &cgs.media.font1 );
-		CG_Text_Paint_Ext( cg.hud.hp[0] + 2, cg.hud.hp[1], scaleVal, scaleVal, colorWhite, "HP", 0, 0, ITEM_TEXTSTYLE_SHADOWED, &cgs.media.font1 );
+		CG_Text_Paint_Ext( cg.hud.hp[0] + 2, cg.hud.hp[1], scaleVal * 0.8f, scaleVal * 0.8f, colorWhite, "HP", 0, 0, ITEM_TEXTSTYLE_SHADOWED, &cgs.media.font1 );
 	}
 
 	if( cgs.gametype == GT_WOLF_LMS ) {
@@ -5337,11 +5337,17 @@ static void CG_DrawPlayerStats( void ) {
 	}
 
 	if(cg.hud.xp[0] >= 0) {
-		str = va( "%i", ( 32768 * cg.snap->ps.stats[STAT_XP_OVERFLOW] ) + cg.snap->ps.stats[STAT_XP] ); // redeye - XP overflow fix
+		// pheno: redeye - XP overflow fix with servers >= 0.9.0
+		if( cgs.etpub >= ETPUB_VERSION( 0, 9, 0 ) ) {
+			str = va( "%i", ( 32768 * cg.snap->ps.stats[STAT_XP_OVERFLOW] ) + cg.snap->ps.stats[STAT_XP] );
+		} else {
+			str = va( "%i", cg.snap->ps.stats[STAT_XP] );
+		}
+
 		scaleVal = cg.hud.xp[2]/100.f;
 		w = CG_Text_Width_Ext( str, scaleVal, 0, &cgs.media.font1 );
 		CG_Text_Paint_Ext( cg.hud.xp[0] - w, cg.hud.xp[1], scaleVal, scaleVal, clr, str, 0, 0, ITEM_TEXTSTYLE_SHADOWED, &cgs.media.font1 );
-		CG_Text_Paint_Ext( cg.hud.xp[0] + 2, cg.hud.xp[1], scaleVal, scaleVal, clr, "XP", 0, 0, ITEM_TEXTSTYLE_SHADOWED, &cgs.media.font1 );
+		CG_Text_Paint_Ext( cg.hud.xp[0] + 2, cg.hud.xp[1], scaleVal * 0.8f, scaleVal * 0.8f, clr, "XP", 0, 0, ITEM_TEXTSTYLE_SHADOWED, &cgs.media.font1 );
 	}
 
 	// draw treasure icon if we have the flag
