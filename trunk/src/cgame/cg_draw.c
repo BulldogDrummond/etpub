@@ -5337,8 +5337,8 @@ static void CG_DrawPlayerStats( void ) {
 	}
 
 	if(cg.hud.xp[0] >= 0) {
-		// pheno: redeye - XP overflow fix with servers >= 0.9.0
-		if( cgs.etpub >= ETPUB_VERSION( 0, 9, 0 ) ) {
+		// pheno: redeye - XP overflow fix with servers > 0.8.1
+		if( cgs.etpub > ETPUB_VERSION( 0, 8, 1 ) ) {
 			str = va( "%i", ( 32768 * cg.snap->ps.stats[STAT_XP_OVERFLOW] ) + cg.snap->ps.stats[STAT_XP] );
 		} else {
 			str = va( "%i", cg.snap->ps.stats[STAT_XP] );

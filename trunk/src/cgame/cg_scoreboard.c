@@ -420,7 +420,7 @@ static void WM_DrawClientScore( int x, int y, score_t *score, float *color, floa
 	}
 
 	// pheno: mark bots
-	if( cgs.etpub >= ETPUB_VERSION( 0, 9, 0 ) && ( score->miscScoreFlags & MSF_BOT ) ) {
+	if( cgs.etpub > ETPUB_VERSION( 0, 8, 1 ) && ( score->miscScoreFlags & MSF_BOT ) ) {
 		CG_DrawSmallString( tempx, y, " ^3BOT", fade );
 	} else {
 		CG_DrawSmallString( tempx, y, va( "%4i", score->ping ), fade );
@@ -652,7 +652,7 @@ static void WM_DrawClientScore_Small( int x, int y, score_t *score, float *color
 	}
 
 	// pheno: mark bots
-	if( cgs.etpub >= ETPUB_VERSION( 0, 9, 0 ) && ( score->miscScoreFlags & MSF_BOT ) ) {
+	if( cgs.etpub > ETPUB_VERSION( 0, 8, 1 ) && ( score->miscScoreFlags & MSF_BOT ) ) {
 		CG_DrawStringExt( tempx, y, " ^3BOT", hcolor, qfalse, qfalse, MINICHAR_WIDTH, MINICHAR_HEIGHT, 0 );
 	} else {
 		CG_DrawStringExt( tempx, y, va( "%4i", score->ping ), hcolor, qfalse, qfalse, MINICHAR_WIDTH, MINICHAR_HEIGHT, 0 );
