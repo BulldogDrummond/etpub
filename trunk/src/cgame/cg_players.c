@@ -377,7 +377,7 @@ void CG_NewClientInfo( int clientNum ) {
 
 				CG_AddPMItemBig( PM_SKILL, va("Increased %s skill to level %i!", skillNames[i], newInfo.skill[i] ), cgs.media.skillPics[ i ] );
 
-				if( cgs.etpub > ETPUB_VERSION( 0, 8, 1 ) ) {
+				if( cgs.etpub > ETPUB_VERSION( 0, 8, 2 ) ) {
 					trap_SendClientCommand( va( "skrwrd %i %i", i, newInfo.skill[i] ) );
 				} else {
 					CG_PriorityCenterPrint( va( "You have been rewarded with %s", bg_skillRewards[i][newInfo.skill[i] - 1] ), CP_DEFAULTHEIGHT, SMALLCHAR_WIDTH, 99999 );
