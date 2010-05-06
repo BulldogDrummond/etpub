@@ -710,9 +710,11 @@ static float PM_CmdScale( usercmd_t *cmd ) {
 #ifdef CGAMEDLL
 	int gametype = cg_gameType.integer;
 	int movespeed = cg_movespeed.integer;
+	int panzerwar = 0;
 #elif GAMEDLL
 	int gametype = g_gametype.integer;
 	int movespeed = g_movespeed.integer;
+	int panzerwar = g_panzerwar.integer;
 #endif
 
 	max = abs( cmd->forwardmove );
@@ -740,28 +742,23 @@ static float PM_CmdScale( usercmd_t *cmd ) {
 	if (pm->ps->pm_type == PM_NOCLIP)
 		scale *= 3;
 
-// JPW NERVE -- half move speed if heavy weapon is carried
-// this is the counterstrike way of doing it -- ie you can switch to a non-heavy weapon and move at
-// full speed.  not completely realistic (well, sure, you can run faster with the weapon strapped to your
-// back than in carry position) but more fun to play.  If it doesn't play well this way we'll bog down the
-// player if the own the weapon at all.
-#ifdef GAMEDLL    
- 	if (!g_panzerwar.integer) {
-#endif		
-		if ((pm->ps->weapon == WP_PANZERFAUST) ||
-			(pm->ps->weapon == WP_MOBILE_MG42) ||
-			(pm->ps->weapon == WP_MOBILE_MG42_SET) ||
-			(pm->ps->weapon == WP_MORTAR)) {
-			if( pm->skill[SK_HEAVY_WEAPONS] >= 3 ) {
-				scale *= 0.75;
-			} else {
-				scale *= 0.5;
-			}
+	// JPW NERVE -- half move speed if heavy weapon is carried
+	// this is the counterstrike way of doing it -- ie you can switch to a non-heavy weapon and move at
+	// full speed.  not completely realistic (well, sure, you can run faster with the weapon strapped to your
+	// back than in carry position) but more fun to play.  If it doesn't play well this way we'll bog down the
+	// player if the own the weapon at all.
+	if ((pm->ps->weapon == WP_PANZERFAUST) ||
+		(pm->ps->weapon == WP_MOBILE_MG42) ||
+		(pm->ps->weapon == WP_MOBILE_MG42_SET) ||
+		(pm->ps->weapon == WP_MORTAR)) {
+		// pheno: faster moving in panzerwar mode too
+		if( pm->skill[SK_HEAVY_WEAPONS] >= 3 || panzerwar == 1 ) {
+			scale *= 0.75;
+		} else {
+			scale *= 0.5;
 		}
-#ifdef GAMEDLL
 	}
-#endif
-	
+
 	if (pm->ps->weapon == WP_FLAMETHROWER) { // trying some different balance for the FT
 		if( !(pm->skill[SK_HEAVY_WEAPONS] >= 3) || pm->cmd.buttons & BUTTON_ATTACK )
 			scale *= 0.7;
