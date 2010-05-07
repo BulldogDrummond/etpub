@@ -2607,7 +2607,7 @@ char *ClientConnect( int clientNum, qboolean firstTime, qboolean isBot ) {
 				((ip & 0xFFFF0000) == 0xC0A80000) ||
 				( ip == 0x7F000001) ) {
 
-				client->sess.uci = 0;
+				client->sess.uci = 246;
 
 			} else {
 
