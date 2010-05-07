@@ -232,7 +232,7 @@ qboolean G_shrubbot_permission(gentity_t *ent, char flag)
 						return qtrue;
 					}
 				}
-				*flags++;
+				flags += 1;
 			}
 			l = g_shrubbot_admins[i]->level;
 		}
@@ -257,7 +257,7 @@ qboolean G_shrubbot_permission(gentity_t *ent, char flag)
 						return qtrue;
 					}
 				}
-				*flags++;
+				flags += 1;
 			}
 		}
 	}
@@ -1399,12 +1399,12 @@ qboolean G_shrubbot_readconfig(gentity_t *ent, int skiparg)
 						c->levels[cmdlevel++] =
 							atoi(level);
 						level[0] = '\0';
-						*lp++;
+						lp += 1;
 						continue;
 					}
 					Q_strcat(level, sizeof(level),
 						va("%c", *lp));
-					*lp++;
+					lp += 1;
 				}
 				if(level[0])
 					c->levels[cmdlevel++] = atoi(level);
@@ -1718,7 +1718,7 @@ qboolean G_shrubbot_tempban(int clientnum, char *reason, int length)
 	Q_strncpyz(b->guid, guid, sizeof(b->guid));
 
 	// strip port off of ip
-	for(i=0; *ip; *ip++) {
+	for(i=0; *ip; ip += 1) {
 		if(i >= sizeof(tmp) || *ip == ':') break;
 		tmp[i++] = *ip;
 	}
@@ -1868,7 +1868,7 @@ qboolean G_shrubbot_ban(gentity_t *ent, int skiparg)
 	Q_strncpyz(b->guid, guid, sizeof(b->guid));
 
 	// strip port off of ip
-	for(i=0; *ip; *ip++) {
+	for(i=0; *ip; ip += 1) {
 		if(i >= sizeof(tmp) || *ip == ':') break;
 		tmp[i++] = *ip;
 	}
@@ -2011,7 +2011,7 @@ qboolean G_shrubbot_mute(gentity_t *ent, int skiparg)
 	Q_SayArgv(skiparg, command, sizeof(command));
 	cmd = command;
 	if(*cmd == '!'){
-		*cmd++;
+		cmd += 1;
 	}
 
 	if(Q_SayArgc() < 2+skiparg) {
@@ -2468,7 +2468,7 @@ qboolean G_shrubbot_showbans(gentity_t *ent, int skiparg)
 				break;
 			date[j] = *made;
 			date[j+1] = '\0';
-			*made++;
+			made += 1;
 		}
 
 		secs = (g_shrubbot_bans[i]->expires - t);
@@ -3044,7 +3044,7 @@ qboolean G_shrubbot_warn(gentity_t *ent, int skiparg)
 			Q_strncpyz(w->name, vic->client->pers.netname, sizeof(w->name));
 			Q_strncpyz(w->guid, vic->client->sess.guid, sizeof(w->guid));
 			ip = vic->client->sess.ip;
-			for(i=0; *ip; *ip++) {
+			for(i=0; *ip; ip += 1) {
 				if(i >= sizeof(tmp) || *vic->client->sess.ip == ':') break;
 				tmp[i++] = *ip;
 			}
@@ -3233,7 +3233,7 @@ qboolean G_shrubbot_lockteams(gentity_t *ent, int skiparg, qboolean toLock)
 	Q_SayArgv(skiparg, command, sizeof(command));
 	cmd = command;
 	if(*cmd == '!')
-		*cmd++;
+		cmd += 1;
 
 	if(Q_SayArgc() < 2+skiparg) {
 		SPC(va("^/%s usage: ^7!%s r|b|s|all",cmd,cmd));
