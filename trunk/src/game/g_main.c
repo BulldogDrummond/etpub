@@ -6117,10 +6117,6 @@ void etpub_version( gentity_t *ent )
 	G_refPrintf( ent, "\n ^3Build  ^1: ^3Version      OS and Build Date" );
 	G_refPrintf( ent, "^1-----------------------------------------------------"
 		"-----------------" );
-	G_refPrintf( ent, " ^7etpub  ^1: ^7%-12s %s %s",
-		va( "%s (%i)", ETPUB_VERSION,
-			( atoi( a ) << 16 ) + ( atoi( b ) << 8 ) + atoi( c ) ),
-		CPUSTRING, __DATE__ );
 
 	if( ent && ent->client->pers.etpubc ) {
 		char userinfo[MAX_INFO_STRING];
@@ -6133,5 +6129,8 @@ void etpub_version( gentity_t *ent )
 			ent->client->pers.etpubc, s2 );
 	}
 
-	G_refPrintf( ent, "" );
+	G_refPrintf( ent, " ^7etpub  ^1: ^7%-12s %s %s\n",
+		va( "%s (%i)", ETPUB_VERSION,
+			( atoi( a ) << 16 ) + ( atoi( b ) << 8 ) + atoi( c ) ),
+		CPUSTRING, __DATE__ );
 }

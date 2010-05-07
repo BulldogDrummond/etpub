@@ -1295,6 +1295,8 @@ void Think_SetupObjectiveInfo( gentity_t *ent ) {
 		gentity_t *constructibles[2];
 		int team[2];
 
+		memset( &team, 0, sizeof( team ) );
+
 		ent->target_ent->parent = ent;
 
 		constructibles[0] = ent->target_ent;

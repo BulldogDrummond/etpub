@@ -1225,6 +1225,7 @@ qboolean G_ScriptAction_GotoMarker( gentity_t *ent, char *params )
 						VectorCopy( target2->r.currentOrigin, vec2 );
 					} else {
 						G_Error( "Target for relative gotomarker not found: %s\n", token );
+						return qfalse;
 					}
 
 					VectorAdd( vec, ent->r.currentOrigin, vec );
