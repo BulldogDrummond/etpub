@@ -736,9 +736,9 @@ static float CG_DrawWatermark( float y ) {
 
 	trap_R_SetColor( col );
 	CG_DrawPic( x, y, 48, 48, cgs.media.watermark );
-	return y + 48 + 4;
-
 	trap_R_SetColor( NULL );
+
+	return y + 48 + 4;
 }
 
 // HOLLEMOD - END

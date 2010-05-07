@@ -399,6 +399,8 @@ void CG_DrawMapEntity( mapEntityData_t *mEnt, float x, float y, float w, float h
 	int customimage = 0;
 	oidInfo_t* oidInfo = NULL;
 
+	memset( &string_pos, 0, sizeof( string_pos ) );
+
 	switch( mEnt->type ) {
 	case ME_PLAYER_DISGUISED:
 	case ME_PLAYER_REVIVE:

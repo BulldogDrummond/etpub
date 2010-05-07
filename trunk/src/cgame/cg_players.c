@@ -1865,6 +1865,8 @@ void CG_Player( centity_t *cent )
 	shadow = qfalse;												// gjd added to make sure it was initialized
 	shadowPlane = 0.0;												// ditto
 
+	memset( &playerOrigin, 0, sizeof( playerOrigin ) );
+
 	// if set to invisible, skip
 	if( cent->currentState.eFlags & EF_NODRAW ) {
 		return;

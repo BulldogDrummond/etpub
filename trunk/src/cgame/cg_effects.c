@@ -463,6 +463,8 @@ void CG_LoseHat( centity_t *cent, vec3_t dir )
 	vec3_t			origin, velocity;
 	bg_character_t	*character;
 
+	memset( &origin, 0, sizeof( origin ) );
+
 	clientNum = cent->currentState.clientNum;
 	if( clientNum < 0 || clientNum >= MAX_CLIENTS ) {
 		CG_Error( "Bad clientNum on player entity");
