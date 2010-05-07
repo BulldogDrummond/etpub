@@ -4459,7 +4459,7 @@ char *UI_FontName(const char *filename)
 			return name;
 		}
 		name[i] = *filename;
-		filename += 1; //*filename++;
+		filename += 1;
 		i++;
 	}
 	return name;

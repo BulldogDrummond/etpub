@@ -1194,7 +1194,7 @@ void CG_HudEditor_MouseHandling( int x, int y ) {
 		if(testrect->h <= 2)
 			testrect->h = 2;
 	
-		testrect += 1; //testrect += 1;
+		testrect += 1;
 	}
 }
 
