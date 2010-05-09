@@ -269,6 +269,9 @@ else:
 g_base_env = Environment( ENV = os.environ, CC = CC, CXX = CXX, LINK = LINK, CPPFLAGS = BASECPPFLAGS, LINKFLAGS = BASELINKFLAGS, CPPPATH = CORECPPPATH, LIBPATH = CORELIBPATH )
 scons_utils.SetupUtils( g_base_env )
 
+# pheno: disable deprecated copy warnings
+SetOption('warn', 'no-deprecated-copy')
+
 g_env = g_base_env.Copy()
 
 g_env['CPPFLAGS'] += OPTCPPFLAGS
