@@ -1586,7 +1586,7 @@ char *Q_StrReplace(char *haystack, char *needle, char *newp)
 			*destp = *haystack;
 			*++destp = '\0';
 		}
-		haystack += 1;
+		haystack++;
 	}
 	// tjw: don't work with final return value in case haystack 
 	//      was pointing at it.

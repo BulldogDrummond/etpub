@@ -6231,15 +6231,15 @@ char *Q_SayConcatArgs(int start) {
 	while(*s) {
 		if(c == start) return s;
 		if(*s == ' ') {
-			s += 1;
+			s++;
 			if(*s != ' ') {
 				c++;
 				continue;
 			}
-			while(*s && *s == ' ') s += 1;  
+			while(*s && *s == ' ') s++;
 			c++;
 		}
-		s += 1;
+		s++;
 	}
 	return s;
 }
@@ -6256,7 +6256,7 @@ char *Q_AddCR(char *s)
 		if(*s == '\\') {
 			copy = s;
 			place = s;
-			s += 1;
+			s++;
 			if(*s && *s == 'n') {
 				*copy = '\n';
 				while(*++s) {
@@ -6267,7 +6267,7 @@ char *Q_AddCR(char *s)
 				continue;
 			}
 		}
-		s += 1;
+		s++;
 	}
 	return start;
 }
@@ -6287,15 +6287,15 @@ int Q_SayArgc()
 	if(!*s) return 0;
 	while(*s) {
 		if(*s == ' ') {
-			s += 1;
+			s++;
 			if(*s != ' ') {
 				c++;
 				continue;
 			}
-			while(*s && *s == ' ') s += 1;  
+			while(*s && *s == ' ') s++;
 			c++;
 		}
-		s += 1;
+		s++;
 	}
 	return c;
 }
@@ -6324,23 +6324,23 @@ qboolean Q_SayArgv(int n, char *buffer, int bufferLength)
 					return qtrue;
 				}
 				*buffer = *s;
-				buffer += 1;
-				s += 1;
+				buffer++;
+				s++;
 				bc++;
 			}
 			*buffer = '\0';
 			return qtrue;
 		}
 		if(*s == ' ') {
-			s += 1;
+			s++;
 			if(*s != ' ') {
 				c++;
 				continue;
 			}
-			while(*s && *s == ' ') s += 1;  
+			while(*s && *s == ' ') s++;
 			c++;
 		}
-		s += 1;
+		s++;
 	}
 	return qfalse;
 }

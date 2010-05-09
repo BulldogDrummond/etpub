@@ -1194,7 +1194,7 @@ void CG_HudEditor_MouseHandling( int x, int y ) {
 		if(testrect->h <= 2)
 			testrect->h = 2;
 	
-		testrect += 1;
+		testrect++;
 	}
 }
 
@@ -1235,7 +1235,7 @@ void CG_HudEditor_KeyHandling( int _key, qboolean down ) {
 						testrect->draggedy = -1; 
 					}
 				}
-				testrect += 1;
+				testrect++;
 			}
 			break;
 
@@ -1257,7 +1257,7 @@ void CG_HudEditor_KeyHandling( int _key, qboolean down ) {
 						testrect->scaledy = -1; 
 					}
 				}
-				testrect += 1;
+				testrect++;
 			}
 			break;
 
@@ -1274,7 +1274,7 @@ void CG_HudEditor_KeyHandling( int _key, qboolean down ) {
 						testrect->h += 2;
 					} 
 				} 
-				testrect += 1;
+				testrect++;
 			}
 			break;
 		case K_MWHEELDOWN:
@@ -1289,7 +1289,7 @@ void CG_HudEditor_KeyHandling( int _key, qboolean down ) {
 						testrect->h -= 2;
 					} 
 				} 
-				testrect += 1;
+				testrect++;
 			}
 			break;
 
@@ -1666,7 +1666,7 @@ void CG_HudEditor_KeyHandling( int _key, qboolean down ) {
 							testrect->scaled = cg.hudEditor.hudScaleMode;
 						} 
 					} 
-					testrect += 1;
+					testrect++;
 				}
 			}
 			break;

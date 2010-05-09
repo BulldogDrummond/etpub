@@ -1116,11 +1116,11 @@ qboolean ConsoleChat(qboolean chatClient) {
 				line));
 			line[0] = '\0';
 			i = 0;
-			s += 1;
+			s++;
 			continue;
 		}
 		line[i] = *s;
-		s += 1;
+		s++;
 		i++;
 	}
 	if(line[0]) {

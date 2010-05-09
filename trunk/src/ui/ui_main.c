@@ -4459,7 +4459,7 @@ char *UI_FontName(const char *filename)
 			return name;
 		}
 		name[i] = *filename;
-		filename += 1;
+		filename++;
 		i++;
 	}
 	return name;
@@ -4472,10 +4472,10 @@ int UI_FontSize(const char *filename)
 
 	while(*filename) {
 		if(*filename != '_') {
-			filename += 1;
+			filename++;
 			continue;
 		}
-		filename += 1;
+		filename++;
 		break;
 	}	
 	while(*filename) {
@@ -4488,7 +4488,7 @@ int UI_FontSize(const char *filename)
 			return atoi(size);
 		}
 		size[i] = *filename;
-		filename += 1;
+		filename++;
 		i++;
 	}
 	return atoi(size);
