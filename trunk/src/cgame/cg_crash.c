@@ -189,7 +189,7 @@ void CrashHandler(int signal, siginfo_t *siginfo, ucontext_t *ctx) {
 		// yada - try logging to disk too
 		trap_Cvar_VariableStringBuffer("fs_homepath", homepath, sizeof(homepath));
 		trap_Cvar_VariableStringBuffer("fs_game", gamepath, sizeof(gamepath));
-		crashLog=fopen(va("%s/%s/etpub_crash.log",homepath,gamepath),"w");
+		crashLog=fopen(va("%s/%s/etpubc_crash.log",homepath,gamepath),"w");
 
 		Crash_Printf("-8<------- Crash Information ------->8-\n");
 		Crash_Printf("   Please forward to etpub mod team.   \n");
@@ -449,7 +449,7 @@ LONG CALLBACK win32_exception_handler(LPEXCEPTION_POINTERS e) {
 	trap_Cvar_VariableStringBuffer("fs_game", gamepath, sizeof(gamepath));
 
 	// yada - try logging to disk too
-	crashLog=fopen(va("%s\\%s\\etpub_crash.log",homepath,gamepath),"w");
+	crashLog=fopen(va("%s\\%s\\etpubc_crash.log",homepath,gamepath),"w");
 	pfnSymInitialize(GetCurrentProcess(), va("%s\\%s", basepath, gamepath), TRUE);
 	Crash_Printf("-8<------- Crash Information ------->8-\n");
 	Crash_Printf("   Please forward to etpub mod team.   \n");
