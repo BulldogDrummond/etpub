@@ -346,25 +346,6 @@ qboolean ReadyToConstruct(gentity_t *ent, gentity_t *constructible, qboolean upd
 	return qtrue;
 }
 
-void BotSetBlockEnt( int client, int blocker );
-/*
-==============
-CheckBotImpacts
-==============
-*/
-void CheckBotImpacts( gentity_t *ent, gentity_t *other ) {
-	char *blockEnts[] = {"func_explosive", NULL};
-	int j;
-
-	for (j=0; blockEnts[j]; j++) {
-		if (other->classname && !Q_stricmp( other->classname, blockEnts[j] )) {
-			BotSetBlockEnt( ent->s.number, other->s.number );
-		}
-	}
-}
-
-//==============================================================
-
 /*
 ==============
 ClientImpacts

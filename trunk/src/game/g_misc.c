@@ -2567,9 +2567,6 @@ void landmine_setup( gentity_t *ent ) {
 	ent->nextthink		= level.time + FRAMETIME;
 	ent->think			= G_LandmineThink;
 
-	// RF, record the time for AI
-	ent->awaitingHelpTime = level.time;
-
 	ent->damage			= 0;
 
 	// forty - #430 - base race mineid and map mines
@@ -2979,6 +2976,184 @@ void G_LastBloodMessage()
 	}
 
 	G_PrintMessage( Q_StrReplace( g_lastBloodMsg.string, "[a]", name ), 0 );
+}
+
+// pheno: -- moved from old botai code -----------
+
+// Gordon: adding some support functions
+// returns qtrue if a construction is under way on this ent, even before it hits any stages
+qboolean G_ConstructionBegun( gentity_t* ent ) {
+	if( G_ConstructionIsPartlyBuilt( ent ) ) {
+		return qtrue;
+	}
+	
+	if( ent->s.angles2[0] ) {
+		return qtrue;
+	}
+
+	return qfalse;
+}
+
+// returns qtrue if all stage are built
+qboolean G_ConstructionIsFullyBuilt( gentity_t* ent ) {
+	if( ent->s.angles2[1] != 1 ) {
+		return qfalse;
+	}
+	return qtrue;
+}
+
+// returns qtrue if 1 stage or more is built
+qboolean G_ConstructionIsPartlyBuilt( gentity_t* ent ) {
+	if( G_ConstructionIsFullyBuilt( ent ) ) {
+		return qtrue;
+	}
+
+	if( ent->count2 ) {
+		if( !ent->grenadeFired ) {
+			return qfalse;
+		} else {
+			return qtrue;
+		}
+	}
+
+	return qfalse;
+}
+
+qboolean G_ConstructionIsDestroyable( gentity_t* ent ) {
+	if(!G_ConstructionIsPartlyBuilt( ent )) {
+		return qfalse;
+	}
+
+	if( ent->s.angles2[0] ) {
+		return qfalse;
+	}
+
+	return qtrue;
+}
+
+// returns the constructible for this team that is attached to this toi
+gentity_t* G_ConstructionForTeam( gentity_t* toi, team_t team ) {
+	gentity_t* targ = toi->target_ent;
+	if(!targ || targ->s.eType != ET_CONSTRUCTIBLE) {
+		return NULL;
+	}
+
+	if( targ->spawnflags & 4 ) {
+		if( team == TEAM_ALLIES ) {
+			return targ->chain;
+		}
+	} else if( targ->spawnflags & 8 ) {
+		if( team == TEAM_AXIS ) {
+			return targ->chain;
+		}
+	}
+
+	return targ;
+}
+
+gentity_t* G_IsConstructible( team_t team, gentity_t* toi ) {
+	gentity_t* ent;
+
+	if( !toi || toi->s.eType != ET_OID_TRIGGER ) { 
+		return NULL;
+	}
+
+	if( !(ent = G_ConstructionForTeam( toi, team )) ) {
+		return NULL;
+	}
+
+	if( G_ConstructionIsFullyBuilt( ent ) ) {
+		return NULL;
+	}
+
+	if( ent->chain && G_ConstructionBegun( ent->chain ) ) {
+		return NULL;
+	}
+
+	return ent;
+}
+
+/*
+==============
+AngleDifference
+==============
+*/
+float AngleDifference(float ang1, float ang2) {
+	float diff;
+
+	diff = ang1 - ang2;
+	if (ang1 > ang2) {
+		if (diff > 180.0) diff -= 360.0;
+	}
+	else {
+		if (diff < -180.0) diff += 360.0;
+	}
+	return diff;
+}
+
+/*
+==================
+stristr
+==================
+*/
+char *stristr(char *str, char *charset) {
+	int i;
+
+	while(*str) {
+		for (i = 0; charset[i] && str[i]; i++) {
+			if (toupper(charset[i]) != toupper(str[i])) break;
+		}
+		if (!charset[i]) return str;
+		str++;
+	}
+	return NULL;
+}
+
+/*
+==================
+ClientName
+==================
+*/
+char *ClientName(int client, char *name, int size) {
+	char buf[MAX_INFO_STRING];
+
+	if (client < 0 || client >= MAX_CLIENTS) {
+		G_Printf("ClientName: client out of range\n");
+		return "[client out of range]";
+	}
+	trap_GetConfigstring(CS_PLAYERS+client, buf, sizeof(buf));
+	strncpy(name, Info_ValueForKey(buf, "n"), size-1);
+	name[size-1] = '\0';
+	Q_CleanStr( name );
+	return name;
+}
+
+/*
+==================
+FindClientByName
+==================
+*/
+int FindClientByName(char *name) {
+	int i, j;
+	char buf[MAX_INFO_STRING];
+
+	for(j = 0; j < level.numConnectedClients; j++) {
+		i = level.sortedClients[j];
+		ClientName(i, buf, sizeof(buf));
+		if (!Q_stricmp(buf, name)) {
+			return i;
+		}
+	}
+
+	for(j = 0; j < level.numConnectedClients; j++) {
+		i = level.sortedClients[j];
+		ClientName(i, buf, sizeof(buf));
+		if( stristr(buf, name) ) {
+			return i;
+		}
+	}
+
+	return -1;
 }
 
 // -----------------------------------------------

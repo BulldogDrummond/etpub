@@ -7,17 +7,6 @@
 
 #include "g_local.h"
 #include "../game/q_shared.h"
-#include "../game/botlib.h"		//bot lib interface
-#include "../game/be_aas.h"
-#include "../game/be_ea.h"
-#include "../game/be_ai_gen.h"
-#include "../game/be_ai_goal.h"
-#include "../game/be_ai_move.h"
-#include "../botai/botai.h"			//bot ai interface
-#include "../botai/ai_main.h"
-#include "../botai/chars.h"
-#include "../botai/ai_team.h"
-#include "../botai/ai_dmq3.h"
 #include "etpro_mdx.h"
 #include "g_etbot_interface.h"
 
@@ -25,9 +14,6 @@
 #include "g_lua.h"
 #endif // LUA_SUPPORT
 
-extern void BotRecordKill( int client, int enemy );
-extern void BotRecordPain( int client, int enemy, int mod );
-extern void BotRecordDeath( int client, int enemy );
 static void G_Obituary(int mod, int target, int attacker);
 
 extern vec3_t muzzleTrace;

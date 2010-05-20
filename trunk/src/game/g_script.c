@@ -77,8 +77,6 @@ qboolean G_ScriptAction_RepairMG42( gentity_t *ent, char *params );
 qboolean G_ScriptAction_SetHQStatus( gentity_t *ent, char *params );
 qboolean G_ScriptAction_PrintAccum(gentity_t *ent, char *params );
 qboolean G_ScriptAction_PrintGlobalAccum(gentity_t *ent, char *params );
-qboolean G_ScriptAction_RemoveBot(gentity_t *ent, char *params );
-qboolean G_ScriptAction_BotDebugging(gentity_t *ent, char *params );
 qboolean G_ScriptAction_ObjectiveStatus( gentity_t *ent, char *params );
 qboolean G_ScriptAction_SetModelFromBrushmodel( gentity_t *ent, char *params );
 qboolean G_ScriptAction_SetPosition( gentity_t *ent, char *params );
@@ -92,7 +90,6 @@ qboolean G_ScriptAction_AddTankAmmo( gentity_t *ent, char *params );
 qboolean G_ScriptAction_Kill( gentity_t *ent, char *params );
 qboolean G_ScriptAction_DisableMessage( gentity_t *ent, char *params );
 qboolean G_ScriptAction_SetGlobalFog( gentity_t *ent, char *params );
-qboolean G_ScriptAction_SpawnBot( gentity_t *ent, char *params );
 qboolean G_ScriptAction_Cvar( gentity_t *ent, char *params );
 qboolean G_ScriptAction_AbortIfWarmup( gentity_t *ent, char *params );
 qboolean G_ScriptAction_AbortIfNotSinglePlayer( gentity_t *ent, char *params );
@@ -103,8 +100,6 @@ qboolean G_ScriptAction_MusicQueue( gentity_t *ent, char *params );
 qboolean G_ScriptAction_MusicFade( gentity_t *ent, char *params );
 qboolean G_ScriptAction_SetDebugLevel( gentity_t *ent, char *params );
 qboolean G_ScriptAction_FadeAllSounds( gentity_t *ent, char *params );
-qboolean G_ScriptAction_SetBotGoalState( gentity_t *ent, char *params );
-qboolean G_ScriptAction_SetBotGoalPriority( gentity_t *ent, char *params );
 qboolean G_ScriptAction_SetAASState( gentity_t *ent, char *params );
 qboolean G_ScriptAction_Construct(gentity_t *ent, char *params ) ;
 qboolean G_ScriptAction_ConstructibleClass( gentity_t *ent, char *params ) ;
@@ -183,9 +178,6 @@ g_script_stack_action_t gScriptActions[] =
 
 	{"printaccum",						G_ScriptAction_PrintAccum},
 	{"printglobalaccum",				G_ScriptAction_PrintGlobalAccum},
-	{"removebot",						G_ScriptAction_RemoveBot},
-	{"botgebugging",					G_ScriptAction_BotDebugging},
-	{"spawnbot",						G_ScriptAction_SpawnBot},
 	{"cvar",							G_ScriptAction_Cvar},
 	{"abortifwarmup",					G_ScriptAction_AbortIfWarmup},
 	{"abortifnotsingleplayer",			G_ScriptAction_AbortIfNotSinglePlayer},
@@ -205,8 +197,6 @@ g_script_stack_action_t gScriptActions[] =
 	// fade all sounds up or down
 	{"fadeallsounds",					G_ScriptAction_FadeAllSounds},
 
-	{"setbotgoalstate",					G_ScriptAction_SetBotGoalState},
-	{"setbotgoalpriority",				G_ScriptAction_SetBotGoalPriority},
 	{"setaasstate",						G_ScriptAction_SetAASState},
 	{"construct",						G_ScriptAction_Construct},
 	{"spawnrubble",						G_ScriptAction_SpawnRubble},
@@ -1020,27 +1010,7 @@ void script_mover_die(gentity_t *self, gentity_t *inflictor, gentity_t *attacker
 	self->die = NULL;
 }
 
-void script_mover_set_blocking( gentity_t *ent ) {
-	if (ent->r.linked && ent->r.contents == CONTENTS_SOLID) {
-		G_SetAASBlockingEntity( ent, AAS_AREA_AVOID );
-	}
-}
-
-void script_mover_aas_blocking( gentity_t *ent ) {
-	if( ent->timestamp <= level.time ) {
-		// are we moving?
-		if (ent->s.pos.trType != TR_STATIONARY /*VectorLengthSquared( ent->s.pos.trDelta )*/) {
-			// never block while moving
-			if (ent->AASblocking) {
-				G_SetAASBlockingEntity( ent, AAS_AREA_ENABLED );
-			}
-		} else if (!VectorCompare( ent->s.pos.trBase, ent->botAreaPos )) {
-			script_mover_set_blocking( ent );
-			VectorCopy( ent->s.pos.trBase, ent->botAreaPos );
-		}
-		ent->timestamp = level.time + 500;
-	}
-
+void script_mover_think( gentity_t *ent ) {
 	if( ent->spawnflags & 128 ) {
 		if( !ent->tankLink ) {
 			if( ent->mg42weapHeat ) {
@@ -1089,9 +1059,7 @@ void script_mover_spawn(gentity_t *ent) {
 
 	script_linkentity(ent);
 
-	// now start thinking process which controls AAS interaction
-	script_mover_set_blocking( ent );
-	ent->think = script_mover_aas_blocking;
+	ent->think = script_mover_think;
 	ent->nextthink = level.time + 200;
 }
 

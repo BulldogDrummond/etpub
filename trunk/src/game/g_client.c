@@ -2249,7 +2249,6 @@ void ClientUserinfoChanged( int clientNum ) {
 		// c: playerType (class?)
 		// r: rank
 		// f: fireteam
-		// bot: botSlotNumber
 		// nwp: noWeapon
 		// m: medals
 		// ch: character
@@ -3113,7 +3112,6 @@ void ClientSpawn(
 	int			flags;
 	int			savedPing;
 	int			savedTeam;
-	int			savedSlotNumber;
 	// forty - #589 - Dens slashkill exploit fix
 	//int savedClassWeaponTime;
 	int savedDeathTime;
@@ -3187,7 +3185,6 @@ void ClientSpawn(
 	savedPing		= client->ps.ping;
 	savedTeam		= client->ps.teamNum;
 	// START	xkan, 8/27/2002
-	savedSlotNumber	= client->botSlotNumber;
 	// forty - #589 - Dens slashkill exploit fix
 	//savedClassWeaponTime = client->ps.classWeaponTime;
 	savedDeathTime = client->deathTime;
@@ -3211,9 +3208,6 @@ void ClientSpawn(
 	client->sess			= savedSess;
 	client->ps.ping			= savedPing;
 	client->ps.teamNum		= savedTeam;
-	// START	xkan, 8/27/2002
-	client->botSlotNumber	= savedSlotNumber;
-	// END		xkan, 8/27/2002
 
 	for( i = 0 ; i < MAX_PERSISTANT ; i++ ) {
 		client->ps.persistant[i] = persistant[i];
@@ -3543,23 +3537,13 @@ void ClientSpawn(
 	// https://zerowing.idsoftware.com/bugzilla/show_bug.cgi?id=569
 	G_ResetMarkers( ent );
 
-	// Set up bot speed bonusses
-	BotSpeedBonus( ent->s.number );
-
 	// RF, start the scripting system
-	if (!revived && client->sess.sessionTeam != TEAM_SPECTATOR) {
-		Bot_ScriptInitBot( ent->s.number );
-		//
-		if (spawnPoint && spawnPoint->targetname) {
-			Bot_ScriptEvent( ent->s.number, "spawn", spawnPoint->targetname );
-		} else {
-			Bot_ScriptEvent( ent->s.number, "spawn", "" );
-		}
+	if( !revived && client->sess.sessionTeam != TEAM_SPECTATOR ) {
 		// RF, call entity scripting event
 		G_Script_ScriptEvent( ent, "playerstart", "" );
 	}
 #ifndef NO_BOT_SUPPORT
-	else if( revived && ent->r.svFlags & SVF_BOT) {
+	else if( revived && ( ent->r.svFlags & SVF_BOT ) ) {
 		Bot_ScriptEvent( ent->s.number, "revived", "" );
 	}
 #endif

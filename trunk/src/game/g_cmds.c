@@ -4346,27 +4346,6 @@ void Cmd_SetCameraOrigin_f( gentity_t *ent ) {
 	}
 }
 
-extern gentity_t *BotFindEntityForName( char *name );
-
-/*
-==============
-Cmd_InterruptCamera_f
-==============
-*/
-void Cmd_InterruptCamera_f( gentity_t *ent ) {
-	gentity_t *player;
-
-	if( g_gametype.integer != GT_SINGLE_PLAYER && g_gametype.integer != GT_COOP )
-		return;
-
-	player = BotFindEntityForName( "player" );
-
-	if( !player )
-		return;
-
-	G_Script_ScriptEvent( player, "trigger", "cameraInterrupt" );
-}
-
 extern vec3_t playerMins;
 extern vec3_t playerMaxs;
 
@@ -6149,8 +6128,6 @@ void ClientCommand( int clientNum ) {
 		Cmd_StopCamera_f( ent );
 	} else if (Q_stricmp (cmd, "setCameraOrigin") == 0) {
 		Cmd_SetCameraOrigin_f( ent );
-	} else if (Q_stricmp (cmd, "cameraInterrupt") == 0) {
-		Cmd_InterruptCamera_f( ent );
 	} else if (Q_stricmp (cmd, "setviewpos") == 0) {
 		Cmd_SetViewpos_f( ent );
 	} else if (Q_stricmp (cmd, "setspawnpt") == 0) {
