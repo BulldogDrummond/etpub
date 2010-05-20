@@ -806,6 +806,14 @@
 				>
 			</File>
 			<File
+				RelativePath="..\..\etmain\ui\credits_et260.menu"
+				>
+			</File>
+			<File
+				RelativePath="..\..\etmain\ui\credits_etpub.menu"
+				>
+			</File>
+			<File
 				RelativePath="..\..\etmain\ui\credits_idsoftware.menu"
 				>
 			</File>
