@@ -268,7 +268,14 @@ static void CG_TransitionSnapshot( void ) {
 		if( cg.xp < cg.snap->ps.stats[STAT_XP] ) {
 			cg.xpChangeTime = cg.time;
 		}
-		cg.xp = cg.snap->ps.stats[STAT_XP];
+
+		// pheno: KMETAVZER - limbo panel XP overflow fix
+		if( cgs.etpub > ETPUB_VERSION( 0, 8, 2 ) ) { 
+			cg.xp = ( 32768 * cg.snap->ps.stats[STAT_XP_OVERFLOW] ) +
+				cg.snap->ps.stats[STAT_XP];
+		} else {
+			cg.xp = cg.snap->ps.stats[STAT_XP];
+		}
 	}
 
 	BG_PlayerStateToEntityState( &cg.snap->ps, &cg_entities[ cg.snap->ps.clientNum ].currentState, cg.time, qfalse );

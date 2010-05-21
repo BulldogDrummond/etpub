@@ -896,7 +896,7 @@ typedef struct {
 	int			clientFrame;		// incremented each frame
 	
 	int			clientNum;
-	int			xp;
+	long		xp;
 	int			xpChangeTime;
 
 	// kw: made demoRecording for pre-2.60 ET versions

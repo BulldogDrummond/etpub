@@ -567,7 +567,7 @@ struct panel_button_s {
 	rectDef_t	rect;
 
 	// data
-	int			data[8];
+	long		data[8];
 
 	// "font"
 	panel_button_text_t* font;

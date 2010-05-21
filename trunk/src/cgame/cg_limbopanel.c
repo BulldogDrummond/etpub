@@ -1992,7 +1992,7 @@ void CG_LimboPanel_RenderCounterNumber( float x, float y, float w, float h, floa
 	trap_R_DrawStretchPic( x, y, w, h, 0, numberS,	1, numberE, shaderRoll );
 }
 
-int CG_LimboPanel_RenderCounter_ValueForButton( panel_button_t* button ) {
+long CG_LimboPanel_RenderCounter_ValueForButton( panel_button_t* button ) {
 	int i, count = 0;
 
 	switch( button->data[0] ) {
@@ -2242,7 +2242,7 @@ void CG_LimboPanel_RenderCounter( panel_button_t* button ) {
 	
 	float counter_rolltime =	CG_LimboPanel_RenderCounter_RollTimeForButton	( button );
 	int num =					CG_LimboPanel_RenderCounter_NumRollers			( button );
-	int value =					CG_LimboPanel_RenderCounter_ValueForButton		( button );
+	long value =				CG_LimboPanel_RenderCounter_ValueForButton		( button );
 	if( num > MAX_ROLLERS ) {
 		num = MAX_ROLLERS;
 	}
@@ -2254,8 +2254,8 @@ void CG_LimboPanel_RenderCounter( panel_button_t* button ) {
 		float frac = (COUNTER_ROLLTOTAL / counter_rolltime);
 
 		for( i = 0, j = 1; i < num; i++, j *= numimages ) {
-			int valueOld = (button->data[3] / j) % numimages;
-			int valueNew = (button->data[5] / j) % numimages;
+			long valueOld = (button->data[3] / j) % numimages;
+			long valueNew = (button->data[5] / j) % numimages;
 
 			if( valueNew == valueOld ) {
 				count[i] = valueOld;
