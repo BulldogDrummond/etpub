@@ -3157,3 +3157,22 @@ int FindClientByName(char *name) {
 }
 
 // -----------------------------------------------
+
+void G_ReportGibs( gentity_t *targ, gentity_t *attacker )
+{
+	if( !( g_logOptions.integer & LOGOPTS_REPORT_GIBS ) ) {
+		return;
+	}
+
+	if( attacker == targ ||
+		attacker->s.number == ENTITYNUM_WORLD ||
+		!attacker->client ) {
+		AP( va( "cpm \"%s ^7was gibbed.\"", targ->client->pers.netname ) );
+	} else if( OnSameTeam( attacker, targ ) ) {
+		AP( va( "cpm \"%s ^7was gibbed by ^1TEAMMATE^7 %s\"",
+			targ->client->pers.netname, attacker->client->pers.netname ) );
+	} else {
+		AP( va( "cpm \"%s ^7was gibbed by^7 %s\"",
+			targ->client->pers.netname, attacker->client->pers.netname ) );
+	}
+}
