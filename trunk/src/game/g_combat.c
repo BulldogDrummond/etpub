@@ -627,7 +627,7 @@ void player_die( gentity_t *self, gentity_t *inflictor, gentity_t *attacker, int
 		if(attacker == self || killer == ENTITYNUM_WORLD )
 			AP(va("cpm \"%s ^7was gibbed.\"", self->client->pers.netname));
 		else if(OnSameTeam(attacker, self))
-			AP(va("cpm \"%s ^3WAS GIBBED BY TEAMMATE^7 %s\"", self->client->pers.netname, killerName));
+			AP(va("cpm \"%s ^7was gibbed by ^1TEAMMATE^7 %s\"", self->client->pers.netname, killerName));
 		else
 			AP(va("cpm \"%s ^7was gibbed by^7 %s\"", self->client->pers.netname, killerName));
 	}
@@ -2315,7 +2315,7 @@ void G_Damage( gentity_t *targ, gentity_t *inflictor, gentity_t *attacker,  vec3
 							AP(va("cpm \"%s ^7was gibbed.\"", targ->client->pers.netname));
 						else if(OnSameTeam(targ, attacker))
 							if(attacker->client)
-								AP(va("cpm \"%s ^3WAS GIBBED BY TEAMMATE^7 %s\"", targ->client->pers.netname, attacker->client->pers.netname));
+								AP(va("cpm \"%s ^7was gibbed by ^1TEAMMATE^7 %s\"", targ->client->pers.netname, attacker->client->pers.netname));
 							else
 								AP(va("cpm \"%s ^7was gibbed.\"", targ->client->pers.netname));
 						else
@@ -3299,7 +3299,7 @@ static void G_Obituary(int mod, int target, int attacker) {
 		if( gi->client->sess.sessionTeam == ga->client->sess.sessionTeam ) {
 			if(!(g_logOptions.integer & LOGOPTS_TK_WEAPON)) {
 				tk = "^7";
-				message = "[v] ^1WAS KILLED BY TEAMMATE^7 [a]";
+				message = "[v] ^7was killed by ^1TEAMMATE^7 [a]";
 			} else {
 				tk = "^1TEAMKILL:^7 ";
 				//message = "[v] ^7[a]";
