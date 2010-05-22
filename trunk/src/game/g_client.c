@@ -655,6 +655,8 @@ void limbo( gentity_t *ent, qboolean makeCorpse )
 						WP_BINOCULARS) ) {
 				G_DropBinocs(ent);
 			}
+			// pheno: satchel should disappear here!
+			G_FadeItems( ent, MOD_SATCHEL );
 			CopyToBodyQue (ent); // make a nice looking corpse
 		} else {
 			trap_UnlinkEntity (ent);

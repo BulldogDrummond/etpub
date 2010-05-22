@@ -442,3 +442,4 @@ current
 * pheno:   fixed broken scoreboard alignment when in g_gametype 5 mode (LMS)
 * pheno:   added redeye's XP overflow fix
 * pheno:   added KMETAVZER's limbo panel XP overflow fix
+* pheno:   satchel remains as long as the player was not gibbed
