@@ -1630,6 +1630,7 @@ void TossClientItems( gentity_t *self );
 gentity_t* G_BuildHead(gentity_t *ent);
 gentity_t* G_BuildLeg(gentity_t *ent);
 qboolean IsFFReflectable(int mod);
+void G_ReportGibs( gentity_t *targ, gentity_t *attacker ); // pheno
 
 // damage flags
 #define DAMAGE_RADIUS				0x00000001	// damage was indirect

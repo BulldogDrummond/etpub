@@ -620,16 +620,9 @@ void player_die( gentity_t *self, gentity_t *inflictor, gentity_t *attacker, int
 	}
 #endif
 
-	if(
-		g_logOptions.integer & LOGOPTS_REPORT_GIBS && 
-		self->health <= GIB_HEALTH 
-	) {
-		if(attacker == self || killer == ENTITYNUM_WORLD )
-			AP(va("cpm \"%s ^7was gibbed.\"", self->client->pers.netname));
-		else if(OnSameTeam(attacker, self))
-			AP(va("cpm \"%s ^7was gibbed by ^1TEAMMATE^7 %s\"", self->client->pers.netname, killerName));
-		else
-			AP(va("cpm \"%s ^7was gibbed by^7 %s\"", self->client->pers.netname, killerName));
+	// report gibs
+	if( self->health <= GIB_HEALTH ) {
+		G_ReportGibs( self, attacker );
 	}
 
 #ifdef LUA_SUPPORT
@@ -2307,24 +2300,10 @@ void G_Damage( gentity_t *targ, gentity_t *inflictor, gentity_t *attacker,  vec3
 					G_addStats(targ, attacker, take, mod);
 				}
 	
-				if( (targ->health < limbo_health) && (targ->health > GIB_HEALTH) ) {
-					if(
-						g_logOptions.integer & LOGOPTS_REPORT_GIBS 
-					) {
-						if(attacker == targ || attacker->s.number == ENTITYNUM_WORLD )
-							AP(va("cpm \"%s ^7was gibbed.\"", targ->client->pers.netname));
-						else if(OnSameTeam(targ, attacker))
-							if(attacker->client)
-								AP(va("cpm \"%s ^7was gibbed by ^1TEAMMATE^7 %s\"", targ->client->pers.netname, attacker->client->pers.netname));
-							else
-								AP(va("cpm \"%s ^7was gibbed.\"", targ->client->pers.netname));
-						else
-							if(attacker->client)
-								AP(va("cpm \"%s ^7was gibbed by^7 %s\"", targ->client->pers.netname, attacker->client->pers.netname));
-							else 
-								AP(va("cpm \"%s ^7was gibbed.\"", targ->client->pers.netname));
-					}
-					limbo(targ, qtrue);
+				if( ( targ->health < limbo_health ) &&
+					( targ->health > GIB_HEALTH ) ) {
+					G_ReportGibs( targ, attacker ); // report gibs
+					limbo( targ, qtrue );
 				}
 
 			} else {
@@ -3444,9 +3423,23 @@ qboolean IsFFReflectable(int mod)
 	return (rval);
 }
 
-
-
 //==========================================================================
 
+void G_ReportGibs( gentity_t *targ, gentity_t *attacker )
+{
+	if( !( g_logOptions.integer & LOGOPTS_REPORT_GIBS ) ) {
+		return;
+	}
 
-
+	if( attacker == targ ||
+		attacker->s.number == ENTITYNUM_WORLD ||
+		!attacker->client ) {
+		AP( va( "cpm \"%s ^7was gibbed.\"", targ->client->pers.netname ) );
+	} else if( OnSameTeam( attacker, targ ) ) {
+		AP( va( "cpm \"%s ^7was gibbed by ^1TEAMMATE^7 %s\"",
+			targ->client->pers.netname, attacker->client->pers.netname ) );
+	} else {
+		AP( va( "cpm \"%s ^7was gibbed by^7 %s\"",
+			targ->client->pers.netname, attacker->client->pers.netname ) );
+	}
+}
