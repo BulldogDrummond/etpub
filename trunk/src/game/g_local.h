@@ -1710,7 +1710,7 @@ void aagun_fire( gentity_t *other );
 void G_PrintMessage( char *message, int position );
 void G_FirstBloodMessage( gentity_t *attacker, gentity_t *victim );
 void G_LastBloodMessage();
-void G_ReportGibs( gentity_t *targ, gentity_t *attacker );
+void G_ReportGib( gentity_t *targ, gentity_t *attacker );
 
 
 //

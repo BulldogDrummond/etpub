@@ -3158,7 +3158,12 @@ int FindClientByName(char *name) {
 
 // -----------------------------------------------
 
-void G_ReportGibs( gentity_t *targ, gentity_t *attacker )
+/*
+==================
+G_ReportGib
+==================
+*/
+void G_ReportGib( gentity_t *targ, gentity_t *attacker )
 {
 	if( !( g_logOptions.integer & LOGOPTS_REPORT_GIBS ) ) {
 		return;

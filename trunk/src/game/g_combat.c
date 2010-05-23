@@ -620,9 +620,9 @@ void player_die( gentity_t *self, gentity_t *inflictor, gentity_t *attacker, int
 	}
 #endif
 
-	// report gibs
+	// report gib
 	if( self->health <= GIB_HEALTH ) {
-		G_ReportGibs( self, attacker );
+		G_ReportGib( self, attacker );
 	}
 
 #ifdef LUA_SUPPORT
@@ -2302,7 +2302,7 @@ void G_Damage( gentity_t *targ, gentity_t *inflictor, gentity_t *attacker,  vec3
 	
 				if( ( targ->health < limbo_health ) &&
 					( targ->health > GIB_HEALTH ) ) {
-					G_ReportGibs( targ, attacker ); // report gibs
+					G_ReportGib( targ, attacker ); // report gib
 					limbo( targ, qtrue );
 				}
 
