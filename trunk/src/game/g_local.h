@@ -2918,9 +2918,10 @@ void G_MakeReferee(void);
 void G_RemoveReferee(void);
 void G_MuteClient(void);
 void G_UnMuteClient(void);
-// pheno: shoutcaster - referee commands
+// pheno
 void G_refMakeShoutcaster_cmd( gentity_t *ent );
 void G_refRemoveShoutcaster_cmd( gentity_t *ent );
+void G_refLogout_cmd( gentity_t *ent );
 
 
 

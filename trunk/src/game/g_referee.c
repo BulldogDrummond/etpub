@@ -32,11 +32,15 @@ qboolean G_refCommandCheck(gentity_t *ent, char *cmd)
 	// yada - handled by the vote functions now
 	//else if(!Q_stricmp(cmd, "mute"))		G_refMute_cmd(ent, qtrue); 
 	//else if(!Q_stricmp(cmd, "unmute"))		G_refMute_cmd(ent, qfalse);
-	// pheno: shoutcaster - referee commands
+
+	// pheno
 	else if( !Q_stricmp( cmd, "makeshoutcaster" ) )
 		G_refMakeShoutcaster_cmd( ent );
 	else if( !Q_stricmp( cmd, "removeshoutcaster" ) )
 		G_refRemoveShoutcaster_cmd( ent );
+	else if( !Q_stricmp( cmd, "logout" ) )
+		G_refLogout_cmd( ent );
+
 	else return(qfalse);
 
 	return(qtrue);
@@ -89,21 +93,21 @@ qboolean G_refCommandCheck(gentity_t *ent, char *cmd)
 // yada - new version since sv and game cmd are equal now
 void G_refHelp_cmd(gentity_t *ent)
 {
-	G_refPrintf(ent,"^3Referee commands:");
+	G_refPrintf(ent,"\n^3Referee commands:");
 	G_refPrintf(ent,"------------------------------------------");
-
 	G_voteHelp(ent, qfalse);
 	// CHRUKER: b038 - Removed non-existing restart command
 	// CHRUKER: b039 - Added <pid> parameter to remove command
-	G_refPrintf(ent,"^5allready         putallies^7 <pid>  ^5speclock");
-	G_refPrintf(ent,"^5lock             putaxis^7 <pid>    ^5specunlock");
-	G_refPrintf(ent,"^5help             remove^7 <pid>     ^5unlock");
-	G_refPrintf(ent,"^5warmup           warn ^7<pid>       ^5makeshoutcaster^7 <pid>");
-	G_refPrintf(ent,"^5pause            unpause          removeshoutcaster^7 <pid>");
+	G_refPrintf(ent,"------------------------------------------");
+	G_refPrintf(ent,"^5allready         putallies^7 <pid>^5  speclock         warmup");
+	G_refPrintf(ent,"^5lock             putaxis^7 <pid>^5    specunlock       warn^7 <pid>");
+	G_refPrintf(ent,"^5help             remove^7 <pid>^5     unlock           logout");
+	G_refPrintf(ent,"^5pause            makeshoutcaster^7 <pid>");
+	G_refPrintf(ent,"^5unpause          removeshoutcaster^7 <pid>");
 	G_refPrintf(ent,"------------------------------------------");
 	G_refPrintf(ent,"Usage: ^3\\ref <cmd> [params]\n");
 }
-		
+
 
 // Request for ref status or lists ref commands.
 void G_ref_cmd(gentity_t *ent, unsigned int dwCommand, qboolean fValue)
@@ -550,6 +554,19 @@ void G_refRemoveShoutcaster_cmd( gentity_t *ent )
 	}
 
 	G_RemoveShoutcaster( player );
+}
+
+/*
+================
+G_refLogout_cmd
+================
+*/
+void G_refLogout_cmd( gentity_t *ent )
+{ 
+	if( ent->client->sess.referee == RL_REFEREE ) {
+		ent->client->sess.referee = RL_NONE;
+		ClientUserinfoChanged( ent->s.clientNum );
+	}
 }
 
 //////////////////////////////
