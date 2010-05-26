@@ -375,7 +375,7 @@ void CG_DrawFireTeamOverlay( rectDef_t* rect ) {
 	
 			locStr[i] = va( "^3%s", CG_GetLocationMsg(origin));
 
-			if (!Q_stricmp( locStr[i], "Unknown")){
+			if (!Q_stricmp( locStr[i], "^3Unknown")){
 				locStr[i] = va( "^3(%s)", BG_GetLocationString( loc ));
 				locValid = qfalse;
 			}
