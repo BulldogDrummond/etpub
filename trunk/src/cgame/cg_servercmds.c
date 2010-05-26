@@ -2924,10 +2924,6 @@ static void CG_ServerCommand( void ) {
 		return;
 	}
 
-	// TODO (pheno): did we really need a server command?
-	//               check this! have a look at cg_ents.c on
-	//               adding shoutcasters dynamite counters
-
 	// forty - dyno counters
 	if(!Q_stricmp(cmd, "dc")) {
 		CG_DynoCounter();
