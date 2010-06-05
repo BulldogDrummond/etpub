@@ -2100,3 +2100,4 @@
 * pheno:   added etpub_version console command
 * pheno:   added redeye's XP overflow fix
 * pheno:   added logout referee command
+* pheno:   omnibot 0.8 support added by crapshoot
