@@ -1,8 +1,8 @@
 ////////////////////////////////////////////////////////////////////////////////
 // 
-// $LastChangedBy: crapshoot $
-// $LastChangedDate: 2008-10-09 00:10:07 -0700 (Thu, 09 Oct 2008) $
-// $LastChangedRevision: 3605 $
+// $LastChangedBy: drevil $
+// $LastChangedDate: 2010-03-31 21:38:18 -0700 (Wed, 31 Mar 2010) $
+// $LastChangedRevision: 4776 $
 //
 // Title: ET Config
 //
@@ -30,6 +30,9 @@ typedef enum eET_Version
 	ET_VERSION_0_7_alpha2,
 	ET_VERSION_0_7,
 	ET_VERSION_0_71,
+	ET_VERSION_0_8_alpha1,
+	ET_VERSION_0_8_alpha2,
+	ET_VERSION_0_8,
 	ET_VERSION_LAST,
 	ET_VERSION_LATEST = ET_VERSION_LAST - 1
 } ET_Version;
@@ -79,7 +82,6 @@ typedef enum eET_Msgs
 	ET_MSG_PICKWEAPON,
 	ET_MSG_PICKWEAPON2,
 	ET_MSG_GETHINT,
-	ET_MSG_CHECKPOINTTEAM,
 	ET_MSG_CHANGESPAWNPOINT,
 
 	ET_MSG_GHASFLAG,
@@ -106,51 +108,9 @@ typedef enum eET_Msgs
 	ET_MSG_SETCVAR,
 	ET_MSG_GETCVAR,
 	ET_MSG_DISABLEBOTPUSH,
-	ET_MSG_GETWEAPONTAG,
 
 	ET_MSG_END
 } ET_Msg;
-
-typedef enum eET_PlayerClass
-{
-	ET_CLASS_UNKNOWN = 0,
-	ET_CLASS_NULL = 0,
-	ET_CLASS_SOLDIER,
-	ET_CLASS_MEDIC,
-	ET_CLASS_ENGINEER,
-	ET_CLASS_FIELDOPS,
-	ET_CLASS_COVERTOPS,
-	ET_CLASS_MAX,
-	ET_CLASS_ANY = ET_CLASS_MAX,
-
-	// Other values to identify the "class"
-	ET_CLASSEX_MG42MOUNT,
-	ET_CLASSEX_DYNAMITE,
-	ET_CLASSEX_MINE,
-	ET_CLASSEX_SATCHEL,
-	ET_CLASSEX_SMOKEBOMB,
-	ET_CLASSEX_SMOKEMARKER,
-	ET_CLASSEX_VEHICLE,
-	ET_CLASSEX_VEHICLE_HVY,
-	ET_CLASSEX_VEHICLE_NODAMAGE,
-	ET_CLASSEX_BREAKABLE,
-	//ET_CLASSEX_INJUREDPLAYER,
-	ET_CLASSEX_CORPSE,
-	ET_CLASSEX_TREASURE,
-	ET_CLASSEX_GRENADE,
-	ET_CLASSEX_ROCKET,
-	ET_CLASSEX_MORTAR,
-	ET_CLASSEX_ARTY,
-	ET_CLASSEX_AIRSTRIKE,
-	ET_CLASSEX_FLAMECHUNK,
-	ET_CLASSEX_M7_GRENADE,
-	ET_CLASSEX_GPG40_GRENADE,
-	ET_CLASSEX_HEALTHCABINET,
-	ET_CLASSEX_AMMOCABINET,
-	ET_CLASSEX_BROKENCHAIR,
-
-	ET_NUM_CLASSES
-} ET_PlayerClass;
 
 typedef enum eET_Weapons
 {
@@ -221,8 +181,61 @@ typedef enum eET_Weapons
 
 	ET_WP_MOUNTABLE_MG42,
 
-	ET_WP_MAX
+	ET_WP_MAX = ET_WP_NONE+128
 } ET_Weapon;
+
+// enumerations: EntityCategory
+typedef enum eET_EntityCategory
+{
+	ET_ENT_CAT_MINE = ENT_CAT_MAX,
+
+	// THIS MUST BE LAST
+	ET_ENT_CAT_MAX,
+} ET_EntityCategory;
+
+typedef enum eET_PlayerClass
+{
+	ET_CLASS_UNKNOWN = 0,
+	ET_CLASS_NULL = 0,
+	ET_CLASS_SOLDIER,
+	ET_CLASS_MEDIC,
+	ET_CLASS_ENGINEER,
+	ET_CLASS_FIELDOPS,
+	ET_CLASS_COVERTOPS,
+	ET_CLASS_MAX,
+	ET_CLASS_ANY = ET_CLASS_MAX,
+
+	// Other values to identify the "class"
+	ET_CLASSEX_MG42MOUNT,
+	ET_CLASSEX_DYNAMITE,
+	ET_CLASSEX_MINE,
+	ET_CLASSEX_SATCHEL,
+	ET_CLASSEX_SMOKEBOMB,
+	ET_CLASSEX_SMOKEMARKER,
+	ET_CLASSEX_VEHICLE,
+	ET_CLASSEX_VEHICLE_HVY,
+	ET_CLASSEX_VEHICLE_NODAMAGE,
+	ET_CLASSEX_BREAKABLE,
+	//ET_CLASSEX_INJUREDPLAYER,
+	ET_CLASSEX_CORPSE,
+	ET_CLASSEX_TREASURE,
+	ET_CLASSEX_GRENADE,
+	ET_CLASSEX_ROCKET,
+	ET_CLASSEX_MORTAR,
+	ET_CLASSEX_ARTY,
+	ET_CLASSEX_AIRSTRIKE,
+	ET_CLASSEX_FLAMECHUNK,
+	ET_CLASSEX_M7_GRENADE,
+	ET_CLASSEX_GPG40_GRENADE,
+	ET_CLASSEX_HEALTHCABINET,
+	ET_CLASSEX_AMMOCABINET,
+	ET_CLASSEX_BROKENCHAIR,
+
+	ET_CLASSEX_WEAPON,
+	ET_CLASSEX_WEAPON_LAST = ET_CLASSEX_WEAPON+ET_WP_MAX,
+
+	ET_NUM_CLASSES
+} ET_PlayerClass;
 
 // typedef: ET_Team
 //		The available teams for this gametype.
@@ -233,37 +246,6 @@ typedef enum eET_Team
 	ET_TEAM_ALLIES,
 	ET_TEAM_MAX
 } ET_Team;
-
-// typedef: ET_GoalType
-//		Enumerations for ET specific goal types.
-typedef enum eET_GoalType
-{
-	ET_GOAL_BEGIN = BASE_GOAL_NUM,
-	ET_GOAL_CONSTRUCTION,	// construction site
-	ET_GOAL_DYNTARGET,		// dyno targets
-	ET_GOAL_DYNAMITE,		// a dynomite ;-)
-	ET_GOAL_FALLENTEAMMATE,	// a teammate that needs to be revived
-	ET_GOAL_MOVER,			// a mover, could be vehicle or other shit
-	ET_GOAL_MG42MOUNT,		// a mountable mg42
-	ET_GOAL_MG42REPAIR,		// repair a mountable mg42
-	ET_GOAL_MOBILEMG42SPOT,	// a mobile mg42 spot
-	ET_GOAL_MORTARPOSITION, // a spot to launch mortars from
-	ET_GOAL_SATCHELTARGET,	// satchel charge target
-	ET_GOAL_CALLARTY,		// source for artillery strikes
-	ET_GOAL_CALLARTYTARGET_S,// static target for artillery strikes
-	ET_GOAL_CALLARTYTARGET_D,// dynamic target for artillery strikes
-	ET_GOAL_PLANTMINE,		 // area to plant mines in
-	ET_GOAL_HEALTH_CAB,		// health cabinet
-	ET_GOAL_AMMO_CAB,		// ammo cabinet
-	ET_GOAL_CHECKPOINT,		// capturable checkpoint
-	ET_GOAL_EXPLOSIVE,	    // func_explosives
-	ET_GOAL_FLAMETHROWER,		// flamethrower camp
-	ET_GOAL_PANZER,			// panzer camp
-	ET_GOAL_USERGOAL,			// routeable flag for scripted waypoint goals (i.e. useswitch)
-
-	// THIS MUST STAY LAST
-	ET_GOAL_END
-} ET_GoalType;
 
 typedef enum eET_Skills
 {

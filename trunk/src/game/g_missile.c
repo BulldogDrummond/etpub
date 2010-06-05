@@ -1631,6 +1631,15 @@ void G_LandmineThink( gentity_t *self ) {
 				continue;
 		}
 
+		// bots by default won't trip mines that they can see ...
+		if( !(g_OmniBotFlags.integer & OBF_TRIGGER_MINES) && ent->r.svFlags & SVF_BOT ) { 
+			if (G_LandmineTeam( self ) == ent->client->sess.sessionTeam ) 
+				continue;
+
+			if ( G_LandmineSpotted(self) )
+				continue;
+		}
+
 		// TAT 11/20/2002 use the unified trigger check to see if we are close enough to prime the mine
 		if( sEntWillTriggerMine( ent, self ) ) {
 			

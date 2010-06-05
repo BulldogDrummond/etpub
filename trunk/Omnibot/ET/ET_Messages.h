@@ -1,8 +1,8 @@
 ////////////////////////////////////////////////////////////////////////////////
 // 
-// $LastChangedBy: crapshoot $
-// $LastChangedDate: 2008-10-09 00:10:07 -0700 (Thu, 09 Oct 2008) $
-// $LastChangedRevision: 3605 $
+// $LastChangedBy: drevil $
+// $LastChangedDate: 2010-02-09 21:32:10 -0800 (Tue, 09 Feb 2010) $
+// $LastChangedRevision: 4671 $
 //
 // Title: TF Message Structure Definitions
 //
@@ -114,11 +114,6 @@ struct ET_CursorHint
 {
 	int			m_Type;
 	int			m_Value;
-};
-
-struct ET_CheckpointTeam
-{
-	int			m_OwningTeam;
 };
 
 struct ET_SpawnPoint
@@ -245,11 +240,6 @@ struct ET_CvarGet
 struct ET_DisableBotPush
 {
 	int			m_Push;
-};
-
-struct ET_GetWeaponTag
-{
-	int			m_WeaponTag;
 };
 
 #pragma pack(pop)

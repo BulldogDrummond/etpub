@@ -1,8 +1,8 @@
 ////////////////////////////////////////////////////////////////////////////////
 // 
 // $LastChangedBy: drevil $
-// $LastChangedDate: 2008-09-21 00:57:13 -0700 (Sun, 21 Sep 2008) $
-// $LastChangedRevision: 3464 $
+// $LastChangedDate: 2010-04-24 20:51:13 -0700 (Sat, 24 Apr 2010) $
+// $LastChangedRevision: 4828 $
 //
 ////////////////////////////////////////////////////////////////////////////////
 
@@ -63,13 +63,13 @@ public:
 		return udata.m_Short[0] >= 0;
 	}
 
-	bool operator!=(const GameEntity& _2) const
+	bool operator!=(const GameEntity& _other) const
 	{
-		return udata.m_Int != _2.udata.m_Int;
+		return udata.m_Int != _other.udata.m_Int;
 	}
-	bool operator==(const GameEntity& _2) const
+	bool operator==(const GameEntity& _other) const
 	{
-		return udata.m_Int == _2.udata.m_Int;
+		return udata.m_Int == _other.udata.m_Int;
 	}
 
 	explicit GameEntity(obint16 _index, obint16 _serial)
@@ -137,13 +137,13 @@ inline bool SUCCESS(obResult _res)
 {
 	return (_res == Success) ? true : false;
 }
-inline int MAKE_KEY(char _1, char _2, char _3, char _4)
+inline int MAKE_KEY(char _v1, char _v2, char _v3, char _v4)
 {
-	return (((_1)<<24) | ((_2)<<16) | ((_3)<<8) | (_4));
+	return (((_v1)<<24) | ((_v2)<<16) | ((_v3)<<8) | (_v4));
 }
 #else
 #define SUCCESS(res) ((res) == Success ? 1 : 0)
-#define MAKE_KEY(res) (((_1)<<24) | ((_2)<<16) | ((_3)<<8) | (_4))
+#define MAKE_KEY(_v1, _v2, _v3, _v4) (((_v1)<<24) | ((_v2)<<16) | ((_v3)<<8) | (_v4))
 #endif
 
 typedef enum eFireMode
@@ -181,13 +181,6 @@ typedef enum eWeaponType
 {
 	INVALID_WEAPON = 0,
 } WeaponType;
-
-// enumerations: AmmoType
-//		INVALID_AMMO - Used for invalid ammo types.
-typedef enum eAmmoType
-{
-	INVALID_AMMO = 0,
-} AmmoType;
 
 // enumerations: BotDebugFlag
 //		BOT_DEBUG_LOG - Debug log for this bot.
@@ -278,8 +271,6 @@ typedef struct AABB_t
 		{
 			m_Mins[i] = _min[i] < _max[i] ? _min[i] : _max[i];
 			m_Maxs[i] = _min[i] > _max[i] ? _min[i] : _max[i];
-			/*m_Mins[i] = _min[i];
-			m_Maxs[i] = _max[i];*/
 		}
 	}
 	void CenterPoint(float _out[3]) const
@@ -386,6 +377,16 @@ typedef struct AABB_t
 			m_Maxs[i] *= _scale;
 		}
 	}
+	AABB_t ScaleCopy(float _scale)
+	{
+		AABB_t out = *this; // cs: was AABB, but gcc said NO
+		for(int i = 0; i < 3; ++i)
+		{
+			out.m_Mins[i] *= _scale;
+			out.m_Maxs[i] *= _scale;
+		}
+		return out;
+	}
 	void Expand(float _expand)
 	{
 		for(int i = 0; i < 3; ++i)
@@ -412,19 +413,19 @@ typedef struct AABB_t
 	{
 		_bl[0] = m_Mins[0];
 		_bl[1] = m_Mins[1];
-		_bl[2] = m_Mins[0];
+		_bl[2] = m_Mins[2];
 
 		_tl[0] = m_Mins[0];
 		_tl[1] = m_Maxs[1];
-		_tl[2] = m_Mins[0];
+		_tl[2] = m_Mins[2];
 
 		_tr[0] = m_Maxs[0];
 		_tr[1] = m_Maxs[1];
-		_tr[2] = m_Mins[0];
+		_tr[2] = m_Mins[2];
 
 		_br[0] = m_Maxs[0];
 		_br[1] = m_Mins[1];
-		_br[2] = m_Mins[0];
+		_br[2] = m_Mins[2];
 	}
 	void GetTopCorners(float _bl[3], float _tl[3], float _tr[3], float _br[3])
 	{
@@ -528,43 +529,6 @@ typedef enum eButtonFlags
 	BOT_BUTTON_FIRSTUSER
 } ButtonFlags;
 
-// enumerations: GoalType
-//		GOAL_AMMO - Ammunition can be located at this goal
-//		GOAL_ARMOR - Armor can be located at this goal
-//		GOAL_HEALTH - Health can be located at this goal
-//		GOAL_GOTO - The bot should just go to this goal
-//		GOAL_DEFEND - The bot should just go to this goal and watch for targets.
-//		GOAL_ATTACK - The bot should just go to this goal and hunt for targets.
-//		GOAL_SNIPE - The bot should snipe from this point.
-//		GOAL_CTF_FLAG - The bot should attempt to grab this flag and return it to a capture point.
-//		GOAL_CTF_FLAGCAP - The bot should take GOAL_CTF_FLAG to this point.
-//		GOAL_CTF_RETURN_FLAG - The bot should attempt to touch this flag to 'return' it.
-//		GOAL_SCRIPT - A script should be ran for this goal.
-//		GOAL_ROUTEPT - A start region for a route point.
-typedef enum eGoalType
-{
-	GOAL_NONE = 0,
-	GOAL_AMMO,
-	GOAL_ARMOR,
-	GOAL_HEALTH,
-	GOAL_GOTO,
-	GOAL_DEFEND,
-	GOAL_ATTACK,
-	GOAL_SNIPE,
-	GOAL_CTF_FLAG,
-	GOAL_CTF_FLAGCAP,
-	GOAL_CTF_HOLDCAP,
-	GOAL_CTF_RETURN_FLAG,
-	GOAL_SCRIPT,
-	GOAL_ROUTEPT,
-	GOAL_TRAININGSPAWN,
-
-	// Mod specific goals start at this
-	BASE_GOAL_NUM = 1000,
-	// Script goals
-	BASE_GOAL_SCRIPT = 2000,
-} GoalType;
-
 // enumerations: EntityFlags
 //		ENT_FLAG_TEAM1 - This entity is only available/visible for team 1
 //		ENT_FLAG_TEAM2 - This entity is only available/visible for team 2
@@ -646,13 +610,20 @@ typedef enum eEntityCategory
 	ENT_CAT_PROJECTILE,
 	ENT_CAT_SHOOTABLE,
 	ENT_CAT_PICKUP,
+	ENT_CAT_PICKUP_AMMO,
+	ENT_CAT_PICKUP_WEAPON,
+	ENT_CAT_PICKUP_HEALTH,
+	ENT_CAT_PICKUP_ENERGY,
+	ENT_CAT_PICKUP_ARMOR,
 	ENT_CAT_TRIGGER,
 	ENT_CAT_MOVER,
 	ENT_CAT_AVOID,
 	ENT_CAT_MOUNTEDWEAPON,
 	ENT_CAT_MISC,
 	ENT_CAT_STATIC,
+	ENT_CAT_PROP,
 	ENT_CAT_AUTODEFENSE,
+	ENT_CAT_OBSTACLE,
 	ENT_CAT_INTERNAL,
 
 	// THIS MUST BE LAST
@@ -685,6 +656,8 @@ typedef enum eEntityClassGeneric
 	ENT_CLASS_GENERIC_GOAL,
 	ENT_CLASS_EXPLODING_BARREL,
 	ENT_CLASS_GENERIC_WEAPON,
+	ENT_CLASS_GENERIC_PROP,
+	ENT_CLASS_GENERIC_PROP_EXPLODE,
 } EntityClassGeneric;
 
 // enumerations: SoundType
@@ -741,6 +714,7 @@ typedef enum eContents
 	CONT_LADDER		= (1<<7),
 	CONT_TELEPORTER = (1<<8),
 	CONT_MOVABLE	= (1<<9),
+	CONT_PLYRCLIP	= (1<<10),
 
 	// THIS MUST BE LAST
 	CONT_START_USER = (1<<24)
@@ -751,6 +725,7 @@ typedef enum eContents
 typedef enum eSurfaceFlags
 {
 	SURFACE_SLICK	= (1<<0),
+	SURFACE_LADDER	= (1<<1),
 
 	// THIS MUST BE LAST
 	SURFACE_START_USER = (1<<24)
@@ -793,34 +768,34 @@ typedef enum eNavigatorID
 	NAVID_NONE,	
 	NAVID_WP,	
 	NAVID_NAVMESH,
+	NAVID_FLOODFILL,
+	NAVID_RECAST,
 
 	// THIS MUST BE LAST
 	NAVID_MAX
 } NavigatorID;
 
 // enumerations: TraceMasks
-//		TR_MASK_ALL - This trace should test against everything
-//		TR_MASK_SOLID - This trace should test against only solids
-//		TR_MASK_PLAYER - This trace should test against only players
-//		TR_MASK_SHOT - This trace should test as a shot trace
-//		TR_MASK_OPAQUE - This trace should test against opaque objects only
-//		TR_MASK_WATER - This trace should test against water
-//		TR_MASK_PLAYERCLIP - This trace should test against player clips
-//		TR_MASK_SMOKEBOMB - This trace should test against player clips
 typedef enum eTraceMasks
 {
-	TR_MASK_ALL			= (1<<0),
-	TR_MASK_SOLID		= (1<<1),
-	TR_MASK_PLAYER		= (1<<2),
-	TR_MASK_SHOT		= (1<<3),
-	TR_MASK_OPAQUE		= (1<<4),
-	TR_MASK_WATER		= (1<<5),
-	TR_MASK_PLAYERCLIP	= (1<<6),
-	TR_MASK_SMOKEBOMB	= (1<<7),
-	TR_MASK_FLOODFILL	= (1<<8),
+	TR_MASK_ALL			= (1<<0), // hit everything
+	TR_MASK_SOLID		= (1<<1), // blocked by solids/world
+	TR_MASK_PLAYER		= (1<<2), // blocked by players
+	TR_MASK_SHOT		= (1<<3), // blocked by same mask that game uses for projectile/shot traces
+	TR_MASK_OPAQUE		= (1<<4), // blocked by opaque surfaces(even if they can be shot through)
+	TR_MASK_WATER		= (1<<5), // blocked by see-through water
+	TR_MASK_SLIME		= (1<<6), // blocked by opaque water
+	TR_MASK_GRATE		= (1<<7), // blocked by grates, normally projectiles go through grates, solids dont
+	TR_MASK_PLAYERCLIP	= (1<<8), // blocked by player clips
+	TR_MASK_SMOKEBOMB	= (1<<9), // blocked by smoke bombs
+	TR_MASK_FLOODFILL	= (1<<10), // flood fill filter
+	TR_MASK_FLOODFILLENT= (1<<11), // flood fill filter with entities
 
 	// THIS MUST BE LAST
-	TR_MASK_LAST		= (1<<16)
+	TR_MASK_START_USER	= (1<<24),
+
+	// combo masks can be defined separately
+	TR_MASK_VISIBLE		= TR_MASK_SOLID|TR_MASK_OPAQUE|TR_MASK_SLIME, // can see but not necessarily shoot
 } TraceMasks;
 
 // struct: BotUserData
@@ -871,43 +846,43 @@ typedef struct obUserData_t
 		udata.m_Vector[1] = _v[1]; 
 		udata.m_Vector[2] = _v[2]; 
 	};
-	obUserData_t(int _0, int _1, int _2) : DataType(dt3_4byteFlags)
+	obUserData_t(int _v0, int _v1, int _v2) : DataType(dt3_4byteFlags)
 	{
-		udata.m_4ByteFlags[0] = _0; 
-		udata.m_4ByteFlags[1] = _1; 
-		udata.m_4ByteFlags[2] = _2;
+		udata.m_4ByteFlags[0] = _v0; 
+		udata.m_4ByteFlags[1] = _v1; 
+		udata.m_4ByteFlags[2] = _v2;
 	};
-	obUserData_t(char *_0, char *_1, char *_2) : DataType(dt3_Strings)
+	obUserData_t(char *_v0, char *_v1, char *_v2) : DataType(dt3_Strings)
 	{
-		udata.m_CharPtrs[0] = _0; 
-		udata.m_CharPtrs[1] = _1; 
-		udata.m_CharPtrs[2] = _2;
+		udata.m_CharPtrs[0] = _v0; 
+		udata.m_CharPtrs[1] = _v1; 
+		udata.m_CharPtrs[2] = _v2;
 	};
-	obUserData_t(short _0, short _1, short _2, short _3, short _4, short _5) : 
+	obUserData_t(short _v0, short _v1, short _v2, short _v3, short _v4, short _v5) : 
 		DataType(dt6_2byteFlags)
 	{
-		udata.m_2ByteFlags[0] = _0; 
-		udata.m_2ByteFlags[1] = _1; 
-		udata.m_2ByteFlags[2] = _2;
-		udata.m_2ByteFlags[3] = _3; 
-		udata.m_2ByteFlags[4] = _4; 
-		udata.m_2ByteFlags[5] = _5;
+		udata.m_2ByteFlags[0] = _v0; 
+		udata.m_2ByteFlags[1] = _v1; 
+		udata.m_2ByteFlags[2] = _v2;
+		udata.m_2ByteFlags[3] = _v3; 
+		udata.m_2ByteFlags[4] = _v4; 
+		udata.m_2ByteFlags[5] = _v5;
 	};
-	obUserData_t(char _0, char _1, char _2, char _3, char _4, char _5, char _6, char _7, char _8, char _9, char _10, char _11) : 
+	obUserData_t(char _v0, char _v1, char _v2, char _v3, char _v4, char _v5, char _v6, char _v7, char _v8, char _v9, char _v10, char _v11) : 
 		DataType(dt12_1byteFlags)
 	{
-		udata.m_1ByteFlags[0] = _0; 
-		udata.m_1ByteFlags[1] = _1; 
-		udata.m_1ByteFlags[2] = _2;
-		udata.m_1ByteFlags[3] = _3; 
-		udata.m_1ByteFlags[4] = _4; 
-		udata.m_1ByteFlags[5] = _5;
-		udata.m_1ByteFlags[6] = _6; 
-		udata.m_1ByteFlags[7] = _7; 
-		udata.m_1ByteFlags[8] = _8;
-		udata.m_1ByteFlags[9] = _9; 
-		udata.m_1ByteFlags[10] = _10; 
-		udata.m_1ByteFlags[11] = _11;
+		udata.m_1ByteFlags[0] = _v0; 
+		udata.m_1ByteFlags[1] = _v1; 
+		udata.m_1ByteFlags[2] = _v2;
+		udata.m_1ByteFlags[3] = _v3; 
+		udata.m_1ByteFlags[4] = _v4; 
+		udata.m_1ByteFlags[5] = _v5;
+		udata.m_1ByteFlags[6] = _v6; 
+		udata.m_1ByteFlags[7] = _v7; 
+		udata.m_1ByteFlags[8] = _v8;
+		udata.m_1ByteFlags[9] = _v9; 
+		udata.m_1ByteFlags[10] = _v10; 
+		udata.m_1ByteFlags[11] = _v11;
 	};
 	// Function: IsNone
 	// This <BotUserData> has no type specified
@@ -939,9 +914,9 @@ typedef struct obUserData_t
 	// Function: Is3_4ByteFlags
 	// This <BotUserData> is an array of 3 4-byte values
 	inline bool Is3_4ByteFlags() const { return (DataType == dt3_4byteFlags); };
-	// Function: Is6_2ByteFlags
+	// Function: Is6_otherByteFlags
 	// This <BotUserData> is an array of 6 2-byte values
-	inline bool Is6_2ByteFlags() const { return (DataType == dt6_2byteFlags); };
+	inline bool Is6_otherByteFlags() const { return (DataType == dt6_2byteFlags); };
 	// Function: Is12_1ByteFlags
 	// This <BotUserData> is an array of 12 1-byte values
 	inline bool Is12_1ByteFlags() const { return (DataType == dt12_1byteFlags); };
@@ -1017,6 +992,49 @@ typedef struct obUserData_t
 #endif
 } obUserData;
 
+class KeyVals
+{
+public:
+	enum { MaxArgs = 32, MaxArgLength = 32, MaxStringLength = 64 };
+
+	bool SetInt(const char *_key, int _val);
+	bool SetFloat(const char *_key, float _val);
+	bool SetEntity(const char *_key, GameEntity _val);
+	bool SetVector(const char *_key, float _x,float _y,float _z);
+	bool SetVector(const char *_key, const float *_v);
+	bool SetString(const char *_key, const char *_value);
+	bool Set(const char *_key, const obUserData &_value);
+
+	bool GetInt(const char *_key, int &_val) const;
+	bool GetFloat(const char *_key, float &_val) const;
+	bool GetEntity(const char *_key, GameEntity &_val) const;
+	bool GetVector(const char *_key, float &_x,float &_y,float &_z) const;
+	bool GetVector(const char *_key, float *_v) const;
+	bool GetString(const char *_key, const char *&_value) const;
+
+	void Reset();
+
+	void GetKV(int _index, const char *&_key, obUserData &ud) const;
+
+	KeyVals();
+private:
+	char		m_Key[MaxArgs][MaxArgLength];
+	char		m_String[MaxArgs][MaxStringLength];
+	obUserData	m_Value[MaxArgs];
+
+	bool SetKeyVal(const char *_key, const obUserData &_ud);
+	bool GetKeyVal(const char *_key, obUserData &_ud) const;
+};
+
+class Seconds
+{
+public:
+	int GetMs() const { return m_Ms; } 
+	Seconds(float _seconds = 0.f) : m_Ms((int)(_seconds*1000.f)) {}
+private:
+	int		m_Ms;
+};
+
 // struct: TriggerInfo
 enum { TriggerBufferSize = 72 };
 typedef struct TriggerInfo_t
@@ -1060,22 +1078,12 @@ typedef struct TriggerInfo_t
 // struct: MapGoalDef
 typedef struct MapGoalDef_t
 {
-	enum { BufferSize = 64 };
-
-	GameEntity		m_Entity;
-	int				m_GoalType;
-	int				m_Team;
-	char			m_TagName[BufferSize];
-	obUserData		m_UserData;
+	KeyVals			Props;
 #ifdef __cplusplus
 	
 	void Reset()
 	{
-		m_Entity.Reset();
-		m_GoalType = 0;
-		m_Team = 0;
-		m_TagName[0] = 0;
-		m_UserData = obUserData();
+		Props.Reset();
 	}
 	MapGoalDef_t() { Reset(); }
 #endif
@@ -1085,12 +1093,15 @@ typedef struct MapGoalDef_t
 typedef struct AutoNavFeature_t
 {
 	int			m_Type;
+	int			m_Team;
 	float		m_Position[3];
 	float		m_Facing[3];
 	float		m_TargetPosition[3];
 	AABB		m_TargetBounds;
 	float		m_TravelTime;
 	AABB		m_Bounds;
+	bool		m_ObstacleEntity;
+	bool		m_BiDirectional;
 } AutoNavFeature;
 
 // Generic Enumerations
@@ -1124,7 +1135,8 @@ typedef enum eFlagState
 	S_FLAG_AT_BASE,
 	S_FLAG_DROPPED,
 	S_FLAG_CARRIED,
-	S_FLAG_UNAVAILABLE
+	S_FLAG_UNAVAILABLE,
+	S_FLAG_UNKNOWN
 } FlagState;
 
 // enumerations: GameState
@@ -1177,6 +1189,7 @@ typedef enum
 	DRAW_RADIUS,
 	DRAW_BOUNDS,
 	DRAW_POLYGON,
+	DRAW_TEXT,
 } DebugMsgType;
 
 typedef float vector_t;
@@ -1207,8 +1220,16 @@ typedef struct
 	enum { MaxPolyVerts=32 };
 	obVec3			m_Verts[MaxPolyVerts];	
 	int				m_NumVerts;
-	int				m_Color;	
+	int				m_Color;
 } IPC_DebugPolygonMessage;
+
+typedef struct  
+{
+	enum { BufferSize=256 };
+	obVec3			m_Pos;
+	char			m_Buffer[BufferSize];
+	int				m_Color;
+} IPC_DebugTextMessage;
 
 typedef struct
 {
@@ -1218,6 +1239,7 @@ typedef struct
 		IPC_DebugRadiusMessage	m_Radius;
 		IPC_DebugAABBMessage	m_AABB;
 		IPC_DebugPolygonMessage m_Polygon;
+		IPC_DebugTextMessage	m_Text;
 	} data;
 
 	int				m_Duration;

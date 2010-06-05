@@ -1,8 +1,8 @@
 ////////////////////////////////////////////////////////////////////////////////
 // 
-// $LastChangedBy: geekfeststarter $
-// $LastChangedDate: 2008-04-30 01:48:21 -0700 (Wed, 30 Apr 2008) $
-// $LastChangedRevision: 2741 $
+// $LastChangedBy: drevil $
+// $LastChangedDate: 2009-02-08 23:38:11 -0800 (Sun, 08 Feb 2009) $
+// $LastChangedRevision: 3917 $
 //
 // about: Exported function definitions
 //		In order for the game to call functions from the bot, we must export
@@ -53,7 +53,7 @@ void BotSendGlobalEvent(const MessageHelper &_message);
 void BotUpdateEntity(GameEntity oldent,GameEntity newent);
 // function: BotDeleteMapGoal
 //		Delete map goal by name
-void BotDeleteMapGoal(char *goalname);
+void BotDeleteMapGoal(const char *goalname);
 
 //SubscriberHandle Message_SubscribeToMsg(int _msg, pfnMessageFunction _func);
 //void Message_Unsubscribe(const SubscriberHandle _handle);

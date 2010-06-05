@@ -1,8 +1,8 @@
 ////////////////////////////////////////////////////////////////////////////////
 // 
-// $LastChangedBy: ensiform $
-// $LastChangedDate: 2008-07-27 17:34:32 -0700 (Sun, 27 Jul 2008) $
-// $LastChangedRevision: 3163 $
+// $LastChangedBy: drevil $
+// $LastChangedDate: 2010-05-01 10:36:37 -0700 (Sat, 01 May 2010) $
+// $LastChangedRevision: 4841 $
 //
 ////////////////////////////////////////////////////////////////////////////////
 
@@ -350,20 +350,17 @@ struct Msg_MoverAt
 
 	Msg_MoverAt()
 	{
+		m_Position[0]=m_Position[1]=m_Position[2]=0.f;
+		m_Under[0]=m_Under[1]=m_Under[2]=0.f;
 	}
 };
 
 //////////////////////////////////////////////////////////////////////////
 // Events
 
-struct Event_SystemThreadCreated
+struct Event_SystemScriptUpdated
 {
-	int			m_ThreadId;
-};
-
-struct Event_SystemThreadDestroyed
-{
-	int			m_ThreadId;
+	obint32		m_ScriptKey;
 };
 
 struct Event_SystemClientConnected
@@ -408,7 +405,8 @@ struct EntityInstance
 {
 	GameEntity		m_Entity;
 	BitFlag32		m_EntityCategory;
-	int				m_EntityClass;	
+	int				m_EntityClass;
+	int				m_TimeStamp;
 };
 
 struct Event_EntityDeleted
@@ -473,6 +471,11 @@ struct Event_AddWeapon
 struct Event_RemoveWeapon
 {
 	int			m_WeaponId;
+};
+
+struct Event_RefreshWeapon
+{
+	obint32		m_WeaponId;
 };
 
 struct Event_WeaponFire
@@ -555,9 +558,20 @@ struct Event_EntityConnection
 	Event_EntityConnection()
 		: m_ConnectionId(0)
 		, m_ConnectionDir(CON_TWO_WAY)
+		, m_Radius(0.f)
 		, m_Teleport(false)
 	{
 	}
+};
+
+struct Event_EntEnterRadius
+{
+	GameEntity	m_Entity;
+};
+
+struct Event_EntLeaveRadius
+{
+	GameEntity	m_Entity;
 };
 
 #pragma pack(pop)

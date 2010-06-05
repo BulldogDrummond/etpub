@@ -1,8 +1,8 @@
 ////////////////////////////////////////////////////////////////////////////////
 // 
 // $LastChangedBy: drevil $
-// $LastChangedDate: 2008-03-13 23:07:37 -0700 (Thu, 13 Mar 2008) $
-// $LastChangedRevision: 2505 $
+// $LastChangedDate: 2009-05-16 18:53:18 -0700 (Sat, 16 May 2009) $
+// $LastChangedRevision: 4155 $
 //
 ////////////////////////////////////////////////////////////////////////////////
 
@@ -34,6 +34,17 @@ public:
 		cdata.m_RGBA[1] = _g;
 		cdata.m_RGBA[2] = _b;
 		cdata.m_RGBA[3] = _a; // 255 is opaque, 0 is transparent
+	}
+	void FromFloat(float _r, float _g, float _b, float _a = 1)
+	{
+		cdata.m_RGBA[0] = (obuint8)(_r * 255.f);
+		cdata.m_RGBA[1] = (obuint8)(_g * 255.f);
+		cdata.m_RGBA[2] = (obuint8)(_b * 255.f);
+		cdata.m_RGBA[3] = (obuint8)(_a * 255.f);// 255 is opaque, 0 is transparent
+	}
+	operator int() const
+	{
+		return cdata.m_RGBAi;
 	}
 
 	inline obuint8 r() const	{ return cdata.m_RGBA[0]; }

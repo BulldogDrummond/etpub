@@ -1,8 +1,8 @@
 ////////////////////////////////////////////////////////////////////////////////
 // 
 // $LastChangedBy: drevil $
-// $LastChangedDate: 2008-08-27 23:18:41 -0700 (Wed, 27 Aug 2008) $
-// $LastChangedRevision: 3372 $
+// $LastChangedDate: 2010-03-17 22:09:36 -0700 (Wed, 17 Mar 2010) $
+// $LastChangedRevision: 4739 $
 //
 // about: Generic Bot Events
 //
@@ -19,8 +19,7 @@ typedef enum
 	EVENT_ID_UNDEFINED = 0,
 
 	SYSTEM_ID_FIRST,
-		SYSTEM_THREAD_CREATED,
-		SYSTEM_THREAD_DESTROYED,
+		SYSTEM_SCRIPT_CHANGED,
 	SYSTEM_ID_LAST,
 
 	GAME_ID_FIRST,
@@ -72,12 +71,17 @@ typedef enum
 			MESSAGE_ADDWEAPON,		// gives a weapon to the bot, should add to list to be evaluated for use
 			MESSAGE_REMOVEWEAPON,	// remove a weapon from the bots inventory
 			MESSAGE_RESETWEAPONS,	// tells the bot to clear out all the weapons
-			MESSAGE_REFRESHWEAPONPTRS,
+			MESSAGE_REFRESHWEAPON,
+			MESSAGE_REFRESHALLWEAPONS,
 			MESSAGE_SPECTATED,
 			MESSAGE_AIMCOMPLETED,
 			MESSAGE_SCRIPTMSG,
 			MESSAGE_PROXIMITY_TRIGGER,
 			MESSAGE_DYNAMIC_PATHS_CHANGED,
+			MESSAGE_ENT_ENTER_RADIUS,
+			MESSAGE_ENT_LEAVE_RADIUS,
+			MESSAGE_MG_ENTER_RADIUS,
+			MESSAGE_MG_LEAVE_RADIUS,
 		MESSAGE_ID_LAST,
 
 		// Percepts  (senses: feel, see, hear, smell, )

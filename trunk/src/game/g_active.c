@@ -248,15 +248,13 @@ void BotVoiceChatAfterIdleTime( int client, const char *id, int mode, int delay,
 void PushBot( gentity_t *ent, gentity_t *other ) {
 	vec3_t dir, ang, f, r;
 	float oldspeed;
-	//
 
-	// dont push when mounted in certain stationary weapons
-	if(other->client && Bot_Util_AllowPush(other->client->ps.weapon) == qfalse)
-		return;
-
-	// dont push if scripted not to
-	if(ent->client && !ent->client->sess.botPush)
-		return;
+	// dont push when mounted in certain stationary weapons or scripted not to be pushed
+	if(other->client)
+	{
+		if (Bot_Util_AllowPush(other->client->ps.weapon) == qfalse || !other->client->sess.botPush)	
+			return;
+	}
 
 	oldspeed = VectorLength( other->client->ps.velocity );
 	if (oldspeed < 200)

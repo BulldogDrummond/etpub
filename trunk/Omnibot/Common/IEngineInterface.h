@@ -1,8 +1,8 @@
 ////////////////////////////////////////////////////////////////////////////////
 // 
 // $LastChangedBy: drevil $
-// $LastChangedDate: 2008-07-05 03:18:03 -0700 (Sat, 05 Jul 2008) $
-// $LastChangedRevision: 3023 $
+// $LastChangedDate: 2010-05-01 10:37:51 -0700 (Sat, 01 May 2010) $
+// $LastChangedRevision: 4842 $
 //
 ////////////////////////////////////////////////////////////////////////////////
 
@@ -149,12 +149,9 @@ public:
 };
 
 // typedef: IEngineInterface
-//		This struct defines all the function pointers that the
-//		game will fill in and give to the bot so that the bot may perform generic
-//		actions without caring about the underlying engine or game. It is 
-//		_ABSOLUTELY REQUIRED_ that the game not leave any of the function pointers
-//		set to null, unless otherwise noted, even if that means using empty functions in the interface
-//		to set the pointers.
+//		This struct defines all the function that the game will implement 
+//		and give to the bot so that the bot may perform generic
+//		actions without caring about the underlying engine or game.
 class IEngineInterface
 {
 public:
@@ -246,9 +243,17 @@ public:
 	//		This function should return the position of a <GameEntity> in world space
 	virtual obResult GetEntityPosition(const GameEntity _ent, float _pos[3]) = 0;
 
+	// Function: GetEntityLocalAABB
+	//		This function should return the axis aligned box of a <GameEntity> in local space
+	virtual obResult GetEntityLocalAABB(const GameEntity _ent, AABB &_aabb) = 0;
+
 	// Function: GetEntityWorldAABB
 	//		This function should return the axis aligned box of a <GameEntity> in world space
 	virtual obResult GetEntityWorldAABB(const GameEntity _ent, AABB &_aabb) = 0;
+
+	// Function: GetEntityWorldOBB
+	//		This function should return the oriented box of a <GameEntity> in world space
+	virtual obResult GetEntityWorldOBB(const GameEntity _ent, float *_center, float *_axis0, float *_axis1, float *_axis2, float *_extents) = 0;
 
 	// Function: GetEntityGroundEntity
 	//		This function should return any entity being rested/stood on.
@@ -272,7 +277,7 @@ public:
 
 	// Function: BotGetCurrentAmmo
 	//		This function should update ammo stats for a client and ammotype
-	virtual obResult GetCurrentAmmo(const GameEntity _ent, int _ammotype, int &_cur, int &_max) = 0;
+	virtual obResult GetCurrentAmmo(const GameEntity _ent, int _weaponId, FireMode _mode, int &_cur, int &_max) = 0;
 
 	// Function: GetGameTime
 	//		This function should return the current game time in milli-seconds
@@ -291,10 +296,20 @@ public:
 	//		to request additional or mod specific info from the game
 	virtual obResult InterfaceSendMessage(const MessageHelper &_data, const GameEntity _ent) = 0;
 
-	// Function: AddTempDisplayLine
+	// Function: DebugLine
 	//		Adds a line to immediately display between 2 positions, with a specific color
 	virtual bool DebugLine(const float _start[3], const float _end[3], const obColor &_color, float _time) 
 	{ _start; _end; _color; _time; return false; }
+	
+	// Function: DebugBox
+	//		Adds a line to immediately display between 2 positions, with a specific color
+	virtual bool DebugBox(const float _mins[3], const float _maxs[3], const obColor &_color, float _time) 
+	{ _mins; _maxs; _color; _time; return false; }
+
+	// Function: DebugArrow
+	//		Adds a line to immediately display between 2 positions, with a specific color
+	virtual bool DebugArrow(const float _start[3], const float _end[3], const obColor &_color, float _time) 
+	{ return DebugLine(_start, _end, _color, _time); }
 
 	// Function: DebugRadius
 	//		Adds a radius indicator to be displayed at a certain position with radius and color
@@ -306,6 +321,11 @@ public:
 	virtual bool DebugPolygon(const obVec3 *_verts, const int _numverts, const obColor &_color, float _time, int _flags)
 	{ _verts; _numverts; _color; _time; _flags; return false; }
 
+	// Function: PrintScreenMessage
+	//		This function should print a message the the game screen if possible
+	virtual bool PrintScreenText(const float _pos[3], float _duration, const obColor &_color, const char *_msg)
+	{ _pos; _duration; _color; _msg; return false; }
+
 	// Function: PrintError
 	//		This function should print an error the the game however desired,
 	//		whether it be to the console, messagebox,...
@@ -315,10 +335,6 @@ public:
 	//		This function should print a message the the game however desired,
 	//		whether it be to the console, messagebox,...
 	virtual void PrintMessage(const char *_msg) = 0;
-
-	// Function: PrintScreenMessage
-	//		This function should print a message the the game screen if possible
-	virtual void PrintScreenText(const float _pos[3], float _duration, const obColor &_color, const char *_msg) = 0;
 
 	// Function: GetMapName
 	//		This function should give access to the name of the currently loaded map
@@ -367,6 +383,9 @@ public:
 	// Function: GetLogPath
 	//		This function should get the log path to the bot dll and base path to supplemental files.
 	virtual const char *GetLogPath() = 0;
+
+	IEngineInterface() {}
+	virtual ~IEngineInterface() {}
 };
 
 //class SkeletonInterface : public IEngineInterface
@@ -420,7 +439,7 @@ public:
 //
 //	virtual obResult GetCurrentWeaponClip(const GameEntity _ent, FireMode _mode, int &_curclip, int &_maxclip) = 0;
 //
-//	virtual obResult GetCurrentAmmo(const GameEntity _ent, int _ammotype, int &_cur, int &_max) = 0;
+//	virtual obResult GetCurrentAmmo(const GameEntity _ent, int _weaponId, FireMode _mode, int &_cur, int &_max) = 0;
 //
 //	virtual int GetGameTime() = 0;
 //

@@ -3,13 +3,6 @@
  * 
  */
 
-// tjw: VC6 does not know __FUNCTION__
-#ifdef _MSC_VER
-	#if _MSC_VER <= 1200
-		#define __FUNCTION__ "UNKNOWN"
-	#endif
-#endif
-
 #ifndef __G_ETBOT_INTERFACE_H__
 #define __G_ETBOT_INTERFACE_H__
 
@@ -32,9 +25,11 @@ enum BotFlagOptions
 	OBF_DONT_MOUNT_TANKS	= (1<<1), // Bots cannot mount tanks 
 	OBF_DONT_MOUNT_GUNS		= (1<<2), // Bots cannot mount emplaced guns
 	OBF_DONT_SHOW_BOTCOUNT	= (1<<3), // Don't count bots
+	OBF_GIBBING				= (1<<4), // Bots will target ungibbed enemies
+	OBF_TRIGGER_MINES		= (1<<5), // Bots will trigger team and spotted mines
+	OBF_SHOVING				= (1<<6), // Bots can use g_shove
 	OBF_NEXT_FLAG			= (1<<16), // mod specific flags start from here
 
-	// mod specific flags start from here
 	BOT_FLAGS_SHRUBBOT_IMMUTABLE	= OBF_NEXT_FLAG,			// Bit 17 - 2^16 = 65536
 	BOT_FLAGS_NO_KICKBAN			= (OBF_NEXT_FLAG << 1),		// Bit 18 - 2^17 = 131072
 	// pheno: do not welcome bots
@@ -48,7 +43,7 @@ int Bot_Interface_Shutdown();
 
 void Bot_Interface_Update();
 
-int	 Bot_Interface_ConsoleCommand();
+void Bot_Interface_ConsoleCommand();
 
 qboolean Bot_Util_AllowPush(int weaponId);
 qboolean Bot_Util_CheckForSuicide(gentity_t *ent);

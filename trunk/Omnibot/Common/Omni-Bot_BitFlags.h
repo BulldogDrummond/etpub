@@ -1,8 +1,8 @@
 ////////////////////////////////////////////////////////////////////////////////
 // 
 // $LastChangedBy: drevil $
-// $LastChangedDate: 2008-01-24 09:26:29 -0800 (Thu, 24 Jan 2008) $
-// $LastChangedRevision: 2363 $
+// $LastChangedDate: 2009-05-14 07:41:24 -0700 (Thu, 14 May 2009) $
+// $LastChangedRevision: 4149 $
 //
 ////////////////////////////////////////////////////////////////////////////////
 
@@ -81,6 +81,7 @@ public:
 	{
 		return m_Flags!=r.m_Flags;
 	}
+	obint32 GetRawFlags() const { return m_Flags; }
 	explicit BitFlag32(obint32 flgs = 0) : m_Flags(flgs) {}
 private:
 	obint32	m_Flags;

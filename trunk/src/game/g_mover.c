@@ -1355,6 +1355,10 @@ void Use_BinaryMover( gentity_t *ent, gentity_t *other, gentity_t *activator ) {
 		return;
 	}
 
+	// generic func_button trigger for bots
+	if (ent->target)
+		Bot_Util_SendTrigger(ent, NULL, va("%s activated", ent->target), "pushed");
+
 	// only check for blocking when opening, otherwise the door has no choice
 	if(ent->moverState == MOVER_POS1 || ent->moverState == MOVER_POS1ROTATE)
  		isblocked = IsBinaryMoverBlocked ( ent, other, activator);

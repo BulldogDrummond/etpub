@@ -1325,30 +1325,41 @@ void Cmd_Kill_f( gentity_t *ent )
 {
 	gentity_t *attacker;
 
-	if( ent->health <= 0 ) {
-		CP( "cp \"You must be alive to use /kill.\"");
+	if(ent->health <= 0) {
+		// cs: bots have to go to limbo when issuing /kill otherwise it causes problems
+		if (ent->r.svFlags & SVF_BOT) {
+			limbo(ent,qtrue);
+			return;
+		}
+		SP("^9You must be alive to use ^3/kill.\n");
 		return;
 	}
-	if( g_maxSelfkills.integer == 0 ) {
-		CP( "cp \"/kill is disabled on this server.\"" );
-		return;
+
+	// cs: bots need to /kill sometimes (stuckages, class / weapon change)
+	if ( !(ent->r.svFlags & SVF_BOT) )
+	{
+		if( g_maxSelfkills.integer == 0 ) {
+			CP( "cp \"/kill is disabled on this server.\"" );
+			return;
+		}
+		if( ( g_slashKill.integer & SLASHKILL_NOPOISON ) &&
+			ent->client->pmext.poisoned ) {
+			CP( "cp \"/kill is disabled as long as you are poisoned.\"" );
+			return;
+		}
+		// pheno: no selfkill in frozen state
+		if( ( g_slashKill.integer & SLASHKILL_NOFROZEN ) && ent->client->frozen ) {
+			CP( "cp \"/kill is disabled as long as you are frozen.\"" );
+			return;
+		}
+		if( g_maxSelfkills.integer > -1 &&
+			ent->client->pers.selfKills >= g_maxSelfkills.integer ) {
+			CP( va( "cp \"You have reached your maximum selfkills (%i).\"",
+				g_maxSelfkills.integer ) );
+			return;
+		}
 	}
-	if( ( g_slashKill.integer & SLASHKILL_NOPOISON ) &&
-		ent->client->pmext.poisoned ) {
-		CP( "cp \"/kill is disabled as long as you are poisoned.\"" );
-		return;
-	}
-	// pheno: no selfkill in frozen state
-	if( ( g_slashKill.integer & SLASHKILL_NOFROZEN ) && ent->client->frozen ) {
-		CP( "cp \"/kill is disabled as long as you are frozen.\"" );
-		return;
-	}
-	if( g_maxSelfkills.integer > -1 &&
-		ent->client->pers.selfKills >= g_maxSelfkills.integer ) {
-		CP( va( "cp \"You have reached your maximum selfkills (%i).\"",
-			g_maxSelfkills.integer ) );
-		return;
-	}
+
 	if(ent->client->sess.sessionTeam == TEAM_SPECTATOR ||
 	  (ent->client->ps.pm_flags & PMF_LIMBO) ||
 	  ent->health <= 0 || level.match_pause != PAUSE_NONE) {
@@ -5024,21 +5035,23 @@ void Cmd_Activate2_f( gentity_t *ent ) {
 	}
 
 	// look for a guy to push
-	trap_Trace(&tr, 
-		offset, 
-		NULL, 
-		NULL, 
-		end, 
-		ent->s.number, 
-		CONTENTS_BODY);
-	if(tr.entityNum >= 0) {
-		traceEnt = &g_entities[tr.entityNum];
-		if(traceEnt->client) {
-			if(traceEnt->client->ps.eFlags & EF_PLAYDEAD) 
-				G_DragCorpse(ent, traceEnt);
-			else
-				G_PushPlayer(ent, traceEnt);
-			return;
+	if ( g_OmniBotFlags.integer & OBF_SHOVING || !(ent->r.svFlags & SVF_BOT) ) {
+		trap_Trace(&tr,
+			offset,
+			NULL,
+			NULL,
+			end,
+			ent->s.number,
+			CONTENTS_BODY);
+		if(tr.entityNum >= 0) {
+			traceEnt = &g_entities[tr.entityNum];
+			if(traceEnt->client) {
+				if(traceEnt->client->ps.eFlags & EF_PLAYDEAD)
+					G_DragCorpse(ent, traceEnt);
+				else
+					G_PushPlayer(ent, traceEnt);
+				return;
+			}
 		}
 	}
 
