@@ -1,0 +1,36 @@
+#!/bin/sh
+
+WET="/Applications/Wolfenstein ET"
+
+if [ ! -d "${WET}/etpub" ]; then
+	mkdir "${WET}/etpub"
+	(cd "${WET}/etpub" && ln -s ../etpub.app Wolfenstein\ ET.app)
+fi
+
+if [ ! -d "${WET}/etpub.app" ]; then
+	cp -r "${WET}/Wolfenstein ET.app" "${WET}/etpub.app"
+fi
+
+rm -r "${WET}/etpub.app/Contents/Resources/qagame_mac.bundle"
+
+cd $1
+cd ../
+cp -r qagame_mac.bundle "${WET}/etpub.app/Contents/Resources/"
+
+cd ..
+if [ ! -f "${WET}/etpub/server.cfg" ]; then
+	cp docs/Example/config/server.cfg "${WET}/etpub/"
+fi
+if [ ! -f "${WET}/etpub/default.cfg" ]; then
+	cp docs/Example/config/default.cfg "${WET}/etpub/"
+fi
+if [ ! -f "${WET}/etpub/shrubbot.cfg" ]; then
+	cp docs/Example/config/shrubbot.cfg "${WET}/etpub/"
+fi
+if [ ! -f "${WET}/etpub/settings.cfg" ]; then
+	cp docs/Example/config/settings.cfg "${WET}/etpub/"
+fi
+if [ ! -f "${WET}/etpub/mapvotecycle.cfg" ]; then
+	cp docs/Example/config/mapvotecycle.cfg "${WET}/etpub/"
+fi
+exit 0

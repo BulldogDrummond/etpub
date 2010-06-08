@@ -1,0 +1,6 @@
+Important Notes For Upgrading etpub 0.8.x to 0.9.x
+--------------------------------------------------
+
+1) To use the new country flags feature you'll need the GeoIP database file 
+   inside your server's etpub directory. Read the README file in extra/GeoIP
+

@@ -1,0 +1,261 @@
+#include "ui/menudef.h"
+
+// Defines //
+
+#define WINDOW_X		16
+#define WINDOW_Y		16
+#define WINDOW_WIDTH	608
+#define WINDOW_HEIGHT	310
+#define GROUP_NAME		"grpFonts"
+#define SUBWINDOW_WIDTH		150
+// Macros //
+
+#include "ui/menumacros.h"
+		
+// System Menu //
+	
+menuDef {
+	name		"etpub_fonts"
+	visible		0
+	fullscreen	0
+	rect		WINDOW_X WINDOW_Y WINDOW_WIDTH WINDOW_HEIGHT
+	style		WINDOW_STYLE_FILLED
+	onOpen {
+		uiScript updateFonts;
+	}
+	onESC {
+		close etpub_fonts ;
+		open etpub
+	}
+
+// Window //
+
+	WINDOW( "FONTS", 151 )
+
+	SUBWINDOW( 6, 32, (SUBWINDOW_WIDTH), 100, "ui_font1" )
+	
+	itemDef {
+		name			"ui_font1_list"
+		group			GROUP_NAME
+		rect			12 50 $evalfloat((SUBWINDOW_WIDTH)-12) 80
+		type			ITEM_TYPE_LISTBOX
+		textfont		UI_FONT_COURBD_21
+		textscale		.2
+		textaligny		-3
+		forecolor		.6 .6 .6 1
+		outlinecolor	.5 .5 .5 .2
+		border			WINDOW_BORDER_FULL
+		bordercolor		.1 .1 .1 .5
+		feeder			FEEDER_FONTS
+		elementtype		LISTBOX_TEXT
+		elementwidth	200
+		elementheight	12
+		columns			1 0 100 33
+		visible			1
+		tooltip			"Submenu Headers"
+		
+		action {
+			uiScript ui_loadfont1
+		}
+	}
+	SUBWINDOW( 156, 32, (SUBWINDOW_WIDTH), 100, "ui_font2" )
+	
+	itemDef {
+		name			"ui_font2_list"
+		group			GROUP_NAME
+		rect			156 50 $evalfloat((SUBWINDOW_WIDTH)-12) 80
+		type			ITEM_TYPE_LISTBOX
+		textfont		UI_FONT_COURBD_21
+		textscale		.2
+		textaligny		-3
+		forecolor		.6 .6 .6 1
+		outlinecolor	.5 .5 .5 .2
+		border			WINDOW_BORDER_FULL
+		bordercolor		.1 .1 .1 .5
+		feeder			FEEDER_FONTS
+		elementtype		LISTBOX_TEXT
+		elementwidth	200
+		elementheight	12
+		columns			1 0 100 33
+		visible			1
+		tooltip			"Menu Headers"
+		
+		action {
+			uiScript ui_loadfont2
+		}
+	}
+
+	SUBWINDOW( 306, 32, (SUBWINDOW_WIDTH), 100, "ui_font3" )
+	
+	itemDef {
+		name			"ui_font3_list"
+		group			GROUP_NAME
+		rect			306 50 $evalfloat((SUBWINDOW_WIDTH)-12) 80
+		type			ITEM_TYPE_LISTBOX
+		textfont		UI_FONT_COURBD_21
+		textscale		.2
+		textaligny		-3
+		forecolor		.6 .6 .6 1
+		outlinecolor	.5 .5 .5 .2
+		border			WINDOW_BORDER_FULL
+		bordercolor		.1 .1 .1 .5
+		feeder			FEEDER_FONTS
+		elementtype		LISTBOX_TEXT
+		elementwidth	200
+		elementheight	12
+		columns			1 0 100 33
+		visible			1
+		tooltip			"List Items / Field Labels"
+		
+		action {
+			uiScript ui_loadfont3
+		}
+	}
+
+	SUBWINDOW( 456, 32, (SUBWINDOW_WIDTH), 100, "ui_font4" )
+	
+	itemDef {
+		name			"ui_font4_list"
+		group			GROUP_NAME
+		rect			456 50 $evalfloat((SUBWINDOW_WIDTH)-12) 80
+		type			ITEM_TYPE_LISTBOX
+		textfont		UI_FONT_COURBD_21
+		textscale		.2
+		textaligny		-3
+		forecolor		.6 .6 .6 1
+		outlinecolor	.5 .5 .5 .2
+		border			WINDOW_BORDER_FULL
+		bordercolor		.1 .1 .1 .5
+		feeder			FEEDER_FONTS
+		elementtype		LISTBOX_TEXT
+		elementwidth	200
+		elementheight	12
+		columns			1 0 100 33
+		visible			1
+		tooltip			"Buttons"
+		
+		action {
+			uiScript ui_loadfont4
+		}
+	}
+
+// CG Fonts
+
+	SUBWINDOW( 6, 132, (SUBWINDOW_WIDTH), 100, "cg_font1" )
+	
+	itemDef {
+		name			"cg_font1_list"
+		group			GROUP_NAME
+		rect			12 150 $evalfloat((SUBWINDOW_WIDTH)-12) 80
+		type			ITEM_TYPE_LISTBOX
+		textfont		UI_FONT_COURBD_21
+		textscale		.2
+		textaligny		-3
+		forecolor		.6 .6 .6 1
+		outlinecolor	.5 .5 .5 .2
+		border			WINDOW_BORDER_FULL
+		bordercolor		.1 .1 .1 .5
+		feeder			FEEDER_FONTS
+		elementtype		LISTBOX_TEXT
+		elementwidth	200
+		elementheight	12
+		columns			1 0 100 33
+		visible			1
+		tooltip			"Ammo / Health / Limbo Screen"
+		
+		action {
+			uiScript cg_loadfont1
+		}
+	}
+	SUBWINDOW( 156, 132, (SUBWINDOW_WIDTH), 100, "cg_font2" )
+	
+	itemDef {
+		name			"cg_font2_list"
+		group			GROUP_NAME
+		rect			156 150 $evalfloat((SUBWINDOW_WIDTH)-12) 80
+		type			ITEM_TYPE_LISTBOX
+		textfont		UI_FONT_COURBD_21
+		textscale		.2
+		textaligny		-3
+		forecolor		.6 .6 .6 1
+		outlinecolor	.5 .5 .5 .2
+		border			WINDOW_BORDER_FULL
+		bordercolor		.1 .1 .1 .5
+		feeder			FEEDER_FONTS
+		elementtype		LISTBOX_TEXT
+		elementwidth	200
+		elementheight	12
+		columns			1 0 100 33
+		visible			1
+		tooltip			"Various Menu Labels"
+		
+		action {
+			uiScript cg_loadfont2
+		}
+	}
+
+	SUBWINDOW( 306, 132, (SUBWINDOW_WIDTH), 100, "cg_font3" )
+	
+	itemDef {
+		name			"cg_font3_list"
+		group			GROUP_NAME
+		rect			306 150 $evalfloat((SUBWINDOW_WIDTH)-12) 80
+		type			ITEM_TYPE_LISTBOX
+		textfont		UI_FONT_COURBD_21
+		textscale		.2
+		textaligny		-3
+		forecolor		.6 .6 .6 1
+		outlinecolor	.5 .5 .5 .2
+		border			WINDOW_BORDER_FULL
+		bordercolor		.1 .1 .1 .5
+		feeder			FEEDER_FONTS
+		elementtype		LISTBOX_TEXT
+		elementwidth	200
+		elementheight	12
+		columns			1 0 100 33
+		visible			1
+		tooltip			"Obituaries / Debriefing Text"
+		
+		action {
+			uiScript cg_loadfont3
+		}
+	}
+
+	SUBWINDOW( 456, 132, (SUBWINDOW_WIDTH), 100, "cg_font4" )
+	
+	itemDef {
+		name			"cg_font4_list"
+		group			GROUP_NAME
+		rect			456 150 $evalfloat((SUBWINDOW_WIDTH)-12) 80
+		type			ITEM_TYPE_LISTBOX
+		textfont		UI_FONT_COURBD_21
+		textscale		.2
+		textaligny		-3
+		forecolor		.6 .6 .6 1
+		outlinecolor	.5 .5 .5 .2
+		border			WINDOW_BORDER_FULL
+		bordercolor		.1 .1 .1 .5
+		feeder			FEEDER_FONTS
+		elementtype		LISTBOX_TEXT
+		elementwidth	200
+		elementheight	12
+		columns			1 0 100 33
+		visible			1
+		tooltip			"Center Print / Limbo / Objective Info / Questions"
+		
+		action {
+			uiScript cg_loadfont4
+		}
+	}
+
+	SLIDER( 88, 240, (SUBWINDOW_WIDTH)-4, 10, "QA Font Scale:", .2, 8, "cg_fontQAScale" .01 0 .3, "Polls and Fireteam Messages" )
+	SLIDER( 88, 250, (SUBWINDOW_WIDTH)-4, 10, "Limbo Font Scale:", .2, 8, "cg_fontLimboScale" .01 0 .3, "Limbo Text & Depoloyment Countdown" )
+	SLIDER( 88, 260, (SUBWINDOW_WIDTH)-4, 10, "BP Font Scale:", .2, 8, "cg_fontBPScale" .01 0 .3, "Banner Print Messages" )
+
+	SLIDER( 298, 240, (SUBWINDOW_WIDTH)-4, 10, "CP Font Scale:", .2, 8, "cg_fontCPScale" .01 0 .3, "Center Print Messages" )
+	SLIDER( 298, 250, (SUBWINDOW_WIDTH)-4, 10, "OID Font Scale:", .2, 8, "cg_fontOIDScale" .01 0 .3, "Objective Info" )
+		
+	BUTTON( 90, WINDOW_HEIGHT-24, .33*(WINDOW_WIDTH-24), 18, "DEFAULTS", .3, 14, uiScript defaultfonts )
+	BUTTON( 300, WINDOW_HEIGHT-24, .33*(WINDOW_WIDTH-24), 18, "BACK", .3, 14, close etpub_fonts; open etpub )
+
+}

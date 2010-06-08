@@ -1,0 +1,35 @@
+
+Important Notes For Upgrading etpub 0.4.x to 0.5.x
+--------------------------------------------------
+
+1) If you use g_shove, you may need to lower the value significantly.  The
+   value used tries to better match shrubet's so try 80 if you're unsure.
+
+2) If you use the g_logOptions 256 flag or any shrubbot commands that can be
+   used to abuse players (e.g. !burn, !disorient, etc.) see the new cvar
+   g_tyranny.  You will not be allowed to use any of those features unless
+   g_tyranny is set to 1 before the first map is loaded when the server starts.
+
+3) There have been some new votes added and they are allowed by default.
+   You can disable them by setting the following cvars to 0:
+	vote_allow_surrender
+	vote_allow_nextcampaign
+	vote_allow_restartcampagin
+	vote_allow_poll
+
+4) If you use g_shove, a player emmits a sound when he is shoved.  It is the
+   grenade throwing grunt, so if you don't like this set g_shoveSound to ""
+   (or to some other sound).
+
+5) g_maxWarp is set to 4 by default now (it was previously disabled by default).
+
+6) Players are no longer allowed to stick their heads into solids.  This will
+   produce some gittery movement when they try to do it.  You can avoid this
+   by using the etpub_client (as well as use some other new features of etpub)
+
+   http://et.tjw.org/etpub/client/
+
+   You can download etpub_client from:
+
+   http://et.tjw.org/etpub/
+

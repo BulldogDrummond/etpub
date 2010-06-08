@@ -1,0 +1,356 @@
+<html>
+<head>
+<title>etpub client documentation</title>
+<style type="text/css">
+dt {
+        font-weight: bold;
+}
+</style>
+</head>
+<body>
+<h2>etpub client documentation</h2>
+<a href="#cvars">Cvars</a><br>
+<a href="#cmds">Commands</a></br>
+<a href="#autoexec">Autoexec Files</a></br>
+<a href="#gen">General Changes</a><br>
+
+<a name="cvars"><h3>cvars</h3></a>
+
+<dl>
+
+<dt>cg_drawTime [0|1|2]</dt>
+<dd><p>Decides whether to draw the current local time beneath the FPS display.  
+When set to 1, it will display 24 hour clock, when set to 2, it will 
+display a 12 hour clock, with am/pm</p></dd>
+
+<dt>cg_drawTimeSeconds [0|1]</dt>
+<dd>
+<p>When set to 1, will display the seconds as well on the time.
+Requires cg_drawTime set to either 1 or 2</p></dd>
+
+<dt>cg_hud</dt>
+<dd>
+<p>The name of your current hud, which will be loaded upon startup</p></dd>
+
+<dt>cg_panzerhack [0|1]</dt>
+<dd>
+<p>Put your SMG in weaponbank 2  
+(instead of bank 3) when you're a soldier with level 4 Heavy Weapons</p>
+<p>Default: 1</p>
+</dd>
+
+<dt>cg_logConsole [bitmask]</dt>
+<dd>
+<p>Log centerprints and/or banners to your console</p>
+	<dl>
+	<dt>1
+	<dd>Log centerprints
+	<dt>2
+	<dd>Log banners
+	</dl>
+<p>Default: 1</p>
+</dd>
+
+<dt>cg_gun_fovscale [0|1]</dt>
+<dd>
+<p>Scale the gun when you use different FOV</p>
+<p>Default: 1</p>
+</dd>
+
+<dt>cg_weapaltReloads [0|1]</dt>
+<dd>
+<p>Hitting altfire (usually right mouse button) when holding a weapon that
+doesn't have an alternative fire will reload the weapon</p>
+<p>Default: 0</p>
+</dd>
+
+<dt>cg_drawRanks [0|1|2]</dt>
+<dd>
+<p>When 1 the rank (for example "Private") will be shown in front of the name
+when you look at a player in your team. When 2 it will only show the short rank
+("Pvt" for exmaple) and when 0 it won't show any rank.</p>
+<p>Default: 1</p>
+</dd>
+
+<dt>cg_fireteamAlpha [0.0 - 1.0]</dt>
+<dd>
+<p>Determines the level of transparency of the fireteam window</p>
+<p>Default: 0.6</p>
+</dd>
+
+<dt>cg_lagometerAlpha [0.0 - 1.0]</dt>
+<dd>
+<p>Determines the level of transparency of the lagometer</p>
+<p>Default: 1.0</p>
+</dd>
+
+<dt>cg_chatAlpha [0.0 - 1.0]</dt>
+<dd>
+<p>Determines the level of transparency of the chat texts at the bottom of your
+screen</p>
+<p>Default: 0.33</p>
+</dd>
+
+<dt>cg_watermarkAlpha [0.0 - 1.0]</dt>
+<dd>
+<p>Determines the level of transparency of the watermark, if the server has
+one. Note that the server might set a transparency themselves. In that case the
+watermark alpha will be the product of these transparency levels</p>
+<p>Default: 1.0</p>
+</dd>
+
+<dt>cg_specAlpha [0.0 - 1.0]</dt>
+<dd>
+<p>Determines the level of transparency of the SPECTATOR text</p>
+<p>Default: 1.0</p>
+</dd>
+
+<dt>cg_dynoCounter [0|1]</dt>
+<dd>
+<p>Displays a counter in your HUD that will countdown untill a dynamite on an
+objective explodes. This will not spam the chat/cpm</p>
+<dl>
+	<dt>1
+	<dd>Visual
+	<dt>2
+	<dd>Textual
+	</dl>
+<p>Default: 1</p>
+</dd>
+
+<dt>cg_maxTeamDynas [0-8]</dt>
+<dd>
+<p>The number of dynamites of your own team that will be displayed in the
+counter</p>
+<p>Default: 4</p>
+</dd>
+
+<dt>cg_maxEnemyDynas [0-8]</dt>
+<dd>
+<p>The number of dynamites of your enemy that will be displayed in the
+counter</p>
+<p>Default: 4</p>
+</dd>
+
+<dt>cg_drawClassIcons [bitmask]</dt>
+<dd>
+<p>Changes Classtexts into ClassIcons</p>
+	<dl>
+	<dt>1
+	<dd>In crosshair names
+	<dt>2
+	<dd>In fireteam
+	<dt>4
+	<dd>On scoreboard
+	</dl>
+<p>Default: 7</p>
+</dd>
+
+<dt>cg_drawCrosshairHP [0|1]</dt>
+<dd>
+<p>Draw textual HP instead of the healthbar when aiming at someone</p>
+<p>Default: 0</p>
+</dd>
+
+<dt>cg_autoSelectFTMembers [0|1]</dt>
+<dd>
+<p>Toggles automatic selection of your fireteam members</p>
+<p>Default: 0</p>
+</dd>
+
+<dt>cg_damageKick [0|1|2]</dt>
+<dd>
+<p>Changes the way damage kick occurs (the screen shake when a player gets shot).</p>
+<dl>
+	<dt>0
+	<dd>No damagekick.
+	<dt>1
+	<dd>Regular damagekick, variable shake, increases when player is low on health.
+	<dt>2
+	<dd>Simple damagekick, constant shake value.
+</dl>
+<p>Default: 1</p>
+</dd>
+
+<dt>cg_tracers [0|1|2]</td>
+<dd>
+<p>Enables/disables drawing the bullet tracers:</p>
+<dl>
+	<dt>0
+	<dd>No tracers.
+	<dt>1
+	<dd>All tracers.
+	<dt>2
+	<dd>All but your own tracers.
+</dl>
+<p>Default: 1</p>
+</dd>
+
+<dt>cg_countryFlags [bitmask]</dt>
+<dd>
+<p>Show the GeoIP country flags</p>
+	<dl>
+	<dt>1
+	<dd>On scoreboard
+	<dt>2
+	<dd>In crosshair names
+	</dl>
+<p>Default: 3</p>
+</dd>
+
+<dt>cg_gibs [0|1]</dt>
+<dd>
+<p>Toggles the display of gib models.</p>
+<p>Default: 1</p>
+</dd>
+
+</dl>
+<hr>
+<a name="cmds"><h3>Commands</h3></a>
+<dl>
+<dt>m [partialname] [message]</dt>
+<dd>Send private message to all players matching the partial name</dd>
+
+<dt>mt [partialname] [message]</dt>
+<dd>Send private message to all players on your team that match the partial name</dd>
+
+<dt>loadhud</dt>
+<dd>used to load a custom hud from a .hud file contained in a pk3 file.
+Also able to "/loadhud ?" to show a list of available huds, 
+"/loadhud blank" to load a blank hud, or "/loadhud" to
+load the default ET hud.  When loading a hud, the default ET is loaded first,
+then the custom HUD overwrites any values specified.  So if a HUD element
+isn't specifically disabled in a custom HUD, it will be in ET default
+position</dd>
+
+<dt>edithud</dt>
+<dd>Used to edit the hud in realtime.  Can also be used to script a hud 
+so that server admins don't have to package .hud files into pk3
+<p><strong>format:</strong>
+<em>/edithud elementName [value1] [value2] . . . . [valueX]</em></p>
+<p>Current <em>elementNames</em> and <em>(values)</em> are as follows:
+<ul>
+<li>ammocount (x, y, scale)
+<li>chargebar (x, y, width)
+<li>compass (x, y, size)
+<li>upperright (y)
+<li>fireteam (x, y, width)
+<li>flagcov (x, y)
+<li>head (x, y, width, height)
+<li>healthbar (x, y, width)
+<li>healthtext (x, y, scale)
+<li>lagometer (x, y)
+<li>overheat (x, y, width, height)
+<li>skillbox1 (x, y, size)
+<li>skillbox2 (x, y, size)
+<li>skillbox3 (x, y, size)
+<li>skillpic1 (x, y, size)
+<li>skillpic2 (x, y, size)
+<li>skillpic3 (x, y, size)
+<li>skilltext1 (x, y, scale)
+<li>skilltext2 (x, y, scale)
+<li>skilltext3 (x, y, scale)
+<li>staminabar (x, y, width)
+<li>weaponcard (x, y, size)
+<li>xptext (x, y, scale)
+<li>cpmtext (x, y, scale)
+<li>chattext (x, y, scale)
+<li>votefttext (x, y)
+<li>livesleft (x, y)
+</ul></p>
+<p>All items except skilltextX are part of the original ET hud.  skillTextX
+is a textual representation of the xp levels, i.e. 0, 1, 2, 3, 4.  The 
+skill[box,pic,text] elements correspond as follows, 1 = class specific skills, 2 = battle sense, 
+3 = light weapons</p>
+<p>Default <em>scale</em> values, where used, is 25 in the default ET hud.</p>
+<p><em>upperright</em> represents the spawn counter/game timer, clock, FPS
+normally displayed on the right side of the screen.</p>
+<p>(x,y) are based on a 640 x 480 scale, regardless of the actual screen 
+resolution that ET is running.  Therefore (0,0) is upper left, (640,480)
+is lower right and (320, 240) is crosshairs</p>
+<p>To disable an element entirely, set the first value to -1.  Currently
+votefttext CANNOT be disabled</p>
+</dd>
+
+<dt>dumphud</dt>
+<dd>Dumps the current hud settings to the console in format used
+to create a .hud file</dd>
+
+<dt>dropweapon</dt>
+<dd>Drops the player's primary weapon.</dd>
+
+<dt>sclogin [password]</dt>
+<dd>Logs the player into shoutcasting mode.</dd>
+
+<dt>sclogout</dt>
+<dd>Removes the player's own shoutcaster status.</dd>
+
+<dt>shoutcastlogin [password]</dt>
+<dd>Logs the player into shoutcasting mode.</dd>
+
+<dt>shoutcastlogout</dt>
+<dd>Removes the player's own shoutcaster status.</dd>
+
+<dt>timerSet [1-60]</dt>
+<dd>Sets enemy spawntimer (shown in red). You need to give the value for the timer. 
+Not giving any value will disable the spawntimer.</dd>
+
+<dt>resetTimer</dt>
+<dd>Resets the enemy spawn timer to the value which was given when timerSet was called.
+This command will do nothing if timerSet hasn't been called before.</dd>
+
+<dt>lua_status</dt>
+<dd>Shows information about the scripts currently loaded by the Lua API engine.</dd>
+
+<dt>etpub_version</dt>
+<dd>Shows information about the running client and server version.</dd>
+
+</dl>
+
+<hr>
+<a name="autoexec"><h3>Autoexec Files</h3></a>
+
+<p>The etpub client now has the ability to automatically execute certain config (*.cfg)
+files upon certain events:</p>
+
+<dl>
+
+<dt>autoexec_allies.cfg, autoexec_axis.cfg, autoexec_spectator.cfg
+<dd><p>Executed when you join a team (or become a spectator)</p>
+
+<dt>autoexec_&lt;mapname&gt;.cfg, autoexec_default.cfg
+<dd><p>Executed when the map switches to &lt;mapname&gt;.  autoexec_default.cfg is always
+executed after the autoexec_&lt;mapname&gt;.cfg file.</p>
+
+<dt>autoexec_soldier.cfg, autoexec_medic.cfg, autoexec_engineer.cfg, autoexec_fieldops.cfg,
+autoexec_covertops.cfg
+<dd><p>Executed when you switch classes</p>
+
+</dl>
+
+<p>Please note that if any of these files do not exist they simply will not be executed, there
+will not be any error messages</p>
+<p>Also note that these filenames are casesensitive on linux</p>
+
+<hr>
+<a name="gen"><h3>General Changes</h3></a>
+<ul>
+<li>New etpub in-game menu for configuring the cg_drawTime cvars
+<li>Integrates many of Chruker's <a href="http://games.chruker.dk/enemy_territory/modding_project_bugfix.php">&quot;Project: Bug Fix&quot;</a> fixes.
+<li>Support for the 'forcecvar' server command.
+<li>Uses etpub's player movement code, so client prediction will better
+    match the server.
+<li>If ETPro's etpromapscripts are used, you won't see the message 
+&quot;You are near the Back Door&quot; on battery unless you use it.
+(support for EF_FAKEBMODEL).
+<li>When playing dead, you don't see the text about being wonded and waiting
+for a medic.
+<li>On servers with the g_weapons flags 2 or 4, you won't hear the predicted
+'click' sound when using syringe or pliers underwater.
+<li>'+lookdown' and '+lookup' commands are disabled to prevent scripted 
+anti-recoil cheats.
+</ul>
+
+</body>
+</html>
+
