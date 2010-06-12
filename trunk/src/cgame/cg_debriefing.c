@@ -2326,10 +2326,10 @@ void CG_MapVote_MultiVoteButton_Draw( panel_button_t* button )
 		return;
 	}
 	
-	if ( cgs.dbMapVotedFor[button->data[7]-1] != -1 ) {
-		str = va("^3%d: ^1RE-VOTE", 4 - button->data[7]);
+	if( cgs.dbMapVotedFor[button->data[7]-1] != -1 ) {
+		str = va( "^3%d: ^1RE-VOTE", 4 - ( int )button->data[7] );
 	} else {
-		str = va("^3%d: ^3VOTE", 4 - button->data[7]);
+		str = va( "^3%d: ^3VOTE", 4 - ( int )button->data[7] );
 	}
 
 	if ( cgs.dbMapVotedFor[button->data[7]-1] != -1 ) {
