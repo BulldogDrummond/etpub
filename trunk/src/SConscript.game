@@ -79,6 +79,9 @@ geoip.c
 
 local_env = g_env.Copy()
 
+if g_os == 'win32' and os.name != 'nt':
+	local_env.Append( LIBS = ['ws2_32'] )
+
 local_env.Append( CPPDEFINES = ['GAMEDLL'] )
 local_env.Append( CPPDEFINES = ['USE_MDXFILE'] )
 local_env.Append( CPPDEFINES = ['NO_BOT_SUPPORT'] )

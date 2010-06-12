@@ -233,7 +233,7 @@ OPTCPPFLAGS = [ ]
 
 # pheno: make sure to compile a 32 bit object on a compiler
 #        configured to compile 64 bit objects by default
-if( OS == 'Linux' ):
+if( g_os == 'Linux' ):
 	BASECPPFLAGS += [ '-m32' ]
 	BASELINKFLAGS += [ '-m32' ]
 
@@ -305,8 +305,6 @@ if g_os == 'win32' and os.name != 'nt':
 	# mingw doesn't define the cpu type, but our only target is x86
 	g_env.Append( CPPDEFINES = '_M_IX86=400' )
 	g_env.Append( LINKFLAGS = '-static-libgcc' )
-	if( TARGET_GAME == '1' ):
-		g_env.Append( LIBS = 'ws2_32' )
 	# scons doesn't support cross-compiling, so set these up manually
 	g_env['STATIC_AND_SHARED_OBJECTS_ARE_THE_SAME']	= 1
 	g_env['WIN32DEFSUFFIX'] = '.def'
