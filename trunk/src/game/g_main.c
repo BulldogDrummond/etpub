@@ -654,7 +654,7 @@ cvarTable_t		gameCvarTable[] = {
 
 	{ &g_dedicated, "dedicated", "0", 0, 0, qfalse },
 
-  { &g_panzerwar, "g_panzerwar", "0", 0, 0, qtrue, qtrue },
+	{ &g_panzerwar, "g_panzerwar", "0", 0, 0, qtrue, qtrue },
 	{ &g_sniperwar, "g_sniperwar", "0", 0, 0, qtrue, qtrue },
 	{ &g_riflewar, "g_riflewar", "0", 0, 0, qtrue, qtrue },
 
@@ -2235,12 +2235,14 @@ void G_UpdateEtpubinfo(void)
 	trap_SetConfigstring(CS_ETPUBINFO, cs);
 }
 
+// Panzer War
+qboolean panzerwar_enabled = qfalse;
 void G_PanzerWar()
 {
 	ammotable_t *panzer = GetAmmoTableData( WP_PANZERFAUST );
 
 	// pheno: reworked - store and restore weapon data over map changes
-	if( g_panzerwar.integer ) {
+	if( g_panzerwar.integer && !panzerwar_enabled ) {
 		char dmgPanzer[MAX_CVAR_VALUE_STRING];
 		char panzersSpeed[MAX_CVAR_VALUE_STRING];
 		
@@ -2261,7 +2263,9 @@ void G_PanzerWar()
 
 		trap_Cvar_Set( "g_dmgPanzer", "133" );
 		trap_Cvar_Set( "g_panzersSpeed", "2000" );
-	} else {
+
+		panzerwar_enabled = qtrue;
+	} else if( !g_panzerwar.integer && panzerwar_enabled ) {
 		char buffer[MAX_CVAR_VALUE_STRING];
 		int dmgPanzer, panzerSpeed;
 
@@ -2274,16 +2278,20 @@ void G_PanzerWar()
 
 		trap_Cvar_Set( "g_dmgPanzer", va( "%i", dmgPanzer ) );
 		trap_Cvar_Set( "g_panzerSpeed", va( "%i", panzerSpeed ) );
+
+		panzerwar_enabled = qfalse;
 	}
 }
 
+// Sniper War
+qboolean sniperwar_enabled = qfalse;
 void G_SniperWar()
 {
 	ammotable_t *garand = GetAmmoTableData( WP_GARAND );
 	ammotable_t *k43 = GetAmmoTableData( WP_K43 );
 
 	// pheno: reworked - store and restore weapon data over map changes
-	if( g_sniperwar.integer ) {
+	if( g_sniperwar.integer && !sniperwar_enabled ) {
 		char dmgSniper[MAX_CVAR_VALUE_STRING];
 		
 		// store weapon data
@@ -2298,7 +2306,9 @@ void G_SniperWar()
 		k43->maxammo = 400;
 
 		trap_Cvar_Set( "g_dmgSniper", "70" );
-	} else {
+
+		sniperwar_enabled = qtrue;
+	} else if( !g_sniperwar.integer && sniperwar_enabled ) {
 		char buffer[MAX_CVAR_VALUE_STRING];
 		int dmgSniper;
 
@@ -2309,9 +2319,13 @@ void G_SniperWar()
 			&dmgSniper );
 
 		trap_Cvar_Set( "g_dmgSniper", va( "%i", dmgSniper ) );
+
+		sniperwar_enabled = qfalse;
 	}
 }
 
+// Rifle War
+qboolean riflewar_enabled = qfalse;
 void G_RifleWar()
 {
 	ammotable_t *carbine = GetAmmoTableData( WP_CARBINE );
@@ -2320,7 +2334,7 @@ void G_RifleWar()
 	ammotable_t *gpg40 = GetAmmoTableData( WP_GPG40 );
 
 	// pheno: reworked - store and restore weapon data over map changes
-	if( g_riflewar.integer ) {
+	if( g_riflewar.integer && !riflewar_enabled ) {
 		// store weapon data
 		trap_Cvar_Set( va( "%s_riflewar", GAMEVERSION ),
 			va( "%i %i %i %i", carbine->maxammo, m7->maxammo, kar98->maxammo,
@@ -2331,7 +2345,9 @@ void G_RifleWar()
 		m7->maxammo = 200;
 		kar98->maxammo = 200;
 		gpg40->maxammo = 200;
-	} else {
+
+		riflewar_enabled = qtrue;
+	} else if( !g_riflewar.integer && riflewar_enabled ) {
 		char buffer[MAX_CVAR_VALUE_STRING];
 
 		// restore weapon data
@@ -2339,6 +2355,8 @@ void G_RifleWar()
 			buffer, sizeof( buffer ) );
 		sscanf( buffer, "%i %i %i %i", &carbine->maxammo, &m7->maxammo,
 			&kar98->maxammo, &gpg40->maxammo );
+
+		riflewar_enabled = qfalse;
 	}
 }
 
@@ -2428,13 +2446,6 @@ void G_UpdateCvars( void )
 
 				if ( cv->trackChange && !(cv->cvarFlags & CVAR_LATCH) ) {
 					trap_SendServerCommand( -1, va("print \"Server:[lof] %s [lon]changed to[lof] %s\n\"", cv->cvarName, cv->vmCvar->string ) );
-					if(cv->vmCvar == &g_panzerwar) {
-						G_PanzerWar();
-					} else if(cv->vmCvar == &g_sniperwar) {
-						G_SniperWar();
-					} else if(cv->vmCvar == &g_riflewar) {
-						G_RifleWar();
-					}
 				}
 
 				if (cv->teamShader) {
@@ -5706,6 +5717,11 @@ uebrgpiebrpgibqeripgubeqrpigubqifejbgipegbrtibgurepqgbn%i", level.time )
 
 	// get any cvar changes
 	G_UpdateCvars();
+
+	// pheno: check for *war mode changes
+	G_PanzerWar();
+	G_SniperWar();
+	G_RifleWar();
 
 	for( i = 0; i < level.num_entities; i++ ) {
 		g_entities[i].runthisframe = qfalse;
