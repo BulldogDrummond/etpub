@@ -2101,3 +2101,4 @@
 * pheno:   added redeye's XP overflow fix
 * pheno:   added logout referee command
 * cs:      added Omni-bot 0.8 support
+* pheno:   added core's mapvote fix. Thanks to NQ team.

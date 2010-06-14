@@ -3710,7 +3710,7 @@ void BeginIntermission( void ) {
 	int			i;
 	gentity_t	*client;
 	int itime;
-	char bspNames[MAX_STRING_CHARS];
+	char bspNames[8192]; // 32 x 128 chars = 4096 minimum. Up to 64 (full-sized) mapnames fit in 8192 bytes.
 	int len, maxMaps;
 	char* bspptr;
 
