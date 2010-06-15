@@ -4649,8 +4649,8 @@ static void PM_Weapon( void ) {
 
 	// pheno: in some cases the client sends an EV_NOAMMO event on enabled
 	//        panzerwar mode, so we have to check both, client and server side
-	//  Note: w/o installed etpub client >= 20090112 it will sometimes result
-	//        into auto switching!
+	//  Note: w/o installed latest etpub client it will sometimes result into
+	//        auto switching!
 #if defined GAMEDLL
 	panzerwar = g_panzerwar.integer;
 #elif defined CGAMEDLL

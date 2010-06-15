@@ -443,4 +443,5 @@ current
 * pheno:   added redeye's XP overflow fix
 * pheno:   added KMETAVZER's limbo panel XP overflow fix
 * pheno:   satchel remains as long as the player was not gibbed
-* pheno:   fixed panzerfaust auto switching to grenade on enabled panzerwar mode
+* pheno:   fixed panzerfaust auto switching to grenade with enabled
+           panzerwar mode
