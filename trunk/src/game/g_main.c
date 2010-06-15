@@ -2578,7 +2578,9 @@ void G_UpdateCvars( void )
 					// pheno: fixed - update etpub info string when
 					//        g_friendlyFire is changed (don't check for
 					//        g_friendlyFire changes in G_IsEtpubinfoCvar()!)
-					if( cv->vmCvar == &g_friendlyFire ) {
+					// pheno: update it on g_panzerwar changes too
+					if( cv->vmCvar == &g_friendlyFire ||
+						cv->vmCvar == &g_panzerwar ) {
 						G_UpdateEtpubinfo();
 					}
 				}

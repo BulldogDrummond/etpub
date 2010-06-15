@@ -3629,6 +3629,7 @@ static void PM_Weapon( void ) {
 #ifdef DO_WEAPON_DBG
 	static int weaponstate_last = -1;
 #endif
+	int			panzerwar; // pheno
 
 	// don't allow attack until all buttons are up
 	if ( pm->ps->pm_flags & PMF_RESPAWNED ) {
@@ -4084,28 +4085,15 @@ static void PM_Weapon( void ) {
 			return;
 		}
 
-		// pheno: on enabled panzerwar mode allow to fire if charge bar
-		//        is half full (should prevent weapon auto switching)
-#ifdef GAMEDLL
-		if( g_panzerwar.integer ) {
+		if( pm->skill[SK_HEAVY_WEAPONS] >= 1 ) {
 			if( pm->cmd.serverTime - pm->ps->classWeaponTime <
-					pm->soldierChargeTime * 0.5f ) {
+					pm->soldierChargeTime * 0.66f ) {
 				return;
 			}
-		} else {
-#endif
-			if( pm->skill[SK_HEAVY_WEAPONS] >= 1 ) {
-				if( pm->cmd.serverTime - pm->ps->classWeaponTime <
-						pm->soldierChargeTime * 0.66f ) {
-					return;
-				}
-			} else if ( pm->cmd.serverTime - pm->ps->classWeaponTime <
-					pm->soldierChargeTime ) {
-				return;
-			}
-#ifdef GAMEDLL // pheno
+		} else if ( pm->cmd.serverTime - pm->ps->classWeaponTime <
+				pm->soldierChargeTime ) {
+			return;
 		}
-#endif
 	}
 
 	if( pm->ps->weapon == WP_GPG40 || pm->ps->weapon == WP_M7 ) {
@@ -4659,14 +4647,25 @@ static void PM_Weapon( void ) {
 			break;
 	}
 
-	// JPW NERVE -- in multiplayer, pfaust fires once then switches to pistol since it's useless for a while
-  if ( (pm->ps->weapon == WP_PANZERFAUST 
-#ifdef GAMEDLL // elf
-&& !g_panzerwar.integer
+	// pheno: in some cases the client sends an EV_NOAMMO event on enabled
+	//        panzerwar mode, so we have to check both, client and server side
+	//  Note: w/o installed etpub client >= 20090112 it will sometimes result
+	//        into auto switching!
+#if defined GAMEDLL
+	panzerwar = g_panzerwar.integer;
+#elif defined CGAMEDLL
+	panzerwar = cgs.panzerwar;
 #endif
-	) || (pm->ps->weapon == WP_SMOKE_MARKER ) || (pm->ps->weapon == WP_DYNAMITE) || (pm->ps->weapon == WP_SMOKE_BOMB) || (pm->ps->weapon == WP_LANDMINE) || (pm->ps->weapon == WP_SATCHEL)) {
-    PM_AddEvent( EV_NOAMMO );
-  }
+
+	// JPW NERVE -- in multiplayer, pfaust fires once then switches to pistol since it's useless for a while
+	if( ( ( pm->ps->weapon == WP_PANZERFAUST ) && !panzerwar ) ||
+		( pm->ps->weapon == WP_SMOKE_MARKER ) ||
+		( pm->ps->weapon == WP_DYNAMITE ) ||
+		( pm->ps->weapon == WP_SMOKE_BOMB ) ||
+		( pm->ps->weapon == WP_LANDMINE ) ||
+		( pm->ps->weapon == WP_SATCHEL ) ) {
+		PM_AddEvent( EV_NOAMMO );
+	}
 	// jpw
 
 	if( pm->ps->weapon == WP_SATCHEL ) {

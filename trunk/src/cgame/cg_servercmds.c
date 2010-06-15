@@ -425,6 +425,7 @@ void CG_ParseEtpubinfo( void ) {
 
 	// pheno
 	cgs.friendlyFire = atoi( Info_ValueForKey( info, "g_friendlyFire" ) );
+	cgs.panzerwar = atoi( Info_ValueForKey( info, "g_panzerwar" ) );
 
 	// forty - #303 - 
 	if (etpub < ETPUB_VERSION(0, 8, 0)) {

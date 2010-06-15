@@ -332,7 +332,7 @@ matt:    Remove inaccurate Permanent XP Save designation when in map vote mode
            draw the timers.
 
 20070801
--------
+--------
 * stephan: fixed a bug where teamflags were added to spectator/server chats
 * stephan: added spectator ping and score to scoreboard
 * stephan: added a class letter to the hud uniform icon
@@ -443,3 +443,4 @@ current
 * pheno:   added redeye's XP overflow fix
 * pheno:   added KMETAVZER's limbo panel XP overflow fix
 * pheno:   satchel remains as long as the player was not gibbed
+* pheno:   fixed panzerfaust auto switching to grenade on enabled panzerwar mode

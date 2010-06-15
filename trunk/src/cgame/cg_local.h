@@ -2312,6 +2312,7 @@ typedef struct {
 
 	// pheno
 	int friendlyFire;
+	int panzerwar;
 } cgs_t;
 
 //==============================================================================
