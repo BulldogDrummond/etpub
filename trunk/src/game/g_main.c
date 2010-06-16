@@ -2231,6 +2231,8 @@ void G_UpdateEtpubinfo(void)
 	// pheno
 	Info_SetValueForKey( cs, "g_friendlyFire",
 		va( "%i", g_friendlyFire.integer ) );
+	Info_SetValueForKey( cs, "g_panzerwar",
+		va( "%i", g_panzerwar.integer ) );
 
 	trap_SetConfigstring(CS_ETPUBINFO, cs);
 }
