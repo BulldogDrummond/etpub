@@ -49,6 +49,9 @@ Linux
    3.2) Unzip the downloaded archive and copy the liblua5.1.so file to your
         Enemy Territory installation directory, beside etded.x86 or et.x86.
 
+   3.3) Make sure to have the correct permissions set to liblua5.1.so
+        (chmod a=r,u+w liblua5.1.so).
+
    Hint: If you haven't access to the Enemy Territory installation
          directory, e.g. a rented server, you have to ask your admin
 		 to copy the necessary files for you.
