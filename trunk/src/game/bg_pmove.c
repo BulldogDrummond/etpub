@@ -3629,7 +3629,6 @@ static void PM_Weapon( void ) {
 #ifdef DO_WEAPON_DBG
 	static int weaponstate_last = -1;
 #endif
-	int			panzerwar; // pheno
 
 	// don't allow attack until all buttons are up
 	if ( pm->ps->pm_flags & PMF_RESPAWNED ) {
@@ -4647,21 +4646,17 @@ static void PM_Weapon( void ) {
 			break;
 	}
 
-	// pheno: in some cases the client sends an EV_NOAMMO event on enabled
-	//        panzerwar mode, so we have to check both, client and server side
-	//  Note: w/o installed latest etpub client it will sometimes result into
-	//        auto switching!
-#if defined GAMEDLL
-	panzerwar = g_panzerwar.integer;
-#elif defined CGAMEDLL
-	panzerwar = cgs.panzerwar;
-#endif
-
 	// JPW NERVE -- in multiplayer, pfaust fires once then switches to pistol since it's useless for a while
-	if( ( ( pm->ps->weapon == WP_PANZERFAUST ) && !panzerwar ) ||
-		( pm->ps->weapon == WP_SMOKE_MARKER ) ||
-		( pm->ps->weapon == WP_DYNAMITE ) ||
+	if( ( pm->ps->weapon == WP_SMOKE_MARKER ) ||
 		( pm->ps->weapon == WP_SMOKE_BOMB ) ||
+	// pheno: added KMETAVZER's panzerfaust auto switching to grenade with
+	//        enabled panzerwar mode fix
+	//  Note: w/o installed latest etpub client it will sometimes result
+	//        into auto switching!
+#ifdef GAMEDLL
+		( ( pm->ps->weapon == WP_PANZERFAUST ) && !g_panzerwar.integer ) ||
+#endif
+		( pm->ps->weapon == WP_DYNAMITE ) ||
 		( pm->ps->weapon == WP_LANDMINE ) ||
 		( pm->ps->weapon == WP_SATCHEL ) ) {
 		PM_AddEvent( EV_NOAMMO );

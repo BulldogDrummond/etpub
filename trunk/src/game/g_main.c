@@ -2231,8 +2231,6 @@ void G_UpdateEtpubinfo(void)
 	// pheno
 	Info_SetValueForKey( cs, "g_friendlyFire",
 		va( "%i", g_friendlyFire.integer ) );
-	Info_SetValueForKey( cs, "g_panzerwar",
-		va( "%i", g_panzerwar.integer ) );
 
 	trap_SetConfigstring(CS_ETPUBINFO, cs);
 }
@@ -2580,9 +2578,7 @@ void G_UpdateCvars( void )
 					// pheno: fixed - update etpub info string when
 					//        g_friendlyFire is changed (don't check for
 					//        g_friendlyFire changes in G_IsEtpubinfoCvar()!)
-					// pheno: update it on g_panzerwar changes too
-					if( cv->vmCvar == &g_friendlyFire ||
-						cv->vmCvar == &g_panzerwar ) {
+					if( cv->vmCvar == &g_friendlyFire ) {
 						G_UpdateEtpubinfo();
 					}
 				}
