@@ -2099,6 +2099,7 @@
 * pheno:   added g_mode bitflag cvar (see docs)
 * pheno:   added etpub_version console command
 * pheno:   added redeye's XP overflow fix
+* pheno:   satchel remains as long as the player was not gibbed
 * pheno:   added logout referee command
 * cs:      added Omni-bot 0.8 support
 * pheno:   added core's mapvote fix. Thanks to NQ team.
