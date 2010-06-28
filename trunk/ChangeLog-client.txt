@@ -380,8 +380,8 @@ matt:    Remove inaccurate Permanent XP Save designation when in map vote mode
 * stephan: fixed potential crash bug in crosshair HP + improved the values a
            bit
 
-current
--------
+20100628
+--------
 * stephan: fixed a bug where percentage based weapon restrictions weren't
            displayed in the client (requires etpub server >= 0.8.1)
 * stephan: fixed the alignment of the ZOMBIE and CONNECTING text on the
