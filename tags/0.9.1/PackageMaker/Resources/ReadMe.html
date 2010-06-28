@@ -1,0 +1,26 @@
+This installer will create the following in your "Wolfenstein ET" folder:
+<dl>
+<dt><b>etpub</b>
+<dd>folder that is used to store etpub-specific configuration files (.cfg) and
+    custom ET packages (.pk3). 
+<dt><b>etpub.app</b>
+<dd>a copy of 'Wolfenstein ET.app' with etpub installed into it.
+<dt><b>etpub_server.command</b>
+<dd>a script that starts 'rtcw_et_server' telling it to:
+	<ol>
+	<li>Use 'etpub.app' instead of 'Wolfenstein ET.app'
+	<li>Use fs_game 'etpub' instead of 'etmain'
+	<li>exec server.cfg
+	</ol> 
+</dl>
+
+<p>
+To remove etpub from your system, simply move these 3 things to the trash.
+</p>
+
+<p>
+This installer will also copy example .cfg files to the etpub directory if 
+they do not exist already.  These files are heavily commented to aid in
+configuration.    You can edit them with a text editor such as TextEdit.
+</p>
+

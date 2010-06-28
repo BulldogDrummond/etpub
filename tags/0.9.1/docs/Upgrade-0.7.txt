@@ -1,0 +1,13 @@
+
+Important Notes For Upgrading etpub 0.6.x to 0.7.x
+--------------------------------------------------
+
+1) The behaviour of g_inactivity has changed.  It will move players to
+   SPECTATOR instead of dropping them.
+
+2) The behaviour of g_spectatorInactivity has changed.  It will only drop
+   players if the server is full.
+
+3) The shrubbot flag '1' no longer gives protection from server
+   inactivity settings.  You must give the '0' flag to the admin/level
+   if you don't want it to be effected by inactivity settings.

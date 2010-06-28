@@ -1,0 +1,17 @@
+
+Important Notes For Upgrading etpub 0.8.x to 0.9.x
+--------------------------------------------------
+
+1) If you have decided to use the etpub distribution with Lua API support
+   you'll need the Lua shared library file located in the Enemy Territory
+   installation directory. Please read step three of docs/Install.txt for
+   details on how to obtain and install the file.
+
+2) To use the new country flags feature you'll need the GeoIP.dat database
+   file inside the server's etpub directory.
+   
+   2.1) Download the compressed GeoIP database file GeoIP.dat.gz from
+        http://geolite.maxmind.com/download/geoip/database/GeoLiteCountry/.
+
+   2.2) Decompress it and copy it into the server's etpub directory.
+

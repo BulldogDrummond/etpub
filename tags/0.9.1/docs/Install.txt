@@ -1,0 +1,129 @@
+
+etpub Server Installation
+-------------------------
+
+etpub is a server side only modification. This means that it only is
+installed on servers and clients do not need to download any files to
+play on etpub servers.
+
+To install etpub on your server, you only need to ensure that the
+Enemy Territory binary loads the qagame shared library instead of
+the default one when it is started. Below we'll describe how to
+install etpub for the supported platforms.
+
+Configuration and detailed setup instructions are not covered in this
+document. See the directory docs/Example of the etpub distribution for
+example configuration files and visit http://etpub.org/ for more
+detailed instructions.
+
+
+Important
+---------
+
+We highly recommended that you are using the latest
+Wolfenstein - Enemy Territory release, currently version 2.60b,
+to set up or running a public etpub dedicated server!
+
+
+Linux
+-----
+
+1) Create a directory named 'etpub' next to the 'etmain' directory in either
+   the Enemy Territory installation directory or the ~/.etwolf/ directory of
+   the user that runs etded.x86. By default the game installation directory
+   is located at /usr/local/games/enemy-territory/.
+
+2) Copy the linux/qagame.mp.i386.so file from the etpub distribution to
+   the 'etpub' directory created in step one.
+
+3) If you have decided to use the etpub distribution with Lua API support
+   you will need the liblua5.1.so file located in the Enemy Territory
+   installation directory where etded.x86 or et.x86 is located.
+
+   Important: Currently etpub's qagame supports Lua 5.1.4.
+
+   3.1) Download the LuaBinaries for Linux from
+        http://luabinaries.luaforge.net/download.html (in most cases
+		lua5_1_4_Linux26g4_lib.tar.gz).
+
+   3.2) Unzip the downloaded archive and copy the liblua5.1.so file to your
+        Enemy Territory installation directory, beside etded.x86 or et.x86.
+
+   3.3) Make sure to have the correct permissions set to liblua5.1.so
+        (chmod a=r,u+w liblua5.1.so).
+
+   Hint: If you haven't access to the Enemy Territory installation
+         directory, e.g. a rented server, you have to ask your admin
+		 to copy the necessary files for you.
+
+4) To use the country flags feature, you will need the GeoIP.dat database file
+   located in the 'etpub' directory from step one.
+
+   4.1) Download the compressed GeoIP database file GeoIP.dat.gz from
+        http://geolite.maxmind.com/download/geoip/database/GeoLiteCountry/.
+
+   4.2) Decompress it and copy it into the 'etpub' directory from step one.
+
+5) Ensure that etded or et is called with the additional command line
+   arguments '+set fs_game etpub' (in addition to the ones you already use!).
+
+
+Windows
+-------
+
+1) Create a directory named 'etpub' next to the 'etmain' directory in the
+   Enemy Territory installation directory. By default the game installation
+   directory is located at 'C:\Program Files\Wolfenstein - Enemy Territory'.
+
+2) Copy the win32/qagame_mp_x86.dll file from the etpub distribution to
+   the 'etpub' directory created in step one.
+
+3) If you have decided to use the etpub distribution with Lua API support
+   you'll need the lua5.1.dll file located in the Enemy Territory installation
+   directory where ETDED.exe or ET.exe is located.
+
+   Important: Currently etpub's qagame supports Lua 5.1.4.
+
+   3.1) Download the LuaBinaries for Windows from
+        http://luabinaries.luaforge.net/download.html (in most cases
+		lua5_1_4_Win32_dll8_lib.zip).
+
+   3.2) Unzip the downloaded archive and copy the lua5.1.dll file to your
+        Enemy Territory installation directory, beside ETDED.exe or ET.exe.
+
+   Hint: If you haven't access to the Enemy Territory installation
+         directory, e.g. a rented server, you have to ask your admin
+		 to copy the necessary files for you.
+
+4) To use the country flags feature, you will need the GeoIP.dat database file
+   located in the 'etpub' directory from step one.
+
+   4.1) Download the compressed GeoIP database file GeoIP.dat.gz from
+        http://geolite.maxmind.com/download/geoip/database/GeoLiteCountry/.
+
+   4.2) Decompress it and copy it into the 'etpub' directory from step one.
+
+5) Ensure that ETDED.exe or ET.exe is called with the additional command line
+   arguments '+set fs_game etpub' (in addition to the ones you already use!).
+
+
+Mac OS X
+--------
+
+Sorry, Mac OS X support has been dropped for the server version of etpub.
+
+
+etpub Client Installation
+-------------------------
+
+Using the etpub client is however highly recommended and brings
+many new features like shoutcasting, country flags, custom huds
+or team and class menus.
+
+
+Linux, Windows and Mac OS X
+---------------------------
+
+1) Download the latest etpubc-XXXXXXXX.pk3 file from http://etpub.org/ and
+   copy it to the 'etpub' directory.
+

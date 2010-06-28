@@ -1,0 +1,117 @@
+# -*- mode: python -*-
+# Enemy Territory build script
+# TTimo <ttimo@idsoftware.com>
+# http://scons.sourceforge.net
+
+import sys, os
+import scons_utils
+
+Import( 'GLOBALS' )
+Import( GLOBALS )
+
+qagame_string = """
+bg_animation.c
+bg_animgroup.c
+bg_campaign.c
+bg_character.c
+bg_classes.c
+bg_misc.c
+bg_pmove.c
+bg_slidemove.c
+bg_sscript.c
+bg_stats.c
+bg_tracemap.c
+g_active.c
+g_alarm.c
+g_antilag.c
+g_buddy_list.c
+g_character.c
+g_client.c
+g_cmds.c
+g_cmds_ext.c
+g_combat.c
+g_config.c
+g_fireteams.c
+g_items.c
+g_main.c
+g_match.c
+g_mem.c
+g_misc.c
+g_missile.c
+g_mover.c
+g_multiview.c
+g_props.c
+g_referee.c
+g_script.c
+g_script_actions.c
+g_session.c
+g_sha1.c
+g_shoutcaster.c
+g_spawn.c
+g_stats.c
+g_svcmds.c
+g_syscalls.c
+g_systemmsg.c
+g_target.c
+g_team.c
+g_teammapdata.c
+g_trigger.c
+g_utils.c
+g_vote.c
+g_weapon.c
+q_math.c
+q_shared.c
+g_shrubbot.c
+etpro_mdx.c
+g_xpsave.c
+g_crash.c
+g_etbot_interface.cpp
+g_http_client.c
+g_matchinfo.c
+g_censor.c
+g_player_rating.c
+g_settings.c
+et-antiwarp.c
+geoip.c
+../sha-1/sha1.c
+../../../../../Omnibot/Common/BotLoadLibrary.cpp
+"""
+
+local_env = g_env.Copy()
+
+if g_os == 'win32' and os.name != 'nt':
+	local_env.Append( LIBS = ['ws2_32'] )
+
+local_env.Append( CPPDEFINES = ['GAMEDLL'] )
+local_env.Append( CPPDEFINES = ['USE_MDXFILE'] )
+local_env.Append( CPPDEFINES = ['NO_BOT_SUPPORT'] )
+local_env.Append( CPPDEFINES = ['THREADS'] )
+
+local_env.Append( CPPPATH = ['../../../../Omnibot/Common', '../../../../Omnibot/ET', '../../../sha-1'] )
+
+# Omnibot
+local_env.Append( CXXFLAGS = ['-fpermissive'] )
+
+# build with Lua API support
+if( WITH_LUA_SUPPORT == '1' ):
+	local_env.Append( CPPDEFINES = ['LUA_SUPPORT'] )
+	local_env.Append( CPPPATH = ['../../../lua'] )
+	if( win32_build == 1 ):
+		local_env.Append( LINKFLAGS = ['-Llua/libs/win32'] )
+	else:
+		local_env.Append( LINKFLAGS = ['-Llua/libs/unix', '-Wl,-rpath=./'] )
+	local_env.Append( LINKFLAGS = ['-llua5.1'] )
+	qagame_string += """g_lua.c"""
+
+# Jaybird - these lines are used to statically link c++'s dependencies
+# redeye - but only if we are not using gcc4
+if( g_os == 'Linux' and gcc_major_ver != '4' ):
+	local_env.Append( LINKFLAGS = ['misc/libstdc++.a', '-static-libgcc', '-L./misc/'] )
+
+local_env['LINK'] = local_env['CXX']
+
+source_list = scons_utils.BuildList( 'game', qagame_string )
+
+#ret = local_env.Program( target = 'et', source = source_list )
+ret = local_env.SharedLibrary( target = 'qagame', source = source_list )
+Return( 'ret' )

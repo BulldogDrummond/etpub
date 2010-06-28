@@ -1,0 +1,148 @@
+
+				etpub Coding Style
+                    Stolen From: Linux kernel coding style
+
+I've copied the Chapters from the Linux kernel CodingStyle document that 
+should apply to future changes to etpub.  These are Chapters 2, 3, 5, 
+and 7. The original can be found here:
+
+http://lxr.linux.no/source/Documentation/CodingStyle
+
+(Last updated on 16 February 2004 by a community effort on LKML)
+
+I've also added a Chapter 8 that is specific for etpub.
+
+These guidelines will not be strictly enforced, but you will make tjw angry 
+if you don't at least try to follow Chapter 2 and Chapter 8.
+
+                                ---
+
+		Chapter 2: Breaking long lines and strings
+
+Coding style is all about readability and maintainability using commonly
+available tools.
+
+The limit on the length of lines is 80 columns and this is a hard limit.
+
+Statements longer than 80 columns will be broken into sensible chunks.
+Descendants are always substantially shorter than the parent and are placed
+substantially to the right. The same applies to function headers with a long
+argument list. Long strings are as well broken into shorter strings.
+
+void fun(int a, int b, int c)
+{
+	if (condition)
+		printk(KERN_WARNING "Warning this is a long printk with "
+						"3 parameters a: %u b: %u "
+						"c: %u \n", a, b, c);
+	else
+		next_statement;
+}
+
+		Chapter 3: Placing Braces
+
+The other issue that always comes up in C styling is the placement of
+braces.  Unlike the indent size, there are few technical reasons to
+choose one placement strategy over the other, but the preferred way, as
+shown to us by the prophets Kernighan and Ritchie, is to put the opening
+brace last on the line, and put the closing brace first, thusly:
+
+	if (x is true) {
+		we do y
+	}
+
+However, there is one special case, namely functions: they have the
+opening brace at the beginning of the next line, thus:
+
+	int function(int x)
+	{
+		body of function
+	}
+
+Heretic people all over the world have claimed that this inconsistency
+is ...  well ...  inconsistent, but all right-thinking people know that
+(a) K&R are _right_ and (b) K&R are right.  Besides, functions are
+special anyway (you can't nest them in C).
+
+Note that the closing brace is empty on a line of its own, _except_ in
+the cases where it is followed by a continuation of the same statement,
+ie a "while" in a do-statement or an "else" in an if-statement, like
+this:
+
+	do {
+		body of do-loop
+	} while (condition);
+
+and
+
+	if (x == y) {
+		..
+	} else if (x > y) {
+		...
+	} else {
+		....
+	}
+
+Rationale: K&R.
+
+Also, note that this brace-placement also minimizes the number of empty
+(or almost empty) lines, without any loss of readability.  Thus, as the
+supply of new-lines on your screen is not a renewable resource (think
+25-line terminal screens here), you have more empty lines to put
+comments on.
+
+		Chapter 5: Functions
+
+Functions should be short and sweet, and do just one thing.  They should
+fit on one or two screenfuls of text (the ISO/ANSI screen size is 80x24,
+as we all know), and do one thing and do that well.
+
+The maximum length of a function is inversely proportional to the
+complexity and indentation level of that function.  So, if you have a
+conceptually simple function that is just one long (but simple)
+case-statement, where you have to do lots of small things for a lot of
+different cases, it's OK to have a longer function.
+
+However, if you have a complex function, and you suspect that a
+less-than-gifted first-year high-school student might not even
+understand what the function is all about, you should adhere to the
+maximum limits all the more closely.  Use helper functions with
+descriptive names (you can ask the compiler to in-line them if you think
+it's performance-critical, and it will probably do a better job of it
+than you would have done).
+
+Another measure of the function is the number of local variables.  They
+shouldn't exceed 5-10, or you're doing something wrong.  Re-think the
+function, and split it into smaller pieces.  A human brain can
+generally easily keep track of about 7 different things, anything more
+and it gets confused.  You know you're brilliant, but maybe you'd like
+to understand what you did 2 weeks from now.
+
+
+		Chapter 7: Commenting
+
+Comments are good, but there is also a danger of over-commenting.  NEVER
+try to explain HOW your code works in a comment: it's much better to
+write the code so that the _working_ is obvious, and it's a waste of
+time to explain badly written code.
+
+Generally, you want your comments to tell WHAT your code does, not HOW.
+Also, try to avoid putting comments inside a function body: if the
+function is so complex that you need to separately comment parts of it,
+you should probably go back to chapter 5 for a while.  You can make
+small comments to note or warn about something particularly clever (or
+ugly), but try to avoid excess.  Instead, put the comments at the head
+of the function, telling people what it does, and possibly WHY it does
+it.
+
+
+		Chapter 8: Newline Characters
+
+All files should use DOS style newline characters "\r\n" and not UNIX style
+newline characters "\n".  Exception can be made for files that require UNIX
+carriage returns (e.g. the first line of a perl script).
+
+Files that are added to the subversion repository will need:
+ "svn propset svn:eol-stule CRLF /path/to/file" 
+done to them before commiting.
+

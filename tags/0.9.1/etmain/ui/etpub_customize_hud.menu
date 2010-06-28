@@ -1,0 +1,92 @@
+#include "ui/menudef.h"
+
+// Defines //
+
+//#define WINDOW_X		32
+//#define WINDOW_Y		32
+//#define WINDOW_WIDTH	576
+//#define WINDOW_HEIGHT	416
+#define WINDOW_X		16
+#define WINDOW_Y		16
+#define WINDOW_WIDTH	324
+#define WINDOW_HEIGHT	456
+#define GROUP_NAME		"grpOptionsCustomiseHud"
+
+// Macros //
+
+#include "ui/menumacros.h"
+
+// Customise Hud Menu //
+	
+menuDef {
+	name		"etpub_customize_hud"
+	visible		0
+	fullscreen	0
+	rect		WINDOW_X WINDOW_Y WINDOW_WIDTH WINDOW_HEIGHT
+	style		WINDOW_STYLE_FILLED
+
+	onESC {
+		close etpub_customize_hud ;
+		open etpub
+	}
+
+// Window //
+
+	WINDOW( "HUD", 94 )
+
+// Subwindows //
+
+//#define SUBWINDOW_WIDTH		(SUBWINDOW_WIDTH)
+#define SUBWINDOW_WIDTH		WINDOW_WIDTH-12
+
+// ETpub specific HUD Display //
+
+	SUBWINDOW( 6, 32, (SUBWINDOW_WIDTH), 136, "ETPUB" )
+	MULTI( 8, 48, (SUBWINDOW_WIDTH)-4, 10, "Clock:", .2, 8, "cg_drawTime", cvarFloatList { "Off" 0 "24 hr" 1 "12 hr" 2}, "Show local time in 12/24 hour view" )
+	YESNO( 8, 60, (SUBWINDOW_WIDTH)-4, 10, "Show time w/seconds:", .2, 8, "cg_drawTimeSeconds", "Show seconds on clock time" )
+	YESNO( 8, 72, (SUBWINDOW_WIDTH)-4, 10, "Muzzleflash:", .2, 8, "cg_muzzleflash", "Show muzzleflashes" )
+	MULTI( 8, 84, (SUBWINDOW_WIDTH)-4, 10, "Draw Gun:", .2, 8, "cg_drawgun", cvarFloatList { "Off" 0 "On" 1 "Trans. White" 2 "Trans. Red" 3 "Trans. Green" 4 "Trans. Blue" 5 "Construction" 6 }, "Sets if and how the first person gun model will be shown" )
+	YESNO( 8, 96, (SUBWINDOW_WIDTH)-4, 10, "Scale Gun:", .2, 8, "cg_gun_fovscale", "Scale the gun when using differten FOV settings" )
+	MULTI( 8, 108, (SUBWINDOW_WIDTH)-4, 10, "Draw Crosshair Ranks:", .2, 8, "cg_drawRanks", cvarFloatList { "No" 0 "Yes, Full Rank" 1 "Yes, Short Rank" 2}, "Draw Ranks when aiming on a player of your team" )
+	MULTI( 8, 120, (SUBWINDOW_WIDTH)-4, 10, "Draw Class Icons:", .2, 8, "cg_drawClassIcons", cvarFloatList { "No (Draw Text)" 0 "Crosshair" 1 "FireTeam" 2 "Crosshair + FT" 3 "ScoreBoard" 4 "Crosshair + SB" 5 "FT + SB" 6 "Crosshair + FT + SB" 7}, "Draw ClassIcons instead of text" )
+	MULTI( 8, 132, (SUBWINDOW_WIDTH)-4, 10, "Draw Country Flags:", .2, 8, "cg_countryFlags", cvarFloatList { "No" 0 "Scoreboard" 1 "Crosshair" 2 "SB + Crosshair" 3}, "Draw country flags (Requires server side enabling)" )
+	MULTI( 8, 144, (SUBWINDOW_WIDTH)-4, 10, "Draw Crosshair HP:", .2, 8, "cg_drawCrosshairHP", cvarFloatList { "No (Draw Healthbar)" 0 "Yes" 1}, "Draw HP instead of healthbar" )
+	BUTTON( 8+.5*((SUBWINDOW_WIDTH)-196), 156, 196, 10, "Drag & Drop Hud Editor", .2, 8, close etpub_customize_hud ; exec "hudeditor" )
+	
+// etmain hud settings
+	SUBWINDOW( 6, 172, (SUBWINDOW_WIDTH), 64, "ETMAIN" )
+	YESNO( 8, 188, (SUBWINDOW_WIDTH)-4, 10, "Draw FPS:", .2, 8, "cg_drawFPS", "Show framerate" )
+	YESNO( 8, 200, (SUBWINDOW_WIDTH)-4, 10, "Draw 2D:", .2, 8, "cg_draw2d", "Show 2D Elements" )
+	YESNO( 8, 212, (SUBWINDOW_WIDTH)-4, 10, "Lagometer:", .2, 8, "cg_lagometer", "Show the lagometer" )
+	YESNO( 8, 224, (SUBWINDOW_WIDTH)-4, 10, "Weapon Icon Flash:", .2, 8, "cg_drawWeaponIconFlash", "Flash the weapon icon indicator when firing")
+	
+// speedometer
+	SUBWINDOW( 6, 240, (SUBWINDOW_WIDTH), 52, "SPEEDOMETER" )
+	MULTI( 8, 256, (SUBWINDOW_WIDTH)-4, 10, "Draw Speed:", .2, 8, "cg_drawspeed", cvarFloatList { "Off" 0 "Speed" 1 "Speed + Max" 2}, "Show speedometer" )
+	MULTI( 8, 268, (SUBWINDOW_WIDTH)-4, 10, "Units:", .2, 8, "cg_speedunit", cvarFloatList { "UPS" 0 "MPH" 1 "KPH" 2}, "Set the units of measure for the speedometer" )
+	CVARFLOATLABEL( 8, 268, (SUBWINDOW_WIDTH)-4, 10, "cg_speedinterval", .2, ITEM_ALIGN_RIGHT, $evalfloat((SUBWINDOW_WIDTH)-4), 8 )
+	SLIDER( 8, 280, (SUBWINDOW_WIDTH)-4, 10, "Refresh:", .2, 8, "cg_speedinterval" 100 1 300, "Set the refresh rate of speedometer in msec" )
+	
+// opacity
+	SUBWINDOW( 6, 296, (SUBWINDOW_WIDTH), 76, "TRANSPARENCY" )
+	CVARFLOATLABEL( 8, 312, (SUBWINDOW_WIDTH)-4, 10, "cg_fireteamAlpha", .2, ITEM_ALIGN_RIGHT, $evalfloat((SUBWINDOW_WIDTH)-4), 8 )
+	SLIDER( 8, 312, (SUBWINDOW_WIDTH)-4, 10, "Fireteam:", .2, 8, "cg_fireteamAlpha" 0.6 0 1, "Set the transparency level for the fireteam overlay" )
+	CVARFLOATLABEL( 8, 324, (SUBWINDOW_WIDTH)-4, 10, "cg_lagometerAlpha", .2, ITEM_ALIGN_RIGHT, $evalfloat((SUBWINDOW_WIDTH)-4), 8 )	
+	SLIDER( 8, 324, (SUBWINDOW_WIDTH)-4, 10, "Lagometer:", .2, 8, "cg_lagometerAlpha" 1 0 1, "Set the transparency level for the lagometer" )
+	CVARFLOATLABEL( 8, 336, (SUBWINDOW_WIDTH)-4, 10, "cg_chatAlpha", .2, ITEM_ALIGN_RIGHT, $evalfloat((SUBWINDOW_WIDTH)-4), 8 )
+	SLIDER( 8, 336, (SUBWINDOW_WIDTH)-4, 10, "Chat:", .2, 8, "cg_chatAlpha" 0.33 0 1, "Set the transparency level for the chat area" )
+	CVARFLOATLABEL( 8, 348, (SUBWINDOW_WIDTH)-4, 10, "cg_specAlpha", .2, ITEM_ALIGN_RIGHT, $evalfloat((SUBWINDOW_WIDTH)-4), 8 )
+	SLIDER( 8, 348, (SUBWINDOW_WIDTH)-4, 10, "Spectator Status:", .2, 8, "cg_specAlpha" 1 0 1, "Set the transparency level for the spectator status indicator" )
+	CVARFLOATLABEL( 8, 360, (SUBWINDOW_WIDTH)-4, 10, "cg_watermarkAlpha", .2, ITEM_ALIGN_RIGHT, $evalfloat((SUBWINDOW_WIDTH)-4), 8 )
+	SLIDER( 8, 360, (SUBWINDOW_WIDTH)-4, 10, "Watermark:", .2, 8, "cg_watermarkAlpha" 1 0 1, "Set the transparency level for the watermark" )
+
+// Dynocounter
+	SUBWINDOW( 6, 376, (SUBWINDOW_WIDTH), 52, "DYNOCOUNTER   (Requires server side enabling)" )
+	MULTI( 8, 392, (SUBWINDOW_WIDTH)-4, 10, "Dyno Counters:", .2, 8, "cg_dynoCounter", cvarFloatList { "Disabled" 0 "Visual" 1 "Textual" 2}, "Draw dynamite counters when dynamite is planted on an objective" )
+	MULTI( 8, 404, (SUBWINDOW_WIDTH)-4, 10, "Team Dynas:", .2, 8, "cg_maxTeamDynas", cvarFloatList { "0 (Disabled)" 0 "1" 1 "2" 2 "3" 3 "4" 4 "5" 5 "6" 6 "7" 7 "8" 8}, "The number of dynamites from your own team that will be displayed in the counter" )
+	MULTI( 8, 416, (SUBWINDOW_WIDTH)-4, 10, "Enemy Dynas:", .2, 8, "cg_maxEnemyDynas", cvarFloatList { "0 (Disabled)" 0 "1" 1 "2" 2 "3" 3 "4" 4 "5" 5 "6" 6 "7" 7 "8" 8}, "The number of dynamites from your enemy that will be displayed in the counter" )
+	
+
+// Buttons //
+	BUTTON( 6, WINDOW_HEIGHT-24, WINDOW_WIDTH-12, 18, "BACK", .3, 14, close etpub_customize_hud ; open etpub )
+}

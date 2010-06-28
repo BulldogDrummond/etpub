@@ -1,0 +1,62 @@
+#include "ui/menudef.h"
+
+// Defines //
+
+#define WINDOW_X		16
+#define WINDOW_Y		16
+#define WINDOW_WIDTH	400
+#define WINDOW_HEIGHT	280
+#define GROUP_NAME		"grpOptionsCustomiseConfig"
+
+// Macros //
+
+#include "ui/menumacros.h"
+
+// Customise Hud Menu //
+	
+menuDef {
+	name		"etpub_customize_config"
+	visible		0
+	fullscreen	0
+	rect		WINDOW_X WINDOW_Y WINDOW_WIDTH WINDOW_HEIGHT
+	style		WINDOW_STYLE_FILLED
+
+	onESC {
+		close etpub_customize_config;
+		open etpub
+	}
+
+// Window //
+
+	WINDOW( "CONFIG", 94 )
+
+// Subwindows //
+
+#define SUBWINDOW_WIDTH		WINDOW_WIDTH-12
+
+// ETpub specific HUD Display //
+
+	SUBWINDOW( 6, 32, (SUBWINDOW_WIDTH), 100, "CONFIG" )
+	MULTI( 8, 48, (SUBWINDOW_WIDTH)-4, 10, "LVL4 Soldier SMG Weapon Bank:", .2, 8, "cg_panzerhack", cvarFloatList { "2" 1 "3" 0 }, "The slot (weapon bank) where sub-machine guns are placed when you reach level 4 heavy weapons" )
+	YESNO( 8, 60, (SUBWINDOW_WIDTH)-4, 10, "Optimized Prediction:", .2, 8, "cg_optimizePrediction", "Use optimized prediction which can improve performance" )
+	YESNO( 8, 72, (SUBWINDOW_WIDTH)-4, 10, "Double-Tap Cycles Scoreboard:", .2, 8, "cg_scoresDoubleTap", "Double-tapping your +scores bind will cycle scoreboard between XP/KillRating/PlayerRating" )
+	MULTI( 8, 84, (SUBWINDOW_WIDTH)-4, 10, "Obituaries:", .2, 8, "cg_obituary", cvarFloatList {"Left" 0 "Chat" 1 "Left w/Alt TK" 2 "Chat w/Alt TK" 3}, "Where death messages should be displayed, if server is sending EV_OBITUARY to the client" )
+	MULTI( 8, 96, (SUBWINDOW_WIDTH)-4, 10, "Console Logging:", .2, 8, "cg_logConsole", cvarFloatList {"No" 0 "Centerprints" 1 "Banners" 2 "Center + Banners" 3}, "What should be logged to your console" )
+	YESNO( 8, 108, (SUBWINDOW_WIDTH)-4, 10, "AltFire Reloads:", .2, 8, "cg_weapaltReloads", "Hitting AltFire should reload the gun if there is no alternative weapon" )
+	MULTI( 8, 120, (SUBWINDOW_WIDTH)-4, 10, "Autoselect FT members:", .2, 8, "cg_autoSelectFTMembers", cvarFloatList {"No" 0 "Yes" 1}, "Fireteam members are autoselected" )
+	
+// Controls //
+	SUBWINDOW( 6, 136, (SUBWINDOW_WIDTH), 76, "CONTROLS" )
+	BIND( 8, 152, (SUBWINDOW_WIDTH)-4, 10, "Playdead:", .2, 8, "playdead", "" )
+	BIND( 8, 164, (SUBWINDOW_WIDTH)-4, 10, "Objectives:", .2, 8, "+obj", "" )
+	BIND( 8, 176, (SUBWINDOW_WIDTH)-4, 10, "Classmenu:", .2, 8, "classmenu", "" )
+	BIND( 8, 188, (SUBWINDOW_WIDTH)-4, 10, "Teammenu:", .2, 8, "teammenu", "" )
+	BIND( 8, 200, (SUBWINDOW_WIDTH)-4, 10, "Spawnmenu:", .2, 8, "spawnmenu", "" )
+	
+// Sounds //
+	SUBWINDOW( 6, 216, (SUBWINDOW_WIDTH), 28, "SOUNDS" )
+	YESNO( 8, 232, (SUBWINDOW_WIDTH)-4, 10, "Hit sounds:", .2, 8, "cg_hitSounds", "Controls whether a sound is played when successfully shooting another player" )
+
+// Buttons //
+	BUTTON( 6, WINDOW_HEIGHT-24, WINDOW_WIDTH-12, 18, "BACK", .3, 14, close etpub_customize_config; open etpub )
+}

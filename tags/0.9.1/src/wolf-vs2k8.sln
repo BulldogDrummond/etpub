@@ -1,0 +1,38 @@
+Microsoft Visual Studio Solution File, Format Version 10.00
+# Visual C++ Express 2008
+Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "cgame", "cgame\cgame-vs2k8.vcproj", "{FF6231F7-8857-4300-885B-4EC6BE589725}"
+EndProject
+Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "game", "game\game-vs2k8.vcproj", "{8F3EF8E0-6110-411F-913A-6BBDDD1AD40E}"
+EndProject
+Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "ui", "ui\ui-vs2k8.vcproj", "{69E79ED4-0C66-43FC-AB46-D2CB050B7A36}"
+EndProject
+Global
+	GlobalSection(SolutionConfigurationPlatforms) = preSolution
+		Debug|Win32 = Debug|Win32
+		Release LUA|Win32 = Release LUA|Win32
+		Release|Win32 = Release|Win32
+	EndGlobalSection
+	GlobalSection(ProjectConfigurationPlatforms) = postSolution
+		{FF6231F7-8857-4300-885B-4EC6BE589725}.Debug|Win32.ActiveCfg = Debug|Win32
+		{FF6231F7-8857-4300-885B-4EC6BE589725}.Debug|Win32.Build.0 = Debug|Win32
+		{FF6231F7-8857-4300-885B-4EC6BE589725}.Release LUA|Win32.ActiveCfg = Release LUA|Win32
+		{FF6231F7-8857-4300-885B-4EC6BE589725}.Release LUA|Win32.Build.0 = Release LUA|Win32
+		{FF6231F7-8857-4300-885B-4EC6BE589725}.Release|Win32.ActiveCfg = Release|Win32
+		{FF6231F7-8857-4300-885B-4EC6BE589725}.Release|Win32.Build.0 = Release|Win32
+		{8F3EF8E0-6110-411F-913A-6BBDDD1AD40E}.Debug|Win32.ActiveCfg = Debug|Win32
+		{8F3EF8E0-6110-411F-913A-6BBDDD1AD40E}.Debug|Win32.Build.0 = Debug|Win32
+		{8F3EF8E0-6110-411F-913A-6BBDDD1AD40E}.Release LUA|Win32.ActiveCfg = Release LUA|Win32
+		{8F3EF8E0-6110-411F-913A-6BBDDD1AD40E}.Release LUA|Win32.Build.0 = Release LUA|Win32
+		{8F3EF8E0-6110-411F-913A-6BBDDD1AD40E}.Release|Win32.ActiveCfg = Release|Win32
+		{8F3EF8E0-6110-411F-913A-6BBDDD1AD40E}.Release|Win32.Build.0 = Release|Win32
+		{69E79ED4-0C66-43FC-AB46-D2CB050B7A36}.Debug|Win32.ActiveCfg = Debug|Win32
+		{69E79ED4-0C66-43FC-AB46-D2CB050B7A36}.Debug|Win32.Build.0 = Debug|Win32
+		{69E79ED4-0C66-43FC-AB46-D2CB050B7A36}.Release LUA|Win32.ActiveCfg = Release LUA|Win32
+		{69E79ED4-0C66-43FC-AB46-D2CB050B7A36}.Release LUA|Win32.Build.0 = Release LUA|Win32
+		{69E79ED4-0C66-43FC-AB46-D2CB050B7A36}.Release|Win32.ActiveCfg = Release|Win32
+		{69E79ED4-0C66-43FC-AB46-D2CB050B7A36}.Release|Win32.Build.0 = Release|Win32
+	EndGlobalSection
+	GlobalSection(SolutionProperties) = preSolution
+		HideSolutionNode = FALSE
+	EndGlobalSection
+EndGlobal
