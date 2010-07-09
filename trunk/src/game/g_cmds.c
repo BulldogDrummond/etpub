@@ -2551,7 +2551,9 @@ void Cmd_Team_f( gentity_t *ent, unsigned int dwCommand, qboolean fValue ) {
 	if(team == ent->client->sess.sessionTeam)
 	{
 		G_SetClientWeapons(ent, w, w2, qtrue);
-		ClientUserinfoChanged( (int)(ent->client - level.clients));
+
+		//cs: this is already called in G_SetClientWeapons (if necessary). was qfalse supposed to be sent for updateclient?
+		//ClientUserinfoChanged( (int)(ent->client - level.clients));
 	}
 	else
 		SetTeam(ent, s, qfalse, w, w2, qtrue);
@@ -2678,7 +2680,7 @@ void Cmd_Class_f( gentity_t* ent, unsigned int dwCommand, qboolean fValue ) {
 
 	if(pteam == ci->sessionTeam) {
 		ci->nextteam = 0;
-		G_SetClientWeapons(ent, pweap, pweap2, qtrue);
+		G_SetClientWeapons(ent, pweap, pweap2, qfalse); // cs: changed to qfalse to avoid double userinfochanged call
 		ClientUserinfoChanged( clientNum );
 	} else {
 		char *s;
