@@ -5819,12 +5819,13 @@ const char *_GetEntityName(gentity_t *_ent)
 
 		name = newentname;
 
+		Q_CleanStr(name);
 		if ( name )
 		{
 			char undschar[] = { '-', (char)NULL };
 			char skipchar[] = { '[', ']', '#', '!', '*', '`',
 				'^', '&', '<', '>', '+', '=', '|', '\'', '%',
-				'.', ':', '/', '(', ')', '^', (char)NULL };
+				'.', ':', '/', '(', ')', (char)NULL };
 			char *curchar = NULL;
 			char *tmp = NULL;
 			char *tmpdst = NULL;
