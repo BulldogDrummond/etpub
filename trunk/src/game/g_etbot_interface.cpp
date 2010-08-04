@@ -5824,7 +5824,7 @@ const char *_GetEntityName(gentity_t *_ent)
 			char undschar[] = { '-', (char)NULL };
 			char skipchar[] = { '[', ']', '#', '!', '*', '`',
 				'^', '&', '<', '>', '+', '=', '|', '\'', '%',
-				'.', ':', '/', '(', ')', (char)NULL };
+				'.', ':', '/', '(', ')', '^', (char)NULL };
 			char *curchar = NULL;
 			char *tmp = NULL;
 			char *tmpdst = NULL;
