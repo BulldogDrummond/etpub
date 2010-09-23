@@ -2104,3 +2104,5 @@
 * cs:      added Omni-bot 0.8 support
 * pheno:   added core's mapvote fix. Thanks to NQ team.
 * pheno:   fixed resetting *war modes on map changes
+
+1.0.0
