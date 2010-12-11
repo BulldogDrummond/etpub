@@ -2535,7 +2535,6 @@ char *ClientConnect( int clientNum, qboolean firstTime, qboolean isBot ) {
 				}
 			}
 		}
-
 	} // if (!isBot || !(ent->r.svFlags & SVF_BOT))
 
 	// they can connect
@@ -3685,6 +3684,9 @@ void ClientDisconnect( int clientNum ) {
 				flag = LaunchItem(item,ent->r.currentOrigin,launchvel,ent-g_entities);
 				flag->s.modelindex2 = ent->s.otherEntityNum2;// JPW NERVE FIXME set player->otherentitynum2 with old modelindex2 from flag and restore here
 				flag->message = ent->message;	// DHM - Nerve :: also restore item name
+
+				Bot_Util_SendTrigger(flag, NULL, va("%s dropped.", flag->message), "dropped");
+
 				// Clear out player's temp copies
 				ent->s.otherEntityNum2 = 0;
 				ent->message = NULL;
@@ -3699,7 +3701,7 @@ void ClientDisconnect( int clientNum ) {
 
 	trap_UnlinkEntity (ent);
 	ent->s.modelindex = 0;
-	ent->inuse = qfalse;
+	//ent->inuse = qfalse;
 	ent->classname = "disconnected";
 	ent->client->pers.connected = CON_DISCONNECTED;
 	ent->client->ps.persistant[PERS_TEAM] = TEAM_FREE;

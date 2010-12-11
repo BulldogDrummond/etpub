@@ -1494,6 +1494,9 @@ void G_DropItems(gentity_t *self)
 
 		flag->s.modelindex2 = self->s.otherEntityNum2;// JPW NERVE FIXME set player->otherentitynum2 with old modelindex2 from flag and restore here
 		flag->message = self->message;	// DHM - Nerve :: also restore item name
+
+		Bot_Util_SendTrigger(flag, NULL, va("%s dropped.", flag->message), "dropped");
+
 		// Clear out player's temp copies
 		self->s.otherEntityNum2 = 0;
 		self->message = NULL;
