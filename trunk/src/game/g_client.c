@@ -3701,7 +3701,7 @@ void ClientDisconnect( int clientNum ) {
 
 	trap_UnlinkEntity (ent);
 	ent->s.modelindex = 0;
-	//ent->inuse = qfalse;
+	ent->inuse = qfalse;
 	ent->classname = "disconnected";
 	ent->client->pers.connected = CON_DISCONNECTED;
 	ent->client->ps.persistant[PERS_TEAM] = TEAM_FREE;
