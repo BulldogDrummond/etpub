@@ -3709,6 +3709,9 @@ void ClientDisconnect( int clientNum ) {
 	ent->client->sess.sessionTeam = TEAM_FREE;
 	ent->active = 0;
 
+	// cs: this needs to be cleared
+	ent->r.svFlags &= ~SVF_BOT;
+
 	trap_SetConfigstring( CS_PLAYERS + clientNum, "");
 
 

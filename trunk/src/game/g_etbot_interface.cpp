@@ -1876,12 +1876,35 @@ public:
 
 		OB_GETMSG(Msg_Addbot);
 
-		int num = trap_BotAllocateClient(0);
+		// cs: find a usable slot. this should avoid any game / engine sync problems related to CS_FREE
+		gentity_t *clEnt = NULL;
+		int useSlot = 0;
+		for (int clNum = 1; clNum < level.maxclients; clNum++)
+		{
+			clEnt = &g_entities[clNum];
+			if(!clEnt || clEnt->inuse || (clEnt->client && 
+				(clEnt->client->pers.connected == CON_CONNECTED || clEnt->client->pers.connected == CON_CONNECTING)))
+			{
+				continue;
+			}
+			else
+			{
+				useSlot = clNum;
+				break;
+			}
+		}
+
+		if(useSlot == 0)
+		{
+			PrintError("Could not add bot!, no free slots!");
+			return -1;
+		}
+
+		int num = trap_BotAllocateClient(useSlot);
 
 		if (num < 0)
 		{
 			PrintError("Could not add bot!");
-			PrintError("No free slots!");
 			return -1;
 		}
 
