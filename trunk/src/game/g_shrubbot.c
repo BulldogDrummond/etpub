@@ -1049,9 +1049,10 @@ qboolean G_shrubbot_cmd_check(gentity_t *ent)
 			cmdLine = G_Shortcuts(ent, g_shrubbot_commands[i]->exec);
 
 			// pheno: replace [i] shortcut with player ID
+			// gaoesa: ps.clientNum is unreliable in case of spectating
 			if( ent && ent->client ) {
 				cmdLine = Q_StrReplace( cmdLine, "[i]",
-					va( "%i", ent->client->ps.clientNum ) );
+					va( "%i", ent - g_entities ) ); // was ent->client->ps.clientNum
 			}
 
 			// Replace arguments
@@ -4005,7 +4006,7 @@ qboolean G_shrubbot_stats(gentity_t *ent, int skiparg)
 	gclient_t *p;
 	char fmt[MAX_STRING_CHARS];
 	char tmp[MAX_NAME_LENGTH];
-	char name[MAX_NAME_LENGTH];
+	//char name[MAX_NAME_LENGTH]; // gaoesa: no longer used
 	char name_fmt[5];
 	int shots, hits, headshots;
 	float accuracy, hsratio, distance;
@@ -4094,10 +4095,10 @@ qboolean G_shrubbot_stats(gentity_t *ent, int skiparg)
 		DecolorString(p->pers.netname, tmp);
 		spaces = length - strlen(tmp);
 		Com_sprintf(name_fmt, sizeof(name_fmt), "%%%is", spaces + strlen(p->pers.netname));
-		Com_sprintf(name, sizeof(name), name_fmt, p->pers.netname);
+		Com_sprintf(fmt, sizeof(fmt), name_fmt, p->pers.netname); // gaoesa: use fmt instead of name for consistent widths
 
 		SBP(va("^7%s ^2%5i %5i ^%c%5.1f ^2%5i ^%c%5.1f ^2%7.1f\n",
-			name,
+			fmt,	// was name
 			shots,
 			hits,
 			colorAcc,

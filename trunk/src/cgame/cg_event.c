@@ -94,8 +94,8 @@ static void CG_Obituary( entityState_t *ent ) {
 	char		*message;
 	char		*message2;
 	char		*finalMsg;
-	char		targetName[32];
-	char		attackerName[32];
+	char		targetName[MAX_NAME_LENGTH]; // gaoesa: was 32
+	char		attackerName[MAX_NAME_LENGTH]; // gaoesa: was 32
 	qboolean	tk;
 	clientInfo_t	*ci, *ca; // JPW NERVE ca = attacker
 	qhandle_t	deathShader = cgs.media.pmImages[PM_DEATH];
