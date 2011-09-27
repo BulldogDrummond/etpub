@@ -2287,13 +2287,14 @@ evilbanigoto:
 						return;*/
 
 					//bani - eh, why was this commented out? it makes sense, and prevents a sploit.
-					if (dynamiteDropTeam == ent->client->sess.sessionTeam) {
+					// cs: moving team check below so omnibot trigger is always fired.
+					/*if (dynamiteDropTeam == ent->client->sess.sessionTeam) {
 
 						// forty - dyno counter - make sure we get the message if we defused our own for whatever reason.
 						if(g_dyno.integer & DYNO_COUNTER)
 							trap_SendServerCommand(-1, va("dc 1 %d %d %s", traceEnt->s.number, traceEnt->s.teamNum, BG_GetLocationString(traceEnt->r.currentOrigin)));
 						return;
-					}
+					}*/
 
 					for ( i=0 ; i<num ; i++ ) {
 						hit = &g_entities[touch[i]];
@@ -2315,15 +2316,18 @@ evilbanigoto:
 								continue;
 							}
 
-							if (ent->client->sess.sessionTeam == TEAM_AXIS) {
+							G_Script_ScriptEvent( hit->target_ent, "defused", "" );
+
+							// forty - dyno counter - make sure we get the message if we defused our own for whatever reason.
+							if(g_dyno.integer & DYNO_COUNTER)
+								trap_SendServerCommand(-1, va("dc 1 %d %d %s", traceEnt->s.number, traceEnt->s.teamNum, BG_GetLocationString(traceEnt->r.currentOrigin)));
+
+							if (ent->client->sess.sessionTeam == TEAM_AXIS && dynamiteDropTeam != TEAM_AXIS) {
 								if ((hit->spawnflags & AXIS_OBJECTIVE) && (!scored)) {
 									AddScore(ent,WOLF_DYNAMITE_DIFFUSE);
 									G_AddSkillPoints( ent, SK_EXPLOSIVES_AND_CONSTRUCTION, 6.f );
 									G_DebugAddSkillPoints( ent, SK_EXPLOSIVES_AND_CONSTRUCTION, 6.f, "defusing enemy dynamite" );
 									scored++;
-								}
-								if(hit->target_ent) {
-									G_Script_ScriptEvent( hit->target_ent, "defused", "axis" );
 								}
 
 								{
@@ -2331,16 +2335,12 @@ evilbanigoto:
 									pm->s.effect2Time = 1; // 1 = defused
 									pm->s.effect3Time = hit->s.teamNum;
 									pm->s.teamNum = ent->client->sess.sessionTeam;
-
-									// forty - dyno counter
-									if(g_dyno.integer & DYNO_COUNTER)
-										trap_SendServerCommand(-1, va("dc 1 %d %d %s", traceEnt->s.number, traceEnt->s.teamNum, BG_GetLocationString(traceEnt->r.currentOrigin)));
 								}
 
 //								trap_SendServerCommand(-1, "cp \"Axis engineer disarmed the Dynamite!\n\"");
 								//bani
 								defusedObj = qtrue;
-							} else { // TEAM_ALLIES
+							} else if (dynamiteDropTeam != TEAM_ALLIES) { // TEAM_ALLIES
 								if ((hit->spawnflags & ALLIED_OBJECTIVE) && (!scored)) {
 									AddScore(ent,WOLF_DYNAMITE_DIFFUSE);
 									G_AddSkillPoints( ent, SK_EXPLOSIVES_AND_CONSTRUCTION, 6.f );
@@ -2348,19 +2348,12 @@ evilbanigoto:
 									scored++; 
 									hit->spawnflags &= ~OBJECTIVE_DESTROYED; // "re-activate" objective since it wasn't destroyed
 								}
-								if(hit->target_ent) {
-									G_Script_ScriptEvent( hit->target_ent, "defused", "allies" );
-								}
 
 								{
 									gentity_t* pm = G_PopupMessage( PM_DYNAMITE );
 									pm->s.effect2Time = 1; // 1 = defused
 									pm->s.effect3Time = hit->s.teamNum;
 									pm->s.teamNum = ent->client->sess.sessionTeam;
-
-									// forty - dyno counter
-									if(g_dyno.integer & DYNO_COUNTER)
-										trap_SendServerCommand(-1, va("dc 1 %d %d %s", traceEnt->s.number, traceEnt->s.teamNum, BG_GetLocationString(traceEnt->r.currentOrigin)));
 								}
 
 //								trap_SendServerCommand(-1, "cp \"Allied engineer disarmed the Dynamite!\n\"");
@@ -2406,8 +2399,14 @@ evilbanigoto:
 								continue;
 							}
 
+							G_Script_ScriptEvent( hit, "defused", "" );
+
+							// forty - dyno counter - make sure we get the message if we defused our own for whatever reason.
+							if(g_dyno.integer & DYNO_COUNTER)
+								trap_SendServerCommand(-1, va("dc 1 %d %d %s", traceEnt->s.number, traceEnt->s.teamNum, BG_GetLocationString(traceEnt->r.currentOrigin)));
+
 							// we got somthing to destroy
-							if (ent->client->sess.sessionTeam == TEAM_AXIS) {
+							if (ent->client->sess.sessionTeam == TEAM_AXIS && dynamiteDropTeam != TEAM_AXIS) {
 								if ( hit->s.teamNum == TEAM_AXIS && (!scored)) {
 									AddScore(ent,WOLF_DYNAMITE_DIFFUSE);
 									if(ent && ent->client) G_LogPrintf("Dynamite_Diffuse: %d\n", ent - g_entities);	// OSP
@@ -2415,21 +2414,16 @@ evilbanigoto:
 									G_DebugAddSkillPoints( ent, SK_EXPLOSIVES_AND_CONSTRUCTION, 6.f, "defusing enemy dynamite" );
 									scored++;
 								}
-								G_Script_ScriptEvent( hit, "defused", "axis" );
 
 								{
 									gentity_t* pm = G_PopupMessage( PM_DYNAMITE );
 									pm->s.effect2Time = 1; // 1 = defused
 									pm->s.effect3Time = hit->parent->s.teamNum;
 									pm->s.teamNum = ent->client->sess.sessionTeam;
-
-									// forty - dyno counter
-									if(g_dyno.integer & DYNO_COUNTER)
-										trap_SendServerCommand(-1, va("dc 1 %d %d %s", traceEnt->s.number, traceEnt->s.teamNum, BG_GetLocationString(traceEnt->r.currentOrigin)));
 								}
 
 //								trap_SendServerCommand(-1, "cp \"Axis engineer disarmed the Dynamite!\" 2");
-							} else { // TEAM_ALLIES
+							} else if (dynamiteDropTeam != TEAM_ALLIES) { // TEAM_ALLIES
 								if ( hit->s.teamNum == TEAM_ALLIES && (!scored)) {
 									AddScore(ent,WOLF_DYNAMITE_DIFFUSE);
 									if(ent && ent->client) G_LogPrintf("Dynamite_Diffuse: %d\n", ent - g_entities);	// OSP
@@ -2437,17 +2431,12 @@ evilbanigoto:
 									G_DebugAddSkillPoints( ent, SK_EXPLOSIVES_AND_CONSTRUCTION, 6.f, "defusing enemy dynamite" );
 									scored++; 
 								}
-								G_Script_ScriptEvent( hit, "defused", "allies" );
 
 								{
 									gentity_t* pm = G_PopupMessage( PM_DYNAMITE );
 									pm->s.effect2Time = 1; // 1 = defused
 									pm->s.effect3Time = hit->parent->s.teamNum;
 									pm->s.teamNum = ent->client->sess.sessionTeam;
-
-									// forty - dyno counter
-									if(g_dyno.integer & DYNO_COUNTER)
-										trap_SendServerCommand(-1, va("dc 1 %d %d %s", traceEnt->s.number, traceEnt->s.teamNum, BG_GetLocationString(traceEnt->r.currentOrigin)));
 								}
 
 //								trap_SendServerCommand(-1, "cp \"Allied engineer disarmed the Dynamite!\" 2");
