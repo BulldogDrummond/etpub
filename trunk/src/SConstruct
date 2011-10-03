@@ -257,14 +257,11 @@ elif ( BUILD == 'debug' ):
 elif ( BUILD == 'release' ):
 	BASECPPFLAGS.append( '-DNDEBUG' )
 	if ( OS == 'Linux' ):
-		# -fomit-frame-pointer: gcc manual indicates -O sets this implicitely,
-		# only if that doesn't affect debugging
-		# on Linux, this affects backtrace capability, so I'm assuming this is needed
 		# -finline-functions: implicit at -O3
 		# -fschedule-insns2: implicit at -O3
 		# -funroll-loops ?
 		# -mfpmath=sse -msse ?
-		OPTCPPFLAGS = [ '-O3', '-march=i686', '-Winline', '-ffast-math', '-fomit-frame-pointer', '-finline-functions', '-fschedule-insns2' ]
+		OPTCPPFLAGS = [ '-O3', '-march=i686', '-Winline', '-ffast-math', '-finline-functions', '-fschedule-insns2' ]
 	elif ( OS == 'Darwin' ):
 		OPTCPPFLAGS = [ '-O3', '-falign-functions=16', '-falign-loops=16', '-finline' ]		
 else:
