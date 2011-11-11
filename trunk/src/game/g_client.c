@@ -948,7 +948,6 @@ static void AddExtraSpawnAmmo( gclient_t *client, weapon_t weaponNum)
 }
 
 qboolean AddWeaponToPlayer( gclient_t *client, weapon_t weapon, int ammo, int ammoclip, qboolean setcurrent ) {
-	qboolean isBot = (g_entities[client->ps.clientNum].r.svFlags & SVF_BOT) ? qtrue : qfalse;
 	COM_BitSet( client->ps.weapons, weapon );
 	client->ps.ammoclip[BG_FindClipForWeapon(weapon)] = ammoclip;
 	client->ps.ammo[BG_FindAmmoForWeapon(weapon)] = ammo;
@@ -958,16 +957,10 @@ qboolean AddWeaponToPlayer( gclient_t *client, weapon_t weapon, int ammo, int am
 	// skill handling
 	AddExtraSpawnAmmo( client, weapon );
 
-	if (isBot) 
-	{
-		Bot_Event_AddWeapon(client->ps.clientNum, Bot_WeaponGameToBot(weapon));
-	}
+	Bot_Event_AddWeapon(client->ps.clientNum, Bot_WeaponGameToBot(weapon));
 
 	return qtrue;
 }
-
-void BotSetPOW(int entityNum, qboolean isPOW);
-
 
 // kw: selects the best available weapon for the client,
 //     best suiting his/her wishes. Aren't we nice?
@@ -1577,23 +1570,12 @@ SetWolfSpawnWeapons
 void SetWolfSpawnWeapons( gclient_t *client ) 
 {
 	int pc;
-	qboolean isBot = qfalse;
-	qboolean isPOW = qfalse;
-
     pc = client->sess.playerType;
-	
-	if(g_entities[client->ps.clientNum].r.svFlags & SVF_BOT)
-		isBot = qtrue;
-	if(g_entities[client->ps.clientNum].r.svFlags & SVF_POW) 
-		isPOW = qtrue;
 
 	if ( client->sess.sessionTeam == TEAM_SPECTATOR ) 
 		return;
 
-	if (isBot)
-	{
-		Bot_Event_ResetWeapons(client->ps.clientNum);
-	}
+	Bot_Event_ResetWeapons(client->ps.clientNum);
 
 	// Reset special weapon time
 	if(client->pers.slashKill &&
@@ -1656,18 +1638,6 @@ void SetWolfSpawnWeapons( gclient_t *client )
 	// previous weapons)
 	client->ps.weapons[0] = 0;
 	client->ps.weapons[1] = 0;
-
-	// Gordon: set up pow status
-#ifndef NO_BOT_SUPPORT
-	if( isBot ) {
-		if( isPOW ) {
-			BotSetPOW( client->ps.clientNum, qtrue );
-			return;
-		} else {
-			BotSetPOW( client->ps.clientNum, qfalse );
-		}
-	}
-#endif
 
 	if(g_throwableKnives.integer) {
 		AddWeaponToPlayer( client, WP_KNIFE, 
