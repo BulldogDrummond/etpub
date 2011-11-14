@@ -1027,10 +1027,46 @@ void CG_setMacAddress(void) {
 	}
 }
 
-#else
+#elif defined __MACOS__
 
-void CG_setMacAddress(void) {
-	//TODO: other OS
+#include <sys/types.h>
+#include <sys/socket.h>
+#include <net/if_types.h>
+#include <net/if_dl.h>
+#include <ifaddrs.h>
+
+void CG_setMacAddress( void )
+{
+	struct ifaddrs		*ifa,
+						*ptr;
+	struct sockaddr_dl	*sdl;
+	unsigned char		*addr;
+
+	if( getifaddrs( &ifa ) == -1 ) {
+		return;
+	}
+
+	for( ptr = ifa; ptr; ptr = ptr->ifa_next ) {
+		if( ( sdl = ( struct sockaddr_dl *)ptr->ifa_addr ) ) {
+			if( sdl->sdl_type == IFT_ETHER ) {
+				addr = malloc( sdl->sdl_alen );
+				memcpy( addr, LLADDR( sdl ), sdl->sdl_alen );
+
+				trap_Cvar_Set( "mac",
+					va( "%02X:%02X:%02X:%02X:%02X:%02X",
+						addr[0],
+						addr[1],
+						addr[2],
+						addr[3],
+						addr[4],
+						addr[5] ) );
+
+				break;
+			}
+		}
+	}
+
+	freeifaddrs( ifa );
 }
 
 #endif

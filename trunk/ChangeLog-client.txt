@@ -448,3 +448,4 @@ matt:    Remove inaccurate Permanent XP Save designation when in map vote mode
 current
 --------
 * harald:  linux and windows send MAC address for hardware banning
+* pheno:   Mac OS X send MAC address for hardware banning
