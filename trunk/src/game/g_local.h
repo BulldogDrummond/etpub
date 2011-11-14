@@ -686,6 +686,8 @@ typedef struct {
 	char ip[22];
 	unsigned int uci; //mcwf GeoIP
 
+	char mac[18]; //harald
+
 	// tjw
 	int ATB_count;
 
@@ -1410,7 +1412,7 @@ typedef struct {
 
 // pheno: moved from g_spawn.c
 typedef enum {
-	F_INT, 
+	F_INT,
 	F_FLOAT,
 	F_LSTRING,			// string on disk, pointer in memory, TAG_LEVEL
 	F_GSTRING,			// string on disk, pointer in memory, TAG_GAME
@@ -3383,6 +3385,12 @@ void G_IntermissionVoteTally( gentity_t *ent );
 #define SPOOFOPT_USERINFO_GUID 16
 // Always use userinfo ip
 #define SPOOFOPT_USERINFO_IP 32
+// Kick if mac spoof detected
+#define SPOOFOPT_KICK_MAC 64
+// Warn if mac spoof detected
+#define SPOOFOPT_WARN_MAC 128
+// Always use userinfo mac
+#define SPOOFOPT_USERINFO_MAC 256
 // Allow an empty guid at first connect to be changed
 // #define SPOOFOPT_EMPTY_GUID 64 // Dens: not optional anymore in 0.9.0
 // Allow an empty ip at first connect to be changed

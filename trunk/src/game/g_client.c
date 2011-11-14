@@ -195,10 +195,10 @@ gentity_t *SelectSpawnPoint ( vec3_t avoidPoint, vec3_t origin, vec3_t angles ) 
 	if ( spot == nearestSpot ) {
 		// roll again if it would be real close to point of death
 		spot = SelectRandomDeathmatchSpawnPoint ( );
-		if ( spot == nearestSpot ) { 
+		if ( spot == nearestSpot ) {
 			// last try
 			spot = SelectRandomDeathmatchSpawnPoint ( );
-		}		
+		}
 	}
 
 	// find a single player start spot
@@ -286,7 +286,7 @@ void InitBodyQue (void) {
 /*
 =============
 BodyUnlink
-  
+
 Called by BodySink
 =============
 */
@@ -294,14 +294,14 @@ void BodyUnlink( gentity_t *ent ) {
 	trap_UnlinkEntity( ent );
 	ent->physicsObject = qfalse;
 }
-                
+
 /*
 =============
 BodySink
 
-After sitting around for five seconds, fall into the ground and dissapear 
+After sitting around for five seconds, fall into the ground and dissapear
 =============
-*/ 
+*/
 void BodySink2( gentity_t *ent ) {
 	ent->physicsObject = qfalse;
 	// tjw: BODY_TIME is how long they last all together, not just sink anim
@@ -395,9 +395,9 @@ void CopyToBodyQue( gentity_t *ent ) {
 	// DHM - Nerve
 	// change the animation to the last-frame only, so the sequence
 	// doesn't repeat anew for the body
-	switch ( body->s.legsAnim & ~ANIM_TOGGLEBIT ) 
+	switch ( body->s.legsAnim & ~ANIM_TOGGLEBIT )
 	{
-	case BOTH_DEATH1:	
+	case BOTH_DEATH1:
 	case BOTH_DEAD1:
 	default:
 		body->s.torsoAnim = body->s.legsAnim = BOTH_DEAD1;
@@ -417,7 +417,7 @@ void CopyToBodyQue( gentity_t *ent ) {
 	VectorCopy (ent->r.maxs, body->r.maxs);
 	VectorCopy (ent->r.absmin, body->r.absmin);
 	VectorCopy (ent->r.absmax, body->r.absmax);
-	
+
 	// ydnar: bodies have lower bounding box
 	body->r.maxs[ 2 ] = 0;
 
@@ -500,7 +500,7 @@ void G_DropLimboHealth(gentity_t *ent)
 		return;
 	if(!ent->client)
 		return;
-	if(ent->client->sess.playerType != PC_MEDIC) 
+	if(ent->client->sess.playerType != PC_MEDIC)
 		return;
 	if(g_gamestate.integer != GS_PLAYING)
 		return;
@@ -526,7 +526,7 @@ void G_DropLimboHealth(gentity_t *ent)
 		VectorScale(launchvel, 100, launchvel);
 		launchvel[2] = (100 + (g_tossDistance.integer * 10));
 		VectorCopy(ent->r.currentOrigin, launchspot);
-		
+
 		Weapon_Medic_Ext(ent,
 			launchspot,
 			launchspot,
@@ -546,7 +546,7 @@ void G_DropLimboAmmo(gentity_t *ent)
 		return;
 	if(!ent->client)
 		return;
-	if(ent->client->sess.playerType != PC_FIELDOPS) 
+	if(ent->client->sess.playerType != PC_FIELDOPS)
 		return;
 	if(g_gamestate.integer != GS_PLAYING)
 		return;
@@ -562,7 +562,7 @@ void G_DropLimboAmmo(gentity_t *ent)
 		// from, it just makes this more
 		// accurate.
 		ent->client->ps.classWeaponTime +=
-			(level.time 
+			(level.time
 				- ent->client->deathTime
 				+ 10000);
 	}
@@ -579,7 +579,7 @@ void G_DropLimboAmmo(gentity_t *ent)
 		VectorScale(launchvel, 100, launchvel);
 		launchvel[2] = (100 + (g_tossDistance.integer * 10));
 		VectorCopy(ent->r.currentOrigin, launchspot);
-		
+
 		Weapon_MagicAmmo_Ext(ent,
 			launchspot,
 			launchspot,
@@ -594,7 +594,7 @@ void G_DropLimboAmmo(gentity_t *ent)
 limbo
 ================
 */
-void limbo( gentity_t *ent, qboolean makeCorpse ) 
+void limbo( gentity_t *ent, qboolean makeCorpse )
 {
 	int i,contents;
 	//int startclient = ent->client->sess.spectatorClient;
@@ -647,12 +647,12 @@ void limbo( gentity_t *ent, qboolean makeCorpse )
 		ent->client->ps.pm_flags |= PMF_FOLLOW;
 		ent->client->sess.botSuicide = qfalse; // cs: avoid needlessly /killing at next spawn
 
-		
+
 		if( makeCorpse ) {
 			G_DropLimboHealth(ent);
 			G_DropLimboAmmo(ent);
-			if((g_weapons.integer & WPF_DROP_BINOCS) && 
-					COM_BitCheck(ent->client->ps.weapons, 
+			if((g_weapons.integer & WPF_DROP_BINOCS) &&
+					COM_BitCheck(ent->client->ps.weapons,
 						WP_BINOCULARS) ) {
 				G_DropBinocs(ent);
 			}
@@ -706,12 +706,12 @@ void limbo( gentity_t *ent, qboolean makeCorpse )
 			}
 
 			if((cl->ps.pm_flags & PMF_LIMBO)) {
-				
+
 				Cmd_FollowCycle_f(
 					&g_entities[level.sortedClients[i]], 1);
 			}
 			else if(cl->sess.sessionTeam == TEAM_SPECTATOR) {
-				
+
 				if((g_spectator.integer & SPECF_FL_ON_LIMBO)) {
 					cl->sess.spectatorState = SPECTATOR_FREE;
 					ClientBegin(cl - level.clients);
@@ -727,7 +727,7 @@ void limbo( gentity_t *ent, qboolean makeCorpse )
 
 /* JPW NERVE
 ================
-reinforce 
+reinforce
 ================
 // -- called when time expires for a team deployment cycle and there is at least one guy ready to go
 */
@@ -966,17 +966,17 @@ qboolean AddWeaponToPlayer( gclient_t *client, weapon_t weapon, int ammo, int am
 //     best suiting his/her wishes. Aren't we nice?
 int G_BestSecWeaponForClient( gclient_t *client ) {
 	clientSession_t *ci = &client->sess;
-	
+
 	// note: no breaks as it's supposed to drop through
 	if( ci->sessionTeam == TEAM_AXIS ) {
-		switch(ci->latchPlayerWeapon2) { 	
+		switch(ci->latchPlayerWeapon2) {
 		default:	// defaultly select the best weapon
 		case WP_THOMPSON:
 		case WP_MP40:
 			// Slot 3: SMG
-			if( ci->playerType == PC_SOLDIER && 
+			if( ci->playerType == PC_SOLDIER &&
 				ci->skill[SK_HEAVY_WEAPONS] >= 4 &&
-				ci->latchPlayerWeapon != WP_MP40 ) {	
+				ci->latchPlayerWeapon != WP_MP40 ) {
 				return WP_MP40;
 			}
 		case WP_AKIMBO_SILENCEDCOLT:
@@ -987,7 +987,7 @@ int G_BestSecWeaponForClient( gclient_t *client ) {
 			if( ci->skill[SK_LIGHT_WEAPONS] >= 4 ) {
 				if(ci->playerType == PC_COVERTOPS) {
 					return WP_AKIMBO_SILENCEDLUGER;
-				} else {		
+				} else {
 					return WP_AKIMBO_LUGER;
 				}
 			}
@@ -1003,14 +1003,14 @@ int G_BestSecWeaponForClient( gclient_t *client ) {
 			}
 		}
 	} else if( ci->sessionTeam == TEAM_ALLIES ) {
-		switch(ci->latchPlayerWeapon2) { 	
+		switch(ci->latchPlayerWeapon2) {
 		default:	// defaultly select the best weapon
 		case WP_THOMPSON:
 		case WP_MP40:
 			// Slot 3: SMG
-			if( ci->playerType == PC_SOLDIER && 
+			if( ci->playerType == PC_SOLDIER &&
 				ci->skill[SK_HEAVY_WEAPONS] >= 4 &&
-				ci->latchPlayerWeapon != WP_THOMPSON) {	
+				ci->latchPlayerWeapon != WP_THOMPSON) {
 				return WP_THOMPSON;
 			}
 		case WP_AKIMBO_SILENCEDCOLT:
@@ -1021,7 +1021,7 @@ int G_BestSecWeaponForClient( gclient_t *client ) {
 			if( ci->skill[SK_LIGHT_WEAPONS] >= 4 ) {
 				if(ci->playerType == PC_COVERTOPS) {
 					return WP_AKIMBO_SILENCEDCOLT;
-				} else {		
+				} else {
 					return WP_AKIMBO_COLT;
 				}
 			}
@@ -1046,7 +1046,7 @@ int G_BestSecWeaponForClient( gclient_t *client ) {
  be used for class stealing.  It needed cleaning up badly anyway.
  It still does.
  */
-void G_AddClassSpecificTools(gclient_t *client) 
+void G_AddClassSpecificTools(gclient_t *client)
 {
 	int	pc;
 	qboolean add_binocs = qfalse;
@@ -1060,7 +1060,7 @@ void G_AddClassSpecificTools(gclient_t *client)
 		case PC_ENGINEER:
 			AddWeaponToPlayer( client, WP_DYNAMITE, 0, 1, qfalse );
 			AddWeaponToPlayer( client, WP_PLIERS, 0, 1, qfalse );
-			AddWeaponToPlayer( client, 
+			AddWeaponToPlayer( client,
 				WP_LANDMINE,
 				GetAmmoTableData(WP_LANDMINE)->defaultStartingAmmo,
 				GetAmmoTableData(WP_LANDMINE)->defaultStartingClip,
@@ -1073,7 +1073,7 @@ void G_AddClassSpecificTools(gclient_t *client)
 				GetAmmoTableData(WP_SMOKE_BOMB)->defaultStartingAmmo,
 				GetAmmoTableData(WP_SMOKE_BOMB)->defaultStartingClip,
 				qfalse);
-			// See if we already have a satchel charge placed 
+			// See if we already have a satchel charge placed
 			// this needs to be here for class stealing
 			if( G_FindSatchel( &g_entities[client->ps.clientNum] ) ) {
 				AddWeaponToPlayer( client, WP_SATCHEL, 0, 0, qfalse );
@@ -1088,7 +1088,7 @@ void G_AddClassSpecificTools(gclient_t *client)
 				add_binocs = qtrue;
 			}
 			AddWeaponToPlayer(client, WP_AMMO, 0, 1, qfalse);
-			AddWeaponToPlayer( client, 
+			AddWeaponToPlayer( client,
 				WP_SMOKE_MARKER,
 				GetAmmoTableData(WP_SMOKE_MARKER)->defaultStartingAmmo,
 				GetAmmoTableData(WP_SMOKE_MARKER)->defaultStartingClip,
@@ -1100,7 +1100,7 @@ void G_AddClassSpecificTools(gclient_t *client)
 				GetAmmoTableData(WP_MEDIC_SYRINGE)->defaultStartingAmmo,
 				GetAmmoTableData(WP_MEDIC_SYRINGE)->defaultStartingClip,
 				qfalse);
-			if( client->sess.skill[SK_FIRST_AID] >= 4 && 
+			if( client->sess.skill[SK_FIRST_AID] >= 4 &&
 				!(g_medics.integer & MEDIC_NOSELFADREN) )
 				AddWeaponToPlayer(client,
 					WP_MEDIC_ADRENALINE,
@@ -1136,7 +1136,7 @@ void G_AddClassSpecificTools(gclient_t *client)
 	}
 }
 
-qboolean _SetSoldierSpawnWeapons(gclient_t *client) 
+qboolean _SetSoldierSpawnWeapons(gclient_t *client)
 {
 	weapon_t w;
 	weapon_t w2, w3 = 0;
@@ -1157,10 +1157,10 @@ qboolean _SetSoldierSpawnWeapons(gclient_t *client)
 		AddWeaponToPlayer(client, WP_GRENADE_LAUNCHER, 0, 4, qfalse);
 
 		w2 = G_BestSecWeaponForClient( client );
-		// kw: Give a (akimbo) pistol if allowed or 
+		// kw: Give a (akimbo) pistol if allowed or
 		//     primary and secundairy weapons are both MP40.
-		if( ((g_weapons.integer & WPF_L4HW_KEEPS_PISTOL) && 
-			client->sess.skill[SK_HEAVY_WEAPONS] >= 4) || 
+		if( ((g_weapons.integer & WPF_L4HW_KEEPS_PISTOL) &&
+			client->sess.skill[SK_HEAVY_WEAPONS] >= 4) ||
 				w == w2 ) {
 			if(client->sess.skill[SK_LIGHT_WEAPONS] < 4) {
 				w3 = WP_LUGER;
@@ -1185,7 +1185,7 @@ qboolean _SetSoldierSpawnWeapons(gclient_t *client)
 		AddWeaponToPlayer(client, WP_GRENADE_PINEAPPLE, 0, 4, qfalse);
 
 		w2 = G_BestSecWeaponForClient( client );
-		if( ((g_weapons.integer & WPF_L4HW_KEEPS_PISTOL) && 
+		if( ((g_weapons.integer & WPF_L4HW_KEEPS_PISTOL) &&
 			client->sess.skill[SK_HEAVY_WEAPONS] >= 4) ||
 				w == w2) {
 			if(client->sess.skill[SK_LIGHT_WEAPONS] < 4) {
@@ -1204,7 +1204,7 @@ qboolean _SetSoldierSpawnWeapons(gclient_t *client)
 		GetAmmoTableData(w)->defaultStartingAmmo,
 		GetAmmoTableData(w)->defaultStartingClip,
 		qtrue);
-	
+
 	if(w == WP_MOBILE_MG42) {
 		ws = WP_MOBILE_MG42_SET;
 	}
@@ -1222,10 +1222,10 @@ qboolean _SetSoldierSpawnWeapons(gclient_t *client)
 
 	if(w2 == WP_AKIMBO_LUGER || w2 == WP_AKIMBO_COLT) {
 		client->ps.ammoclip[
-			BG_FindClipForWeapon(BG_AkimboSidearm(w2))] = 
+			BG_FindClipForWeapon(BG_AkimboSidearm(w2))] =
 			GetAmmoTableData(w2)->defaultStartingClip;
 	}
-	
+
 	if( w != w2 ) // sanity check if both aren't smg
 		AddWeaponToPlayer(client,
 			w2,
@@ -1233,12 +1233,12 @@ qboolean _SetSoldierSpawnWeapons(gclient_t *client)
 			GetAmmoTableData(w2)->defaultStartingClip,
 			qfalse);
 
-	if(w2 == w3) 
+	if(w2 == w3)
 		return qtrue;
 
 	if(w3 == WP_AKIMBO_LUGER || w3 == WP_AKIMBO_COLT) {
 		client->ps.ammoclip[
-			BG_FindClipForWeapon(BG_AkimboSidearm(w3))] = 
+			BG_FindClipForWeapon(BG_AkimboSidearm(w3))] =
 			GetAmmoTableData(w3)->defaultStartingClip;
 	}
 	if(w3) {
@@ -1251,7 +1251,7 @@ qboolean _SetSoldierSpawnWeapons(gclient_t *client)
 	return qtrue;
 }
 
-qboolean _SetMedicSpawnWeapons(gclient_t *client) 
+qboolean _SetMedicSpawnWeapons(gclient_t *client)
 {
 	weapon_t w;
 	weapon_t w2;
@@ -1259,19 +1259,19 @@ qboolean _SetMedicSpawnWeapons(gclient_t *client)
 	if(client->sess.sessionTeam == TEAM_AXIS) {
 		w = WP_MP40;
 		AddWeaponToPlayer(client, WP_GRENADE_LAUNCHER, 0, 1, qfalse);
-	
+
 		w2 = G_BestSecWeaponForClient( client );
-		if( w2 == WP_AKIMBO_LUGER && 
+		if( w2 == WP_AKIMBO_LUGER &&
 			(g_medics.integer & MEDIC_NOAKIMBO) ) {
 			w2 = WP_LUGER;
 		}
 	}
 	else if(client->sess.sessionTeam == TEAM_ALLIES) {
 		w = WP_THOMPSON;
-		AddWeaponToPlayer(client, WP_GRENADE_PINEAPPLE, 0, 1, qfalse);	
+		AddWeaponToPlayer(client, WP_GRENADE_PINEAPPLE, 0, 1, qfalse);
 
 		w2 = G_BestSecWeaponForClient( client );
-		if( w2 == WP_AKIMBO_COLT && 
+		if( w2 == WP_AKIMBO_COLT &&
 			(g_medics.integer & MEDIC_NOAKIMBO) ) {
 			w2 = WP_COLT;
 		}
@@ -1290,7 +1290,7 @@ qboolean _SetMedicSpawnWeapons(gclient_t *client)
 
 	if(w2 == WP_AKIMBO_LUGER || w2 == WP_AKIMBO_COLT) {
 		client->ps.ammoclip[
-			BG_FindClipForWeapon(BG_AkimboSidearm(w2))] = 
+			BG_FindClipForWeapon(BG_AkimboSidearm(w2))] =
 			GetAmmoTableData(w2)->defaultStartingClip;
 	}
 	AddWeaponToPlayer(client,
@@ -1301,7 +1301,7 @@ qboolean _SetMedicSpawnWeapons(gclient_t *client)
 	return qtrue;
 }
 
-qboolean _SetEngineerSpawnWeapons(gclient_t *client) 
+qboolean _SetEngineerSpawnWeapons(gclient_t *client)
 {
 	weapon_t w;
 	weapon_t w2;
@@ -1315,7 +1315,7 @@ qboolean _SetEngineerSpawnWeapons(gclient_t *client)
 			default:
 				w = WP_MP40;
 		}
-		AddWeaponToPlayer(client, WP_GRENADE_LAUNCHER, 0, 4, qfalse);	
+		AddWeaponToPlayer(client, WP_GRENADE_LAUNCHER, 0, 4, qfalse);
 
 		w2 = G_BestSecWeaponForClient( client );
 	}
@@ -1357,7 +1357,7 @@ qboolean _SetEngineerSpawnWeapons(gclient_t *client)
 	}
 	if(w2 == WP_AKIMBO_LUGER || w2 == WP_AKIMBO_COLT) {
 		client->ps.ammoclip[
-			BG_FindClipForWeapon(BG_AkimboSidearm(w2))] = 
+			BG_FindClipForWeapon(BG_AkimboSidearm(w2))] =
 			GetAmmoTableData(w2)->defaultStartingClip;
 	}
 	AddWeaponToPlayer(client,
@@ -1368,7 +1368,7 @@ qboolean _SetEngineerSpawnWeapons(gclient_t *client)
 	return qtrue;
 }
 
-qboolean _SetFieldOpSpawnWeapons(gclient_t *client) 
+qboolean _SetFieldOpSpawnWeapons(gclient_t *client)
 {
 	weapon_t w;
 	weapon_t w2;
@@ -1397,7 +1397,7 @@ qboolean _SetFieldOpSpawnWeapons(gclient_t *client)
 
 	if(w2 == WP_AKIMBO_LUGER || w2 == WP_AKIMBO_COLT) {
 		client->ps.ammoclip[
-			BG_FindClipForWeapon(BG_AkimboSidearm(w2))] = 
+			BG_FindClipForWeapon(BG_AkimboSidearm(w2))] =
 			GetAmmoTableData(w2)->defaultStartingClip;
 	}
 	AddWeaponToPlayer(client,
@@ -1409,7 +1409,7 @@ qboolean _SetFieldOpSpawnWeapons(gclient_t *client)
 
 }
 
-qboolean _SetCovertSpawnWeapons(gclient_t *client) 
+qboolean _SetCovertSpawnWeapons(gclient_t *client)
 {
 	weapon_t w;
 	weapon_t w2, w3 = 0;
@@ -1426,7 +1426,7 @@ qboolean _SetCovertSpawnWeapons(gclient_t *client)
 				w = WP_STEN;
 		}
 		AddWeaponToPlayer(client, WP_GRENADE_LAUNCHER, 0, 2, qfalse);
-		
+
 		w2 = G_BestSecWeaponForClient( client );
 		if(w2 == WP_SILENCER) {
 			w3 = WP_LUGER;
@@ -1456,7 +1456,7 @@ qboolean _SetCovertSpawnWeapons(gclient_t *client)
 		GetAmmoTableData(w)->defaultStartingAmmo,
 		GetAmmoTableData(w)->defaultStartingClip,
 		qtrue);
-	
+
 	if(w == WP_K43) {
 		ws = WP_K43_SCOPE;
 	}
@@ -1476,7 +1476,7 @@ qboolean _SetCovertSpawnWeapons(gclient_t *client)
 	}
 	if(w2 == WP_AKIMBO_SILENCEDLUGER || w2 == WP_AKIMBO_SILENCEDCOLT) {
 		client->ps.ammoclip[
-		       	BG_FindClipForWeapon(BG_AkimboSidearm(w2))] = 
+		       	BG_FindClipForWeapon(BG_AkimboSidearm(w2))] =
 			GetAmmoTableData(w2)->defaultStartingClip;
 	}
 	AddWeaponToPlayer(client,
@@ -1515,7 +1515,7 @@ void G_SetSniperOnly(gclient_t *client)
     w = WP_K43;
     ws = WP_K43_SCOPE;
     startclip = 10;
-  } else //if (client->sess.sessionTeam == TEAM_ALLIES) 
+  } else //if (client->sess.sessionTeam == TEAM_ALLIES)
   {
     w = WP_GARAND;
     ws = WP_GARAND_SCOPE;
@@ -1534,7 +1534,7 @@ void G_SetRifleOnly(gclient_t *client)
     w = WP_KAR98;
     ws = WP_GPG40;
     startclip = 10;
-  } else //if (client->sess.sessionTeam == TEAM_ALLIES) 
+  } else //if (client->sess.sessionTeam == TEAM_ALLIES)
   {
     w = WP_CARBINE;
     ws = WP_M7;
@@ -1567,12 +1567,12 @@ void G_SetKnifeOnly(gclient_t *client, int pc)
 SetWolfSpawnWeapons
 ===========
 */
-void SetWolfSpawnWeapons( gclient_t *client ) 
+void SetWolfSpawnWeapons( gclient_t *client )
 {
 	int pc;
     pc = client->sess.playerType;
 
-	if ( client->sess.sessionTeam == TEAM_SPECTATOR ) 
+	if ( client->sess.sessionTeam == TEAM_SPECTATOR )
 		return;
 
 	Bot_Event_ResetWeapons(client->ps.clientNum);
@@ -1598,7 +1598,7 @@ void SetWolfSpawnWeapons( gclient_t *client )
 			ctime = level.covertopsChargeTime[cteam];
 			break;
 		default:
-			ctime = level.soldierChargeTime[cteam];	
+			ctime = level.soldierChargeTime[cteam];
 		}
 		client->ps.classWeaponTime = level.time - (.5f * ctime);
 	}
@@ -1612,7 +1612,7 @@ void SetWolfSpawnWeapons( gclient_t *client )
 
 		// tjw: classWeaponTime preserved in ClientSpawn()
 		//      adjust it to compensate for the time of /kill
-		client->ps.classWeaponTime += level.time - client->deathTime; 
+		client->ps.classWeaponTime += level.time - client->deathTime;
 	}
 	else {
 		// tjw: give full charge bar
@@ -1627,24 +1627,24 @@ void SetWolfSpawnWeapons( gclient_t *client )
 	// Communicate it to cgame
 	client->ps.stats[STAT_PLAYER_CLASS] = pc;
 
-	// Abuse teamNum to store player class as well (can't see stats 
+	// Abuse teamNum to store player class as well (can't see stats
 	// for all clients in cgame)
 	client->ps.teamNum = pc;
 
 	// JPW NERVE -- zero out all ammo counts
 	memset(client->ps.ammo, 0, MAX_WEAPONS * sizeof(int));
 
-	// All players start with a knife (not OR-ing so that it clears 
+	// All players start with a knife (not OR-ing so that it clears
 	// previous weapons)
 	client->ps.weapons[0] = 0;
 	client->ps.weapons[1] = 0;
 
 	if(g_throwableKnives.integer) {
-		AddWeaponToPlayer( client, WP_KNIFE, 
-				g_maxKnives.integer, 
+		AddWeaponToPlayer( client, WP_KNIFE,
+				g_maxKnives.integer,
 				g_throwableKnives.integer, qtrue );
 	} else {
-		AddWeaponToPlayer( client, WP_KNIFE, 
+		AddWeaponToPlayer( client, WP_KNIFE,
 				0, 1, qtrue );
 	}
 
@@ -1843,9 +1843,9 @@ const char *GetParsedIP(const char *ipadd)
 		return "localhost";
 
 	rc = sscanf(ipadd, "%3u.%3u.%3u.%3u:%u%c", &b1, &b2, &b3, &b4, &port, &c);
-	if (rc < 4 || rc > 5) 
+	if (rc < 4 || rc > 5)
 		return NULL;
-	if ( (b1 | b2 | b3 | b4) > 255 || port > 65535) 
+	if ( (b1 | b2 | b3 | b4) > 255 || port > 65535)
 		return NULL;
 	if (strspn(ipadd, "0123456789.:") < strlen(ipadd))
 		return NULL;
@@ -1966,7 +1966,7 @@ char *CheckUserinfo( int clientNum )
 	if(count > 1){
 		return "Too many cl_punkbuster fields in userinfo";
 	}
-	
+
 	value = Info_ValueForKey(userinfo, "rate");
 	if (value == NULL || value[0] == '\0')
 		return "Wrong rate field in userinfo.";
@@ -1974,7 +1974,7 @@ char *CheckUserinfo( int clientNum )
 	return 0;
 }
 
-char *CheckSpoofing(gclient_t *client, char *guid, char *IP, char *name){
+char *CheckSpoofing(gclient_t *client, char *guid, char *IP, char *mac, char *name){
 
 	if(Q_stricmp(client->sess.guid, guid)){
 		if( !client->sess.guid || !Q_stricmp(client->sess.guid, "") ){
@@ -1992,8 +1992,8 @@ char *CheckSpoofing(gclient_t *client, char *guid, char *IP, char *name){
 			}
 		}
 	}
-	
-	if(Q_stricmp(client->sess.ip, IP)){ 
+
+	if(Q_stricmp(client->sess.ip, IP)){
 		if ( !client->sess.ip || !Q_stricmp(client->sess.ip, "") ){
 			Q_strncpyz(client->sess.ip, IP, sizeof(client->sess.ip));
 		}else{
@@ -2010,12 +2010,33 @@ char *CheckSpoofing(gclient_t *client, char *guid, char *IP, char *name){
 		}
 	}
 
+	if(Q_stricmp(client->sess.mac, mac)){
+		if ( !client->sess.mac || !Q_stricmp(client->sess.mac, "") ){
+			Q_strncpyz(client->sess.mac, mac, sizeof(client->sess.mac));
+		}else{
+			G_LogPrintf( "MACSPOOF: client %i Original mac %s"
+				"Secondary mac %s\n",
+				client->ps.clientNum,
+				client->sess.mac,
+				mac);
+			if(g_spoofOptions.integer & SPOOFOPT_KICK_MAC){
+				return "You are kicked for MACspoofing";
+			}else if(g_spoofOptions.integer & SPOOFOPT_WARN_MAC){
+				AP(va("cpm \"^1MACSPOOF: ^7%s\"", name));
+			}
+		}
+	}
+
 	if(g_spoofOptions.integer & SPOOFOPT_USERINFO_GUID){
 		Q_strncpyz(client->sess.guid, guid, sizeof(client->sess.guid));
 	}
 
 	if(g_spoofOptions.integer & SPOOFOPT_USERINFO_IP){
 		Q_strncpyz(client->sess.ip, IP, sizeof(client->sess.ip));
+	}
+
+	if(g_spoofOptions.integer & SPOOFOPT_USERINFO_MAC){
+		Q_strncpyz(client->sess.mac, mac, sizeof(client->sess.mac));
 	}
 
 	return 0;
@@ -2043,20 +2064,20 @@ void ClientUserinfoChanged( int clientNum ) {
 	char	medalStr[16] = "";
 	int		characterIndex;
 	int		etpubc;
-	char	*reason, guid[33], ip[22], name[MAX_NETNAME];
+	char	*reason, guid[33], ip[22], mac[18], name[MAX_NETNAME];
 
 	ent = g_entities + clientNum;
 	client = ent->client;
 
 	client->ps.clientNum = clientNum;
-	
+
 	if( !(ent->r.svFlags & SVF_BOT) ) {
 		reason = CheckUserinfo(clientNum);
 		if(reason){
 			trap_DropClient( clientNum,va("^1%s", reason), 0);
 		}
 	}
-	
+
 	client->medals = 0;
 	for( i = 0; i < SK_NUM_SKILLS; i++ ) {
 		client->medals += client->sess.medals[ i ];
@@ -2072,20 +2093,21 @@ void ClientUserinfoChanged( int clientNum ) {
 		// Q_strncpyz( userinfo, "\\name\\badinfo", sizeof(userinfo) );
 		trap_DropClient( clientNum, "^1Forbidden character in userinfo" , 0);
 	}
-	
+
 	Q_strncpyz(guid, Info_ValueForKey(userinfo, "cl_guid"), sizeof(guid));
 	Q_strncpyz(ip, Info_ValueForKey(userinfo, "ip"), sizeof(ip));
+	Q_strncpyz(mac, Info_ValueForKey(userinfo, "mac"), sizeof(mac));
 	Q_strncpyz(name, Info_ValueForKey(userinfo, "name"), sizeof(name));
 
 	if( !( ent->r.svFlags & SVF_BOT ) ) { // pheno: IGNORE BOTS
-		reason = CheckSpoofing( client, guid, ip, name );
+		reason = CheckSpoofing( client, guid, ip, mac, name );
 		if( reason ) {
 			trap_DropClient( clientNum, va( "^1%s", reason ), 0 );
 		}
 	}
 
 #ifndef DEBUG_STATS
-	if( g_developer.integer || *g_log.string || g_dedicated.integer ) 
+	if( g_developer.integer || *g_log.string || g_dedicated.integer )
 #endif
 	{
 		G_LogPrintf("Userinfo: %s\n", userinfo);
@@ -2118,7 +2140,7 @@ void ClientUserinfoChanged( int clientNum ) {
 		client->pers.predictItemPickup = qfalse;
 	} else {
 		s = Info_ValueForKey(userinfo, "cg_uinfo");
-		
+
 		if(s != NULL && Q_stricmp(s, "")) {
 			sscanf(s, "%i %i %i",
 								&client->pers.clientFlags,
@@ -2127,7 +2149,7 @@ void ClientUserinfoChanged( int clientNum ) {
 		} else {
 			// cg_uinfo was empty and useless.
 			// Let us fill these values in with something useful,
-			// if there not present to prevent auto reload 
+			// if there not present to prevent auto reload
 			// from failing. - forty
 			if(!client->pers.clientFlags) client->pers.clientFlags = 13;
 			if(!client->pers.clientTimeNudge) client->pers.clientTimeNudge = 0;
@@ -2155,7 +2177,7 @@ void ClientUserinfoChanged( int clientNum ) {
 			client->pers.hitsounds = 1;
 		}
 	} else client->pers.hitsounds = 0;
-	
+
 	// set name
 	Q_strncpyz( oldname, client->pers.netname, sizeof( oldname ) );
 	s = Info_ValueForKey (userinfo, "name");
@@ -2166,15 +2188,15 @@ void ClientUserinfoChanged( int clientNum ) {
 			if (g_censorNames.string[0] || g_censorNamesNeil.integer) {
 				// returns true if they're kicked
 				if (G_CensorName(
-					client->pers.netname, 
-					userinfo, 
+					client->pers.netname,
+					userinfo,
 					clientNum)) {
 					return;
 				}
 			}
 			// Dens: if a user has too many namechanges, reset his old name
 			// and stop the namechange
-			if( !( ent->r.svFlags & SVF_BOT ) && 
+			if( !( ent->r.svFlags & SVF_BOT ) &&
 				g_maxNameChanges.integer > -1 &&
 				client->pers.nameChanges >= g_maxNameChanges.integer &&
 				!G_shrubbot_permission( ent, SBF_NO_RENAME_LIMIT ) ) {
@@ -2228,8 +2250,8 @@ void ClientUserinfoChanged( int clientNum ) {
 
 		s = va( "n\\%s\\t\\%i\\skill\\%s\\c\\%i\\r\\%i\\m\\%s\\s\\%s%s\\dn\\%s\\dr\\%i\\w\\%i\\lw\\%i\\sw\\%i\\mu\\%i\\uci\\%u", //mcwf GeoIP
 			client->pers.netname,
-			client->sess.sessionTeam, 
-			Info_ValueForKey( userinfo, "skill" ), 
+			client->sess.sessionTeam,
+			Info_ValueForKey( userinfo, "skill" ),
 			client->sess.playerType,
 			client->sess.rank,
 			medalStr,
@@ -2249,10 +2271,10 @@ void ClientUserinfoChanged( int clientNum ) {
 		// quad: added support for latched classes
 		// quad: added support for ettv & shoutcaster
 		s = va( "n\\%s\\t\\%i\\c\\%i\\r\\%i\\m\\%s\\s\\%s\\dn\\%s\\dr\\%i\\w\\%i\\lw\\%i\\sw\\%i\\mu\\%i\\ref\\%i\\uci\\%u\\lc\\%i\\tv\\%i\\sc\\%i",
-			client->pers.netname, 
-			client->sess.sessionTeam, 
-			client->sess.playerType, 
-			client->sess.rank, 
+			client->pers.netname,
+			client->sess.sessionTeam,
+			client->sess.playerType,
+			client->sess.rank,
 			medalStr,
 			skillStr,
 			client->disguiseNetname,
@@ -2264,7 +2286,7 @@ void ClientUserinfoChanged( int clientNum ) {
 			client->sess.referee,
 			client->sess.uci, //mcwf GeoIP
 			client->sess.latchPlayerType,
-			client->sess.ettv, 
+			client->sess.ettv,
 			client->sess.shoutcaster
 		);
 #ifndef NO_BOT_SUPPORT
@@ -2281,7 +2303,7 @@ void ClientUserinfoChanged( int clientNum ) {
 
 #ifdef LUA_SUPPORT
 	// Lua API callbacks
-	// This only gets called when the ClientUserinfo is changed, replicating 
+	// This only gets called when the ClientUserinfo is changed, replicating
 	// ETPro's behaviour.
 	G_LuaHook_ClientUserinfoChanged( clientNum );
 #endif // LUA_SUPPORT
@@ -2341,7 +2363,7 @@ char *ClientConnect( int clientNum, qboolean firstTime, qboolean isBot ) {
 
 	value = Info_ValueForKey(userinfo, "cl_guid");
 	Q_strncpyz(guid, value, sizeof(guid));
-	
+
 	// cs: don't kick bots for any reason in clientconnect
 	if (!isBot && !(ent->r.svFlags & SVF_BOT))
 	{
@@ -2370,7 +2392,7 @@ char *ClientConnect( int clientNum, qboolean firstTime, qboolean isBot ) {
 			clientNum2 = level.sortedClients[i];
 			if(clientNum == clientNum2) continue;
 			if(isBot || g_entities[clientNum2].r.svFlags & SVF_BOT) continue; // IGNORE BOTS
-			trap_GetUserinfo(clientNum2, 
+			trap_GetUserinfo(clientNum2,
 				userinfo2,
 				sizeof(userinfo2));
 			value = Info_ValueForKey (userinfo2, "ip");
@@ -2401,7 +2423,7 @@ char *ClientConnect( int clientNum, qboolean firstTime, qboolean isBot ) {
 			if (G_CensorText(censoredName,&censorNamesDictionary)) {
 				Info_SetValueForKey( userinfo, "name", censoredName);
 				trap_SetUserinfo( clientNum, userinfo );
-				if (g_censorPenalty.integer & CNSRPNLTY_KICK) { 
+				if (g_censorPenalty.integer & CNSRPNLTY_KICK) {
 					return "Name censor: Please change your name.";
 				}
 			}
@@ -2412,7 +2434,7 @@ char *ClientConnect( int clientNum, qboolean firstTime, qboolean isBot ) {
 
 			// forty - Display connection attempts by banned players
 			if(
-				g_logOptions.integer & LOGOPTS_BAN_CONN 
+				g_logOptions.integer & LOGOPTS_BAN_CONN
 			) {
 				value = Info_ValueForKey(userinfo, "name");
 				AP(va("cpm \"Banned player: %s^7, tried to connect.\"", value));
@@ -2462,7 +2484,7 @@ char *ClientConnect( int clientNum, qboolean firstTime, qboolean isBot ) {
 		}
 
 		// Gordon: porting q3f flag bug fix
-		// If a player reconnects quickly after a disconnect, the client 
+		// If a player reconnects quickly after a disconnect, the client
 		// disconnect may never be called, thus flag can get lost in the ether
 		if( ent->inuse ) {
 			G_LogPrintf( "Forcing disconnect on active client: %i\n", ent-g_entities );
@@ -2481,12 +2503,12 @@ char *ClientConnect( int clientNum, qboolean firstTime, qboolean isBot ) {
 			for (i = 0; i < level.numConnectedClients; i++) {
 				clientNum2 = level.sortedClients[i];
 				if(clientNum == clientNum2) continue;
-				if(isBot || g_entities[clientNum2].r.svFlags & SVF_BOT) continue; 
+				if(isBot || g_entities[clientNum2].r.svFlags & SVF_BOT) continue;
 				trap_GetUserinfo(clientNum2,
 					userinfo2,
 					sizeof(userinfo2));
 				value = Info_ValueForKey (userinfo2, "cl_guid");
-				if(!Q_stricmp(guid, value)) { 
+				if(!Q_stricmp(guid, value)) {
 					G_LogPrintf( "Forcing disconnect of "
 						"duplicate guid %s for client %i\n",
 						guid,
@@ -2516,7 +2538,7 @@ char *ClientConnect( int clientNum, qboolean firstTime, qboolean isBot ) {
 	client->pers.connected = CON_CONNECTING;
 	client->pers.connectTime = level.time;			// DHM - Nerve
 
-	// tjw: -999 indicates that no lives were found this value 
+	// tjw: -999 indicates that no lives were found this value
 	//      will be updated in G_xpsave_load() otherwise
 	ent->client->disconnectLives = -999;
 
@@ -2554,7 +2576,7 @@ char *ClientConnect( int clientNum, qboolean firstTime, qboolean isBot ) {
 	//}
 
 	//mcwf GeoIP
-	
+
 	//10.0.0.0/8			[RFC1918]
 	//172.16.0.0/12			[RFC1918]
 	//192.168.0.0/16		[RFC1918]
@@ -2667,7 +2689,7 @@ char *ClientConnect( int clientNum, qboolean firstTime, qboolean isBot ) {
 		//G_shrubbot_greeting(ent); // redeye - moved greeting message to ClientBegin
 
 		// forty - fresh connects don't get their skill levels updated with custom skill leveling.
-		//        
+		//
 		for(i=SK_BATTLE_SENSE;i<SK_NUM_SKILLS;i++)
 			G_SetPlayerSkill(client, i);
 	}
@@ -2685,7 +2707,7 @@ int G_ComputeMaxLives(gclient_t *cl, int maxRespawns)
 {
 	float scaled;
 	int val;
-	float timelimit = g_timelimit.value * 60000.0f; 
+	float timelimit = g_timelimit.value * 60000.0f;
 
 	if((float)level.maxTimeLimit > g_timelimit.value)
 		timelimit = level.maxTimeLimit * 60000.0f;
@@ -2700,7 +2722,7 @@ int G_ComputeMaxLives(gclient_t *cl, int maxRespawns)
 		return -1;
 	}
 
-	scaled = (float)(maxRespawns - 1) * 
+	scaled = (float)(maxRespawns - 1) *
 		(1.0f - ((float)(level.time - level.startTime) / timelimit));
 	val = (int)scaled;
 
@@ -2780,8 +2802,8 @@ void ClientBegin( int clientNum )
 
 	health = ent->health;
 
-	maxlives = (g_maxlives.integer || 
-		g_alliedmaxlives.integer || 
+	maxlives = (g_maxlives.integer ||
+		g_alliedmaxlives.integer ||
 		g_axismaxlives.integer);
 
 	if ( ent->r.linked ) {
@@ -2795,6 +2817,22 @@ void ClientBegin( int clientNum )
 
 	// tjw: first ClientBegin() call for the client
 	if(client->pers.connected == CON_CONNECTING) {
+		char userinfo[MAX_INFO_STRING];
+		char reason[MAX_STRING_CHARS] = "";
+
+		trap_GetUserinfo( clientNum, userinfo, sizeof( userinfo ) );
+		// check for shrubbot ban, when mac address is filled in
+		if (!(ent->r.svFlags & SVF_BOT)) {
+			if(G_shrubbot_ban_check(userinfo, reason)) {
+				if(g_logOptions.integer & LOGOPTS_BAN_CONN) {
+					AP(va("cpm \"Banned player: %s^7, tried to connect.\"", Info_ValueForKey(userinfo, "name")));
+				}
+				trap_DropClient(clientNum,
+												va("You are banned from this server.\n%s\n%s\n", reason, g_dropMsg.string),
+												0);
+			}
+		}
+
 		int i;
 
 		// tjw: send forcecvar commands if there are any
@@ -2824,7 +2862,7 @@ void ClientBegin( int clientNum )
 
 	flags = client->ps.eFlags;
 	memset( &client->ps, 0, sizeof( client->ps ) );
-	
+
 	// tjw: if playerState is cleared this should be too right?
 	memset( &client->pmext, 0, sizeof( client->pmext ) );
 
@@ -2844,10 +2882,10 @@ void ClientBegin( int clientNum )
 		client->ps.persistant[PERS_RESPAWNS_LEFT] = -1;
 	else if(lives_left < 1)
 		client->ps.persistant[PERS_RESPAWNS_LEFT] = 0;
-	else 
+	else
 		client->ps.persistant[PERS_RESPAWNS_LEFT] = lives_left;
-	
-	
+
+
 
 	client->pers.complaintClient = -1;
 	client->pers.complaintEndTime = -1;
@@ -2875,7 +2913,7 @@ void ClientBegin( int clientNum )
 	// Xian -- Changed below for team independant maxlives
 	if( g_gametype.integer != GT_WOLF_LMS ) {
 		if( ( client->sess.sessionTeam == TEAM_AXIS || client->sess.sessionTeam == TEAM_ALLIES ) ) {
-		
+
 			if( !client->maxlivescalced ) {
 				if(g_maxlives.integer > 0) {
 					client->ps.persistant[PERS_RESPAWNS_LEFT] = G_ComputeMaxLives(client, g_maxlives.integer);
@@ -2885,7 +2923,7 @@ void ClientBegin( int clientNum )
 
 				if( g_axismaxlives.integer > 0 || g_alliedmaxlives.integer > 0 ) {
 					if(client->sess.sessionTeam == TEAM_AXIS) {
-						client->ps.persistant[PERS_RESPAWNS_LEFT] = G_ComputeMaxLives(client, g_axismaxlives.integer);	
+						client->ps.persistant[PERS_RESPAWNS_LEFT] = G_ComputeMaxLives(client, g_axismaxlives.integer);
 					} else if(client->sess.sessionTeam == TEAM_ALLIES) {
 						client->ps.persistant[PERS_RESPAWNS_LEFT] = G_ComputeMaxLives(client, g_alliedmaxlives.integer);
 					} else {
@@ -2912,7 +2950,7 @@ void ClientBegin( int clientNum )
 
 	// locate ent at a spawn point
 	// Dens: you get new everything, why would you not get new health?
-	/*if(!g_teamChangeKills.integer && health > 0) { 
+	/*if(!g_teamChangeKills.integer && health > 0) {
 
 		ClientSpawn(ent, qfalse, qtrue, qfalse);
 	}
@@ -2920,20 +2958,20 @@ void ClientBegin( int clientNum )
 		ClientSpawn(ent, qfalse, qtrue, qtrue);
 	//}
 
-	// DHM - Nerve :: Start players in limbo mode if they change teams 
+	// DHM - Nerve :: Start players in limbo mode if they change teams
 	// during the match
 	// tjw: don't kill the player unless they're dead already
-	if(client->sess.sessionTeam != TEAM_SPECTATOR && 
+	if(client->sess.sessionTeam != TEAM_SPECTATOR &&
 		level.time - level.startTime > FRAMETIME * GAME_INIT_FRAMES) {
-			
-			// tjw: otherwise players lose 2 lives. 
+
+			// tjw: otherwise players lose 2 lives.
 			// tjw: wtf does gametype have to do with it?
 			if(g_gametype.integer != GT_WOLF_LMS && maxlives &&
 				client->ps.persistant[PERS_RESPAWNS_LEFT] > 0) {
 
 				client->ps.persistant[PERS_RESPAWNS_LEFT]++;
 			}
-			
+
 			if(health <= 0 || g_teamChangeKills.integer) {
 				ent->health = 0;
 				ent->r.contents = CONTENTS_CORPSE;
@@ -2961,7 +2999,7 @@ void ClientBegin( int clientNum )
 			}else{
 				value = Info_ValueForKey ( userinfo, "cl_guid" );
 			}
-			
+
 			G_LogPrintf( "EnforceMaxLives-GUID: %s\n", value );
 			AddMaxLivesGUID( value );
 
@@ -3145,7 +3183,7 @@ void ClientSpawn(
 	flags = ent->client->ps.eFlags & EF_TELEPORT_BIT;
 	flags ^= EF_TELEPORT_BIT;
 //unlagged reset history markers
-	G_ResetMarkers(ent); 
+	G_ResetMarkers(ent);
 //unlagged
 	flags |= (client->ps.eFlags & EF_VOTED);
 	// clear everything but the persistant data
@@ -3225,7 +3263,7 @@ void ClientSpawn(
 	} else {
 		client->ps.classWeaponTime = client->pers.savedClassWeaponTime;
 	}
-	
+
 
 	client->deathTime = savedDeathTime;
 
@@ -3254,20 +3292,20 @@ void ClientSpawn(
 	ent->waterlevel = 0;
 	ent->watertype = 0;
 	ent->flags = 0;
-	
+
 	VectorCopy( playerMins, ent->r.mins );
 	VectorCopy( playerMaxs, ent->r.maxs );
 
 	// Ridah, setup the bounding boxes and viewheights for prediction
 	VectorCopy( ent->r.mins, client->ps.mins );
 	VectorCopy( ent->r.maxs, client->ps.maxs );
-	
+
 	client->ps.crouchViewHeight = CROUCH_VIEWHEIGHT;
 	client->ps.standViewHeight = DEFAULT_VIEWHEIGHT;
 	client->ps.deadViewHeight = DEAD_VIEWHEIGHT;
-	
+
 	if(g_misc.integer & MISC_OLD_MAXZ)
-		client->ps.crouchMaxZ = CROUCH_VIEWHEIGHT; 
+		client->ps.crouchMaxZ = CROUCH_VIEWHEIGHT;
 	else
 		client->ps.crouchMaxZ = client->ps.maxs[2] - (client->ps.standViewHeight - client->ps.crouchViewHeight);
 
@@ -3352,38 +3390,38 @@ void ClientSpawn(
 	if( client->sess.sessionTeam != TEAM_SPECTATOR ) {
 		// Xian - Moved the invul. stuff out of SetWolfSpawnWeapons and put it here for clarity
 		if ( g_fastres.integer == 1 && revived )
-			client->ps.powerups[PW_INVULNERABLE] = level.time + 1000; 
-		else if(revived) 
-			client->ps.powerups[PW_INVULNERABLE] = level.time + 3000; 
+			client->ps.powerups[PW_INVULNERABLE] = level.time + 1000;
+		else if(revived)
+			client->ps.powerups[PW_INVULNERABLE] = level.time + 3000;
 		else {
 			if(client->sess.sessionTeam == TEAM_AXIS) {
 				if(g_axisSpawnInvul.integer) {
-					client->ps.powerups[PW_INVULNERABLE] = 
-						level.time + 
+					client->ps.powerups[PW_INVULNERABLE] =
+						level.time +
 						(g_axisSpawnInvul.integer *
 						 	1000);
 				} else {
-					client->ps.powerups[PW_INVULNERABLE] = 
-						level.time + 
+					client->ps.powerups[PW_INVULNERABLE] =
+						level.time +
 						(g_spawnInvul.integer *
-						 	1000); 
+						 	1000);
 				}
 			} else if (client->sess.sessionTeam == TEAM_ALLIES) {
 				if(g_alliedSpawnInvul.integer) {
-					client->ps.powerups[PW_INVULNERABLE] = 
-						level.time + 
+					client->ps.powerups[PW_INVULNERABLE] =
+						level.time +
 						(g_alliedSpawnInvul.integer *
-						 	1000); 
+						 	1000);
 				} else {
-					client->ps.powerups[PW_INVULNERABLE] = 
-						level.time + 
+					client->ps.powerups[PW_INVULNERABLE] =
+						level.time +
 						(g_spawnInvul.integer *
-						 	1000); 
+						 	1000);
 				}
-			} else {			
-				client->ps.powerups[PW_INVULNERABLE] = 
-					level.time + 
-					(g_spawnInvul.integer * 1000); 
+			} else {
+				client->ps.powerups[PW_INVULNERABLE] =
+					level.time +
+					(g_spawnInvul.integer * 1000);
 			}
 		}
 	}
@@ -3399,8 +3437,8 @@ void ClientSpawn(
 	//		Bot_Event_Spawn(client->ps.clientNum);
 	//}
 
-	SetWolfSpawnWeapons( client ); 
-	
+	SetWolfSpawnWeapons( client );
+
 	// START	Mad Doctor I changes, 8/17/2002
 
 	// JPW NERVE -- increases stats[STAT_MAX_HEALTH] based on # of medics in game
@@ -3448,7 +3486,7 @@ void ClientSpawn(
 
 #ifndef NO_BOT_SUPPORT
 	if( ent->r.svFlags & SVF_BOT ) {
-		// xkan, 10/11/2002 - the ideal view angle is defaulted to 0,0,0, but the 
+		// xkan, 10/11/2002 - the ideal view angle is defaulted to 0,0,0, but the
 		// spawn_angles is the desired angle for the bots to face.
 		BotSetIdealViewAngles( index, spawn_angles );
 
@@ -3554,7 +3592,7 @@ void ClientDisconnect( int clientNum ) {
 	//////////////////////////////////////////////////////////////////////////
 	Bot_Event_ClientDisConnected(clientNum);
 	//////////////////////////////////////////////////////////////////////////
-	
+
 
 	// josh: signal atb to run again if it's on and the player was on a team
 	if (ent->client->sess.sessionTeam == TEAM_AXIS
@@ -3610,7 +3648,7 @@ void ClientDisconnect( int clientNum ) {
 			}
 
 			mEnt = G_FindMapEntityDataSingleClient( teamList, NULL, ent->s.number, -1 );
-			
+
 			while( mEnt ) {
 				mapEntityData_t	*mEntFree = mEnt;
 
@@ -3622,7 +3660,7 @@ void ClientDisconnect( int clientNum ) {
 	}
 
 	// send effect if they were completely connected
-	if ( ent->client->pers.connected == CON_CONNECTED 
+	if ( ent->client->pers.connected == CON_CONNECTED
 		&& ent->client->sess.sessionTeam != TEAM_SPECTATOR
 		&& !(ent->client->ps.pm_flags & PMF_LIMBO) ) {
 
@@ -3706,8 +3744,8 @@ void ClientDisconnect( int clientNum ) {
 // In just the GAME DLL, we want to store the groundtrace surface stuff,
 // so we don't have to keep tracing.
 void ClientStoreSurfaceFlags
-( 
-	int clientNum, 
+(
+	int clientNum,
 	int surfaceFlags
 )
 {
@@ -3717,9 +3755,9 @@ void ClientStoreSurfaceFlags
 }
 
 
-// ClientHitboxMaxZ returns the proper value to use for 
+// ClientHitboxMaxZ returns the proper value to use for
 // the entity's r.maxs[2] when running a trace.
-float ClientHitboxMaxZ(gentity_t *hitEnt) 
+float ClientHitboxMaxZ(gentity_t *hitEnt)
 {
 		if(!hitEnt) return 0;
 		if(!hitEnt->client) return hitEnt->r.maxs[2];
@@ -3742,7 +3780,7 @@ float ClientHitboxMaxZ(gentity_t *hitEnt)
 			//      animation is higher than the idle one
 			//      and that should be the most commonly used
 			//return 18;
-			return 24; 
+			return 24;
 		}
 		else if((g_hitboxes.integer & HBF_STANDING)) {
 			return 36;

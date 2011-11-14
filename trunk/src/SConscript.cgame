@@ -79,6 +79,9 @@ source_list = cgame_list
 
 local_env['LINK'] = local_env['CC']
 
+if g_os == 'win32' and os.name != 'nt':
+	local_env.Append( LIBS = '-liphlpapi' )
+
 # GAMERANGER isn't exported in all usage paths
 try:
 	if ( GAMERANGER == '1' ):

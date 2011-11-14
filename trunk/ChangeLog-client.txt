@@ -36,7 +36,7 @@
 * tjw:  removed +lookup, -lookup, +lookdown, and -lookdown commands from the
         client mod.  these are used for anti-recoil cheats.
 * tjw:  etpub_client now tries very hard not to save any of the forcecvar
-        cvars in the profile etconfig.cfg file.  also, once forcecvar is 
+        cvars in the profile etconfig.cfg file.  also, once forcecvar is
         used to set a client cvar, the client can no longer modify it
 	(until they restart their client).
 
@@ -53,13 +53,13 @@
         1 (24 hr clock) or 2 (12 hour clock with am/pm). cg_drawTimeSeconds
         will display seconds
 * matt: added etpub menu option, with HUD customization choices for
-        customizing the drawing of local time (see cg_drawTime, 
+        customizing the drawing of local time (see cg_drawTime,
         cg_drawTimeSeconds)  Also added options for atmosphericeffects
         (rain/snow), cg_drawFPS, cg_drawLagometer
 * matt: added weapons/binocs.weap for proper display of binocs dropped
 * matt: added weapons/knife.weap for proper display of throwing knives
-* forty: Zinx's b_realhead code 
-* forty: "Project: Bug Fix" 020 merged (cgame) 
+* forty: Zinx's b_realhead code
+* forty: "Project: Bug Fix" 020 merged (cgame)
 * matt:  preliminary integration of bacon's editable hud code from SD forums
          client-side commands, /loadhud, /edithud, /dumphud
          example hud hud/stumpy.hud added
@@ -74,14 +74,14 @@
 * matt:  Added preliminary etpub client documentation
 * tjw:   decreased the text size for polls.
 * tjw:   added the /hidevote client command.  also, the "stuck vote"
-         bug that people experience when joining durring a vote is 
+         bug that people experience when joining durring a vote is
          most likely fixed.
-* tjw:   updated the vote menu to include new etpub votes 
+* tjw:   updated the vote menu to include new etpub votes
          ("next campaign", "restart campaign", "surrender", and "poll")
 * tjw:   used Catscratch's suggestion for putting etpubclient version
          in place of "SERVER INFO" on the loading screen.
 * perro: updated client to allow for adjusting stamina recharge rates
-         (g_staminaRecharge) and to support g_misc 16 to prevent 
+         (g_staminaRecharge) and to support g_misc 16 to prevent
          jumping if stamina is below approx 17%.  Updated etpubc.h to show
          20050927
 * tjw:   added etpub 0.5.x version detection hack
@@ -93,9 +93,9 @@
 --------
 * perro: updated client to reflect g_staminarecharge changes
 * matt:  added 4 new hud elements, cpmtext, chattest, livesleft, votefttext
-* matt:  fixed it so that compass zoom level now sticks across maps 
+* matt:  fixed it so that compass zoom level now sticks across maps
          and sessions
-* perro: updated client to show newer obits (poison, goomba, fear, 
+* perro: updated client to show newer obits (poison, goomba, fear,
          throwing knife, reflected-ff)
          cleaned up minor formatting issue with fireteam invitation text
          that caused two lines to print over one another
@@ -109,7 +109,7 @@
 --------
 * kw:    added cg_panzerhack (default: 1) to put your SMG in weaponbank 2
          (instead of bank 3) when you're a soldier with level 4 Heavy Weapons.
-* kw:    client now shows your throwing knives ammo count 
+* kw:    client now shows your throwing knives ammo count
          ([current ammo]/[max ammo])
 * tjw:   support for the g_coverts 128 flag
 
@@ -131,7 +131,7 @@
 * kw:    fixed 2 thirdperson bugs (thanks jaquboss).
 * kw:    campaign info sometimes wasn't shown when the server had a lot of
          campaigns.
-* kw:    maps+hostgame menus should now show a lot more maps/campaigns in 
+* kw:    maps+hostgame menus should now show a lot more maps/campaigns in
          the lists.
 * kw:    fixed 2 crash bugs in the maps+hostgame menus.
 * tjw:   only draw ammo for knife if g_throwableKnives is enabled on the
@@ -160,10 +160,10 @@
 * forty: #422 - Medpack animation fix by jaquboss
 * kw:    bannerprint support.
 * kw:    colors in center/bannerprints are saved over newlines.
-* kw:    fixed landmines and some other compass icons weren't drawn on the correct 
+* kw:    fixed landmines and some other compass icons weren't drawn on the correct
          place on a non-standard sized compass.
 * kw:    compass and commandmap can now be seen/opened as spectator.
-* kw:    SPECTATOR text moved to the top of the screen, so it no longer 
+* kw:    SPECTATOR text moved to the top of the screen, so it no longer
          interferes with the chat text.
 * tjw:   fix for the lag spikes introduced in 20051128 when spotting/laying
          mines and exploding objectives (hopefully).
@@ -173,7 +173,7 @@
 
 20060119
 --------
-* kw:    fixed a lag "blink" in health display in the crosshairnames of 
+* kw:    fixed a lag "blink" in health display in the crosshairnames of
          disguised coverts which made them easy to spot.
 * kw:    fixed a trick that allowed disguised coverts to be recognized
          even at far range.
@@ -196,7 +196,7 @@
 * forty: added additional options to the etpub hud menu
 * tjw:   fixed forcecvar behaviour during map_restart (e.g. end of warmup)
 * forty: cg_muzzleflash (0 muzzle flash off, 1 muzzle flash on)
-* forty: additional cg_drawGun options. 
+* forty: additional cg_drawGun options.
          (0 off, 1, on, 2,3,4,5,6 transparent with various colors)
 * forty: added various opacity options for hud elements.
 * tjw:   initial /loadfont command
@@ -206,7 +206,7 @@
 * tjw:   added cvars cg_fontX and cg_fontXsize where X is 1 through 4.
 * tjw:   added cg_fontQAScale, cg_fontCPScale, cg_fontOIDScale, and
          cg_fontLimboScale which are floats for adjusting font sizes
-* tjw:   added /ui_loadfont command.  
+* tjw:   added /ui_loadfont command.
 * tjw:   added fonts menu.  I decided to effectively disable fonts set in
          scripts for the etpub client in order to make the menus work well.
 
@@ -239,11 +239,11 @@
 * forty: Inactive/invisible hud elements that are toggled are given sane sizes
          and coordinates.
 * tjw:   use correct name coloring on fireteam messages
-* forty: use correct predicted values for crosshair pulsing, 
+* forty: use correct predicted values for crosshair pulsing,
          sniper spread meter, and zoom sway
 * forty: hudeditor save and load menus
 * forty: unsaved modified hud changes carry over from map to map
-* forty: fix holding down or hitting altfire/mouse2 immediately after firing 
+* forty: fix holding down or hitting altfire/mouse2 immediately after firing
          rifle grenade jams the rifle grenade
 * tjw:  "Project: Bug Fix" 071 merged (cgame)
 * tjw:  "Project: Bug Fix" 072 merged (cgame)
@@ -269,7 +269,7 @@
          changes to be lost until a user manually deleted etconfig.cfg.etpub.
 * tjw:   fixed a bug that would allow double-tap of the +scores bind
          show the wrong sort order in the XP scoreboard when playing on
-         non 0.7.x servers or those without g_killRating or g_playerRating 
+         non 0.7.x servers or those without g_killRating or g_playerRating
          turned on.
 * tjw:   fixed annoyance with g_scoresDoubleTap that allowed more than
          one scoreboard cycle in a short time.
@@ -321,7 +321,7 @@ matt:    Remove inaccurate Permanent XP Save designation when in map vote mode
 * gabriel: updated client-side weapons restrictions to restrict by percentages
 * forty:   #297 - watermarks
 * forty:   bacon's dyno counters
-* forty:   phoenix's fov weapon rendering fix 
+* forty:   phoenix's fov weapon rendering fix
 * forty:   #529 - jay's sten animation fix
 * forty:   #601 - jaguboss's client-side hitbox prediction
 * forty:   #303 - Make etpub client check the xp needed to level
@@ -406,7 +406,7 @@ matt:    Remove inaccurate Permanent XP Save designation when in map vote mode
 * flms:    added resetTimer command to just reset the enemy spawn timer
 * stephan: finally fixed a bug where a custom hud wasn't loaded when a player
            started playing (first map)
-* stephan: fixed a bug where the backup profile wasn't loaded when 
+* stephan: fixed a bug where the backup profile wasn't loaded when
            cg_fireTeamOptions was set to 1
 * flms:    added location names (NQ style).
            TODO: dyno counter names
@@ -444,6 +444,10 @@ matt:    Remove inaccurate Permanent XP Save designation when in map vote mode
 * pheno:   added KMETAVZER's limbo panel XP overflow fix
 * pheno:   added KMETAVZER's panzerfaust auto switching to grenade with enabled
            panzerwar mode fix
+
+20111114
+--------
+* harald:  linux and windows send MAC address for hardware banning
 
 current
 -------

@@ -416,6 +416,8 @@ void _shrubbot_writeconfig()
 		G_shrubbot_writeconfig_string(g_shrubbot_bans[i]->guid, f);
 		trap_FS_Write("ip       = ", 11, f);
 		G_shrubbot_writeconfig_string(g_shrubbot_bans[i]->ip, f);
+		trap_FS_Write("mac      = ", 11, f);
+		G_shrubbot_writeconfig_string(g_shrubbot_bans[i]->mac, f);
 		trap_FS_Write("reason   = ", 11, f);
 		G_shrubbot_writeconfig_string(g_shrubbot_bans[i]->reason, f);
 		trap_FS_Write("made     = ", 11, f);
@@ -753,7 +755,7 @@ void G_shrubbot_duration(int secs, char *duration, int dursize)
 
 qboolean G_shrubbot_ban_check(char *userinfo, char *reason)
 {
-	char *guid, *ip;
+	char *guid, *ip, *mac;
 	int i;
 	time_t t;
 	int seconds = 0; // Dens: Perm is default
@@ -764,7 +766,7 @@ qboolean G_shrubbot_ban_check(char *userinfo, char *reason)
 	ip = Info_ValueForKey(userinfo, "ip");
 	if(!*ip) return qfalse;
 	guid = Info_ValueForKey(userinfo, "cl_guid");
-	if(!*guid) return qfalse;
+	mac = Info_ValueForKey(userinfo, "mac");
 	for(i=0; g_shrubbot_bans[i]; i++) {
 		// 0 is for perm ban
 		if(g_shrubbot_bans[i]->expires != 0 &&
@@ -811,7 +813,46 @@ qboolean G_shrubbot_ban_check(char *userinfo, char *reason)
 			}
 			return qtrue;
 		}
-		if(!Q_stricmp(g_shrubbot_bans[i]->guid, guid)) {
+		//harald: don't ban players with NO_GUID
+		if(Q_stricmp(guid, "NO_GUID") && !Q_stricmp(g_shrubbot_bans[i]->guid, guid)) {
+			// Dens: check if there is a reason, than check if the ban expires
+			if(*g_shrubbot_bans[i]->reason) {
+				if(seconds == 0){
+					Com_sprintf(
+						reason,
+						MAX_STRING_CHARS,
+						"Reason: %s\nExpires: NEVER.\n",
+						g_shrubbot_bans[i]->reason
+					);
+				}else{
+					Com_sprintf(
+					reason,
+					MAX_STRING_CHARS,
+					"Reason: %s\nExpires in: %i seconds.\n",
+					g_shrubbot_bans[i]->reason,
+					seconds
+					);
+				}
+			}else{
+				if(seconds == 0){
+					Com_sprintf(
+						reason,
+						MAX_STRING_CHARS,
+						"Expires: NEVER.\n"
+					);
+				}else{
+					Com_sprintf(
+					reason,
+					MAX_STRING_CHARS,
+					"Expires in: %i seconds.\n",
+					seconds
+					);
+				}
+			}
+			return qtrue;
+		}
+		//harald: don't ban players with no mac address
+		if(Q_stricmp(mac, "") && !Q_stricmp(g_shrubbot_bans[i]->mac, mac)) {
 			// Dens: check if there is a reason, than check if the ban expires
 			if(*g_shrubbot_bans[i]->reason) {
 				if(seconds == 0){
@@ -1353,6 +1394,10 @@ qboolean G_shrubbot_readconfig(gentity_t *ent, int skiparg)
 				G_shrubbot_readconfig_string(&cnf,
 					b->ip, sizeof(b->ip));
 			}
+			else if(!Q_stricmp(t, "mac")) {
+				G_shrubbot_readconfig_string(&cnf,
+					b->mac, sizeof(b->mac));
+			}
 			else if(!Q_stricmp(t, "reason")) {
 				G_shrubbot_readconfig_string(&cnf,
 					b->reason, sizeof(b->reason));
@@ -1481,6 +1526,7 @@ qboolean G_shrubbot_readconfig(gentity_t *ent, int skiparg)
 			*b->name = '\0';
 			*b->guid = '\0';
 			*b->ip = '\0';
+			*b->mac = '\0';
 			*b->made = '\0';
 			b->expires = 0;
 			*b->reason = '\0';
@@ -1687,7 +1733,7 @@ qboolean G_shrubbot_tempban(int clientnum, char *reason, int length)
 {
 
 	char userinfo[MAX_INFO_STRING];
-	char *guid, *ip;
+	char *guid, *ip, *mac;
 	char tmp[MAX_NAME_LENGTH];
 	int i;
 	g_shrubbot_ban_t *b = NULL;
@@ -1709,6 +1755,11 @@ qboolean G_shrubbot_tempban(int clientnum, char *reason, int length)
 	}else{
 		ip = Info_ValueForKey(userinfo, "ip");
 	}
+	if(!(g_spoofOptions.integer & SPOOFOPT_USERINFO_MAC)){
+		mac = vic->client->sess.mac;
+	}else{
+		mac = Info_ValueForKey(userinfo, "mac");
+	}
 
 	b = malloc(sizeof(g_shrubbot_ban_t));
 
@@ -1725,6 +1776,7 @@ qboolean G_shrubbot_tempban(int clientnum, char *reason, int length)
 	}
 	tmp[i] = '\0';
 	Q_strncpyz(b->ip, tmp, sizeof(b->ip));
+	Q_strncpyz(b->mac, mac, sizeof(b->mac));
 
 	lt = localtime(&t);
 	strftime(b->made, sizeof(b->made), "%m/%d/%y %H:%M:%S", lt);
@@ -1756,7 +1808,7 @@ qboolean G_shrubbot_ban(gentity_t *ent, int skiparg)
 	char name[MAX_NAME_LENGTH], secs[8];
 	char *reason, err[MAX_STRING_CHARS];
 	char userinfo[MAX_INFO_STRING];
-	char *guid, *ip;
+	char *guid, *ip, *mac;
 	char tmp[MAX_NAME_LENGTH];
 	int i;
 	g_shrubbot_ban_t *b = NULL;
@@ -1857,6 +1909,11 @@ qboolean G_shrubbot_ban(gentity_t *ent, int skiparg)
 	}else{
 		ip = Info_ValueForKey(userinfo, "ip");
 	}
+	if(!(g_spoofOptions.integer & SPOOFOPT_USERINFO_MAC)){
+		mac = vic->client->sess.mac;
+	}else{
+		mac = Info_ValueForKey(userinfo, "mac");
+	}
 	b = malloc(sizeof(g_shrubbot_ban_t));
 
 	if(!b)
@@ -1875,6 +1932,7 @@ qboolean G_shrubbot_ban(gentity_t *ent, int skiparg)
 	}
 	tmp[i] = '\0';
 	Q_strncpyz(b->ip, tmp, sizeof(b->ip));
+	Q_strncpyz(b->mac, mac, sizeof(b->mac));
 
 	lt = localtime(&t);
 	strftime(b->made, sizeof(b->made), "%m/%d/%y %H:%M:%S", lt);
@@ -3997,6 +4055,16 @@ qboolean G_shrubbot_userinfo(gentity_t *ent, int skiparg)
 		SPC( va("^/Current IP: ^d%s", temp ? temp : "Unknown"));
 	}
 
+	temp = Info_ValueForKey(userinfo, "mac");
+
+	if(!Q_stricmp(vic->client->sess.mac, temp)){
+		SPC(va("^/MAC: ^d%s",temp ? temp : "Unknown"));
+	}else{
+		SPC(va("^1MAC MISMATCH! ^/Stored MAC: ^d%s", vic->client->sess.mac ?
+			vic->client->sess.mac : "Unknown"));
+		SPC( va("^/Current IP: ^d%s", temp ? temp : "Unknown"));
+	}
+
 	return qtrue;
 }
 
@@ -4452,7 +4520,7 @@ qboolean G_shrubbot_freeze( gentity_t *ent, int skiparg )
 	}
 
 	vic = &g_entities[pids[0]];
-	
+
 	if( !_shrubbot_admin_higher( ent, &g_entities[pids[0]] ) ) {
 		SPC( "^/freeze:^7 sorry, but your intended victim has a higher admin"
 			 " level than you do" );
@@ -4464,7 +4532,7 @@ qboolean G_shrubbot_freeze( gentity_t *ent, int skiparg )
 			 " shrubbot commands" );
 		return qfalse;
 	}
-	
+
 	if( vic->client->sess.sessionTeam == TEAM_SPECTATOR ) {
 		SPC( "^/freeze:^7 player must be on a team" );
 		return qfalse;
@@ -4474,9 +4542,9 @@ qboolean G_shrubbot_freeze( gentity_t *ent, int skiparg )
 		SPC( "^/freeze:^7 player is already frozen" );
 		return qfalse;
 	}
-	
+
 	vic->client->frozen = qtrue;
-	
+
 	AP( va( "chat \"^/freeze:^7 %s^7 is frozen\"",
 		vic->client->pers.netname ) );
 	CPx( pids[0], va( "cp \"^7%s^7 %s%s\n\"",
@@ -4525,7 +4593,7 @@ qboolean G_shrubbot_unfreeze( gentity_t *ent, int skiparg )
 	}
 
 	vic = &g_entities[pids[0]];
-	
+
 	if( !_shrubbot_admin_higher( ent, &g_entities[pids[0]] ) ) {
 		SPC( "^/unfreeze:^7 sorry, but your intended victim has a higher admin"
 			 " level than you do" );
@@ -4547,9 +4615,9 @@ qboolean G_shrubbot_unfreeze( gentity_t *ent, int skiparg )
 		SPC( "^/unfreeze:^7 player is not currently frozen" );
 		return qfalse;
 	}
-	
+
 	vic->client->frozen = qfalse;
-	
+
 	AP( va( "chat \"^/unfreeze:^7 %s^7 is no longer frozen\"",
 		vic->client->pers.netname ) );
 	CPx( pids[0], va( "cp \"^7%s^7 has made you thawed\"",

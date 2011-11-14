@@ -1,8 +1,7 @@
 #!/bin/sh
 
-PREFIX=/usr/local/cross-tools
-TARGET=i386-mingw32msvc
+PREFIX=/home/harald/Documents/mingw32
+TARGET=i386-mingw32
 PATH="$PREFIX/bin:$PREFIX/$TARGET/bin:$PATH"
 export PATH
 exec scons $*
-strip qagame_mp_x86.dll

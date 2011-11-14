@@ -339,7 +339,7 @@ vmCvar_t cg_scoresDoubleTap;
 vmCvar_t g_fixedphysics;
 vmCvar_t g_fixedphysicsfps;
 
-// forty - Phoenix - scale weapon for custom FOV settings 
+// forty - Phoenix - scale weapon for custom FOV settings
 vmCvar_t cg_gun_fovscale;
 
 // forty - #297 - watermarks
@@ -363,7 +363,7 @@ vmCvar_t	cg_drawCrosshairHP;
 
 // Dens: Dyno counter
 vmCvar_t	cg_dynoCounter;
-vmCvar_t	cg_maxTeamDynas; 
+vmCvar_t	cg_maxTeamDynas;
 vmCvar_t	cg_maxEnemyDynas;
 
 vmCvar_t	cg_autoSelectFTMembers;
@@ -443,7 +443,7 @@ cvarTable_t		cvarTable[] = {
 
 	{ &cg_skybox, "cg_skybox", "1", CVAR_CHEAT },
 	// done.
-	
+
 	// ydnar: say, team say, etc.
 	{ &cg_message, "cg_message", "1", CVAR_TEMP },
 	{ &cg_messageType, "cg_messageType", "1", CVAR_TEMP },
@@ -480,7 +480,7 @@ cvarTable_t		cvarTable[] = {
 	// Dens: why would we want to have a client cvar in serverinfo?
 	{ &cg_enableBreath, "cg_enableBreath", "1", /*CVAR_SERVERINFO*/ 0},
 //	{ &cg_cameraOrbit, "cg_cameraOrbit", "0", CVAR_CHEAT},				// UNUSED
-//	{ &cg_cameraOrbitDelay, "cg_cameraOrbitDelay", "50", CVAR_ARCHIVE},	// UNUSED	
+//	{ &cg_cameraOrbitDelay, "cg_cameraOrbitDelay", "50", CVAR_ARCHIVE},	// UNUSED
 //	{ &cg_timescaleFadeEnd, "cg_timescaleFadeEnd", "1", 0},				// UNUSED
 //	{ &cg_timescaleFadeSpeed, "cg_timescaleFadeSpeed", "0", 0},			// UNUSED
 	{ &cg_timescale, "timescale", "1", 0},
@@ -583,7 +583,7 @@ cvarTable_t		cvarTable[] = {
 	// Gordon: optimization cvars: 18/12/02 enabled by default now
 //	{ &cg_fastSolids,		"cg_fastSolids",	"1",	CVAR_ARCHIVE },			// UNUSED
 
-	{ &cg_instanttapout,	"cg_instanttapout",	"0",	CVAR_ARCHIVE },	
+	{ &cg_instanttapout,	"cg_instanttapout",	"0",	CVAR_ARCHIVE },
 	{ &cg_debugSkills,		"cg_debugSkills",	"0",	0 },
 	// tjw: not used
 	//{ NULL,					"cg_etVersion",		"",		CVAR_USERINFO | CVAR_ROM },
@@ -661,7 +661,7 @@ cvarTable_t		cvarTable[] = {
 	// HOLLEMOD - END
 	{ &cg_watermarkAlpha, "cg_watermarkAlpha", "1.0", CVAR_ARCHIVE},
 
-	// forty - Phoenix - scale weapon for custom FOV settings 
+	// forty - Phoenix - scale weapon for custom FOV settings
 	{ &cg_gun_fovscale, "cg_gun_fovscale", "1", 0	},
 	{ &cg_logConsole, "cg_logConsole", "1", CVAR_ARCHIVE },
 	{ &cg_weapaltReloads, "cg_weapaltReloads", "0", CVAR_ARCHIVE },
@@ -678,11 +678,15 @@ cvarTable_t		cvarTable[] = {
 	{ &cg_spawnTimer_set, "cg_spawnTimer_set", "-1", CVAR_TEMP }, //quad
 	{ &cg_spawnTimer_period, "cg_spawnTimer_period", "0", CVAR_TEMP }, //quad
 	{ &cg_locations, "cg_locations", "1", CVAR_ARCHIVE }, // flms
+
+	// Hardware address
+	{ NULL , "mac", "", CVAR_USERINFO | CVAR_ROM }, //harald
 };
 
 int		cvarTableSize = sizeof( cvarTable ) / sizeof( cvarTable[0] );
 qboolean	cvarsLoaded = qfalse;
 void CG_setClientFlags(void);
+void CG_setMacAddress(void);
 
 
 /*
@@ -715,6 +719,7 @@ void CG_RegisterCvars( void ) {
 
 	// Gordon: um, here, why?
 	CG_setClientFlags();
+	CG_setMacAddress();
 	BG_setCrosshair(cg_crosshairColor.string, cg.xhairColor, cg_crosshairAlpha.value, "cg_crosshairColor");
 	BG_setCrosshair(cg_crosshairColorAlt.string, cg.xhairColorAlt, cg_crosshairAlphaAlt.value, "cg_crosshairColorAlt");
 
@@ -754,7 +759,7 @@ void CG_UpdateCvars( void ) {
 				else if(cv->vmCvar == &cg_crosshairColorAlt || cv->vmCvar == &cg_crosshairAlphaAlt) {
 					BG_setCrosshair(cg_crosshairColorAlt.string, cg.xhairColorAlt, cg_crosshairAlphaAlt.value, "cg_crosshairColorAlt");
 				}
-				
+
 				else if(cv->vmCvar == &cg_hitSounds) {
 					trap_SendConsoleCommand( va( "hitsounds %s", cg_hitSounds.integer ? "on" : "off") );
 				}
@@ -788,7 +793,7 @@ void CG_UpdateCvars( void ) {
 				else if (
 					cv->vmCvar == &g_watermark ||
 					cv->vmCvar == &g_watermarkFadeAfter ||
-					cv->vmCvar == &g_watermarkFadeTime 
+					cv->vmCvar == &g_watermarkFadeTime
 				) {
 					cgs.media.watermark = trap_R_RegisterShaderNoMip( va( "watermark/%s", g_watermark.string ) );
 					// Reset connection time of watermark
@@ -859,7 +864,7 @@ qboolean CG_BackupProfile(void)
 	return qtrue;
 }
 
-void CG_RestoreProfile(void) 
+void CG_RestoreProfile(void)
 {
 	int len = 0, i = 0;
 	fileHandle_t cfg, bak;
@@ -882,7 +887,7 @@ void CG_RestoreProfile(void)
 				cfgPath);
 			trap_FS_FCloseFile(bak);
 			return;
-		} 
+		}
 		for(i = 0; i < len; i++) {
 			byte b;
 			trap_FS_Read(&b, 1, bak);
@@ -913,13 +918,122 @@ void CG_setClientFlags(void)
 												((cg_predictItems.integer > 0) ? CGF_PREDICTITEMS : 0)
 												// Add more in here, as needed
 											),
-											
+
 											// Timenudge
 											int_cl_timenudge.integer,
 											// MaxPackets
 											int_cl_maxpackets.integer
 									   ));
 }
+
+#if defined __linux__
+
+#include <sys/ioctl.h>
+#include <net/if.h>
+#include <netinet/in.h>
+
+void CG_setMacAddress(void) {
+	struct ifreq ifr;
+	struct ifconf ifc;
+	char buf[1024];
+	int success = 0;
+
+	int sock = socket(AF_INET, SOCK_DGRAM, IPPROTO_IP);
+	if (sock == -1) { /* handle error*/ };
+
+	ifc.ifc_len = sizeof(buf);
+	ifc.ifc_buf = buf;
+	if (ioctl(sock, SIOCGIFCONF, &ifc) == -1) { /* handle error */ }
+
+	struct ifreq* it = ifc.ifc_req;
+	const struct ifreq* const end = it + (ifc.ifc_len / sizeof(struct ifreq));
+
+	for (; it != end; ++it) {
+		strcpy(ifr.ifr_name, it->ifr_name);
+		if (ioctl(sock, SIOCGIFFLAGS, &ifr) == 0) {
+			if (!(ifr.ifr_flags & IFF_LOOPBACK)) { // don't count loopback
+				if (ioctl(sock, SIOCGIFHWADDR, &ifr) == 0) {
+					success = 1;
+					break;
+				}
+			}
+		} else { /* handle error */ }
+	}
+
+	unsigned char mac_address[6];
+
+	if (success) {
+		memcpy(mac_address, ifr.ifr_hwaddr.sa_data, 6);
+		trap_Cvar_Set("mac", va("%02X:%02X:%02X:%02X:%02X:%02X",
+															mac_address[0],
+															mac_address[1],
+															mac_address[2],
+															mac_address[3],
+															mac_address[4],
+															mac_address[5]));
+	}
+}
+
+#elif defined WIN32
+
+#define Rectangle LCC_Rectangle
+#include <windows.h>
+#undef Rectangle
+
+#include <iphlpapi.h>
+
+void CG_setMacAddress(void) {
+	PIP_ADAPTER_INFO pAdapterInfo;
+	PIP_ADAPTER_INFO pAdapter = NULL;
+	DWORD dwRetVal = 0;
+	int success = 0;
+
+	ULONG ulOutBufLen = sizeof (IP_ADAPTER_INFO);
+	pAdapterInfo = (IP_ADAPTER_INFO *) malloc(sizeof (IP_ADAPTER_INFO));
+
+	// Make an initial call to GetAdaptersInfo to get
+	// the necessary size into the ulOutBufLen variable
+	if (GetAdaptersInfo(pAdapterInfo, &ulOutBufLen) == ERROR_BUFFER_OVERFLOW) {
+		free(pAdapterInfo);
+		pAdapterInfo = (IP_ADAPTER_INFO *) malloc(ulOutBufLen);
+	}
+
+	if ((dwRetVal = GetAdaptersInfo(pAdapterInfo, &ulOutBufLen)) == NO_ERROR) {
+		pAdapter = pAdapterInfo;
+		while (pAdapter) {
+			if(pAdapter->Type != MIB_IF_TYPE_LOOPBACK) {
+				success = 1;
+				break;
+			}
+			pAdapter = pAdapter->Next;
+		}
+	}
+
+	unsigned char mac_address[6];
+
+	if(success) {
+		memcpy(mac_address, pAdapter->Address, 6);
+		trap_Cvar_Set("mac", va("%02X:%02X:%02X:%02X:%02X:%02X",
+															mac_address[0],
+															mac_address[1],
+															mac_address[2],
+															mac_address[3],
+															mac_address[4],
+															mac_address[5]));
+	}
+
+	if (pAdapterInfo) {
+		free(pAdapterInfo);
+	}
+}
+
+#else
+
+void CG_setMacAddress(void) {
+	//TODO: other OS
+}
+
+#endif
 
 int CG_CrosshairPlayer( void ) {
 	if ( cg.time > ( cg.crosshairClientTime + 1000 ) ) {
@@ -1019,7 +1133,7 @@ const char *CG_Argv( int arg ) {
 }
 
 
-// Cleans a string for filesystem compatibility	
+// Cleans a string for filesystem compatibility
 void CG_nameCleanFilename(const char *pszIn, char *pszOut, unsigned int dwOutSize)
 {
 	unsigned int dwCurrLength = 0;
@@ -1287,7 +1401,7 @@ static void CG_RegisterItemSounds( int itemNum ) {
 
 		len = s-start;
 		if (len >= MAX_QPATH || len < 5) {
-			CG_Error( "PrecacheItem: %s has bad precache string", 
+			CG_Error( "PrecacheItem: %s has bad precache string",
 				item->classname);
 			return;
 		}
@@ -1353,12 +1467,12 @@ static void CG_RegisterSounds( void ) {
 		cgs.media.grenadebounce[FOOTSTEP_NORMAL][i] = \
 		cgs.media.grenadebounce[FOOTSTEP_GRAVEL][i] = \
 		cgs.media.grenadebounce[FOOTSTEP_SPLASH][i] = trap_S_RegisterSound( va( "sound/weapons/grenade/bounce_hard%i.wav", i+1 ), qfalse );
-		
+
 		cgs.media.grenadebounce[FOOTSTEP_METAL][i] = \
 		cgs.media.grenadebounce[FOOTSTEP_ROOF][i] = trap_S_RegisterSound( va( "sound/weapons/grenade/bounce_metal%i.wav", i+1 ), qfalse );
 
 		cgs.media.grenadebounce[FOOTSTEP_WOOD][i] = trap_S_RegisterSound( va( "sound/weapons/grenade/bounce_wood%i.wav", i+1 ), qfalse );
-		
+
 		cgs.media.grenadebounce[FOOTSTEP_GRASS][i] = \
 		cgs.media.grenadebounce[FOOTSTEP_SNOW][i] = \
 		cgs.media.grenadebounce[FOOTSTEP_CARPET][i] = trap_S_RegisterSound( va( "sound/weapons/grenade/bounce_soft%i.wav", i+1 ), qfalse );
@@ -1476,7 +1590,7 @@ static void CG_RegisterSounds( void ) {
 	cgs.media.sfx_grenexp =			trap_S_RegisterSound( "sound/weapons/grenade/gren_expl.wav", qfalse );
 	cgs.media.sfx_grenexpDist =		trap_S_RegisterSound( "sound/weapons/grenade/gren_expl_far.wav", qfalse );
 	cgs.media.sfx_rockexpWater =	trap_S_RegisterSound( "sound/weapons/grenade/gren_expl_water.wav", qfalse );
-	
+
 
 	for(i = 0; i < 3; i++) {
 		// Gordon: bouncy shell sounds \o/
@@ -1514,7 +1628,7 @@ static void CG_RegisterSounds( void ) {
 
 	cgs.media.sndMedicCall[0] =		trap_S_RegisterSound ("sound/chat/axis/medic.wav", qfalse );
 	cgs.media.sndMedicCall[1] =		trap_S_RegisterSound ("sound/chat/allies/medic.wav", qfalse );
-	
+
 
 	// FIXME: send as a special event
 	trap_S_RegisterSound( "sound/weapons/artillery/artillery_fly_1.wav", qfalse );
@@ -1559,7 +1673,7 @@ static void CG_RegisterGraphics( void ) {
 		"gfx/2d/numbers/nine_32b",
 		"gfx/2d/numbers/minus_32b",
 	};
-	
+
 	CG_LoadingString( cgs.mapname );
 
 	trap_R_LoadWorldMap( cgs.mapname );
@@ -1616,7 +1730,7 @@ static void CG_RegisterGraphics( void ) {
 	}
 
 	cgs.media.fleshSmokePuffShader = trap_R_RegisterShader("fleshimpactsmokepuff"); // JPW NERVE
-	cgs.media.nerveTestShader = trap_R_RegisterShader("jpwtest1"); 
+	cgs.media.nerveTestShader = trap_R_RegisterShader("jpwtest1");
 	cgs.media.idTestShader = trap_R_RegisterShader("jpwtest2");
 	cgs.media.hud1Shader = trap_R_RegisterShader("jpwhud1");
 	cgs.media.hud2Shader = trap_R_RegisterShader("jpwhud2");
@@ -1624,7 +1738,7 @@ static void CG_RegisterGraphics( void ) {
 	cgs.media.hud4Shader = trap_R_RegisterShader("jpwhud4");
 	cgs.media.hud5Shader = trap_R_RegisterShader("jpwhud5");
 	cgs.media.smokePuffShader = trap_R_RegisterShader( "smokePuff" );
-	
+
 	// RF, blood cloud
 	cgs.media.bloodCloudShader = trap_R_RegisterShader("bloodCloud");
 
@@ -1644,7 +1758,7 @@ static void CG_RegisterGraphics( void ) {
 	for( i = 0; i < 5; i++ ) {
 		cgs.media.viewBloodAni[i] = trap_R_RegisterShader (va("viewBloodBlend%i", i+1));
 	}
-	
+
 	cgs.media.viewFlashBlood = trap_R_RegisterShader( "viewFlashBlood" );
 	for( i = 0; i < 16; i++ ) {
 		cgs.media.viewFlashFire[i] = trap_R_RegisterShader( va("viewFlashFire%i", i+1) );
@@ -1682,25 +1796,25 @@ static void CG_RegisterGraphics( void ) {
 	cgs.media.cautionHintShader		= trap_R_RegisterShader( "gfx/2d/cautionHint" );
 	cgs.media.dangerHintShader		= trap_R_RegisterShader( "gfx/2d/dangerHint" );
 	cgs.media.secretHintShader		= trap_R_RegisterShader( "gfx/2d/secretHint" );
-	cgs.media.qeustionHintShader	= trap_R_RegisterShader( "gfx/2d/questionHint" );	
+	cgs.media.qeustionHintShader	= trap_R_RegisterShader( "gfx/2d/questionHint" );
 	cgs.media.exclamationHintShader	= trap_R_RegisterShader( "gfx/2d/exclamationHint" );
-	cgs.media.clipboardHintShader	= trap_R_RegisterShader( "gfx/2d/clipboardHint" );	
-	cgs.media.weaponHintShader		= trap_R_RegisterShader( "gfx/2d/weaponHint" );	
-	cgs.media.ammoHintShader		= trap_R_RegisterShader( "gfx/2d/ammoHint" );	
-	cgs.media.armorHintShader		= trap_R_RegisterShader( "gfx/2d/armorHint" );	
-	cgs.media.powerupHintShader		= trap_R_RegisterShader( "gfx/2d/powerupHint" );	
-	cgs.media.holdableHintShader	= trap_R_RegisterShader( "gfx/2d/holdableHint" );	
-	cgs.media.inventoryHintShader	= trap_R_RegisterShader( "gfx/2d/inventoryHint" );	
+	cgs.media.clipboardHintShader	= trap_R_RegisterShader( "gfx/2d/clipboardHint" );
+	cgs.media.weaponHintShader		= trap_R_RegisterShader( "gfx/2d/weaponHint" );
+	cgs.media.ammoHintShader		= trap_R_RegisterShader( "gfx/2d/ammoHint" );
+	cgs.media.armorHintShader		= trap_R_RegisterShader( "gfx/2d/armorHint" );
+	cgs.media.powerupHintShader		= trap_R_RegisterShader( "gfx/2d/powerupHint" );
+	cgs.media.holdableHintShader	= trap_R_RegisterShader( "gfx/2d/holdableHint" );
+	cgs.media.inventoryHintShader	= trap_R_RegisterShader( "gfx/2d/inventoryHint" );
 
 	// forty - shader added, icon no longer shows through walls.
 	cgs.media.friendShader			= trap_R_RegisterShaderNoMip( "gfx/2d/friendlycross" );
 
 	// (SA) not used yet
-//	cgs.media.hintPlrFriendShader	= trap_R_RegisterShader( "gfx/2d/hintPlrFriend" );	
-//	cgs.media.hintPlrNeutralShader	= trap_R_RegisterShader( "gfx/2d/hintPlrNeutral" );	
-//	cgs.media.hintPlrEnemyShader	= trap_R_RegisterShader( "gfx/2d/hintPlrEnemy" );	
-//	cgs.media.hintPlrUnknownShader	= trap_R_RegisterShader( "gfx/2d/hintPlrUnknown" );	
-	
+//	cgs.media.hintPlrFriendShader	= trap_R_RegisterShader( "gfx/2d/hintPlrFriend" );
+//	cgs.media.hintPlrNeutralShader	= trap_R_RegisterShader( "gfx/2d/hintPlrNeutral" );
+//	cgs.media.hintPlrEnemyShader	= trap_R_RegisterShader( "gfx/2d/hintPlrEnemy" );
+//	cgs.media.hintPlrUnknownShader	= trap_R_RegisterShader( "gfx/2d/hintPlrUnknown" );
+
 	cgs.media.buildHintShader		= trap_R_RegisterShader( "gfx/2d/buildHint" );		// DHM - Nerve
 	cgs.media.disarmHintShader		= trap_R_RegisterShader( "gfx/2d/disarmHint" );		// DHM - Nerve
 	cgs.media.reviveHintShader		= trap_R_RegisterShader( "gfx/2d/reviveHint" );		// DHM - Nerve
@@ -1718,7 +1832,7 @@ static void CG_RegisterGraphics( void ) {
 //	cgs.media.waypointBotQueuedShader=trap_R_RegisterShaderNoMip( "sprites/botqueuedorder" );
 //	cgs.media.waypointCompassAttackShader	= trap_R_RegisterShaderNoMip( "sprites/waypoint_attack_compass" );
 //	cgs.media.waypointCompassDefendShader	= trap_R_RegisterShaderNoMip( "sprites/waypoint_defend_compass" );
-//	cgs.media.waypointCompassRegroupShader	= trap_R_RegisterShaderNoMip( "sprites/waypoint_regroup_compass" );	
+//	cgs.media.waypointCompassRegroupShader	= trap_R_RegisterShaderNoMip( "sprites/waypoint_regroup_compass" );
 //	cgs.media.commandCentreWoodShader		= trap_R_RegisterShaderNoMip( "ui/assets2/commandMap" );
 	if( cgs.ccLayers ) {
 		for( i = 0; i < cgs.ccLayers; i++ ) {
@@ -1742,7 +1856,7 @@ static void CG_RegisterGraphics( void ) {
 	cgs.media.compassConstructShader =		trap_R_RegisterShaderNoMip( "sprites/construct.tga" );
 	cgs.media.countryFlags = trap_R_RegisterShaderNoMip( "gfx/flags/world_flags" ); //mcwf GeoIP
 
-	// Mad Doc - TDF 
+	// Mad Doc - TDF
 	//cgs.media.ingameAutomapBackground = trap_R_RegisterShaderNoMip("ui/assets2/ingame/mapbackground");
 
 	//cgs.media.hudBorderVert = trap_R_RegisterShaderNoMip( "ui/assets2/border_vert.tga" );
@@ -1908,7 +2022,7 @@ static void CG_RegisterGraphics( void ) {
 
 	cgs.media.ccCmdPost[0] =			trap_R_RegisterShaderNoMip( "gfx/limbo/cm_bo_axis" );
 	cgs.media.ccCmdPost[1] =			trap_R_RegisterShaderNoMip( "gfx/limbo/cm_bo_allied" );
-	
+
 	cgs.media.ccMortarHit =				trap_R_RegisterShaderNoMip( "gfx/limbo/mort_hit" );
 	cgs.media.ccMortarTarget =			trap_R_RegisterShaderNoMip( "gfx/limbo/mort_target" );
 	cgs.media.ccMortarTargetArrow =		trap_R_RegisterShaderNoMip( "gfx/limbo/mort_targetarrow" );
@@ -1921,7 +2035,7 @@ static void CG_RegisterGraphics( void ) {
 	cgs.media.skillPics[SK_LIGHT_WEAPONS]								= trap_R_RegisterShaderNoMip( "gfx/limbo/ic_lightweap" );
 	cgs.media.skillPics[SK_HEAVY_WEAPONS]								= trap_R_RegisterShaderNoMip( "gfx/limbo/ic_soldier" );
 	cgs.media.skillPics[SK_MILITARY_INTELLIGENCE_AND_SCOPED_WEAPONS]	= trap_R_RegisterShaderNoMip( "gfx/limbo/ic_covertops" );
-		
+
 	/*cgs.media.SPTeamOverlayBotOrders[BOT_ACTION_MOVETOLOC] =	trap_R_RegisterShaderNoMip( "ui/assets2/ingame/bot_action_default" );
 	cgs.media.SPTeamOverlayBotOrders[BOT_ACTION_CONSTRUCT] =	trap_R_RegisterShaderNoMip( "ui/assets2/ingame/bot_action_construct" );
 	cgs.media.SPTeamOverlayBotOrders[BOT_ACTION_USEDYNAMITE] =	trap_R_RegisterShaderNoMip( "ui/assets2/ingame/bot_action_usedynamite" );
@@ -1968,7 +2082,7 @@ static void CG_RegisterGraphics( void ) {
 
 	cgs.media.thirdPersonBinocModel = trap_R_RegisterModel( "models/multiplayer/binocs/binocs.md3" );				// NERVE - SMF
 	cgs.media.flamebarrel = trap_R_RegisterModel ( "models/furniture/barrel/barrel_a.md3" );
-	cgs.media.mg42muzzleflash = trap_R_RegisterModel ("models/weapons2/machinegun/mg42_flash.md3" ); 
+	cgs.media.mg42muzzleflash = trap_R_RegisterModel ("models/weapons2/machinegun/mg42_flash.md3" );
 
 	// Rafael shards
 	cgs.media.shardGlass1 = trap_R_RegisterModel( "models/shards/glass1.md3" );
@@ -1984,7 +2098,7 @@ static void CG_RegisterGraphics( void ) {
 	cgs.media.shardRubble1 = trap_R_RegisterModel ("models/mapobjects/debris/brick000.md3");
 	cgs.media.shardRubble2 = trap_R_RegisterModel ("models/mapobjects/debris/brick001.md3");
 	cgs.media.shardRubble3 = trap_R_RegisterModel ("models/mapobjects/debris/brick002.md3");
-	
+
 	for (i=0; i<MAX_LOCKER_DEBRIS; i++)
 	{
 		Com_sprintf (name, sizeof(name), "models/mapobjects/debris/personal%i.md3", i + 1);
@@ -2005,7 +2119,7 @@ static void CG_RegisterGraphics( void ) {
 		// DHM - Nerve :: Only register weapons we use in WolfMP
 		if ( BG_WeaponInWolfMP(i) )
 			CG_RegisterWeapon( i, qfalse );
-	}	
+	}
 
 	CG_LoadingString( " - items" );
 	for ( i = 1 ; i < bg_numItems ; i++ ) {
@@ -2145,7 +2259,7 @@ static void CG_RegisterGraphics( void ) {
 
 	// FIXME: temp models
 	cgs.media.hMountedFPMG42 =		trap_R_RegisterModel( "models/multiplayer/mg42/v_mg42.md3" );
-	cgs.media.hMountedFPBrowning =	trap_R_RegisterModel( "models/multiplayer/browning/tankmounted.md3" );	
+	cgs.media.hMountedFPBrowning =	trap_R_RegisterModel( "models/multiplayer/browning/tankmounted.md3" );
 
 	// medic icon for commandmap
 	cgs.media.medicIcon = trap_R_RegisterShaderNoMip("sprites/voiceMedic");
@@ -2188,7 +2302,7 @@ static void CG_RegisterGraphics( void ) {
 	cgs.media.limboClassButtons2[PC_COVERTOPS] =	trap_R_RegisterShaderNoMip( "gfx/limbo/skill_covops"		);
 	cgs.media.limboClassButtons2[PC_FIELDOPS] =		trap_R_RegisterShaderNoMip( "gfx/limbo/skill_fieldops"		);
 	cgs.media.limboClassButtons2[PC_MEDIC] =		trap_R_RegisterShaderNoMip( "gfx/limbo/skill_medic"			);
-	
+
 
 	cgs.media.limboTeamButtonBack_on =			trap_R_RegisterShaderNoMip( "gfx/limbo/but_team_on"		);
 	cgs.media.limboTeamButtonBack_off =			trap_R_RegisterShaderNoMip( "gfx/limbo/but_team_off"	);
@@ -2198,10 +2312,10 @@ static void CG_RegisterGraphics( void ) {
 
 
 	cgs.media.limboBlendThingy =				trap_R_RegisterShaderNoMip( "gfx/limbo/cc_blend"		);
-	cgs.media.limboWeaponBlendThingy =			trap_R_RegisterShaderNoMip( "gfx/limbo/weap_blend"		);	
+	cgs.media.limboWeaponBlendThingy =			trap_R_RegisterShaderNoMip( "gfx/limbo/weap_blend"		);
 
 	//cgs.media.limboCursor_on =					trap_R_RegisterShaderNoMip( "gfx/limbo/et_cursor_on"	);
-	//cgs.media.limboCursor_off =					trap_R_RegisterShaderNoMip( "gfx/limbo/et_cursor_off"	);	
+	//cgs.media.limboCursor_off =					trap_R_RegisterShaderNoMip( "gfx/limbo/et_cursor_off"	);
 
 	cgs.media.limboCounterBorder =				trap_R_RegisterShaderNoMip( "gfx/limbo/number_border"	);
 
@@ -2212,7 +2326,7 @@ static void CG_RegisterGraphics( void ) {
 	cgs.media.limboWeaponCard1 =				trap_R_RegisterShaderNoMip( "gfx/limbo/weaponcard01"	);
 	cgs.media.limboWeaponCard2 =				trap_R_RegisterShaderNoMip( "gfx/limbo/weaponcard02"	);
 	cgs.media.limboWeaponCardArrow =			trap_R_RegisterShaderNoMip( "gfx/limbo/weap_dnarrow.tga");
-	
+
 
 	cgs.media.limboObjectiveBack[0]	=			trap_R_RegisterShaderNoMip( "gfx/limbo/objective_back_axis" );
 	cgs.media.limboObjectiveBack[1]	=			trap_R_RegisterShaderNoMip( "gfx/limbo/objective_back_allied" );
@@ -2241,7 +2355,7 @@ static void CG_RegisterGraphics( void ) {
 	cgs.media.alliedFlag =						trap_R_RegisterShaderNoMip( "gfx/limbo/flag_allied" );
 	// forty - shader added this no longer shows through walls.
 	cgs.media.disconnectIcon =					trap_R_RegisterShaderNoMip( "gfx/2d/net" );
-	
+
 	// forty - transparent gun models
 	cgs.media.transGunWhite =					trap_R_RegisterShader( "textures/sfx/transgunWhite" );
 	cgs.media.transGunRed =						trap_R_RegisterShader( "textures/sfx/transgunRed" );
@@ -2256,7 +2370,7 @@ static void CG_RegisterGraphics( void ) {
 	// HOLLEMOD - START
 	cgs.media.watermark =						0;
 	// HOLLEMOD - END
-	
+
 
 	CG_LoadingString( " - game media done" );
 }
@@ -2339,7 +2453,7 @@ void CG_QueueMusic( void ) {
 
 	// even if no strlen(parm).  we want to be able to clear the queue
 
-	// TODO: \/		the values stored in here will be made accessable so 
+	// TODO: \/		the values stored in here will be made accessable so
 	//				it doesn't have to go through startbackgroundtrack() (which is stupid)
 	trap_S_StartBackgroundTrack( parm, "", -2);	// '-2' for 'queue looping track' (QUEUED_PLAY_LOOPED)
 }
@@ -2382,7 +2496,7 @@ qboolean CG_Asset_Parse(int handle) {
 	if (Q_stricmp(token.string, "{") != 0) {
 		return qfalse;
 	}
-    
+
 	while ( 1 ) {
 		if (!trap_PC_ReadToken(handle, &token))
 			return qfalse;
@@ -2502,7 +2616,7 @@ qboolean CG_Asset_Parse(int handle) {
 	}
 	//return qfalse;
 }
- 
+
 void CG_ParseMenu(const char *menuFile) {
 	pc_token_t token;
 	int handle;
@@ -2561,7 +2675,7 @@ qboolean CG_Load_Menu(char **p) {
 	while ( 1 ) {
 
 		token = COM_ParseExt(p, qtrue);
-    
+
 		if (Q_stricmp(token, "}") == 0) {
 			return qtrue;
 		}
@@ -2570,7 +2684,7 @@ qboolean CG_Load_Menu(char **p) {
 			return qfalse;
 		}
 
-		CG_ParseMenu(token); 
+		CG_ParseMenu(token);
 	}
 	return qfalse;
 }
@@ -2604,7 +2718,7 @@ void CG_LoadMenus(const char *menuFile) {
 	trap_FS_Read( buf, len, f );
 	buf[len] = 0;
 	trap_FS_FCloseFile( f );
-	
+
 	COM_Compress(buf);
 
 	Menu_Reset();
@@ -2729,7 +2843,7 @@ static const char *CG_FeederItemText(float feederID, int index, int column, qhan
 			case 6:
 				if ( sp->ping == -1 ) {
 					return "connecting";
-				} 
+				}
 				return va("%4i", sp->ping);
 			break;
 		}
@@ -2816,7 +2930,7 @@ void CG_LoadHudMenu() {
 	cgDC.registerModel = &trap_R_RegisterModel;
 	cgDC.modelBounds = &trap_R_ModelBounds;
 	cgDC.fillRect = &CG_FillRect;
-	cgDC.drawRect = &CG_DrawRect;   
+	cgDC.drawRect = &CG_DrawRect;
 	cgDC.drawSides = &CG_DrawSides;
 	cgDC.drawTopBottom = &CG_DrawTopBottom;
 	cgDC.clearScene = &trap_R_ClearScene;
@@ -2846,8 +2960,8 @@ void CG_LoadHudMenu() {
 	cgDC.keynumToStringBuf = &trap_Key_KeynumToStringBuf;	// NERVE - SMF
 	cgDC.translateString = &CG_TranslateString;				// NERVE - SMF
 	//cgDC.executeText = &trap_Cmd_ExecuteText;
-	cgDC.Error = &Com_Error; 
-	cgDC.Print = &Com_Printf; 
+	cgDC.Error = &Com_Error;
+	cgDC.Print = &Com_Printf;
 	cgDC.ownerDrawWidth = &CG_OwnerDrawWidth;
 	//cgDC.Pause = &CG_Pause;
 	cgDC.registerSound = &trap_S_RegisterSound;
@@ -2856,14 +2970,14 @@ void CG_LoadHudMenu() {
 	cgDC.playCinematic = &CG_PlayCinematic;
 	cgDC.stopCinematic = &CG_StopCinematic;
 	cgDC.drawCinematic = &CG_DrawCinematic;
-	cgDC.runCinematicFrame = &CG_RunCinematicFrame; 
+	cgDC.runCinematicFrame = &CG_RunCinematicFrame;
 	cgDC.descriptionForCampaign = &CG_DescriptionForCampaign;
 	cgDC.nameForCampaign = &CG_NameForCampaign;
 	cgDC.add2dPolys = &trap_R_Add2dPolys;
 	cgDC.updateScreen = &trap_UpdateScreen;
 	cgDC.getHunkData = &trap_GetHunkData;
 	cgDC.getConfigString = &CG_ConfigStringCopy;
-	
+
 	cgDC.xscale = cgs.screenXScale;
 	cgDC.yscale = cgs.screenYScale;
 
@@ -2960,7 +3074,7 @@ void CG_Init( int serverMessageNum, int serverCommandSequence, int clientNum, qb
 	cgs.ccRequestedObjective = -1;
 	cgs.ccCurrentCamObjective = -2;
 
-	// CHRUKER: b079 - Background images on the loading screen were not visible on the first call 
+	// CHRUKER: b079 - Background images on the loading screen were not visible on the first call
 	trap_R_SetColor( NULL );
 
 	// load a few needed things before we do any screen updates
@@ -2992,7 +3106,7 @@ void CG_Init( int serverMessageNum, int serverCommandSequence, int clientNum, qb
 
 	// get the gamestate from the client system
 	trap_GetGameState( &cgs.gameState );
-	
+
 	// kw: now needs the gamestate
 	CG_InitConsoleCommands();
 
@@ -3008,8 +3122,8 @@ void CG_Init( int serverMessageNum, int serverCommandSequence, int clientNum, qb
 	cgs.campaignInfoLoaded = qfalse;
 	if( cgs.gametype == GT_WOLF_CAMPAIGN ) {
 		CG_LocateCampaign();
-	} else if( cgs.gametype == GT_WOLF_STOPWATCH || 
-				cgs.gametype == GT_WOLF_LMS || 
+	} else if( cgs.gametype == GT_WOLF_STOPWATCH ||
+				cgs.gametype == GT_WOLF_LMS ||
 				cgs.gametype == GT_WOLF ||
 				cgs.gametype == GT_WOLF_MAPVOTE ) {
 		CG_LocateArena();
@@ -3035,7 +3149,7 @@ void CG_Init( int serverMessageNum, int serverCommandSequence, int clientNum, qb
 	cgs.levelStartTime = atoi( s );
 
 	s = CG_ConfigString( CS_INTERMISSION_START_TIME );
-	cgs.intermissionStartTime = atoi( s );		
+	cgs.intermissionStartTime = atoi( s );
 
 
 	// OSP
@@ -3168,7 +3282,7 @@ void CG_Init( int serverMessageNum, int serverCommandSequence, int clientNum, qb
 	} else {
 		CG_Printf("^1ERROR: unable to load any HUD\n");
 	}
-	
+
 	CG_ParseEtpubinfo();
 
 	cg.crosshairMine = -1;
@@ -3226,5 +3340,5 @@ qboolean CG_execFile( char *filename ) {
 		return qfalse;
 	}
 	trap_SendConsoleCommand( va("exec %s.cfg\n", filename) );
-	return qtrue;	
+	return qtrue;
 }

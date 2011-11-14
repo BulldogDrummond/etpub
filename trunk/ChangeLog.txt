@@ -1983,10 +1983,10 @@
            g_chargeType
 * flms:    added g_flushItems (NQ)
 * flms:    mg's can make headshots
-* flms:    you also hear hitsounds when Friendly Fire is off and 
+* flms:    you also hear hitsounds when Friendly Fire is off and
            g_reflectFriendlyFire is on
 * flms:    mg's can reload midclip
-* quad:    Lua API for ETPub, aiming for compatibility with ETPro 
+* quad:    Lua API for ETPub, aiming for compatibility with ETPro
            http://wolfwiki.anime.net/index.php/Lua_Mod_API (TODO: Docs!)
 * stephan: added an oversized userinfo check to g_spoofOptions flag 256 and
            added the \n char to the list of characters that may not be used in
@@ -2104,5 +2104,8 @@
 * cs:      added Omni-bot 0.8 support
 * pheno:   added core's mapvote fix. Thanks to NQ team.
 * pheno:   fixed resetting *war modes on map changes
+* harald:  bans are now based on IP, guid and MAC address
+* harald:  added g_spoofOptions for MAC spoofing
+* harald:  banning 1 person without a guid doesn't cause all players without guid to be banned
 
 1.0.0

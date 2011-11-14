@@ -12,18 +12,18 @@
 #define MAX_SHRUBBOT_CMD_LEN 17
 
 /*
- * flags by redeye 
+ * flags by redeye
  * spree, tspree E
  *
- * 1 - cannot be vote kicked, vote muted, dropped 
+ * 1 - cannot be vote kicked, vote muted, dropped
  * due to high team damage ratio, or complained against
  * 2 - cannot be censored or flood protected
- * 3 - can run commands "silently" through the console (/!commandname 
+ * 3 - can run commands "silently" through the console (/!commandname
  * parameters)
  * 4 - can see Axis' and Allies' team chat as a spectator
  * 5 - can switch teams any time, regardless of balance
  * 6 - does not need to specify a reason for a kick/ban
- * 7 - can call a vote at any time (regardless of a vote being disabled or 
+ * 7 - can call a vote at any time (regardless of a vote being disabled or
  * voting limitations)
  * 8 - does not need to specify a duration for a ban
  * 9 - can run commands from team and fireteam chat (as opposed to global chat)
@@ -89,6 +89,7 @@ typedef struct g_shrubbot_ban {
 	char name[MAX_NAME_LENGTH];
 	char guid[33];
 	char ip[18];
+	char mac[18];
 	char reason[MAX_STRING_CHARS];
 	char made[50]; // big enough for strftime() %c
 	int expires;

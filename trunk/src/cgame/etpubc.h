@@ -5,7 +5,7 @@
 //        conditions of qagame - 20090112. This is because releasing public
 //        etpub client nightly builds between the official releases.
 
-#define ETPUBC_VERSION "20100628"
+#define ETPUBC_VERSION "20111114"
 #define ETPUB_VERSION(a,b,c) (((a) << 16) + ((b) << 8) + (c))
 
 #endif // ifndef _ETPUBC_H
