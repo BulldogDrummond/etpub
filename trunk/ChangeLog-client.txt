@@ -445,9 +445,6 @@ matt:    Remove inaccurate Permanent XP Save designation when in map vote mode
 * pheno:   added KMETAVZER's panzerfaust auto switching to grenade with enabled
            panzerwar mode fix
 
-20111114
+current
 --------
 * harald:  linux and windows send MAC address for hardware banning
-
-current
--------

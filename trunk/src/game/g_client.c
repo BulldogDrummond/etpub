@@ -2819,6 +2819,7 @@ void ClientBegin( int clientNum )
 	if(client->pers.connected == CON_CONNECTING) {
 		char userinfo[MAX_INFO_STRING];
 		char reason[MAX_STRING_CHARS] = "";
+		int i;
 
 		trap_GetUserinfo( clientNum, userinfo, sizeof( userinfo ) );
 		// check for shrubbot ban, when mac address is filled in
@@ -2832,8 +2833,6 @@ void ClientBegin( int clientNum )
 												0);
 			}
 		}
-
-		int i;
 
 		// tjw: send forcecvar commands if there are any
 		for(i = 0; i < level.forceCvarCount; i++) {

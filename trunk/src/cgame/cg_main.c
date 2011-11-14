@@ -981,12 +981,14 @@ void CG_setMacAddress(void) {
 #undef Rectangle
 
 #include <iphlpapi.h>
+#pragma comment( lib, "iphlpapi.lib" )
 
 void CG_setMacAddress(void) {
 	PIP_ADAPTER_INFO pAdapterInfo;
 	PIP_ADAPTER_INFO pAdapter = NULL;
 	DWORD dwRetVal = 0;
 	int success = 0;
+	unsigned char mac_address[6];
 
 	ULONG ulOutBufLen = sizeof (IP_ADAPTER_INFO);
 	pAdapterInfo = (IP_ADAPTER_INFO *) malloc(sizeof (IP_ADAPTER_INFO));
@@ -1008,9 +1010,7 @@ void CG_setMacAddress(void) {
 			pAdapter = pAdapter->Next;
 		}
 	}
-
-	unsigned char mac_address[6];
-
+	
 	if(success) {
 		memcpy(mac_address, pAdapter->Address, 6);
 		trap_Cvar_Set("mac", va("%02X:%02X:%02X:%02X:%02X:%02X",
