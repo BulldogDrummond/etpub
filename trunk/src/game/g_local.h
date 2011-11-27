@@ -2354,6 +2354,9 @@ extern vmCvar_t lua_allowedModules;
 extern vmCvar_t g_flushItems;
 extern vmCvar_t g_mg42;
 
+// harald
+extern vmCvar_t g_clientVersion;
+
 // Michael
 
 // for changing amount of xp needed to level up each skill

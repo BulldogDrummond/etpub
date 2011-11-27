@@ -2821,9 +2821,9 @@ void ClientBegin( int clientNum )
 		char reason[MAX_STRING_CHARS] = "";
 		int i;
 
-		trap_GetUserinfo( clientNum, userinfo, sizeof( userinfo ) );
 		// check for shrubbot ban, when mac address is filled in
 		if (!(ent->r.svFlags & SVF_BOT)) {
+		trap_GetUserinfo( clientNum, userinfo, sizeof( userinfo ) );
 			if(G_shrubbot_ban_check(userinfo, reason)) {
 				if(g_logOptions.integer & LOGOPTS_BAN_CONN) {
 					AP(va("cpm \"Banned player: %s^7, tried to connect.\"", Info_ValueForKey(userinfo, "name")));
@@ -2831,6 +2831,15 @@ void ClientBegin( int clientNum )
 				trap_DropClient(clientNum,
 												va("You are banned from this server.\n%s\n%s\n", reason, g_dropMsg.string),
 												0);
+			}
+
+			// if defined, drop clients with client version mismatch
+			if(strcmp(g_clientVersion.string, "")) {
+				G_LogPrintf("Server client version: %s\n", g_clientVersion.string);
+				G_LogPrintf("Client client version: %s\n", Info_ValueForKey(userinfo, "cg_etpubc"));
+				if(strcmp(g_clientVersion.string, Info_ValueForKey(userinfo, "cg_etpubc"))) {
+					trap_DropClient(clientNum, "Client version mismatch", 0);
+				}
 			}
 		}
 

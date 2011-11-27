@@ -579,6 +579,9 @@ vmCvar_t lua_allowedModules;
 vmCvar_t g_flushItems;
 vmCvar_t g_mg42;
 
+// harald
+vmCvar_t g_clientVersion;
+
 vmCvar_t g_countryFlags; //mcwf GeoIP
 
 cvarTable_t		gameCvarTable[] = {
@@ -1154,6 +1157,9 @@ cvarTable_t		gameCvarTable[] = {
 	//flms
 	{ &g_flushItems, "g_flushItems", "1", 0},
 	{ &g_mg42, "g_mg42", "0", 0},
+
+	// harald
+	{ &g_clientVersion, "g_clientVersion", "", 0},
 
 };
 
@@ -2245,13 +2251,13 @@ void G_PanzerWar()
 	if( g_panzerwar.integer && !panzerwar_enabled ) {
 		char dmgPanzer[MAX_CVAR_VALUE_STRING];
 		char panzersSpeed[MAX_CVAR_VALUE_STRING];
-		
+
 		// store weapon data
 		trap_Cvar_VariableStringBuffer( "g_dmgPanzer", dmgPanzer,
 			sizeof( dmgPanzer ) );
 		trap_Cvar_VariableStringBuffer( "g_panzersSpeed", panzersSpeed,
 			sizeof( panzersSpeed ) );
-		
+
 		trap_Cvar_Set( va( "%s_panzerwar", GAMEVERSION ),
 			va( "%i %i %i %s %s", panzer->maxammo, panzer->nextShotTime,
 				panzer->fireDelayTime, dmgPanzer, panzersSpeed ) );
@@ -2293,11 +2299,11 @@ void G_SniperWar()
 	// pheno: reworked - store and restore weapon data over map changes
 	if( g_sniperwar.integer && !sniperwar_enabled ) {
 		char dmgSniper[MAX_CVAR_VALUE_STRING];
-		
+
 		// store weapon data
 		trap_Cvar_VariableStringBuffer( "g_dmgSniper", dmgSniper,
 			sizeof( dmgSniper ) );
-		
+
 		trap_Cvar_Set( va( "%s_sniperwar", GAMEVERSION ),
 			va( "%i %i %s", garand->maxammo, k43->maxammo, dmgSniper ) );
 
