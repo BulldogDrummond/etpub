@@ -2109,3 +2109,4 @@
 * harald:  bans are now based on IP, guid and MAC address
 * harald:  added g_spoofOptions for MAC spoofing
 * harald:  banning 1 person without a guid doesn't cause all players without guid to be banned
+* harald:  kick players with etpub client version mismatch when g_clientVersion is defined in server.cfg
