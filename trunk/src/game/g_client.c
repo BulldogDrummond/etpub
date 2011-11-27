@@ -2835,8 +2835,6 @@ void ClientBegin( int clientNum )
 
 			// if defined, drop clients with client version mismatch
 			if(strcmp(g_clientVersion.string, "")) {
-				G_LogPrintf("Server client version: %s\n", g_clientVersion.string);
-				G_LogPrintf("Client client version: %s\n", Info_ValueForKey(userinfo, "cg_etpubc"));
 				if(strcmp(g_clientVersion.string, Info_ValueForKey(userinfo, "cg_etpubc"))) {
 					trap_DropClient(clientNum, "Client version mismatch", 0);
 				}
