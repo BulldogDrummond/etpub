@@ -100,7 +100,7 @@ if( WITH_LUA_SUPPORT == '1' ):
 		local_env.Append( LINKFLAGS = ['-Llua/libs/win32'] )
 	else:
 		local_env.Append( LINKFLAGS = ['-Llua/libs/unix', '-Wl,-rpath=./'] )
-	local_env.Append( LINKFLAGS = ['-llua5.1'] )
+	local_env.Append( LIBS = ['-llua5.1'] )
 	qagame_string += """g_lua.c"""
 
 # Jaybird - these lines are used to statically link c++'s dependencies

@@ -60,7 +60,7 @@ void QDECL PrintMsg( gentity_t *ent, const char *fmt, ... ) {
 	char		msg[1024];
 	va_list		argptr;
 	char		*p;
-	
+
 	// NOTE: if buffer overflow, it's more likely to corrupt stack and crash than do a proper G_Error?
 	va_start (argptr,fmt);
 	if (Q_vsnprintf (msg, sizeof(msg), fmt, argptr) > sizeof(msg)) {
@@ -175,7 +175,7 @@ void Team_FragBonuses(gentity_t *targ, gentity_t *inflictor, gentity_t *attacker
 		break;
 	case TEAM_ALLIES:
 		c = "team_CTF_blueflag";
-		break;		
+		break;
 	default:
 		return;
 	}
@@ -226,7 +226,7 @@ void Team_FragBonuses(gentity_t *targ, gentity_t *inflictor, gentity_t *attacker
 					AddScore(attacker, CTF_CARRIER_PROTECT_BONUS);
 					attacker->client->pers.teamState.carrierdefense++;
 					PrintMsg(NULL, "%s" S_COLOR_WHITE " defends the %s's flag carrier.\n",
-						attacker->client->pers.netname, 
+						attacker->client->pers.netname,
 						TeamName(attacker->client->sess.sessionTeam));
 					return;
 				}
@@ -470,7 +470,7 @@ int Team_TouchOurFlag( gentity_t *ent, gentity_t *other, int team ) {
 				G_Script_ScriptEvent( level.gameManager, "trigger", "axis_object_returned" );
 			}
 			G_Script_ScriptEvent( &g_entities[ent->s.otherEntityNum], "trigger", "returned" );
-			
+
 			{
 				const char *pName = ent->message?ent->message:_GetEntityName(ent);
 				Bot_Util_SendTrigger(ent, NULL, va("Axis have returned %s!", pName ? pName : ""), "returned");
@@ -484,7 +484,7 @@ int Team_TouchOurFlag( gentity_t *ent, gentity_t *other, int team ) {
 				G_Script_ScriptEvent( level.gameManager, "trigger", "allied_object_returned" );
 			}
 			G_Script_ScriptEvent( &g_entities[ent->s.otherEntityNum], "trigger", "returned" );
-			
+
 			{
 				const char *pName = ent->message?ent->message:_GetEntityName(ent);
 				Bot_Util_SendTrigger(ent, NULL, va("Allies have returned %s!", pName ? pName : ""), "returned");
@@ -579,7 +579,7 @@ int Team_TouchEnemyFlag( gentity_t *ent, gentity_t *other, int team ) {
 		cl->flagParent = ent->s.number;
 
 	cl->pers.teamState.flagsince = level.time;
-	
+
 	other->client->speedScale = ent->splashDamage; // Alter player speed
 
 	if(ent->s.density > 0) {
@@ -592,7 +592,7 @@ int Team_TouchEnemyFlag( gentity_t *ent, gentity_t *other, int team ) {
 int Pickup_Team( gentity_t *ent, gentity_t *other ) {
 	int team;
 	gclient_t *cl = other->client;
-	
+
 	// START Mad Doc - TDF
 	if ( (g_gametype.integer != GT_SINGLE_PLAYER) && (g_gametype.integer != GT_COOP) )
 	{
@@ -623,10 +623,10 @@ int Pickup_Team( gentity_t *ent, gentity_t *other ) {
 
 		// for single player, we want the allies to be able to pick up both flags
 		return Team_TouchEnemyFlag(ent, other, TEAM_ALLIES);
-	
+
 	}
 	// END Mad Doc - TDF
-}  
+}
 
 /*---------------------------------------------------------------------------*/
 
@@ -662,7 +662,7 @@ int FindFarthestObjectiveIndex(vec3_t source) {
 
 	G_Printf("got furthest dist (%f) at point %d (%s) of %d\n",dist,j,objectivename,i);
 */
- 
+
 	return j;
 }
 // jpw
@@ -688,7 +688,7 @@ int FindClosestObjectiveIndex(vec3_t source) {
 			j = i;
 		}
 	}
- 
+
 	return j;
 }
 // -NERVE - SMF
@@ -713,7 +713,7 @@ gentity_t *SelectRandomTeamSpawnPoint( int teamstate, team_t team, int spawnObje
 
 	vec3_t		target;
 	vec3_t		farthest;
-	
+
 	defendingTeam = -1;
 
 	if (team == TEAM_AXIS) {
@@ -797,7 +797,7 @@ gentity_t *SelectRandomTeamSpawnPoint( int teamstate, team_t team, int spawnObje
 		for(i = 0; i < count; i++) {
 			VectorSubtract(farthest, spots[i]->s.origin, target);
 			tmp = VectorLength(target);
-			
+
 			if( tmp < shortest ) {
 				shortest = tmp;
 				closest = i;
@@ -871,7 +871,7 @@ void TeamplayInfoMessage( team_t team ) {
 				if( h < 0 ) {
 					h = 0;
 				}
-			} 
+			}
 
 			if(player->r.svFlags & SVF_POW) {
 				continue;
@@ -899,7 +899,7 @@ void TeamplayInfoMessage( team_t team ) {
 
 	for(i = 0; i < level.numConnectedClients; i++) {
 		player = g_entities + level.sortedClients[i];
-		
+
 		// kw: send tinfo to ALL teams.
 		//     Fixes the blink in health display for disguised covert ops
 		//     and allows spectators to see player health.
@@ -942,7 +942,7 @@ void Use_Team_InitialSpawnpoint( gentity_t *ent, gentity_t *other, gentity_t *ac
 	}
 }
 
-void Use_Team_Spawnpoint( gentity_t *ent, gentity_t *other, gentity_t *activator ) {	
+void Use_Team_Spawnpoint( gentity_t *ent, gentity_t *other, gentity_t *activator ) {
 	if( ent->spawnflags & 2 ) {
 		ent->spawnflags &= ~2;
 
@@ -996,7 +996,7 @@ void SP_team_CTF_blueplayer( gentity_t *ent ) {
 
 // JPW NERVE edited quaked def
 /*QUAKED team_CTF_redspawn (1 0 0) (-16 -16 -24) (16 16 32) ? INVULNERABLE STARTACTIVE
-potential spawning position for axis team in wolfdm games.  
+potential spawning position for axis team in wolfdm games.
 
 TODO: SelectRandomTeamSpawnPoint() will choose team_CTF_redspawn point that:
 
@@ -1004,7 +1004,7 @@ TODO: SelectRandomTeamSpawnPoint() will choose team_CTF_redspawn point that:
 2) isn't occupied and
 3) is closest to team_WOLF_objective
 
-This allows spawnpoints to advance across the battlefield as new ones are 
+This allows spawnpoints to advance across the battlefield as new ones are
 placed and/or activated.
 
 If target is set, point spawnpoint toward target activation
@@ -1031,7 +1031,7 @@ void SP_team_CTF_redspawn(gentity_t *ent) {
 
 // JPW NERVE edited quaked def
 /*QUAKED team_CTF_bluespawn (0 0 1) (-16 -16 -24) (16 16 32) ? INVULNERABLE STARTACTIVE
-potential spawning position for allied team in wolfdm games.  
+potential spawning position for allied team in wolfdm games.
 
 TODO: SelectRandomTeamSpawnPoint() will choose team_CTF_bluespawn point that:
 
@@ -1039,7 +1039,7 @@ TODO: SelectRandomTeamSpawnPoint() will choose team_CTF_bluespawn point that:
 2) isn't occupied and
 3) is closest to selected team_WOLF_objective
 
-This allows spawnpoints to advance across the battlefield as new ones are 
+This allows spawnpoints to advance across the battlefield as new ones are
 placed and/or activated.
 
 If target is set, point spawnpoint toward target activation
@@ -1069,7 +1069,7 @@ void SP_team_CTF_bluespawn(gentity_t *ent) {
 /*QUAKED team_WOLF_objective (1 1 0.3) (-16 -16 -24) (16 16 32) DEFAULT_AXIS DEFAULT_ALLIES
 marker for objective
 
-This marker will be used for computing effective radius for 
+This marker will be used for computing effective radius for
 dynamite damage, as well as generating a list of objectives
 that players can elect to spawn near to in the limbo spawn
 screen.
@@ -1080,6 +1080,10 @@ DEFAULT_AXIS - This spawn region belongs to the Axis at the start of the map
 DEFAULT_ALLIES - This spawn region belongs to the Alles at the start of the map
 */
 static int numobjectives = 0; // TTimo
+
+void reset_numobjectives(void) {
+	numobjectives = 0;
+}
 
 // swaps the team
 void team_wolf_objective_use( gentity_t *self, gentity_t *other, gentity_t *activator ) {
@@ -1139,7 +1143,7 @@ void SP_team_WOLF_objective(gentity_t *ent) {
 
 	G_SpawnString( "description", "WARNING: No objective description set", &desc );
 
-	
+
 
 	// Gordon: wtf is this g_alloced? just use a static buffer fgs...
 	ent->message = G_Alloc( strlen(desc)+1 );
@@ -1408,7 +1412,7 @@ void checkpoint_spawntouch (gentity_t *self, gentity_t *other, trace_t *trace) {
 			self->s.frame = WCP_ANIM_RAISE_AXIS;
 			flagAction = "capture";
 		}
-		else if ( self->s.frame == WCP_ANIM_NOFLAG ) 
+		else if ( self->s.frame == WCP_ANIM_NOFLAG )
 		{
 			self->s.frame = WCP_ANIM_NOFLAG;
 			playsound = qfalse;
@@ -1431,7 +1435,7 @@ void checkpoint_spawntouch (gentity_t *self, gentity_t *other, trace_t *trace) {
 			self->s.frame = WCP_ANIM_RAISE_AMERICAN;
 			flagAction = "capture";
 		}
-		else if ( self->s.frame == WCP_ANIM_NOFLAG ) 
+		else if ( self->s.frame == WCP_ANIM_NOFLAG )
 		{
 			self->s.frame = WCP_ANIM_NOFLAG;
 			playsound = qfalse;
@@ -1459,7 +1463,7 @@ void checkpoint_spawntouch (gentity_t *self, gentity_t *other, trace_t *trace) {
 	if ( playsound )
 		G_AddEvent( self, EV_GENERAL_SOUND, self->soundPos1 );
 
-	self->parent = other;	
+	self->parent = other;
 
 	// Gordon: reset player disguise on touching flag
 	other->client->ps.powerups[PW_OPS_DISGUISED] = 0;
@@ -1677,9 +1681,9 @@ int QDECL G_SortPlayersByXPRate( const void *a, const void *b ) {
 	if(cla->pers.connectTime <= 0) return 1;
 	if(clb->pers.connectTime <= 0) return -1;
 
-	arate = cla->ps.persistant[PERS_SCORE] 
+	arate = cla->ps.persistant[PERS_SCORE]
 		/ (level.time - cla->pers.connectTime);
-	brate = clb->ps.persistant[PERS_SCORE] 
+	brate = clb->ps.persistant[PERS_SCORE]
 		/ (level.time - clb->pers.connectTime);
 
 	if(arate > brate) {
@@ -1731,14 +1735,14 @@ int QDECL G_SortPlayersByPlayerRating( const void *a, const void *b ) {
 	// which is the probability of winning in a match with 19 other average
 	// players. The sqrt stuff converts the variance of a normal into that
 	// of a logistic.
-	arate = 1.0 / (1.0 + 
+	arate = 1.0 / (1.0 +
 		exp(-cla->sess.rating
 		/sqrt(1.0+3.0*cla->sess.rating_variance*20.0 /(M_PI*M_PI))));
 
-	brate = 1.0 / (1.0 + 
+	brate = 1.0 / (1.0 +
 		exp(-clb->sess.rating
 		/sqrt(1.0+3.0*clb->sess.rating_variance*20.0/(M_PI*M_PI))));
-	
+
 
 	if(arate > brate) {
 		return -1;
@@ -1800,7 +1804,7 @@ void G_shuffleTeams(void)
 	// well to large servers, so it's greedy.
 	else if((g_shuffle_rating.integer & SHUFR_PROB) &&
 		g_playerRating.integer) {
-		
+
 		g_mapstat_t *mapstat = G_xpsave_mapstat(level.rawmapname);
 		team_t favorite,not_favorite;
 		qsort(sortClients, cnt, sizeof(int),
@@ -1860,7 +1864,7 @@ void G_shuffleTeams(void)
 		}
 		AP("cp \"^1Teams have been player rating shuffled!\n\"");
 		return;
-		
+
 	}
 */
 	else {
@@ -2014,7 +2018,7 @@ qboolean G_teamJoinCheck(int team_num, gentity_t *ent)
 		if(ent->client->sess.sessionTeam == team_num) {
 			return(qtrue);
 		}
-		
+
 		// quad - don't allow shoutcasters to join the game
 		if (ent->client->sess.shoutcaster) {
 			return(qfalse);
@@ -2088,7 +2092,7 @@ void G_swapTeamLocks(void)
 	qboolean fLock = teamInfo[TEAM_AXIS].spec_lock;
 	teamInfo[TEAM_AXIS].spec_lock = teamInfo[TEAM_ALLIES].spec_lock;
 	teamInfo[TEAM_ALLIES].spec_lock = fLock;
-	
+
 	fLock = teamInfo[TEAM_AXIS].team_lock;
 	teamInfo[TEAM_AXIS].team_lock = teamInfo[TEAM_ALLIES].team_lock;
 	teamInfo[TEAM_ALLIES].team_lock = fLock;
@@ -2151,7 +2155,7 @@ qboolean G_desiredFollow(gentity_t *ent, int nTeam)
 }
 // -OSP
 
-qboolean G_TeamInfo(int team, int *players, int *skulled) 
+qboolean G_TeamInfo(int team, int *players, int *skulled)
 {
 	int i;
 	gclient_t *client;
@@ -2171,7 +2175,7 @@ qboolean G_TeamInfo(int team, int *players, int *skulled)
 	return qtrue;
 }
 
-static void G_ATB_XP() 
+static void G_ATB_XP()
 {
 	int diff, i;
 	float percent;
@@ -2190,13 +2194,13 @@ static void G_ATB_XP()
 	int best;
 	team_t losingTeam = TEAM_AXIS, winningTeam = TEAM_ALLIES;
 
-	bspawn = (((level.dwBlueReinfOffset 
-		+ level.timeCurrent 
-		- level.startTime) 
+	bspawn = (((level.dwBlueReinfOffset
+		+ level.timeCurrent
+		- level.startTime)
 		% g_bluelimbotime.integer) == 0);
-	rspawn = (((level.dwRedReinfOffset 
-		+ level.timeCurrent 
-		- level.startTime) 
+	rspawn = (((level.dwRedReinfOffset
+		+ level.timeCurrent
+		- level.startTime)
 		% g_redlimbotime.integer) == 0);
 
 	// ATB only needs to run if one team is spawning
@@ -2211,22 +2215,22 @@ static void G_ATB_XP()
 
 	if(!bcount || !rcount)
 		return;
-	
+
 	// it doesn't do much good to stack up a skulled team
 	if(bskulled > 2 || rskulled > 2)
 		return;
 
-	if((bcount + rcount) < g_ATB_minPlayers.integer) 
+	if((bcount + rcount) < g_ATB_minPlayers.integer)
 		return;
 	if(level.ATB_holdoff > 0) {
 		if(level.ATB_lastteam == TEAM_ALLIES &&
 			bspawn) {
-			
+
 			level.ATB_holdoff--;
-		}	
+		}
 		else if(level.ATB_lastteam == TEAM_AXIS &&
 			rspawn) {
-			
+
 			level.ATB_holdoff--;
 		}
 		if(level.ATB_holdoff > 0) {
@@ -2236,7 +2240,7 @@ static void G_ATB_XP()
 
 	bscore = level.teamScores[TEAM_ALLIES];
 	rscore = level.teamScores[TEAM_AXIS];
-	
+
 	if(bscore > rscore && !bspawn)
 		return;
 	if(rscore > bscore && !rspawn)
@@ -2248,8 +2252,8 @@ static void G_ATB_XP()
 		rscore < g_ATB_minXP.integer) {
 		return;
 	}
-	
-	// if teams aren't in bad shape, don't do anything 
+
+	// if teams aren't in bad shape, don't do anything
 	if(bscore == 0 || rscore == 0) {
 		return;
 	}
@@ -2269,7 +2273,7 @@ static void G_ATB_XP()
 		diff = rscore - bscore;
 		percent = 100.0f * (diff / (bscore * 1.0f));
 	}
-	
+
 	if(percent < (g_ATB_diff.value * 1.0f))
 		return;
 
@@ -2278,15 +2282,15 @@ static void G_ATB_XP()
 			max_dispairity = 1;
 		if((bcount + rcount) >= 26)
 			max_dispairity = 2;
-	
+
 		if(rscore > bscore &&
 			((bcount + 1) - rcount) > max_dispairity) {
-	
+
 			return;
 		}
 		if(bscore > rscore &&
 			((rcount + 1) - bcount) > max_dispairity) {
-	
+
 			return;
 		}
 	}
@@ -2294,9 +2298,9 @@ static void G_ATB_XP()
 	for(i = 0; i < level.numConnectedClients; i++) {
 		cl = level.clients + level.sortedClients[i];
 
-		if(winningTeam == cl->sess.sessionTeam) 
+		if(winningTeam == cl->sess.sessionTeam)
 			winners[wcnt++] = level.sortedClients[i];
-		else 
+		else
 			losers[lcnt++] = level.sortedClients[i];
 	}
 
@@ -2355,7 +2359,7 @@ static void G_ATB_XP()
 				"^1" : "^4",
 			loseteam));
 		AP(va("chat \"Active Team Balance has moved "
-			"%s^7 to the %s%s^7 team\" -1", 
+			"%s^7 to the %s%s^7 team\" -1",
 			ent->client->pers.netname,
 			(ent->client->sess.sessionTeam == TEAM_AXIS) ?
 				"^1" : "^4",
@@ -2371,14 +2375,14 @@ static void G_ATB_XP()
 			level.ATB_lastteam = TEAM_ALLIES;
 		}
 	}
-	
+
 	if(!g_ATB_swap.integer)
 		return;
 
 	// tjw: don't swap if losing team is down in players
 	if(ent->client->sess.sessionTeam == TEAM_ALLIES &&
 		(bcount + 1) <= (rcount - 1)) {
-		
+
 		return;
 	}
 	else if(ent->client->sess.sessionTeam == TEAM_AXIS &&
@@ -2403,7 +2407,7 @@ static void G_ATB_XP()
 			best = ent->client->sess.ATB_count;
 			n00b = losers[i];
 		}
-		if(i > 2) 
+		if(i > 2)
 			break;
 	}
 
@@ -2412,7 +2416,7 @@ static void G_ATB_XP()
 	ent = &level.gentities[n00b];
 	if(!ent || !ent->client)
 		return;
-	
+
 	if(SetTeam(ent, winteam, qtrue, -1, -1, qfalse)) {
 		CP(va("cp \"Active Team Balance has moved you to "
 			"the %s%s^7 team\" 1",
@@ -2420,7 +2424,7 @@ static void G_ATB_XP()
 				"^1" : "^4",
 			winteam));
 		AP(va("chat \"Active Team Balance has moved "
-			"%s^7 to the %s%s^7 team\" -1", 
+			"%s^7 to the %s%s^7 team\" -1",
 			ent->client->pers.netname,
 			(ent->client->sess.sessionTeam == TEAM_AXIS) ?
 				"^1" : "^4",
@@ -2429,7 +2433,7 @@ static void G_ATB_XP()
 	}
 }
 
-static void G_ATB_PR(qboolean force, qboolean shuffle) 
+static void G_ATB_PR(qboolean force, qboolean shuffle)
 {
 	int i;
 	gentity_t *ent;
@@ -2448,25 +2452,25 @@ static void G_ATB_PR(qboolean force, qboolean shuffle)
 
 	// josh: No more warnings. They're not very noticeable, and those who do
 	//       notice them, tend to exploit it by going spec.
-	//qboolean bwarn = (((level.dwBlueReinfOffset 
-	//	+ level.timeCurrent 
-	//	- level.startTime 
-	//	- 10000) 
-	//	% g_bluelimbotime.integer) == 0);
-	//qboolean rwarn = (((level.dwRedReinfOffset 
-	//	+ level.timeCurrent 
+	//qboolean bwarn = (((level.dwBlueReinfOffset
+	//	+ level.timeCurrent
 	//	- level.startTime
-	//	- 10000) 
+	//	- 10000)
+	//	% g_bluelimbotime.integer) == 0);
+	//qboolean rwarn = (((level.dwRedReinfOffset
+	//	+ level.timeCurrent
+	//	- level.startTime
+	//	- 10000)
 	//	% g_redlimbotime.integer) == 0);
 	//warn = (bwarn || rwarn);
 
-	bspawn = (((level.dwBlueReinfOffset 
-		+ level.timeCurrent 
-		- level.startTime) 
+	bspawn = (((level.dwBlueReinfOffset
+		+ level.timeCurrent
+		- level.startTime)
 		% g_bluelimbotime.integer) == 0);
-	rspawn = (((level.dwRedReinfOffset 
-		+ level.timeCurrent 
-		- level.startTime) 
+	rspawn = (((level.dwRedReinfOffset
+		+ level.timeCurrent
+		- level.startTime)
 		% g_redlimbotime.integer) == 0);
 
 	// gabriel: Ensure g_ATB_rating and g_shuffle_rating have legal values
@@ -2494,12 +2498,12 @@ static void G_ATB_PR(qboolean force, qboolean shuffle)
 
 	if(!bcount || !rcount)
 		return;
-	
+
 	// it doesn't do much good to stack up a skulled team
 	if(!force && (bskulled > 2 || rskulled > 2))
 		return;
 
-	if((bcount + rcount) < g_ATB_minPlayers.integer) 
+	if((bcount + rcount) < g_ATB_minPlayers.integer)
 		return;
 
 	// Allies = winprob ALWAYS
@@ -2570,7 +2574,7 @@ static void G_ATB_PR(qboolean force, qboolean shuffle)
 			pscore =100*level.win_probability_model.win_probability;
 		} else {
 			pscore = 100*
-				(1.0 
+				(1.0
 				 - level.win_probability_model.win_probability);
 		}
 		// If moving them would swing the balance too much, don't
@@ -2599,18 +2603,18 @@ static void G_ATB_PR(qboolean force, qboolean shuffle)
 		//       one doesn't fix things far enough.
 		//
 		// josh: Again, keep numbers within a decent range
-		if((100 - pscore) >= g_ATB_diff.integer 
+		if((100 - pscore) >= g_ATB_diff.integer
 			&& abs(rcount-bcount) < 3
 			&& !odds_balance) {
 			continue;
 		}
 
 		// tjw: this makes sense only if we're not trying to even
-		//      the teams by number of players. 
+		//      the teams by number of players.
 		// josh: When balancing by odds, let ATB move the best player
 		//       that at least improves the odds.
 		if(odds_balance && pscore <= lscore) {
-			continue; 
+			continue;
 		}
 
 		// tjw: try to quiet down ATB by moving the player
@@ -2625,7 +2629,7 @@ static void G_ATB_PR(qboolean force, qboolean shuffle)
 		//      special treatment.
 		offset = (shuffle || !playing) ?
 			0 : (ent->client->sess.ATB_count*4);
-		
+
 		// josh: only allow one ATB per map, too uncomfy
 		//       suboptimal, but more comfy.
 		//       The ATB_COUNT is reset if you spec though
@@ -2651,7 +2655,7 @@ static void G_ATB_PR(qboolean force, qboolean shuffle)
 	//			"^4ALLIED" : "^1AXIS"));
 	//}
 	//else if(SetTeam(ent,
-	
+
 	// josh: run howfair before the move so people see it's unfair
 	if (odds_balance)
 		G_shrubbot_howfair(NULL, 0);
@@ -2665,7 +2669,7 @@ static void G_ATB_PR(qboolean force, qboolean shuffle)
 				(ent->client->sess.sessionTeam == TEAM_AXIS) ?
 					"^1AXIS" : "^4ALLIED"));
 			AP(va("chat \"Active Team Balance has moved "
-				"%s^7 (%d prior moves) to the %s^7 team\" -1", 
+				"%s^7 (%d prior moves) to the %s^7 team\" -1",
 				ent->client->pers.netname,
 				ent->client->sess.ATB_count,
 				(ent->client->sess.sessionTeam == TEAM_AXIS) ?
@@ -2674,7 +2678,7 @@ static void G_ATB_PR(qboolean force, qboolean shuffle)
 			//      !balance in warmup or intermission
 			if(playing)
 				ent->client->sess.ATB_count++;
-			ent->client->sess.map_ATBd_team = 
+			ent->client->sess.map_ATBd_team =
 				ent->client->sess.sessionTeam;
 			G_shrubbot_howfair(NULL, 0);
 		}
@@ -2699,20 +2703,20 @@ static void G_ATB_PR(qboolean force, qboolean shuffle)
 
 /*
  * G_ActiveTeamBalance //tjw
- * if the game is turning bad, move the top player from the winning team 
- * to the losing team when that player's spawn timer reaches 0. 
- * The cvar g_ATB_diff is a percent that decides when the 
- * teams are not balanced. 
- * josh: 
+ * if the game is turning bad, move the top player from the winning team
+ * to the losing team when that player's spawn timer reaches 0.
+ * The cvar g_ATB_diff is a percent that decides when the
+ * teams are not balanced.
+ * josh:
  * g_ATB decides the type of active balancing
  * g_ATB_diff decides when to balance
  * See docs for more info
  */
-void G_ActiveTeamBalance(qboolean force, qboolean shuffle) 
+void G_ActiveTeamBalance(qboolean force, qboolean shuffle)
 {
 	int timelimit = (int)(g_timelimit.value * 60000.0f);
 
-	// tjw: exit early to save cycles 
+	// tjw: exit early to save cycles
 	if(!g_ATB.integer && !force)
 		return;
 
@@ -2723,13 +2727,13 @@ void G_ActiveTeamBalance(qboolean force, qboolean shuffle)
 	// tjw: it's just too bug prone to move people when the game is
 	//      not active.  For instance in GS_WARMUP, everyone is
 	//      CON_CONNECTING and every other gamestate breaks the spawn
-	//      timer determination that activates ATB. 
+	//      timer determination that activates ATB.
 	// tjw: allow !balance to be used in warmup
 	if(g_gamestate.integer != GS_PLAYING && !force)
 		return;
-	
+
 	// tjw: bail out if there are < 3 mins left in the map
-	if(!force && (timelimit - 
+	if(!force && (timelimit -
 		(level.timeCurrent - level.startTime)) < 180000) {
 		return;
 	}
@@ -2742,7 +2746,7 @@ void G_ActiveTeamBalance(qboolean force, qboolean shuffle)
 		return;
 	}
 
-	
+
 	// tjw: don't do anything if possible game ending dynamite
 	//      countdown is running
 	if(!force && G_EndRoundCountdown() > -1)
@@ -2751,14 +2755,14 @@ void G_ActiveTeamBalance(qboolean force, qboolean shuffle)
 	// tjw: reset the safety chain for recursive G_ATB_PR()
 	level.ATB_loops = 0;
 
-	
+
 	if(g_ATB.integer == ATB_XP)
 		G_ATB_XP();
 	else if( (!level.atb_has_run && g_ATB.integer == ATB_PLAYERRATING) || force)
 		G_ATB_PR(force, shuffle);
 }
 
-void G_UnevenTeamCheck( void ) 
+void G_UnevenTeamCheck( void )
 {
 	int axisCount, alliesCount;
 
@@ -2778,8 +2782,8 @@ void G_UnevenTeamCheck( void )
 	if ( (level.time - level.lastUnevenNotify) < (g_unevenTeamFreq.integer * 1000) )
 		return;
 
-	if ( !(g_gamestate.integer == GS_PLAYING || 
-			g_gamestate.integer == GS_WARMUP || 
+	if ( !(g_gamestate.integer == GS_PLAYING ||
+			g_gamestate.integer == GS_WARMUP ||
 			g_gamestate.integer == GS_WARMUP_COUNTDOWN) )
 		return;
 
@@ -2794,7 +2798,7 @@ void G_UnevenTeamCheck( void )
 		AP(va("cp \"^3Uneven Teams\n^4Allied ^7team has ^3%d ^7extra players\" 2",
 			alliesCount - axisCount));
 		level.lastUnevenNotify = level.time;
-	}	
+	}
 }
 
 

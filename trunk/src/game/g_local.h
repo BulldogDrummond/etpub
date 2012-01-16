@@ -1913,6 +1913,7 @@ int QDECL G_SortPlayersByKillRating( const void *a, const void *b );
 int QDECL G_SortPlayersByPlayerRating( const void *a, const void *b );
 void G_ActiveTeamBalance(qboolean force, qboolean shuffle);
 void G_UnevenTeamCheck(void);
+void reset_numobjectives(void);
 
 //
 // g_mem.c
