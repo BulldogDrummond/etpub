@@ -65,6 +65,9 @@ cg_window.c
 ../game/q_shared.c
 ../ui/ui_shared.c
 cg_hud.c
+cg_osfile.c
+cg_uid.c
+md5.c
 """
 
 cgame_list = scons_utils.BuildList( 'cgame', cgame_string )
@@ -79,8 +82,15 @@ source_list = cgame_list
 
 local_env['LINK'] = local_env['CC']
 
+local_env.Append( CPPPATH = ['./curl-7.12.2/include'] )
+local_env.Append( LIBS = ['curl'] )
+
 if g_os == 'win32' and os.name != 'nt':
-	local_env.Append( LIBS = '-liphlpapi' )
+	local_env.Append( LINKFLAGS = ['-L./curl-7.12.2/lib/win32/'] )
+	local_env.Append( LIBS = ['iphlpapi', 'wsock32'] )
+
+if g_os == 'Linux':
+	local_env.Append( LINKFLAGS = ['-L./curl-7.12.2/lib/linux/'] )
 
 # GAMERANGER isn't exported in all usage paths
 try:

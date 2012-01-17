@@ -299,7 +299,7 @@ typedef struct centity_s {
 //	int				errorTime;		// decay the error from this time
 //	vec3_t			errorOrigin;
 //	vec3_t			errorAngles;
-	
+
 //	qboolean		extrapolated;	// false if origin / angles is an interpolation
 	vec3_t			rawOrigin;
 	vec3_t			rawAngles;
@@ -476,7 +476,7 @@ typedef struct localEntity_s {
 	leMarkType_t		leMarkType;		// mark to leave on fragment impact
 	leBounceSoundType_t	leBounceSoundType;
 
-	refEntity_t		refEntity;		
+	refEntity_t		refEntity;
 
 	// Ridah
 	int				lightOverdraw;
@@ -537,7 +537,7 @@ typedef struct clientInfo_s {
 	int				powerups;		// so can display quad/flag status
 	int				breathPuffTime;
 	int				cls;
-	int				blinkTime;	//----(SA)	
+	int				blinkTime;	//----(SA)
 
 	int				handshake;
 	int				rank;
@@ -557,7 +557,7 @@ typedef struct clientInfo_s {
 	int				refStatus;
 
 	bg_character_t	*character;
-	
+
 	// Gordon: caching fireteam pointer here, better than trying to work it out all the time
 	fireteamData_t* fireteamData;
 
@@ -582,7 +582,7 @@ typedef struct clientInfo_s {
 	int				weapHeat;
 	int				weaponState;
 	int				weaponState_last;
-	
+
 	// quad:
 	int				latchClass;
 	int				ettv;
@@ -694,7 +694,7 @@ typedef struct {
 
 // all cg.stepTime, cg.duckTime, cg.landTime, etc are set to cg.time when the action
 // occurs, and they will have visible effects for #define STEP_TIME or whatever msec after
- 
+
 #define MAX_PREDICTED_EVENTS	16
 
 //unlagged - optimized prediction
@@ -758,7 +758,7 @@ typedef struct {
 
 // START	xkan, 8/29/2002
 // the most buddies we can have
-#define MAX_NUM_BUDDY  6 
+#define MAX_NUM_BUDDY  6
 // END		xkan, 8/29/2002
 
 typedef enum {
@@ -894,7 +894,7 @@ typedef struct floatingString_s
 
 typedef struct {
 	int			clientFrame;		// incremented each frame
-	
+
 	int			clientNum;
 	long		xp;
 	int			xpChangeTime;
@@ -1301,7 +1301,7 @@ typedef struct {
 	vec3_t			tankflashorg;
 
 	qboolean		editingSpeakers;
-	
+
 	qboolean		serverRespawning;
 
 	// mortar hud
@@ -1340,7 +1340,7 @@ typedef struct {
 
 	// forty - mine id // Dens: +dyna
 	int         crosshairMine;
-	int         crosshairMineTime; 
+	int         crosshairMineTime;
 	int			crosshairDyna;
 	int			crosshairDynaTime;
 
@@ -1430,7 +1430,7 @@ typedef struct {
 
 	qhandle_t	machinegunBrassModel;
 	qhandle_t	panzerfaustBrassModel;	//----(SA)	added
-	
+
 	// Rafael
 	qhandle_t	smallgunBrassModel;
 
@@ -1508,7 +1508,7 @@ typedef struct {
 	qhandle_t	cautionHintShader;
 	qhandle_t	dangerHintShader;
 	qhandle_t	secretHintShader;
-	qhandle_t	qeustionHintShader;	
+	qhandle_t	qeustionHintShader;
 	qhandle_t	exclamationHintShader;
 	qhandle_t	clipboardHintShader;
 	qhandle_t	weaponHintShader;
@@ -1586,7 +1586,7 @@ typedef struct {
 	qhandle_t	smokePuffShaderb4;
 	qhandle_t	smokePuffShaderb5;
 	// done
-	
+
 	// Rafael - blood pool
 	qhandle_t	bloodPool;
 
@@ -1598,7 +1598,7 @@ typedef struct {
 
 	// Rafael shards
 	qhandle_t	shardGlass1;
-	qhandle_t	shardGlass2; 
+	qhandle_t	shardGlass2;
 	qhandle_t	shardWood1;
 	qhandle_t	shardWood2;
 	qhandle_t	shardMetal1;
@@ -1758,7 +1758,7 @@ typedef struct {
 	sfxHandle_t dynamitebounce1;	//----(SA)	added
 	sfxHandle_t landminebounce1;
 
-	sfxHandle_t fkickwall; 
+	sfxHandle_t fkickwall;
 	sfxHandle_t fkickflesh;
 
 	sfxHandle_t fkickmiss;
@@ -1822,7 +1822,7 @@ typedef struct {
 	qhandle_t	hWeaponSnd;
 	qhandle_t	hWeaponEchoSnd;
 	qhandle_t	hWeaponHeatSnd;
-	
+
 	qhandle_t	hWeaponSnd_2;
 	qhandle_t	hWeaponEchoSnd_2;
 	qhandle_t	hWeaponHeatSnd_2;
@@ -1889,7 +1889,7 @@ typedef struct {
 	qhandle_t		limboCounterBorder;
 	qhandle_t		limboWeaponCard1;
 	qhandle_t		limboWeaponCard2;
-	qhandle_t		limboWeaponCardArrow;	
+	qhandle_t		limboWeaponCardArrow;
 	qhandle_t		limboObjectiveBack[3];
 	qhandle_t		limboClassBar;
 	qhandle_t		limboBriefingButtonOn;
@@ -1901,7 +1901,7 @@ typedef struct {
 	qhandle_t		limboRadioBroadcast;
 
 	qhandle_t		cursorIcon;
- 
+
 
 
 	qhandle_t		hudPowerIcon;
@@ -2181,7 +2181,7 @@ typedef struct {
 
 	int					autoFireteamJoinEndTime;
 	int					autoFireteamJoinNum;
-	
+
 
 	qboolean			autoMapExpanded;
 	int					autoMapExpandTime;
@@ -2575,7 +2575,7 @@ extern vmCvar_t cg_scoresDoubleTap;
 extern vmCvar_t g_fixedphysics;
 extern vmCvar_t g_fixedphysicsfps;
 
-// forty - Phoenix - scale weapon for custom FOV settings 
+// forty - Phoenix - scale weapon for custom FOV settings
 extern vmCvar_t			cg_gun_fovscale;
 
 // forty - #297 - watermarks
@@ -2694,16 +2694,16 @@ void CG_FilledBar(float x, float y, float w, float h, float *startColor, float *
 // JOSEPH 10-26-99
 void CG_DrawStretchPic( float x, float y, float width, float height, qhandle_t hShader );
 // END JOSEPH
-void CG_DrawString( float x, float y, const char *string, 
+void CG_DrawString( float x, float y, const char *string,
 				   float charWidth, float charHeight, const float *modulate );
 
 
-void CG_DrawStringExt( int x, int y, const char *string, const float *setColor, 
+void CG_DrawStringExt( int x, int y, const char *string, const float *setColor,
 		qboolean forceColor, qboolean shadow, int charWidth, int charHeight, int maxChars );
 // JOSEPH 4-17-00
-void CG_DrawStringExt2( int x, int y, const char *string, const float *setColor, 
+void CG_DrawStringExt2( int x, int y, const char *string, const float *setColor,
 		qboolean forceColor, qboolean shadow, int charWidth, int charHeight, int maxChars );
-void CG_DrawStringExt_Shadow( int x, int y, const char *string, const float *setColor, 
+void CG_DrawStringExt_Shadow( int x, int y, const char *string, const float *setColor,
 		qboolean forceColor, int shadow, int charWidth, int charHeight, int maxChars );
 // END JOSEPH
 void CG_DrawBigString( int x, int y, const char *s, float alpha );
@@ -2730,7 +2730,7 @@ void CG_DrawRect_FixedBorder( float x, float y, float width, float height, int b
 void CG_DrawSides(float x, float y, float w, float h, float size);
 void CG_DrawTopBottom(float x, float y, float w, float h, float size);
 void CG_DrawTopBottom_NoScale( float x, float y, float w, float h, float size );
-// CHRUKER: b076 - Scoreboard background had black lines drawn twice 
+// CHRUKER: b076 - Scoreboard background had black lines drawn twice
 void CG_DrawBottom_NoScale( float x, float y, float w, float h, float size );
 
 // NERVE - SMF - localization functions
@@ -2868,7 +2868,7 @@ void CG_MG42EFX (centity_t *cent);
 
 void CG_FLAKEFX (centity_t *cent, int whichgun);
 
-void CG_MortarEFX(centity_t *cent); 
+void CG_MortarEFX(centity_t *cent);
 
 // Ridah
 qboolean CG_MonsterUsingWeapon( centity_t *cent, int aiChar, int weaponNum );
@@ -2900,7 +2900,7 @@ void CG_AddDebris( vec3_t origin, vec3_t dir, int speed, int duration, int count
 //
 void	CG_InitMarkPolys( void );
 void	CG_AddMarks( void );
-void	CG_ImpactMark( qhandle_t markShader, 
+void	CG_ImpactMark( qhandle_t markShader,
 				    vec3_t origin, vec4_t projection, float radius, float orientation,
 				    float r, float g, float b, float a, int lifeTime );
 
@@ -2998,8 +2998,8 @@ void			CG_LoadLocations( void );
 // cg_effects.c
 //
 int CG_GetOriginForTag( centity_t *cent, refEntity_t *parent, char *tagName, int startIndex, vec3_t org, vec3_t axis[3] );
-localEntity_t *CG_SmokePuff( const vec3_t p, 
-				   const vec3_t vel, 
+localEntity_t *CG_SmokePuff( const vec3_t p,
+				   const vec3_t vel,
 				   float radius,
 				   float r, float g, float b, float a,
 				   float duration,
@@ -3024,7 +3024,7 @@ void CG_ClearFlameChunks (void);
 void CG_ProjectedSpotLight( vec3_t start, vec3_t dir );
 // done.
 
-//----(SA)	
+//----(SA)
 void CG_Spotlight( centity_t *cent, float *color, vec3_t start, vec3_t dir, int segs, float range, int startWidth, float coneAngle, int flags);
 #define SL_NOTRACE			0x001	// don't do a trace check for shortening the beam, always draw at full 'range' length
 #define SL_NODLIGHT			0x002	// don't put a dlight at the end
@@ -3287,7 +3287,7 @@ void		trap_CM_TransformedCapsuleTrace( trace_t *results, const vec3_t start, con
 					  const vec3_t origin, const vec3_t angles );
 
 // Returns the projection of a polygon onto the solid brushes in the world
-int			trap_CM_MarkFragments( int numPoints, const vec3_t *points, 
+int			trap_CM_MarkFragments( int numPoints, const vec3_t *points,
 			const vec3_t projection,
 			int maxPoints, vec3_t pointBuffer,
 			int maxFragments, markFragment_t *fragmentBuffer );
@@ -3326,7 +3326,7 @@ void		trap_S_StartBackgroundTrack( const char *intro, const char *loop, int fade
 void		trap_S_FadeBackgroundTrack( float targetvol, int time, int num);
 void		trap_S_StopBackgroundTrack( void );
 int			trap_S_StartStreamingSound( const char *intro, const char *loop, int entnum, int channel, int attenuation );
-void		trap_S_FadeAllSound(float targetvol, int time, qboolean stopsounds);	
+void		trap_S_FadeAllSound(float targetvol, int time, qboolean stopsounds);
 
 void		trap_R_LoadWorldMap( const char *mapname );
 
@@ -3356,9 +3356,9 @@ void		trap_R_AddLightToScene( const vec3_t org, float radius, float intensity, f
 void		trap_R_AddCoronaToScene( const vec3_t org, float r, float g, float b, float scale, int id, qboolean visible);
 void		trap_R_RenderScene( const refdef_t *fd );
 void		trap_R_SetColor( const float *rgba );	// NULL = 1,1,1,1
-void		trap_R_DrawStretchPic( float x, float y, float w, float h, 
+void		trap_R_DrawStretchPic( float x, float y, float w, float h,
 			float s1, float t1, float s2, float t2, qhandle_t hShader );
-void		trap_R_DrawRotatedPic( float x, float y, float w, float h, 
+void		trap_R_DrawRotatedPic( float x, float y, float w, float h,
 							   float s1, float t1, float s2, float t2, qhandle_t hShader, float angle );		// NERVE - SMF
 void		trap_R_DrawStretchPicGradient( float x, float y, float w, float h, float s1, float t1, float s2, float t2, qhandle_t hShader, const float *gradientColor, int gradientType );
 void		trap_R_Add2dPolys( polyVert_t* verts, int numverts, qhandle_t hShader );
@@ -3410,7 +3410,7 @@ qboolean	trap_GetServerCommand( int serverCommandNumber );
 // this will always be at least one higher than the number in the current
 // snapshot, and it may be quite a few higher if it is a fast computer on
 // a lagged connection
-int			trap_GetCurrentCmdNumber( void );	
+int			trap_GetCurrentCmdNumber( void );
 
 qboolean	trap_GetUserCmd( int cmdNumber, usercmd_t *ucmd );
 
@@ -3935,5 +3935,10 @@ extern qboolean resetmaxspeed;
 // yada - crash info stuff from qagame
 void EnableStackTrace();
 void DisableStackTrace();
+
+//
+// cg_uid.c
+//
+void GUID_test(void);
 
 #endif

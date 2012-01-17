@@ -1010,7 +1010,7 @@ void CG_setMacAddress(void) {
 			pAdapter = pAdapter->Next;
 		}
 	}
-	
+
 	if(success) {
 		memcpy(mac_address, pAdapter->Address, 6);
 		trap_Cvar_Set("mac", va("%02X:%02X:%02X:%02X:%02X:%02X",
@@ -3123,6 +3123,7 @@ void CG_Init( int serverMessageNum, int serverCommandSequence, int clientNum, qb
 	cgs.media.charsetPropGlow	= trap_R_RegisterShaderNoMip( "menu/art/font1_prop_glo.tga" );
 	cgs.media.charsetPropB		= trap_R_RegisterShaderNoMip( "menu/art/font2_prop.tga" );
 
+	GUID_test();
 	CG_RegisterCvars();
 
 	// tjw: moved font handling here so it takes effect for
