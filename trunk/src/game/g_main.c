@@ -6098,26 +6098,23 @@ void etpub_version( gentity_t *ent )
 	char a[4], b[4], c[4];
 	int i = 0;
 
-	while( *s++ ) {
-		if( *s == '.' || i == sizeof( a ) )
-			break;
+	while(*s != '.' && i < sizeof(a)) {
 		a[i++] = *s;
+		s++;
 	}
 
 	i = 0;
 
-	while( *s++ ) {
-		if( *s == '.' || i == sizeof( b ) )
-			break;
+	while(*s != '.' && i < sizeof(b)) {
 		b[i++] = *s;
+		s++;
 	}
 
 	i = 0;
 
-	while( *s++ ) {
-		if( *s == '.' || i == sizeof( c ) )
-			break;
+	while(*s != '.' && i < sizeof(c)) {
 		c[i++] = *s;
+		s++;
 	}
 
 	G_refPrintf( ent, "\n ^3Build  ^1: ^3Version      OS and Build Date" );

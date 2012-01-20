@@ -19,8 +19,8 @@ static void CG_ForceCvar() {
 
 	s = CG_Argv(2);
 	Q_strncpyz(cvarValue, s, sizeof(cvarValue));
-	
-	
+
+
 	// tjw: security check
 	if(!Q_stricmp("cl_profile", cvarName))
 		return;
@@ -59,7 +59,7 @@ static void CG_DynoCounter() {
 	const char *pos = NULL;
 
 	type = atoi(CG_Argv(1));
-	entnum = atoi(CG_Argv(2)); 
+	entnum = atoi(CG_Argv(2));
 	team = atoi(CG_Argv(3));
 	pos = CG_Argv(4);
 
@@ -92,7 +92,7 @@ static void CG_DynoCounter() {
 			}
 			// find a free slot
 			// Dens: just use MAXDYNAMITE here, not cg_maxTeamDynas. It won't do
-			// any harm and raising the CVAR value has effect right away 
+			// any harm and raising the CVAR value has effect right away
 			for(i=0;i<MAXDYNAMITE;i++)  {
 				if(cg.dynamiteindex[j] < MAXDYNAMITE &&
 					cg.dynamiteplanted[j][i].entityNum == 0) {
@@ -135,7 +135,7 @@ static void CG_ParsePR(void)
 
 	cg.axisProb = atof(CG_Argv(1));
 	cg.alliesProb = atof(CG_Argv(2));
-	
+
 	s = CG_Argv(i);
 	while(*s) {
 		cg.playerRating[i-3] = atof(s);
@@ -171,10 +171,10 @@ static void CG_ParseScore( team_t team ) {
 
 	if( team == TEAM_AXIS ) {
 		cg.numScores = 0;
-		
+
 		cg.teamScores[0] = atoi( CG_Argv( 1 ) );
 		cg.teamScores[1] = atoi( CG_Argv( 2 ) );
-		
+
 		offset = 4;
 	} else {
 		offset = 2;
@@ -194,7 +194,7 @@ static void CG_ParseScore( team_t team ) {
 //		cg.scores[i].playerClass = atoi(	CG_Argv( offset + 5 + ( j * 7 ) ) );
 		cg.scores[i].miscScoreFlags = atoi(	CG_Argv( offset + 5 + ( j * 7 ) ) ); // pheno
 		cg.scores[i].respawnsLeft = atoi(	CG_Argv( offset + 6 + ( j * 7 ) ) );
-		
+
 		if ( cg.scores[i].client < 0 || cg.scores[i].client >= MAX_CLIENTS ) {
 			cg.scores[i].client = 0;
 		}
@@ -259,7 +259,7 @@ void CG_ParseServerinfo( void ) {
 				Info_ValueForKey(info, "mod_version"),
 				sizeof(etpub));
 		if(!Q_stricmp(etpub, "0.5."))
-			cgs.etpub = ETPUB_VERSION(0,5,0);	
+			cgs.etpub = ETPUB_VERSION(0,5,0);
 	}
 
 	if ( !cgs.localServer ) {
@@ -283,7 +283,7 @@ void CG_ParseServerinfo( void ) {
 
 	cgs.minclients = atoi( Info_ValueForKey( info, "g_minGameClients" ) );		// NERVE - SMF -- OSP: overloaded for ready counts
 
-	// TTimo - make this available for ingame_callvote	
+	// TTimo - make this available for ingame_callvote
 	trap_Cvar_Set( "cg_ui_voteFlags", ((authLevel.integer == RL_NONE) ? Info_ValueForKey(info, "voteFlags") : "0"));
 }
 
@@ -299,31 +299,31 @@ static void InitSkillLevelStructure( skillType_t skillType )
 	switch( skillType )
 	{
 	case SK_HEAVY_WEAPONS:
-		Q_strncpyz( newLevels, cgs.skill_soldier, 
+		Q_strncpyz( newLevels, cgs.skill_soldier,
 			sizeof(cgs.skill_soldier) );
 		break;
 	case SK_FIRST_AID:
-		Q_strncpyz( newLevels, cgs.skill_medic, 
+		Q_strncpyz( newLevels, cgs.skill_medic,
 			sizeof(cgs.skill_medic) );
 		break;
 	case SK_EXPLOSIVES_AND_CONSTRUCTION:
-		Q_strncpyz( newLevels, cgs.skill_engineer, 
+		Q_strncpyz( newLevels, cgs.skill_engineer,
 			sizeof(cgs.skill_engineer) );
 		break;
 	case SK_SIGNALS:
-		Q_strncpyz( newLevels, cgs.skill_fieldops, 
+		Q_strncpyz( newLevels, cgs.skill_fieldops,
 			sizeof( cgs.skill_fieldops) );
 		break;
 	case SK_MILITARY_INTELLIGENCE_AND_SCOPED_WEAPONS:
-		Q_strncpyz( newLevels, cgs.skill_covertops, 
+		Q_strncpyz( newLevels, cgs.skill_covertops,
 			sizeof(cgs.skill_covertops) );
 		break;
 	case SK_BATTLE_SENSE:
-		Q_strncpyz( newLevels, cgs.skill_battlesense, 
+		Q_strncpyz( newLevels, cgs.skill_battlesense,
 			sizeof(cgs.skill_battlesense) );
 		break;
 	case SK_LIGHT_WEAPONS:
-		Q_strncpyz( newLevels, cgs.skill_lightweapons, 
+		Q_strncpyz( newLevels, cgs.skill_lightweapons,
 			sizeof(cgs.skill_lightweapons) );
 		break;
 	case SK_NUM_SKILLS:
@@ -361,23 +361,25 @@ void CG_ParseEtpubinfo( void ) {
 	info = CG_ConfigString( CS_ETPUBINFO );
 
 	s = Info_ValueForKey(info, "etpub");
-	while(*s++) {
-		if(*s == '.' || i == sizeof(a))
-			break;
+	while(*s != '.' && i < sizeof(a)) {
 		a[i++] = *s;
+		s++;
 	}
+
 	i = 0;
-	while(*s++) {
-		if(*s == '.' || i == sizeof(b))
-			break;
+
+	while(*s != '.' && i < sizeof(b)) {
 		b[i++] = *s;
+		s++;
 	}
+
 	i = 0;
-	while(*s++) {
-		if(*s == '.' || i == sizeof(c))
-			break;
+
+	while(*s != '.' && i < sizeof(c)) {
 		c[i++] = *s;
+		s++;
 	}
+
 	s = Info_ValueForKey(info, "etpub");
 	etpub = ETPUB_VERSION(atoi(a), atoi(b), atoi(c));
 	if(etpub > 0 && etpub != cgs.etpub) {
@@ -386,16 +388,16 @@ void CG_ParseEtpubinfo( void ) {
 	}
 
 	cgs.misc = atoi(Info_ValueForKey(info, "g_misc"));
-	cgs.doubleJumpHeight = 
+	cgs.doubleJumpHeight =
 		atof(Info_ValueForKey(info, "g_doubleJumpHeight"));
-	cgs.staminaRecharge = 
+	cgs.staminaRecharge =
 		atof(Info_ValueForKey(info, "g_staminaRecharge"));
 	cgs.weapons = atoi(Info_ValueForKey(info, "g_weapons"));
 	cgs.coverts = atoi(Info_ValueForKey(info, "g_coverts"));
 	cgs.medics = atoi(Info_ValueForKey(info, "g_medics"));
-	cgs.throwableKnives = 
+	cgs.throwableKnives =
 		atoi(Info_ValueForKey(info, "g_throwableKnives"));
-	cgs.adrenother = 
+	cgs.adrenother =
 		atoi(Info_ValueForKey(info, "g_medics")) & MEDIC_ADRENOTHER;
 	cgs.playerRating = atoi(Info_ValueForKey(info, "g_playerRating"));
 	cgs.killRating = atoi(Info_ValueForKey(info, "g_killRating"));
@@ -426,7 +428,7 @@ void CG_ParseEtpubinfo( void ) {
 	// pheno
 	cgs.friendlyFire = atoi( Info_ValueForKey( info, "g_friendlyFire" ) );
 
-	// forty - #303 - 
+	// forty - #303 -
 	if (etpub < ETPUB_VERSION(0, 8, 0)) {
 		// Rely on server-side checking
 		Q_strncpyz(cgs.skill_soldier, "20 50 90 140", sizeof(cgs.skill_soldier));
@@ -501,7 +503,7 @@ CG_ParseOIDInfo
 
 oidInfo_t* CG_OIDInfoForEntityNum( int num ) {
 	int i;
-	
+
 	for( i = 0; i < MAX_OID_TRIGGERS; i++ ) {
 		if( cgs.oidInfo[ i ].entityNum == num ) {
 			return &cgs.oidInfo[ i ];
@@ -588,7 +590,7 @@ NERVE - SMF
 void CG_ParseWolfinfo( void ) {
 	int old_gs = cgs.gamestate;
 	const char *info;
-	
+
 	info = CG_ConfigString( CS_WOLFINFO );
 
 	cgs.currentRound = atoi( Info_ValueForKey( info, "g_currentRound" ) );
@@ -602,7 +604,7 @@ void CG_ParseWolfinfo( void ) {
 //		if(cg_announcer.integer > 0) trap_S_StartLocalSound(cgs.media.countFight, CHAN_ANNOUNCER);
 		Pri("^1FIGHT!\n");
 		CPri("^1FIGHT!\n");
-			
+
 		// kw: moved this to map start because we'll need the latched gametype
 		// if we want to start recording in the warmup countdown.
 		if( (cg_autoAction.integer & AA_DEMORECORD ||
@@ -618,7 +620,7 @@ void CG_ParseWolfinfo( void ) {
 		trap_Cvar_Set( "gamestate", va( "%i", cgs.gamestate ) );
 	}
 
-	if(old_gs != GS_WARMUP_COUNTDOWN && 
+	if(old_gs != GS_WARMUP_COUNTDOWN &&
 		cgs.gamestate == GS_WARMUP_COUNTDOWN) {
 		CG_ParseWarmup();
 	}
@@ -815,7 +817,7 @@ Called on load to set the initial values from configure strings
 */
 void CG_SetConfigValues( void ) {
 	cgs.levelStartTime = atoi( CG_ConfigString( CS_LEVEL_START_TIME ) );
-	cgs.intermissionStartTime = atoi( CG_ConfigString( CS_INTERMISSION_START_TIME ) );		
+	cgs.intermissionStartTime = atoi( CG_ConfigString( CS_INTERMISSION_START_TIME ) );
 	cg.warmup = atoi( CG_ConfigString( CS_WARMUP ) );
 
 	// rain - set all of this crap in cgs - it won't be set if it doesn't
@@ -873,8 +875,8 @@ void CG_ShaderStateChanged(void) {
 				strncpy(timeOffset, t, o-t);
 				timeOffset[o-t] = 0;
 				o++;
-				trap_R_RemapShader( cgs.gameShaderNames[atoi(originalShader)], 
-									cgs.gameShaderNames[atoi(newShader)], 
+				trap_R_RemapShader( cgs.gameShaderNames[atoi(originalShader)],
+									cgs.gameShaderNames[atoi(newShader)],
 									timeOffset );
 			}
 		} else {
@@ -950,7 +952,7 @@ static void CG_ConfigStringModified( void ) {
 	} else if ( num == CS_LEVEL_START_TIME ) {
 		cgs.levelStartTime = atoi( str );
 	} else if ( num == CS_INTERMISSION_START_TIME ) {
-		cgs.intermissionStartTime = atoi( str );		
+		cgs.intermissionStartTime = atoi( str );
 	} else if ( num == CS_VOTE_TIME ) {
 		cgs.voteTime = atoi( str );
 		cgs.voteModified = qtrue;
@@ -979,7 +981,7 @@ static void CG_ConfigStringModified( void ) {
 			if (!strstr(str, ".wav")) {
 				CG_SoundScriptPrecache( str );
 			} else {
-				cgs.gameSounds[ num-CS_SOUNDS] = trap_S_RegisterSound( str, qfalse );	//FIXME: add a compress flag? 
+				cgs.gameSounds[ num-CS_SOUNDS] = trap_S_RegisterSound( str, qfalse );	//FIXME: add a compress flag?
 			}
 
 		}
@@ -1057,7 +1059,7 @@ void CG_AddToTeamChat( const char *str, int clientnum ) {
 	lastcolor = '7';
 
 	// kw: 2 characters less per line for chatflags
-	if( clientnum != -1 ) 
+	if( clientnum != -1 )
 		chatWidth -= 2;
 
 	ls = NULL;
@@ -1214,7 +1216,7 @@ static void CG_MapRestart( void ) {
 	// DHM - Nerve :: Reset complaint system
 	cgs.complaintClient = -1;
 	cgs.complaintEndTime = 0;
-	
+
 	// init crosshairMine + Dyna
 	cg.crosshairMine = -1;
 	cg.crosshairDyna = -1;
@@ -1249,8 +1251,8 @@ static void CG_MapRestart( void ) {
 	cgs.fadeStartTime = 0;
 	cgs.fadeAlpha = 0;
 	trap_Cvar_Set( "cg_letterbox", "0" );
-	
-	// kw: reset gamestate 
+
+	// kw: reset gamestate
 	cgs.gamestate = GS_INITIALIZE;
 	CG_ParseWolfinfo();
 
@@ -1290,16 +1292,16 @@ static void CG_MapRestart( void ) {
 
 	trap_S_ClearLoopingSounds();
 	trap_S_ClearSounds( qfalse );
-	
+
 	// ydnar
 	trap_R_ClearDecals();
-	
+
 	cg.latchAutoActions = qfalse;
 	cg.latchVictorySound = qfalse;			// NERVE - SMF
 // JPW NERVE -- reset render flags
 	cg_fxflags = 0;
 // jpw
-	
+
 	// we really should clear more parts of cg here and stop sounds
 	cg.v_dmg_time = 0;
 	cg.v_noFireTime = 0;
@@ -1731,33 +1733,33 @@ void CG_VoiceChatLocal( int mode, qboolean voiceOnly, int clientNum, int color, 
 				loc[1] = origin[1];
 
 				if(cg_locations.integer > 0) {
-			
+
 				locStr = CG_GetLocationMsg(origin);
 
 				if (!Q_stricmp( locStr, "Unknown")){
 					locStr = va( "%s", BG_GetLocationString( loc ));
 					locValid = qfalse;
 				}
-		
+
 				if(cg_locations.integer > 1 && locValid)
 						Q_strcat( locStr, 64, va(" (%s)", BG_GetLocationString( loc )) );
 
 				} else {
 					locStr = BG_GetLocationString( loc );
 				}
-		
+
 				if( !locStr || !*locStr )
 					locStr = " ";
 			}
 
 			if( mode == SAY_TEAM ) {
-				Com_sprintf(vchat.message, sizeof(vchat.message), "(%s%c%c)%c%c(%s): %c%c%s", 
+				Com_sprintf(vchat.message, sizeof(vchat.message), "(%s%c%c)%c%c(%s): %c%c%s",
 					ci->name, Q_COLOR_ESCAPE, COLOR_WHITE, Q_COLOR_ESCAPE, COLOR_YELLOW, locStr, Q_COLOR_ESCAPE, color, CG_TranslateString( chat ) );
 			} else if( mode == SAY_BUDDY ) {
 				Com_sprintf(vchat.message, sizeof(vchat.message), "<%s%c%c>%c%c<%s>: %c%c%s",
 					ci->name, Q_COLOR_ESCAPE, COLOR_WHITE, Q_COLOR_ESCAPE, COLOR_YELLOW, locStr, Q_COLOR_ESCAPE, color, CG_TranslateString( chat ) );
 			} else {
-				Com_sprintf(vchat.message, sizeof(vchat.message), "%s%c%c: %c%c%s", 
+				Com_sprintf(vchat.message, sizeof(vchat.message), "%s%c%c: %c%c%s",
 					ci->name, Q_COLOR_ESCAPE, COLOR_YELLOW, Q_COLOR_ESCAPE, color, CG_TranslateString( chat ) );
 			}
 			CG_AddBufferedVoiceChat(&vchat);
@@ -1944,7 +1946,7 @@ void CG_topshotsParse_cmd(qboolean doBest)
 	topshotStats_t *ts = &cgs.topshots;
 
 	ts->cWeapons = 0;
-	
+
 	while(iWeap) {
 		int cnum = atoi(CG_Argv(iArg++));
 		int hits = atoi(CG_Argv(iArg++));
@@ -2341,7 +2343,7 @@ void CG_scores_cmd(void)
 									ct.tm_mday, aMonths[ct.tm_mon], 1900+ct.tm_year);
 
 			trap_FS_Write(str, strlen(str), cgs.dumpStatsFile);
-			
+
 			CG_Printf("\n^3>>> Stats recorded to: ^7%s\n\n", cgs.dumpStatsFileName);
 			trap_FS_FCloseFile(cgs.dumpStatsFile);
 			cgs.dumpStatsFile = 0;
@@ -2388,7 +2390,7 @@ void CG_dumpStats(void)
 
 	// Daisy-chain to scores info
 	//	-- we play a game here for a statsall dump:
-	//		1. we still have more ws entries in the queue to parse 
+	//		1. we still have more ws entries in the queue to parse
 	//		2. on the 1st ws entry, go ahead and send out the scores request
 	//		3. we'll just continue to parse the remaining ws entries and dump them to the log
 	//		   before the scores result would ever hit us.. thus, we still keep proper ordering :)
@@ -2555,7 +2557,7 @@ static void CG_ServerCommand( void ) {
 
 		trap_Argv(2, buffer, 16);
 		allied_number = atoi(buffer);
-		
+
 		CG_ParseMapEntityInfo( axis_number, allied_number );
 
 		return;
@@ -2567,7 +2569,7 @@ static void CG_ServerCommand( void ) {
 
 		if ( cg_teamChatsOnly.integer )
 			return;
-		
+
 		if( trap_Argc() >= 3 )
 			client = atoi( CG_Argv( 2 ) );
 
@@ -2790,7 +2792,7 @@ static void CG_ServerCommand( void ) {
 		}
 		return;
 	}
-	
+
 	if( !Q_stricmp( cmd, "aftc" ) ) {
 		cgs.autoFireteamCreateEndTime = cg.time + RESPONSE_ACCEPT_TIME;
 		cgs.autoFireteamCreateNum = atoi( CG_Argv(1) );
@@ -2899,19 +2901,19 @@ static void CG_ServerCommand( void ) {
 		trap_FS_FCloseFile( f );
 		return;
 	}
-	
+
 	// ydnar: bug 267: server sends this command when it's about to kill the current server, before the client can reconnect
 	if( !Q_stricmp( cmd, "spawnserver" ) )
 	{
 		// print message informing player the server is restarting with a new map
 		CG_PriorityCenterPrint( va( "%s", CG_TranslateString( "^3Server Restarting" ) ), CP_HIGHERHEIGHT, SMALLCHAR_WIDTH, 999999 );
-		
+
 		// hack here
 		cg.serverRespawning = qtrue;
-		
+
 		// fade out over the course of 5 seconds, should be enough (nuking: atvi bug 3793)
 		//%	CG_Fade( 0, 0, 0, 255, cg.time, 5000 );
-		
+
 		return;
 	}
 
@@ -2919,7 +2921,7 @@ static void CG_ServerCommand( void ) {
 		CG_ForceCvar();
 		return;
 	}
-	
+
 	if( CG_Debriefing_ServerCommand( cmd ) ) {
 		return;
 	}
@@ -2929,13 +2931,13 @@ static void CG_ServerCommand( void ) {
 		CG_DynoCounter();
 		return;
 	}
-	
+
 	// quad - ignore etpro reliable commands
 	// ETTV sends some in response to 'score'
 	if(cmd[0] == '*') {
 		return;
 	}
-	
+
 	CG_Printf( "Unknown client game command: %s\n", cmd );
 }
 
