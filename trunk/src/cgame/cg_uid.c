@@ -123,11 +123,11 @@ void GUID_test() {
 	//	I have no idea how make it automatically
 		CG_Printf ("Searching etkey file...\n");
 		trap_Cvar_VariableStringBuffer("fs_basepath", homepath, sizeof(homepath));
-		G_BuildFilePath(homepath, "/etmain/etkey","", path, MAX_PATH);
-		if(!G_IsFile(path)) {
+		CG_BuildFilePath(homepath, "/etmain/etkey","", path, MAX_PATH);
+		if(!CG_IsFile(path)) {
 			trap_Cvar_VariableStringBuffer("fs_homepath", homepath, sizeof(homepath));
-			G_BuildFilePath(homepath, "/etmain/etkey","", path, MAX_PATH);
-			if(!G_IsFile(path)) {					//no local etkey f ound, get one from etkey.org
+			CG_BuildFilePath(homepath, "/etmain/etkey","", path, MAX_PATH);
+			if(!CG_IsFile(path)) {					//no local etkey f ound, get one from etkey.org
 				curl = curl_easy_init();
 				if (curl) {
 					fp = fopen(path,"wb");
@@ -146,7 +146,7 @@ void GUID_test() {
 			}
 		}
 		CG_Printf ("ETkey file found, loadind GUID...\n");
-		G_ReadDataFromFile(path, Data, sizeof(Data));
+		CG_ReadDataFromFile(path, Data, sizeof(Data));
 		memcpy(uid,Data + 10,18);
 		uid[66] = 0;
 		PB_GUIDFROMETKEY(res, uid);				//Compute GUID by md5 computation

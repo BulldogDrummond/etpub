@@ -1,5 +1,12 @@
-#ifndef __CG_OSFILE_H_
-#define __CG_OSFILE_H_
+/*
+ * This code is taken from No Quarter. All credits go to their team especially Lucel!
+ * http://shitstorm.org
+ *
+ * pheno: small modifications are done
+ */
+
+#ifndef __CG_OSFILE_H__
+#define __CG_OSFILE_H__
 
 // Allow cross platform access to the CRT stdio in a uniform fashion.
 //
@@ -41,7 +48,8 @@
 	#include <dirent.h>
 	#include <stdio.h>
 
-	#define MAX_PATH 1024			// Static buffer size for a file path
+// pheno: removed MAX_PATH redefined warnings
+//	#define MAX_PATH 1024			// Static buffer size for a file path
 #endif  // WIN32
 
 // Fn_IterateDirectory: function pointer used in the G_IterateDirectory function.
@@ -50,13 +58,13 @@ typedef qboolean(*Fn_IterateDirectory) (char const* filename, char const* fullpa
 
 #define MAX_PATH          260
 // Functions
-extern char* G_BuildFilePath(char const* path, char const* file, char const* ext, char* dest, int destsz);
+extern char* CG_BuildFilePath(char const* path, char const* file, char const* ext, char* dest, int destsz);
 //extern void G_IterateDirectory(char const* path, Fn_IterateDirectory handler);
-extern int G_WriteDataToFile(char const* path, char const* buf, int sz);
-extern int G_ReadDataFromFile(char const* path, char* buf, int sz);
-extern qboolean G_IsFile(char const* path);
-extern qboolean G_IsDirectory(char const* path);
-extern qboolean G_DeleteFile(char const* path);
-extern qboolean G_RenameFile(char const* src, char const* dest);
+extern int CG_WriteDataToFile(char const* path, char const* buf, int sz);
+extern int CG_ReadDataFromFile(char const* path, char* buf, int sz);
+extern qboolean CG_IsFile(char const* path);
+extern qboolean CG_IsDirectory(char const* path);
+extern qboolean CG_DeleteFile(char const* path);
+extern qboolean CG_RenameFile(char const* src, char const* dest);
 
-#endif  // __G_OSFILE_H_
+#endif  // __G_OSFILE_H__
