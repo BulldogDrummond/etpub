@@ -9,6 +9,15 @@
       <UniqueIdentifier>{41c9bfd3-de5c-41b4-a585-5654e4a36588}</UniqueIdentifier>
       <Extensions>h</Extensions>
     </Filter>
+    <Filter Include="MD5">
+      <UniqueIdentifier>{0cf85db3-e950-4559-a533-d2ed5393c64b}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="MD5\Header Files">
+      <UniqueIdentifier>{18927393-13fc-4798-ab32-83915b8cfd30}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="MD5\Source Files">
+      <UniqueIdentifier>{7b3ebbc5-d3e7-4976-ab3f-9ca17de6bf77}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="..\game\bg_animation.c">
@@ -179,6 +188,15 @@
     <ClCompile Include="..\ui\ui_shared.c">
       <Filter>Source Files</Filter>
     </ClCompile>
+    <ClCompile Include="cg_osfile.c">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="cg_uid.c">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="..\md5\md5.c">
+      <Filter>MD5\Source Files</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="..\game\bg_classes.h">
@@ -215,6 +233,12 @@
       <Filter>Header Files</Filter>
     </ClInclude>
     <ClInclude Include="..\ui\ui_shared.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="..\md5\md5.h">
+      <Filter>MD5\Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="cg_osfile.h">
       <Filter>Header Files</Filter>
     </ClInclude>
   </ItemGroup>

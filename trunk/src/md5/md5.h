@@ -1,16 +1,20 @@
-//
-// PunkBuster Implementation of MD5 by RSA Data Security, Inc.
-//
-
-//
-// md5.h
-//
-// style modified by Tony Ray, January 2001
-// added support for randomizing initialization constants in MD5Init()
+// pheno: small modificctions are done
 
 /*
  **********************************************************************
- ** md5.h -- Header file for implementation of MD5                   **
+ ** MD5.h                                                            **
+ **                                                                  **
+ ** - Style modified by Tony Ray, January 2001                       **
+ **   Added support for randomizing initialization constants         **
+ ** - Style modified by Dominik Reichl, September 2002               **
+ **   Optimized code                                                 **
+ **                                                                  **
+ **********************************************************************
+ */
+
+/*
+ **********************************************************************
+ ** MD5.h -- Header file for implementation of MD5                   **
  ** RSA Data Security, Inc. MD5 Message Digest Algorithm             **
  ** Created: 2/17/90 RLR                                             **
  ** Revised: 12/27/90 SRD,AJ,BSK,JT Reference C version              **
@@ -47,18 +51,26 @@
  **********************************************************************
  */
 
-/* typedef a 32 bit type */
+#ifndef ___MD5_H___
+#define ___MD5_H___
+
+/* Typedef a 32 bit type */
+#ifndef UINT4
 typedef unsigned long int UINT4;
+#endif
 
 /* Data structure for MD5 (Message Digest) computation */
 typedef struct {
-  UINT4 i[2];                   /* number of _bits_ handled mod 2^64 */
-  UINT4 buf[4];                                    /* scratch buffer */
-  unsigned char in[64];                              /* input buffer */
-  unsigned char digest[16];     /* actual digest after MD5Final call */
+	UINT4 i[2];                   /* Number of _bits_ handled mod 2^64 */
+	UINT4 buf[4];                                    /* Scratch buffer */
+	unsigned char in[64];                              /* Input buffer */
+	unsigned char digest[16];     /* Actual digest after MD5Final call */
 } MD5_CTX;
 
-void MD5Init (MD5_CTX *mdContext, unsigned long pseudoRandomNumber ) ;
-void MD5Update (MD5_CTX *mdContext, unsigned char *inBuf, unsigned int inLen) ;
-void MD5Final (MD5_CTX *mdContext) ;
+void MD5_Transform (UINT4 *buf, UINT4 *in);
 
+void MD5Init(MD5_CTX *mdContext, unsigned long pseudoRandomNumber);
+void MD5Update(MD5_CTX *mdContext, const unsigned char *inBuf, unsigned int inLen);
+void MD5Final(MD5_CTX *mdContext);
+
+#endif /* ___MD5_H___ included */
