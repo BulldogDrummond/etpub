@@ -45,7 +45,6 @@ g_referee.c
 g_script.c
 g_script_actions.c
 g_session.c
-g_sha1.c
 g_shoutcaster.c
 g_spawn.c
 g_stats.c
@@ -73,8 +72,13 @@ g_player_rating.c
 g_settings.c
 et-antiwarp.c
 geoip.c
-../sha-1/sha1.c
 ../../../../../Omnibot/Common/BotLoadLibrary.cpp
+"""
+
+lua_string = """
+g_lua.c
+g_sha1.c
+../sha-1/sha1.c
 """
 
 local_env = g_env.Copy()
@@ -92,16 +96,17 @@ local_env.Append( CPPPATH = ['../../../../Omnibot/Common', '../../../../Omnibot/
 # Omnibot
 local_env.Append( CXXFLAGS = ['-fpermissive'] )
 
-# build with Lua API support
+# optionally build with Lua API support
 if( WITH_LUA_SUPPORT == '1' ):
 	local_env.Append( CPPDEFINES = ['LUA_SUPPORT'] )
-	local_env.Append( CPPPATH = ['../../../lua'] )
-	if( win32_build == 1 ):
-		local_env.Append( LINKFLAGS = ['-Llua/libs/win32'] )
-	else:
-		local_env.Append( LINKFLAGS = ['-Llua/libs/unix', '-Wl,-rpath=./'] )
+	local_env.Append( CPPPATH = ['../../../lua-5.1.4/include'] )
+	
+	if( g_os == 'Linux' ):
+		local_env.Append( LINKFLAGS = ['-Wl,-rpath=./'] )
+	
+	local_env.Append( LIBPATH = ['%s/lua-5.1.4/libs/%s' % ( GetLaunchDir(), g_os )] )
 	local_env.Append( LIBS = ['lua5.1'] )
-	qagame_string += """g_lua.c"""
+	qagame_string += lua_string
 
 # Jaybird - these lines are used to statically link c++'s dependencies
 # redeye - but only if we are not using gcc4

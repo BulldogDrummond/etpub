@@ -13,14 +13,20 @@
       <UniqueIdentifier>{76d94791-bf94-480a-ab38-0068f18524ba}</UniqueIdentifier>
       <Extensions>ico;cur;bmp;dlg;rc2;rct;bin;cnt;rtf;gif;jpg;jpeg;jpe</Extensions>
     </Filter>
-    <Filter Include="Lua API">
+    <Filter Include="Lua 5.1.4">
       <UniqueIdentifier>{c91e5e0c-f089-4fac-990f-e4350611399d}</UniqueIdentifier>
     </Filter>
-    <Filter Include="Lua API\Header Files">
+    <Filter Include="Lua 5.1.4\Header Files">
       <UniqueIdentifier>{8b1b3e5a-df61-4a7f-a05a-45bf98dce090}</UniqueIdentifier>
     </Filter>
-    <Filter Include="Lua API\Source Files">
-      <UniqueIdentifier>{ed0fa8d9-32a3-4063-a6fe-17b39624b7a9}</UniqueIdentifier>
+    <Filter Include="SHA-1">
+      <UniqueIdentifier>{ba9e24a8-801c-4a4b-90bd-14e806c7512c}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="SHA-1\Header Files">
+      <UniqueIdentifier>{1fb60046-5312-414f-b713-dc0f3b27a4b9}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="SHA-1\Source Files">
+      <UniqueIdentifier>{cd5b820d-cdde-4263-9359-76bae68875e6}</UniqueIdentifier>
     </Filter>
   </ItemGroup>
   <ItemGroup>
@@ -216,11 +222,11 @@
     <ClCompile Include="q_shared.c">
       <Filter>Source Files</Filter>
     </ClCompile>
-    <ClCompile Include="..\sha-1\sha1.c">
+    <ClCompile Include="g_lua.c">
       <Filter>Source Files</Filter>
     </ClCompile>
-    <ClCompile Include="g_lua.c">
-      <Filter>Lua API\Source Files</Filter>
+    <ClCompile Include="..\sha-1\sha1.c">
+      <Filter>SHA-1\Source Files</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
@@ -287,35 +293,33 @@
     <ClInclude Include="q_shared.h">
       <Filter>Header Files</Filter>
     </ClInclude>
-    <ClInclude Include="..\sha-1\sha1.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
     <ClInclude Include="surfaceflags.h">
       <Filter>Header Files</Filter>
     </ClInclude>
     <ClInclude Include="..\botai\syn.h">
       <Filter>Header Files</Filter>
     </ClInclude>
-  </ItemGroup>
-  <ItemGroup>
-    <CustomBuildStep Include="g_lua.h">
-      <Filter>Lua API\Header Files</Filter>
-    </CustomBuildStep>
-    <CustomBuildStep Include="..\lua\lauxlib.h">
-      <Filter>Lua API\Header Files</Filter>
-    </CustomBuildStep>
-    <CustomBuildStep Include="..\lua\lua.h">
-      <Filter>Lua API\Header Files</Filter>
-    </CustomBuildStep>
-    <CustomBuildStep Include="..\lua\lua.hpp">
-      <Filter>Lua API\Header Files</Filter>
-    </CustomBuildStep>
-    <CustomBuildStep Include="..\lua\luaconf.h">
-      <Filter>Lua API\Header Files</Filter>
-    </CustomBuildStep>
-    <CustomBuildStep Include="..\lua\lualib.h">
-      <Filter>Lua API\Header Files</Filter>
-    </CustomBuildStep>
+    <ClInclude Include="..\lua-5.1.4\include\lauxlib.h">
+      <Filter>Lua 5.1.4\Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="..\lua-5.1.4\include\lua.h">
+      <Filter>Lua 5.1.4\Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="..\lua-5.1.4\include\lua.hpp">
+      <Filter>Lua 5.1.4\Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="..\lua-5.1.4\include\luaconf.h">
+      <Filter>Lua 5.1.4\Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="..\lua-5.1.4\include\lualib.h">
+      <Filter>Lua 5.1.4\Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="g_lua.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="..\sha-1\sha1.h">
+      <Filter>SHA-1\Header Files</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <None Include="game.def" />
