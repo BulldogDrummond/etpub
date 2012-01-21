@@ -1,4 +1,4 @@
-// pheno: small modificctions are done
+// pheno: small modifications are done
 
 /*
  **********************************************************************
