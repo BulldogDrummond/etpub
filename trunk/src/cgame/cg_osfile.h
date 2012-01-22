@@ -50,7 +50,6 @@
 	
 	#if defined __linux__
 		
-		#include <sys/stat.h>
 		#define MAX_PATH 4096
 		
 	#elif defined __MACOS__
