@@ -1,4 +1,6 @@
 /*
+ * cg_osfile.h
+ *
  * This code is taken from No Quarter. All credits go to their team especially Lucel!
  * http://shitstorm.org
  *
@@ -15,14 +17,13 @@
 //
 // Lucel
 
-//#include "../ui/ui_shared.h"
-
-//#include "../game/q_shared.h"
 #include "cg_local.h"
 #include <fcntl.h>
 #include <sys/types.h>
 #include <sys/stat.h>
-#if defined(WIN32)
+
+#if defined WIN32
+	
 	#define Rectangle LCC_Rectangle
 	#include <windows.h>
 	#undef Rectangle
@@ -39,24 +40,31 @@
 		#define S_IWUSR _S_IWRITE
 	#endif
 	#define S_IFDIR _S_IFDIR
-#elif defined(__linux__)
-       #include <sys/stat.h>
-#endif // WIN32
-
-#ifndef WIN32
+	#define MAX_PATH 260
+	
+#else
+	
 	#include <unistd.h>
 	#include <dirent.h>
 	#include <stdio.h>
-
-// pheno: removed MAX_PATH redefined warnings
-//	#define MAX_PATH 1024			// Static buffer size for a file path
-#endif  // WIN32
+	
+	#if defined __linux__
+		
+		#include <sys/stat.h>
+		#define MAX_PATH 4096
+		
+	#elif defined __MACOS__
+		
+		#define MAX_PATH 1024
+		
+	#endif // __linux__
+	
+#endif // WIN32
 
 // Fn_IterateDirectory: function pointer used in the G_IterateDirectory function.
 // 	- Return qfalse to terminate processing
 typedef qboolean(*Fn_IterateDirectory) (char const* filename, char const* fullpath, qboolean directory);
 
-#define MAX_PATH          260
 // Functions
 extern char* CG_BuildFilePath(char const* path, char const* file, char const* ext, char* dest, int destsz);
 //extern void G_IterateDirectory(char const* path, Fn_IterateDirectory handler);
