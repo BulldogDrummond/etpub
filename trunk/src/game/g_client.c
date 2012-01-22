@@ -2445,19 +2445,6 @@ char *ClientConnect( int clientNum, qboolean firstTime, qboolean isBot ) {
 
 		}
 
-		// if defined, drop clients with client version mismatch
-		if(strcmp(g_clientVersion.string, "")) {
-			char etpubc[10];
-			Q_strncpyz(etpubc, Info_ValueForKey(userinfo, "cg_etpubc"), sizeof(etpubc));
-			// don't drop clients without cg_etpubc here, since the correct cgame might not be loaded yet
-			if(strcmp(etpubc, "")) {
-				if(strcmp(g_clientVersion.string, etpubc)) {
-					G_LogPrintf("Client version mismatch: found: %s, required: %s\n", etpubc, g_clientVersion.string);
-					return va("Client version mismatch:\nFound: %s\nRequired: %s", etpubc, g_clientVersion.string);
-				}
-			}
-		}
-
 		// Dens: Only check when it's greater than 0 to prevent
 		// level 0 users from being kicked
 		if(g_minConnectLevel.integer > 0){
