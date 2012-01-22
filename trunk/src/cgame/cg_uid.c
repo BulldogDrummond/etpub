@@ -57,22 +57,6 @@ qboolean guid_check(char const* guid) {
 	return qtrue;
 }
 
-int hex2byte(unsigned char *dst,unsigned char *data, int len) {
-    int     i,
-            t;
-
-    if(len < 0) len = strlen(data);
-    len >>= 1;
-
-    for(i = 0; i < len; i++) {
-        sscanf(data + (i << 1), "%02x", &t);
-        dst[i] = t;
-    }
-    return(i);
-}
-
-
-
 int byte2hex(unsigned char *dst, unsigned char *data, int len) {
     static const char   hex[] = "0123456789ABCDEF";
     int     i;
