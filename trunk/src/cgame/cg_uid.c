@@ -16,16 +16,14 @@ In all case, the computed guid is pb one like (computed in the same way)
 
 */
 
+#include "cg_local.h"
+#include "cg_osfile.h"
 
-
+#include "md5.h"
 
 #define CURL_STATICLIB
-#include "cg_local.h"
-#include "md5.h"
-#include "cg_osfile.h"
-#include "../curl-7.12.2/include/curl/curl.h"
-#include "../curl-7.12.2/include/curl/easy.h"
-
+#include "curl/curl.h"
+#include "curl/easy.h"
 
 /*
 guid_check
