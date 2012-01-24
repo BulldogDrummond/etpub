@@ -21,7 +21,6 @@ In all case, the computed guid is pb one like (computed in the same way)
 
 #include "md5.h"
 
-#define CURL_STATICLIB
 #include "curl/curl.h"
 #include "curl/easy.h"
 

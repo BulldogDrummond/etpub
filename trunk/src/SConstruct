@@ -292,7 +292,11 @@ if ( int(JOBS) > 1 ):
 
 # mark the globals
 
-GLOBALS = 'g_env OS g_os win32_build BUILD gcc3 gcc_major_ver cpu GAMERANGER WITH_LUA_SUPPORT'
+# curl
+local_curl = 0	# config selection
+curl_lib = []
+
+GLOBALS = 'g_env OS g_os win32_build BUILD curl_lib local_curl gcc3 gcc_major_ver cpu GAMERANGER WITH_LUA_SUPPORT'
 
 # end general configuration ----------------------
 
@@ -314,6 +318,16 @@ if g_os == 'win32' and os.name != 'nt':
 # targets ----------------------------------------
 
 toplevel_targets = []
+
+# build curl if needed
+if ( TARGET_CGAME == '1' and OS != 'Darwin' ):
+	# 1: debug, 2: release
+	if ( BUILD == 'release' ):
+		local_curl = 2
+	else:
+		local_curl = 1
+	Export( 'GLOBALS ' + GLOBALS )
+	curl_lib = SConscript( 'SConscript.curl' )
 
 if ( TARGET_GAME == '1' ):
 	Export( 'GLOBALS ' + GLOBALS )

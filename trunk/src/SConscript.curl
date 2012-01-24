@@ -20,6 +20,7 @@ class idBuildCurl( scons_utils.idSetupBase ):
 			else:
 				self.SimpleCommand( 'cd ' + self.curl_dir + ' ; mv ./lib/libcurl.a ./lib/.libs/libcurl-release.a' )
 		else:
+			self.TrySimpleCommand( 'cd ' + self.curl_dir + ' ; chmod u+x configure' )
 			self.TrySimpleCommand( 'cd ' + self.curl_dir + ' ; make distclean' )
 			cmd = 'cd ' + self.curl_dir + ' ; CC=\'' + env['CC'] + '\' ./configure --enable-shared=no --enable-static=yes --enable-http --enable-ftp --disable-gopher --enable-file --disable-ldap --disable-dict --disable-telnet --disable-manual --enable-libgcc --disable-ipv6 --disable-ares --without-ssl --without-zlib --without-libidn '
 			if ( self.debug ):
