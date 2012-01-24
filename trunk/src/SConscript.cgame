@@ -80,7 +80,7 @@ source_list = cgame_list
 
 local_env['LINK'] = local_env['CC']
 
-local_env.Append( CPPPATH = ['./curl-7.12.2/include', './md5'] )
+local_env.Append( CPPPATH = ['./curl-7.23.1/include', './md5'] )
 local_env.Append( LIBPATH = ['./curl-7.23.1/lib/.libs'] )
 local_env.Append( LIBS = ['curl-%s' % BUILD] )
 
