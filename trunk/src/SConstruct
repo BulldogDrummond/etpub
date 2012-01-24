@@ -320,9 +320,9 @@ if g_os == 'win32' and os.name != 'nt':
 toplevel_targets = []
 
 # build curl if needed
-if ( TARGET_CGAME == '1' and OS != 'Darwin' ):
+if( TARGET_CGAME == '1' and OS != 'Darwin' ):
 	# 1: debug, 2: release
-	if ( BUILD == 'release' ):
+	if( BUILD == 'release' ):
 		local_curl = 2
 	else:
 		local_curl = 1

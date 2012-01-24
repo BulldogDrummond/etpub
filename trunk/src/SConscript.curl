@@ -2,6 +2,8 @@
 # ET build script
 # TTimo <ttimo@idsoftware.com>
 # http://scons.sourceforge.net
+#
+# pheno: made some modifications for latest curl
 
 import scons_utils
 
@@ -10,34 +12,39 @@ Import( GLOBALS )
 
 class idBuildCurl( scons_utils.idSetupBase ):
 
-	def Compile( self, target = None, source = None, env = None ):	
-		if ( g_os == 'win32' ):
-			self.TrySimpleCommand( 'cd ' + self.curl_dir + '/lib/ ; make -f Makefile.m32 clean' )
-			cmd = 'cd ' + self.curl_dir + '/lib/ ; CC=\'' + env['CC'] + '\' make -f Makefile.m32 libcurl.a'
-			self.SimpleCommand( cmd )
-			if ( self.debug ):
-				self.SimpleCommand( 'cd ' + self.curl_dir + ' ; mv ./lib/libcurl.a ./lib/.libs/libcurl-debug.a' )
-			else:
-				self.SimpleCommand( 'cd ' + self.curl_dir + ' ; mv ./lib/libcurl.a ./lib/.libs/libcurl-release.a' )
+	def Compile( self, target = None, source = None, env = None ):
+		self.TrySimpleCommand( 'cd ' + self.curl_dir + ' ; chmod u+x configure' )
+		self.TrySimpleCommand( 'cd ' + self.curl_dir + ' ; make distclean' )
+		
+		cmd = 'cd ' + self.curl_dir + ' ; CC=\'' + g_env['CC'] + '\' ; ./configure'
+		
+		if( g_os == 'win32' ):
+			cmd += ' --host=i586-mingw32msvc'
+		
+		cmd += ' --enable-shared=no --enable-static=yes --enable-libgcc --enable-http --disable-manual --disable-ipv6 --disable-ares --without-ssl --without-zlib --without-libidn '
+		
+		# disable unneeded protocols
+		cmd += ' --disable-dict --disable-file --disable-ftp --disable-gopher --disable-imap --disable-ldap --disable-pop3 --disable-rtsp --disable-smtp --disable-telnet --disable-tftp '
+		
+		if ( self.debug ):
+			cmd += '--enable-debug'
 		else:
-			self.TrySimpleCommand( 'cd ' + self.curl_dir + ' ; chmod u+x configure' )
-			self.TrySimpleCommand( 'cd ' + self.curl_dir + ' ; make distclean' )
-			cmd = 'cd ' + self.curl_dir + ' ; CC=\'' + env['CC'] + '\' ./configure --enable-shared=no --enable-static=yes --enable-http --enable-ftp --disable-gopher --enable-file --disable-ldap --disable-dict --disable-telnet --disable-manual --enable-libgcc --disable-ipv6 --disable-ares --without-ssl --without-zlib --without-libidn '
-			if ( self.debug ):
-				cmd += '--enable-debug'
-			else:
-				cmd += '--disable-debug'
-			self.SimpleCommand( cmd )
-			self.SimpleCommand( 'cd ' + self.curl_dir + ' ; make' )
-			if ( self.debug ):
-				self.SimpleCommand( 'cd ' + self.curl_dir + ' ; mv ./lib/.libs/libcurl.a ./lib/.libs/libcurl-debug.a' )
-			else:
-				self.SimpleCommand( 'cd ' + self.curl_dir + ' ; mv ./lib/.libs/libcurl.a ./lib/.libs/libcurl-release.a' )
+			cmd += '--disable-debug'
+		
+		self.SimpleCommand( cmd )
+		self.SimpleCommand( 'cd ' + self.curl_dir + ' ; make' )
+		
+		if ( self.debug ):
+			self.SimpleCommand( 'cd ' + self.curl_dir + ' ; mv ./lib/.libs/libcurl.a ./lib/.libs/libcurl-debug.a' )
+		else:
+			self.SimpleCommand( 'cd ' + self.curl_dir + ' ; mv ./lib/.libs/libcurl.a ./lib/.libs/libcurl-release.a' )
+		
 		return 0
 
 build = idBuildCurl()
 build.curl_dir = 'curl-7.23.1'
-if ( local_curl == 1 ):
+
+if( local_curl == 1 ):
 	build.debug = 1
 	target_name = '#' + build.curl_dir + '/lib/.libs/libcurl-debug.a'
 else:
