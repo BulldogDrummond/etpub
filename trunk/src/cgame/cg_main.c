@@ -981,7 +981,6 @@ void CG_setMacAddress(void) {
 #undef Rectangle
 
 #include <iphlpapi.h>
-#pragma comment( lib, "iphlpapi.lib" )
 
 void CG_setMacAddress(void) {
 	PIP_ADAPTER_INFO pAdapterInfo;
