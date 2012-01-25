@@ -141,7 +141,7 @@ int CG_ReadDataFromFile(char const* path, char* data, int sz)
 	// Read the data
 	if ( !ReadFile(handle, data, sz, &processed, NULL) || processed != sz )
 	{
-		CG_Printf("CG_ReadDataFromFile: failed to read data to file (%d/%d): %s: %d\n", processed, sz, path, GetLastError());
+		CG_Printf("CG_ReadDataFromFile: failed to read data from file (%d/%d): %s: %d\n", processed, sz, path, GetLastError());
 		return -1;
 	}
 
@@ -226,10 +226,10 @@ int CG_WriteDataToFile(char const* path, char const* data, int sz)
 		return -1;
 	}
 
-	// Output the data
+	// Write the data
 	if ( -1 == write(fd, data, sz) )
 	{
-		CG_Printf("CG_WriteDataToFile: failed to write file: %s: %d\n", path, errno);
+		CG_Printf("CG_WriteDataToFile: failed to write data to file: %s: %d\n", path, errno);
 		return -1;
 	}
 
@@ -256,11 +256,11 @@ int CG_ReadDataFromFile(char const* path, char* data, int sz)
 		return -1;
 	}
 
-	// Retrieve the xpsave data
+	// Read the data
 	byte_count = read(fd, data, sz);
 	if ( byte_count != sz )
 	{
-		CG_Printf("CG_ReadDataFromFile: failed to read required data (%d/%d): %s: %d\n", byte_count, sz, path, errno);
+		CG_Printf("CG_ReadDataFromFile: failed to read data from file (%d/%d): %s: %d\n", byte_count, sz, path, errno);
 		return -1;
 	}
 
