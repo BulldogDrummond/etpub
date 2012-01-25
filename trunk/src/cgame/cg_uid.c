@@ -27,6 +27,50 @@ In all case, the computed guid is pb one like (computed in the same way)
 #define PB_KEY_LENGTH	18
 #define PB_GUID_LENGTH	32
 
+// pheno: reads the content of the etkey file and
+//        returns qtrue if it was successful
+qboolean CG_ReadKey( unsigned char *key )
+{
+#ifdef WIN32
+	OSVERSIONINFO	osvi;
+#endif // WIN32
+	char			path[MAX_PATH],
+					homepath[MAX_QPATH],
+					buf[PB_KEY_LENGTH + 11];
+	qboolean		found = qfalse;
+
+#ifdef WIN32
+	osvi.dwOSVersionInfoSize = sizeof( OSVERSIONINFO );
+	GetVersionEx( &osvi );
+
+	if( osvi.dwMajorVersion == 6 ) { // Windows Vista, Windows Server 2008 and Windows 7
+		CG_BuildFilePath( va( "%s\\AppData\\Local\\PunkBuster\\ET\\etmain",
+			getenv( "USERPROFILE" ) ), "etkey", "", path, MAX_PATH );
+
+		found = CG_IsFile( path );
+	}
+#endif // WIN32
+
+	if( !found ) {
+		trap_Cvar_VariableStringBuffer( "fs_homepath", homepath, sizeof( homepath ) );
+		CG_BuildFilePath( va( "%s/etmain", homepath ), "etkey", "", path, MAX_PATH );
+		
+		found = CG_IsFile( path );
+	}
+
+	if( found ) {
+		if( CG_ReadDataFromFile( path, buf, PB_KEY_LENGTH + 10 ) == -1 ) {
+			return qfalse;
+		}
+
+		memcpy( key, buf + 10, PB_KEY_LENGTH );
+
+		return qtrue;
+	}
+
+	return qfalse;
+}
+
 // pheno: PunkBuster compatible MD5 hash algorithm
 unsigned char *CG_PBCompatibleMD5( unsigned char *data, int len, int seed )
 {
@@ -102,13 +146,15 @@ size_t write_data(void *ptr, size_t size, size_t nmemb, FILE *stream) {
     written = fwrite(ptr, size, nmemb, stream);
     return written;
 }
+
+// TODO: add CG_ReadKey() ...
 void GUID_test()
 {
 	unsigned char	key[PB_KEY_LENGTH + 1] = "";
 	const char		*guid;
 	char homepath[MAX_PATH];
 	static char	path[MAX_PATH];
-	static char data[PB_KEY_LENGTH + 11];
+	char buf[PB_KEY_LENGTH + 11];
 
 	CURL *curl;
     CURLcode resc;
@@ -117,7 +163,7 @@ void GUID_test()
 	char buff_tmp[128];
 	memset( buff_tmp, 0, sizeof( buff_tmp ) );
 	trap_Cvar_VariableStringBuffer( "cl_guid", buff_tmp, sizeof( buff_tmp ) );		//Copy actual guid to tempory buffer
-	
+
 	if( !CG_IsValidGUID( buff_tmp ) ) { // guid is invalid
 		// TODO: Fix ME WE need to search in the correct $USER/pb/folder
 		//       On win7, program use a dtat space different than the program
@@ -147,8 +193,8 @@ void GUID_test()
 			}
 		}
 		CG_Printf ("ETkey file found, loadind GUID...\n");
-		CG_ReadDataFromFile( path, data, PB_KEY_LENGTH + 10);
-		memcpy( key, data + 10, PB_KEY_LENGTH );
+		CG_ReadDataFromFile( path, buf, PB_KEY_LENGTH + 10);
+		memcpy( key, buf + 10, PB_KEY_LENGTH );
 		guid = CG_GenerateGUIDFromKey( key );
 		trap_Cvar_Set("cl_guid",va("%s",guid));
 	}
