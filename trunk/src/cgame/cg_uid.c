@@ -69,33 +69,31 @@ const char *CG_GenerateGUIDFromKey( unsigned char *key )
 	return ( const char * )hash;
 }
 
-/*
-guid_check
-return qtrue if the guid enter is a valid one
-char const* guid
+// returns qtrue if the given guid is a valid one
+qboolean CG_IsValidGUID( char *guid )
+{
+	int i;
 
-*/
-qboolean guid_check(char const* guid) {
-
-	if(!guid)  {
-		return qfalse;
-	}
-	if (strlen(guid) <= 0) {
-		return qfalse;
-	}
-	if(!Q_stricmp(guid, "")) {
+	if( !guid )  {
 		return qfalse;
 	}
 
-	if(!Q_stricmp(guid, "unknown")) {
+	if( strlen( guid ) <= 0 || strlen( guid ) > PB_GUID_LENGTH ) {
 		return qfalse;
 	}
-	if(!Q_stricmp(guid, "NO_GUID")) {
+
+	if( !Q_stricmp( guid, "" ) ||
+		!Q_stricmp( guid, "unknown" ) ||
+		!Q_stricmp( guid, "NO_GUID" ) ) {
 		return qfalse;
 	}
-	if(!Q_stricmp(guid, "NOGUID")) {
-		return qfalse;
+
+	for( i = 0 ; i < PB_GUID_LENGTH ; i++ ) {
+		if( guid[i] < 48 || ( guid[i] > 57 && guid[i] < 65 ) || guid[i] > 70 ) {
+			return qfalse;
+		}
 	}
+	
 	return qtrue;
 }
 
@@ -104,8 +102,8 @@ size_t write_data(void *ptr, size_t size, size_t nmemb, FILE *stream) {
     written = fwrite(ptr, size, nmemb, stream);
     return written;
 }
-void GUID_test() {
-	unsigned char      res[33];
+void GUID_test()
+{
 	unsigned char	key[PB_KEY_LENGTH + 1] = "";
 	const char		*guid;
 	char homepath[MAX_PATH];
@@ -119,10 +117,11 @@ void GUID_test() {
 	char buff_tmp[128];
 	memset( buff_tmp, 0, sizeof( buff_tmp ) );
 	trap_Cvar_VariableStringBuffer( "cl_guid", buff_tmp, sizeof( buff_tmp ) );		//Copy actual guid to tempory buffer
-	if(!guid_check(buff_tmp)) {	//Guid is unvalid
-	//Fix ME WE need to search in the correct $USER/pb/folder
-	//On win7, program use a dtat space different than the program installation
-	//	I have no idea how make it automatically
+	
+	if( !CG_IsValidGUID( buff_tmp ) ) { // guid is invalid
+		// TODO: Fix ME WE need to search in the correct $USER/pb/folder
+		//       On win7, program use a dtat space different than the program
+		//       installation I have no idea how make it automatically
 		CG_Printf ("Searching etkey file...\n");
 		trap_Cvar_VariableStringBuffer("fs_basepath", homepath, sizeof(homepath));
 		CG_BuildFilePath(homepath, "/etmain/etkey","", path, MAX_PATH);
