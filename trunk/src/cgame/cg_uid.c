@@ -24,6 +24,51 @@ In all case, the computed guid is pb one like (computed in the same way)
 #include "curl/curl.h"
 #include "curl/easy.h"
 
+#define PB_KEY_LENGTH	18
+#define PB_GUID_LENGTH	32
+
+// pheno: PunkBuster compatible MD5 hash algorithm
+unsigned char *CG_PBCompatibleMD5( unsigned char *data, int len, int seed )
+{
+	MD5_CTX						ctx;
+	unsigned char				*p;
+	int							i;
+	static unsigned char		hash[PB_GUID_LENGTH + 1];
+	static const unsigned char	hex[] = "0123456789abcdef";
+
+	MD5Init( &ctx, seed );
+	MD5Update( &ctx, data, len );
+	MD5Final( &ctx );
+
+	p = hash;
+
+	for( i = 0; i < 16; i++ ) {
+		*p++ = hex[ctx.digest[i] >> 4];
+		*p++ = hex[ctx.digest[i] & 15];
+	}
+	
+	*p = 0;
+	
+	return hash;
+}
+
+// pheno: returns exact the same GUID like PunkBuster does
+const char *CG_GenerateGUIDFromKey( unsigned char *key )
+{
+	unsigned char	*hash;
+	int				i;
+
+	hash = CG_PBCompatibleMD5( key, PB_KEY_LENGTH, 0x00b684a3 );
+	hash = CG_PBCompatibleMD5( hash, PB_GUID_LENGTH, 0x00051a56 );
+
+	// hash is lowercased after md5sums, we must to change case to upper
+	for( i = 0; hash[i]; i++ ) {
+		hash[i] = toupper( hash[i] );
+	}
+
+	return ( const char * )hash;
+}
+
 /*
 guid_check
 return qtrue if the guid enter is a valid one
@@ -54,30 +99,6 @@ qboolean guid_check(char const* guid) {
 	return qtrue;
 }
 
-int byte2hex(unsigned char *dst, unsigned char *data, int len) {
-    static const char   hex[] = "0123456789ABCDEF";
-    int     i;
-
-    for(i = 0; i < len; i++) {
-        dst[i << 1]       = hex[data[i] >> 4];
-        dst[(i << 1) + 1] = hex[data[i] & 15];
-    }
-    dst[i << 1] = 0;
-    return(i);
-}
-
-void PB_GUIDFROMETKEY(unsigned char *res, unsigned char *key) {
-	MD5_CTX     ctx;
-	 MD5Init(&ctx, 0x00b684a3);
-    MD5Update(&ctx, key, 18);
-    MD5Final(&ctx);
-    byte2hex(res, ctx.digest, 16);  // the md5 is performed on the hex string
-    MD5Init(&ctx, 0x00051a56);
-    MD5Update(&ctx, res, 32);
-    MD5Final(&ctx);
-    memcpy(res, ctx.digest, 16);
-}
-
 size_t write_data(void *ptr, size_t size, size_t nmemb, FILE *stream) {
     size_t written;
     written = fwrite(ptr, size, nmemb, stream);
@@ -85,11 +106,11 @@ size_t write_data(void *ptr, size_t size, size_t nmemb, FILE *stream) {
 }
 void GUID_test() {
 	unsigned char      res[33];
-	unsigned char uid[19] = "";
-	unsigned char guid[33]= "";
+	unsigned char	key[PB_KEY_LENGTH + 1] = "";
+	const char		*guid;
 	char homepath[MAX_PATH];
 	static char	path[MAX_PATH];
-	static char Data[67];
+	static char data[PB_KEY_LENGTH + 11];
 
 	CURL *curl;
     CURLcode resc;
@@ -127,11 +148,9 @@ void GUID_test() {
 			}
 		}
 		CG_Printf ("ETkey file found, loadind GUID...\n");
-		CG_ReadDataFromFile(path, Data, sizeof(Data));
-		memcpy(uid,Data + 10,18);
-		uid[66] = 0;
-		PB_GUIDFROMETKEY(res, uid);				//Compute GUID by md5 computation
-		byte2hex(guid,res,16);
+		CG_ReadDataFromFile( path, data, PB_KEY_LENGTH + 10);
+		memcpy( key, data + 10, PB_KEY_LENGTH );
+		guid = CG_GenerateGUIDFromKey( key );
 		trap_Cvar_Set("cl_guid",va("%s",guid));
 	}
 	trap_Cvar_VariableStringBuffer( "cl_guid", buff_tmp, sizeof( buff_tmp ) );
