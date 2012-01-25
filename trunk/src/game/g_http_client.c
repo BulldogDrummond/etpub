@@ -16,7 +16,6 @@
 #include <io.h>
 #define snprintf _snprintf
 #define close _close
-#pragma comment(lib, "ws2_32.lib")
 #else
 #include <sys/socket.h>
 #include <netdb.h>
