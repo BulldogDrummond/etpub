@@ -27,50 +27,6 @@ In all case, the computed guid is pb one like (computed in the same way)
 #define PB_KEY_LENGTH	18
 #define PB_GUID_LENGTH	32
 
-// pheno: reads the content of the etkey file and
-//        returns qtrue if it was successful
-qboolean CG_ReadKey( unsigned char *key )
-{
-#ifdef WIN32
-	OSVERSIONINFO	osvi;
-#endif // WIN32
-	char			path[MAX_PATH],
-					homepath[MAX_QPATH],
-					buf[PB_KEY_LENGTH + 11];
-	qboolean		found = qfalse;
-
-#ifdef WIN32
-	osvi.dwOSVersionInfoSize = sizeof( OSVERSIONINFO );
-	GetVersionEx( &osvi );
-
-	if( osvi.dwMajorVersion == 6 ) { // Windows Vista, Windows Server 2008 and Windows 7
-		CG_BuildFilePath( va( "%s\\AppData\\Local\\PunkBuster\\ET\\etmain",
-			getenv( "USERPROFILE" ) ), "etkey", "", path, MAX_PATH );
-
-		found = CG_IsFile( path );
-	}
-#endif // WIN32
-
-	if( !found ) {
-		trap_Cvar_VariableStringBuffer( "fs_homepath", homepath, sizeof( homepath ) );
-		CG_BuildFilePath( va( "%s/etmain", homepath ), "etkey", "", path, MAX_PATH );
-		
-		found = CG_IsFile( path );
-	}
-
-	if( found ) {
-		if( CG_ReadDataFromFile( path, buf, PB_KEY_LENGTH + 10 ) == -1 ) {
-			return qfalse;
-		}
-
-		memcpy( key, buf + 10, PB_KEY_LENGTH );
-
-		return qtrue;
-	}
-
-	return qfalse;
-}
-
 // pheno: PunkBuster compatible MD5 hash algorithm
 unsigned char *CG_PBCompatibleMD5( unsigned char *data, int len, int seed )
 {
@@ -90,9 +46,9 @@ unsigned char *CG_PBCompatibleMD5( unsigned char *data, int len, int seed )
 		*p++ = hex[ctx.digest[i] >> 4];
 		*p++ = hex[ctx.digest[i] & 15];
 	}
-	
+
 	*p = 0;
-	
+
 	return hash;
 }
 
@@ -137,7 +93,7 @@ qboolean CG_IsValidGUID( char *guid )
 			return qfalse;
 		}
 	}
-	
+
 	return qtrue;
 }
 
@@ -147,60 +103,86 @@ size_t write_data(void *ptr, size_t size, size_t nmemb, FILE *stream) {
     return written;
 }
 
-// TODO: add CG_ReadKey() ...
 void GUID_test()
 {
 	unsigned char	key[PB_KEY_LENGTH + 1] = "";
 	const char		*guid;
-	char homepath[MAX_PATH];
-	static char	path[MAX_PATH];
-	char buf[PB_KEY_LENGTH + 11];
+	char homepath[MAX_PATH],
+		path[MAX_PATH],
+		buf[PB_KEY_LENGTH + 11];
+#ifdef WIN32
+	OSVERSIONINFO	osvi;
+	char winpath[MAX_PATH];
+#endif // WIN32
 
 	CURL *curl;
-    CURLcode resc;
 	char *url = "www.etkey.org/etkey.php";	//Url to get the etkey file
 	FILE *fp;
 	char buff_tmp[128];
 	memset( buff_tmp, 0, sizeof( buff_tmp ) );
 	trap_Cvar_VariableStringBuffer( "cl_guid", buff_tmp, sizeof( buff_tmp ) );		//Copy actual guid to tempory buffer
 
-	if( !CG_IsValidGUID( buff_tmp ) ) { // guid is invalid
-		// TODO: Fix ME WE need to search in the correct $USER/pb/folder
-		//       On win7, program use a dtat space different than the program
-		//       installation I have no idea how make it automatically
+	if(!CG_IsValidGUID(buff_tmp)) {
 		CG_Printf ("Searching etkey file...\n");
-		trap_Cvar_VariableStringBuffer("fs_basepath", homepath, sizeof(homepath));
+		trap_Cvar_VariableStringBuffer("fs_homepath", homepath, sizeof(homepath));
 		CG_BuildFilePath(homepath, "/etmain/etkey","", path, MAX_PATH);
+
+#ifdef WIN32
 		if(!CG_IsFile(path)) {
-			trap_Cvar_VariableStringBuffer("fs_homepath", homepath, sizeof(homepath));
-			CG_BuildFilePath(homepath, "/etmain/etkey","", path, MAX_PATH);
-			if(!CG_IsFile(path)) {					//no local etkey f ound, get one from etkey.org
-				curl = curl_easy_init();
-				if (curl) {
-					fp = fopen(path,"wb");
-					CG_Printf ("Downloading etkey file...\n");
-					curl_easy_setopt(curl, CURLOPT_URL, url);
-					curl_easy_setopt(curl, CURLOPT_WRITEFUNCTION, write_data);
-					curl_easy_setopt(curl, CURLOPT_WRITEDATA, fp);
-					resc = curl_easy_perform(curl);
-					curl_easy_cleanup(curl);
-					fclose(fp);
-				} else {
-					CG_Printf ( "You need to have ETKEY file, automatic system fail, plz visit etkey.org to obtain one\n");
-					return;
+			osvi.dwOSVersionInfoSize = sizeof( OSVERSIONINFO );
+			GetVersionEx( &osvi );
+
+			if( osvi.dwMajorVersion == 6 ) { // Windows Vista, Windows Server 2008 and Windows 7
+				CG_BuildFilePath( va( "%s\\AppData\\Local\\PunkBuster\\ET\\etmain",
+					getenv( "USERPROFILE" ) ), "etkey", "", winpath, MAX_PATH );
+				if(CG_IsFile(winpath)) {
+					//if the file exists, use winpath as path, else leave it
+					memcpy(path, winpath, MAX_PATH);
 				}
-				//trap_SendConsoleCommand("reconnect\n");
 			}
 		}
-		CG_Printf ("ETkey file found, loadind GUID...\n");
-		CG_ReadDataFromFile( path, buf, PB_KEY_LENGTH + 10);
-		memcpy( key, buf + 10, PB_KEY_LENGTH );
-		guid = CG_GenerateGUIDFromKey( key );
-		trap_Cvar_Set("cl_guid",va("%s",guid));
-	}
-	trap_Cvar_VariableStringBuffer( "cl_guid", buff_tmp, sizeof( buff_tmp ) );
-	CG_Printf("Actual client guid %s \n",buff_tmp);
+#endif // WIN32
 
+		if(!CG_IsFile(path)) {
+			//open for writing
+			fp = fopen(path,"wb");
+
+#ifdef WIN32
+			//no write access, so try winpath
+			if(fp == NULL) {
+				memcpy(path, winpath, MAX_PATH);
+				fp = fopen(path,"wb");
+			}
+#endif // WIN32
+
+			//no need to download if you cant write data
+			if(fp != NULL) {
+				curl = curl_easy_init();
+				if (curl) {
+						CG_Printf ("Downloading etkey file...\n");
+						curl_easy_setopt(curl, CURLOPT_URL, url);
+						curl_easy_setopt(curl, CURLOPT_WRITEFUNCTION, write_data);
+						curl_easy_setopt(curl, CURLOPT_WRITEDATA, fp);
+						curl_easy_perform(curl);
+						curl_easy_cleanup(curl);
+						fclose(fp);
+				}
+			}
+		}
+		if(CG_IsFile(path)) {
+			CG_Printf ("ETkey file found, loadind GUID...\n");
+			CG_ReadDataFromFile( path, buf, PB_KEY_LENGTH + 10);
+			memcpy( key, buf + 10, PB_KEY_LENGTH );
+			guid = CG_GenerateGUIDFromKey( key );
+			trap_Cvar_Set("cl_guid",va("%s",guid));
+		} else {
+			CG_Printf ( "You need an etkey... Automatic download system failed. Visit etkey.org to obtain one!\n");
+			return;
+		}
+	} else {
+		trap_Cvar_VariableStringBuffer( "cl_guid", buff_tmp, sizeof( buff_tmp ) );
+		CG_Printf("Actual client guid %s \n",buff_tmp);
+	}
 }
 
 

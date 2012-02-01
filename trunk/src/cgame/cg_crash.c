@@ -20,15 +20,15 @@ void Crash_Printf(const char *fmt, ...){
 	trap_Print(text);
 }
 
-#if defined __linux__ 
+#if defined __linux__
 
 #include <string.h>
-#include <signal.h>
 #include <unistd.h>
 #include <execinfo.h>
 #define __USE_GNU
 #include <link.h>
 #include <sys/ucontext.h>
+#include <signal.h>
 #include <features.h>
 
 #if __GLIBC__ == 2 && __GLIBC_MINOR__ == 1
@@ -40,7 +40,7 @@ extern char *strsignal (int __sig) __THROW;
 //use sigaction instead.
 __sighandler_t INTHandler (int signal, struct sigcontext ctx);
 void CrashHandler(int signal, siginfo_t *siginfo, ucontext_t *ctx);
-void (*OldHandler)(int signal);	
+void (*OldHandler)(int signal);
 struct sigaction oldact[NSIG];
 
 
@@ -56,15 +56,15 @@ void installcrashhandler() {
 	sigemptyset(&act.sa_mask);
 	act.sa_flags = SA_SIGINFO;
 
-	sigaction(SIGSEGV, &act, &oldact[SIGSEGV]); 
-	sigaction(SIGILL, &act, &oldact[SIGILL]); 
-	sigaction(SIGFPE, &act, &oldact[SIGFPE]); 
+	sigaction(SIGSEGV, &act, &oldact[SIGSEGV]);
+	sigaction(SIGILL, &act, &oldact[SIGILL]);
+	sigaction(SIGFPE, &act, &oldact[SIGFPE]);
 	sigaction(SIGBUS, &act, &oldact[SIGBUS]);
 
 }
 
 void restorecrashhandler() {
-	sigaction(SIGSEGV, &oldact[SIGSEGV], NULL); 
+	sigaction(SIGSEGV, &oldact[SIGSEGV], NULL);
 }
 
 void installinthandler() {
@@ -73,7 +73,7 @@ void installinthandler() {
 }
 
 void linux_siginfo(int signal, siginfo_t *siginfo) {
-	Crash_Printf("Signal: %s (%d)\n", strsignal(signal), signal); 
+	Crash_Printf("Signal: %s (%d)\n", strsignal(signal), signal);
 	Crash_Printf("Siginfo: %p\n", siginfo);
 	if(siginfo) {
 		Crash_Printf("Code: %d\n", siginfo->si_code);
@@ -116,12 +116,12 @@ void linux_dsoinfo(void) {
 
 			if(linkmap->l_addr) {
 
-				if(strcmp(linkmap->l_name,"")==0) 
+				if(strcmp(linkmap->l_name,"")==0)
 					Crash_Printf("0x%08x\t(unknown)\n", linkmap->l_addr);
 				else
 					Crash_Printf("0x%08x\t%s\n", linkmap->l_addr, linkmap->l_name);
 
-			}			
+			}
 
 			linkmap=linkmap->l_next;
 
@@ -130,15 +130,15 @@ void linux_dsoinfo(void) {
 
 void linux_backtrace(ucontext_t *ctx) {
 
-	// See <asm/sigcontext.h>	
+	// See <asm/sigcontext.h>
 
-	// ctx.eip contains the actual value of eip 
+	// ctx.eip contains the actual value of eip
 	// when the signal was generated.
 
-	// ctx.cr2 contains the value of the cr2 register 
+	// ctx.cr2 contains the value of the cr2 register
 	// when the signal was generated.
 
-	// the cr2 register on i386 contains the address 
+	// the cr2 register on i386 contains the address
 	// that caused the page fault if there was one.
 
 	int i;
@@ -237,7 +237,7 @@ typedef BOOL (WINAPI *PFNSYMCLEANUP)(HANDLE);
 typedef PGET_MODULE_BASE_ROUTINE PFNSYMGETMODULEBASE;
 typedef BOOL (WINAPI *PFNSTACKWALK)(DWORD, HANDLE, HANDLE, LPSTACKFRAME, LPVOID, PREAD_PROCESS_MEMORY_ROUTINE, PFUNCTION_TABLE_ACCESS_ROUTINE, PGET_MODULE_BASE_ROUTINE, PTRANSLATE_ADDRESS_ROUTINE);
 typedef BOOL (WINAPI *PFNSYMGETSYMFROMADDR)(HANDLE, DWORD, LPDWORD, PIMAGEHLP_SYMBOL);
-typedef BOOL (WINAPI *PFNSYMENUMERATEMODULES)(HANDLE, PSYM_ENUMMODULES_CALLBACK, PVOID); 
+typedef BOOL (WINAPI *PFNSYMENUMERATEMODULES)(HANDLE, PSYM_ENUMMODULES_CALLBACK, PVOID);
 typedef PFUNCTION_TABLE_ACCESS_ROUTINE PFNSYMFUNCTIONTABLEACCESS;
 
 PFNSYMINITIALIZE pfnSymInitialize = NULL;
@@ -249,7 +249,7 @@ PFNSYMENUMERATEMODULES pfnSymEnumerateModules = NULL;
 PFNSYMFUNCTIONTABLEACCESS pfnSymFunctionTableAccess = NULL;
 
 /*
-Visual C 7 Users, place the PDB file generated with the build into your etpub 
+Visual C 7 Users, place the PDB file generated with the build into your etpub
 directory otherwise your stack traces will be useless.
 
 Visual C 6 Users, shouldn't need the PDB file since the DLL will contain COFF symbols.
@@ -297,7 +297,7 @@ char *ExceptionName(DWORD exceptioncode){
 }
 
 void win32_exceptioninfo(LPEXCEPTION_POINTERS e) {
-	Crash_Printf("Exception: %s (0x%08x)\n", ExceptionName(e->ExceptionRecord->ExceptionCode), e->ExceptionRecord->ExceptionCode); 
+	Crash_Printf("Exception: %s (0x%08x)\n", ExceptionName(e->ExceptionRecord->ExceptionCode), e->ExceptionRecord->ExceptionCode);
 	Crash_Printf("Exception Address: 0x%08x\n", e->ExceptionRecord->ExceptionAddress);
 }
 
@@ -339,7 +339,7 @@ void win32_backtrace(LPEXCEPTION_POINTERS e){
 		pSym->MaxNameLength=MAX_PATH;
 		if(pfnSymGetSymFromAddr(process,lastRET,&disp,pSym)){
 			Crash_Printf("(%d) %s(%s+%#0x) [0x%08x]\n",cnt,modname,pSym->Name,disp,lastRET);
-		}else{ 
+		}else{
 			Crash_Printf("(%d) %s [0x%08x]\n",cnt,modname,lastRET);
 		}
 
@@ -428,7 +428,7 @@ void win32_backtrace(LPEXCEPTION_POINTERS e) {
 
 		if(pfnSymGetSymFromAddr(process, sf.AddrPC.Offset, &Disp, pSym))
 			Crash_Printf("(%d) %s(%s+%#0x) [0x%08x]\n", cnt, modname, pSym->Name, Disp, sf.AddrPC.Offset);
-		else 
+		else
 			Crash_Printf("(%d) %s [0x%08x]\n", cnt, modname, sf.AddrPC.Offset);
 
 		cnt++;
@@ -543,7 +543,7 @@ void DisableCoreDump() {
 void EnableStackTrace() {
 #if defined __linux__
 	installcrashhandler();
-#elif defined WIN32		
+#elif defined WIN32
 	win32_initialize_handler();
 #else
 
