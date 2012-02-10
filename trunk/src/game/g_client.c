@@ -1977,7 +1977,9 @@ char *CheckUserinfo( int clientNum )
 char *CheckSpoofing(gclient_t *client, char *guid, char *IP, char *mac, char *name){
 
 	if(Q_stricmp(client->sess.guid, guid)){
-		if( !client->sess.guid || !Q_stricmp( client->sess.guid, "NOGUID" ) ) {
+		if( !client->sess.guid ||
+			!Q_stricmp( client->sess.guid, "" ) ||
+			!Q_stricmp( client->sess.guid, "NOGUID" ) ) {
 			// pheno: don't save defaults
 			if( Q_stricmp( guid, "unknown" ) && Q_stricmp( guid, "NO_GUID" ) ) {
 				Q_strncpyz( client->sess.guid, guid, sizeof( client->sess.guid ) );
@@ -1997,7 +1999,9 @@ char *CheckSpoofing(gclient_t *client, char *guid, char *IP, char *mac, char *na
 	}
 
 	if(Q_stricmp(client->sess.ip, IP)){
-		if( !client->sess.ip || !Q_stricmp( client->sess.ip, "NOIP" ) ) {
+		if( !client->sess.ip ||
+			!Q_stricmp( client->sess.ip, "" ) ||
+			!Q_stricmp( client->sess.ip, "NOIP" ) ) {
 			Q_strncpyz(client->sess.ip, IP, sizeof(client->sess.ip));
 		}else{
 			G_LogPrintf( "IPSPOOF: client %i Original ip %s"
@@ -2014,7 +2018,9 @@ char *CheckSpoofing(gclient_t *client, char *guid, char *IP, char *mac, char *na
 	}
 
 	if(Q_stricmp(client->sess.mac, mac)){
-		if( !client->sess.mac || !Q_stricmp( client->sess.mac, "NOMAC" ) ) {
+		if( !client->sess.mac ||
+			!Q_stricmp( client->sess.mac, "" ) ||
+			!Q_stricmp( client->sess.mac, "NOMAC" ) ) {
 			Q_strncpyz(client->sess.mac, mac, sizeof(client->sess.mac));
 		}else{
 			G_LogPrintf( "MACSPOOF: client %i Original mac %s"
@@ -2584,7 +2590,7 @@ char *ClientConnect( int clientNum, qboolean firstTime, qboolean isBot ) {
 			Q_strncpyz( client->sess.ip, value, sizeof( client->sess.ip ) );
 		}
 	//}
-
+	
 	//mcwf GeoIP
 
 	//10.0.0.0/8			[RFC1918]
