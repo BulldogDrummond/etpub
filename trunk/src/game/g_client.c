@@ -1978,7 +1978,10 @@ char *CheckSpoofing(gclient_t *client, char *guid, char *IP, char *mac, char *na
 
 	if(Q_stricmp(client->sess.guid, guid)){
 		if( !client->sess.guid || !Q_stricmp( client->sess.guid, "NOGUID" ) ) {
-			Q_strncpyz(client->sess.guid, guid, sizeof(client->sess.guid));
+			// pheno: don't save defaults
+			if( Q_stricmp( guid, "unknown" ) && Q_stricmp( guid, "NO_GUID" ) ) {
+				Q_strncpyz( client->sess.guid, guid, sizeof( client->sess.guid ) );
+			}
 		}else{
 			G_LogPrintf( "GUIDSPOOF: client %i Original guid %s"
 				"Secondary guid %s\n",
@@ -2568,11 +2571,18 @@ char *ClientConnect( int clientNum, qboolean firstTime, qboolean isBot ) {
 			Q_strncpyz(client->sess.ip, "", sizeof(client->sess.ip));
 		}
 	}else{*/
-		value = Info_ValueForKey (userinfo, "ip");
 		// tjw: add guid to session so we don't have to keep parsing
 		//      userinfo everywhere
-		Q_strncpyz(client->sess.guid, guid, sizeof(client->sess.guid));
-		Q_strncpyz(client->sess.ip, value, sizeof(client->sess.ip));
+		if( !client->sess.guid || !Q_stricmp( client->sess.guid, "NOGUID" ) ) {
+			if( Q_stricmp( guid, "unknown" ) && Q_stricmp( guid, "NO_GUID" ) ) {
+				Q_strncpyz( client->sess.guid, guid, sizeof( client->sess.guid ) );
+			}
+		}
+
+		value = Info_ValueForKey( userinfo, "ip" );
+		if( !client->sess.guid || !Q_stricmp( client->sess.guid, "NOIP" ) ) {
+			Q_strncpyz( client->sess.ip, value, sizeof( client->sess.ip ) );
+		}
 	//}
 
 	//mcwf GeoIP
