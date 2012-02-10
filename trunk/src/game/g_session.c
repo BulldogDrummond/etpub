@@ -72,9 +72,15 @@ void G_WriteClientSessionData( gclient_t *client, qboolean restart )
 		// Dens: Needs to be saved to prevent spoofing
 		// quad: I think this solves ticket #5, will need to test it at large now
 		//       but at least ETTV clients don't get kicked anymore.
-		client->sess.guid && (*client->sess.guid) ? client->sess.guid : "NOGUID",
-		client->sess.ip && (*client->sess.ip) ? client->sess.ip : "NOIP",
-		client->sess.mac && (*client->sess.mac) ? client->sess.mac : "NOMAC",
+		client->sess.guid &&
+			( !client->sess.guid || !Q_stricmp( client->sess.guid, "" ) ) ?
+				client->sess.guid : "NOGUID",
+		client->sess.ip &&
+			( !client->sess.ip || !Q_stricmp( client->sess.ip, "" ) ) ?
+				client->sess.ip : "NOIP",
+		client->sess.mac &&
+			( !client->sess.mac || !Q_stricmp( client->sess.mac, "" ) ) ?
+				client->sess.mac : "NOMAC",
 		client->sess.uci, //mcwf GeoIP
 		client->sess.need_greeting,
 		// quad: shoutcaster and ettv
