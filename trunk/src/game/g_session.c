@@ -74,13 +74,13 @@ void G_WriteClientSessionData( gclient_t *client, qboolean restart )
 		//       but at least ETTV clients don't get kicked anymore.
 		client->sess.guid &&
 			( !client->sess.guid || !Q_stricmp( client->sess.guid, "" ) ) ?
-				client->sess.guid : "NOGUID",
+				"NOGUID" : client->sess.guid,
 		client->sess.ip &&
 			( !client->sess.ip || !Q_stricmp( client->sess.ip, "" ) ) ?
-				client->sess.ip : "NOIP",
+				"NOIP" : client->sess.ip,
 		client->sess.mac &&
 			( !client->sess.mac || !Q_stricmp( client->sess.mac, "" ) ) ?
-				client->sess.mac : "NOMAC",
+				"NOMAC" : client->sess.mac,
 		client->sess.uci, //mcwf GeoIP
 		client->sess.need_greeting,
 		// quad: shoutcaster and ettv
