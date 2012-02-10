@@ -30,7 +30,7 @@ void G_WriteClientSessionData( gclient_t *client, qboolean restart )
 	//if(level.fResetStats) G_deleteStats(client - level.clients);
 	G_deleteStats(client - level.clients);
 
-	s = va("%i %i %i %i %i %i %i %i %i %i %i %i %i %i %f %f %f %f %i %i %i %i %i %i %i %i %i %i %i %i %i %s %s %u %d %i %i",
+	s = va("%i %i %i %i %i %i %i %i %i %i %i %i %i %i %f %f %f %f %i %i %i %i %i %i %i %i %i %i %i %i %i %s %s %s %u %d %i %i",
 		client->sess.sessionTeam,
 		client->sess.spectatorTime,
 		client->sess.spectatorState,
@@ -74,6 +74,7 @@ void G_WriteClientSessionData( gclient_t *client, qboolean restart )
 		//       but at least ETTV clients don't get kicked anymore.
 		client->sess.guid && (*client->sess.guid) ? client->sess.guid : "NOGUID",
 		client->sess.ip && (*client->sess.ip) ? client->sess.ip : "NOIP",
+		client->sess.mac && (*client->sess.mac) ? client->sess.mac : "NOMAC",
 		client->sess.uci, //mcwf GeoIP
 		client->sess.need_greeting,
 		// quad: shoutcaster and ettv
@@ -192,7 +193,7 @@ void G_ReadSessionData( gclient_t *client )
 
 	trap_Cvar_VariableStringBuffer( va( "session%i", client - level.clients ), s, sizeof(s) );
 
-	sscanf( s, "%i %i %i %i %i %i %i %i %i %i %i %i %i %i %f %f %f %f %i %i %i %i %i %i %i %i %i %i %i %i %i %s %s %u %d %i %i", //mcwf GeoIP
+	sscanf( s, "%i %i %i %i %i %i %i %i %i %i %i %i %i %i %f %f %f %f %i %i %i %i %i %i %i %i %i %i %i %i %i %s %s %s %u %d %i %i", //mcwf GeoIP
 		(int *)&client->sess.sessionTeam,
 		&client->sess.spectatorTime,
 		(int *)&client->sess.spectatorState,
@@ -234,6 +235,7 @@ void G_ReadSessionData( gclient_t *client )
 		// Dens: Needed to prevent spoofing
 		client->sess.guid,
 		client->sess.ip,
+		client->sess.mac,
 		&client->sess.uci, //mcwf GeoIP
 		&need_greeting,
 		// quad: shoutcaster and ettv
@@ -354,8 +356,13 @@ void G_InitSessionData( gclient_t *client, char *userinfo ) {
 
 	sess = &client->sess;
 
+	// pheno: set default values for guid, ip and mac address
+	Q_strncpyz( sess->guid, "NOGUID", sizeof( sess->guid ) );
+	Q_strncpyz( sess->ip, "NOIP", sizeof( sess->ip ) );
+	Q_strncpyz( sess->mac, "NOMAC", sizeof( sess->mac ) );
+
 	// initial team determination
-	sess->sessionTeam = TEAM_SPECTATOR;	
+	sess->sessionTeam = TEAM_SPECTATOR;
 
 	sess->spectatorState = SPECTATOR_FREE;
 	sess->spectatorTime = level.time;
