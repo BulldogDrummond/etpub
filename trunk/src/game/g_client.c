@@ -1977,7 +1977,7 @@ char *CheckUserinfo( int clientNum )
 char *CheckSpoofing(gclient_t *client, char *guid, char *IP, char *mac, char *name){
 
 	if(Q_stricmp(client->sess.guid, guid)){
-		if( !client->sess.guid || !Q_stricmp(client->sess.guid, "") ){
+		if( !client->sess.guid || !Q_stricmp( client->sess.guid, "NOGUID" ) ) {
 			Q_strncpyz(client->sess.guid, guid, sizeof(client->sess.guid));
 		}else{
 			G_LogPrintf( "GUIDSPOOF: client %i Original guid %s"
@@ -1994,7 +1994,7 @@ char *CheckSpoofing(gclient_t *client, char *guid, char *IP, char *mac, char *na
 	}
 
 	if(Q_stricmp(client->sess.ip, IP)){
-		if ( !client->sess.ip || !Q_stricmp(client->sess.ip, "") ){
+		if( !client->sess.ip || !Q_stricmp( client->sess.ip, "NOIP" ) ) {
 			Q_strncpyz(client->sess.ip, IP, sizeof(client->sess.ip));
 		}else{
 			G_LogPrintf( "IPSPOOF: client %i Original ip %s"
@@ -2011,7 +2011,7 @@ char *CheckSpoofing(gclient_t *client, char *guid, char *IP, char *mac, char *na
 	}
 
 	if(Q_stricmp(client->sess.mac, mac)){
-		if ( !client->sess.mac || !Q_stricmp(client->sess.mac, "") ){
+		if( !client->sess.mac || !Q_stricmp( client->sess.mac, "NOMAC" ) ) {
 			Q_strncpyz(client->sess.mac, mac, sizeof(client->sess.mac));
 		}else{
 			G_LogPrintf( "MACSPOOF: client %i Original mac %s"
