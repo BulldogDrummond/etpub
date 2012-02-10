@@ -230,9 +230,6 @@
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
-    <ClInclude Include="g_http_client.h">
-      <Filter>Source Files</Filter>
-    </ClInclude>
     <ClInclude Include="bg_classes.h">
       <Filter>Header Files</Filter>
     </ClInclude>
@@ -319,6 +316,9 @@
     </ClInclude>
     <ClInclude Include="..\sha-1\sha1.h">
       <Filter>SHA-1\Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="g_http_client.h">
+      <Filter>Header Files</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>
