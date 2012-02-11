@@ -77,13 +77,13 @@ qboolean CG_IsValidGUID( char *guid )
 		return qfalse;
 	}
 
-	if( strlen( guid ) <= 0 || strlen( guid ) > PB_GUID_LENGTH ) {
-		return qfalse;
-	}
-
 	if( !Q_stricmp( guid, "" ) ||
 		!Q_stricmp( guid, "unknown" ) ||
 		!Q_stricmp( guid, "NO_GUID" ) ) {
+		return qfalse;
+	}
+
+	if( strlen( guid ) <= 0 || strlen( guid ) > PB_GUID_LENGTH ) {
 		return qfalse;
 	}
 
