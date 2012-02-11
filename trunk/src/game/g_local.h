@@ -681,7 +681,7 @@ typedef struct {
 	int skill_start[SK_NUM_SKILLS][NUM_SKILL_LEVELS];
 
 	// tjw: guid added to session to save cycles
-	char guid[33];
+	char guid[PB_GUID_LENGTH + 1];
 	// Dens: added to prevent spoofing
 	char ip[22];
 	unsigned int uci; //mcwf GeoIP

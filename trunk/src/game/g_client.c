@@ -2073,7 +2073,7 @@ void ClientUserinfoChanged( int clientNum ) {
 	char	medalStr[16] = "";
 	int		characterIndex;
 	int		etpubc;
-	char	*reason, guid[33], ip[22], mac[18], name[MAX_NETNAME];
+	char	*reason, guid[PB_GUID_LENGTH + 1], ip[22], mac[18], name[MAX_NETNAME];
 
 	ent = g_entities + clientNum;
 	client = ent->client;
@@ -2359,7 +2359,7 @@ char *ClientConnect( int clientNum, qboolean firstTime, qboolean isBot ) {
 	gentity_t	*ent;
 	int			i;
     int			clientNum2;
-	char		guid[33];
+	char		guid[PB_GUID_LENGTH + 1];
 	char		*userinfoReason;
 	char 		name[MAX_NETNAME];
 	int			conn_per_ip;

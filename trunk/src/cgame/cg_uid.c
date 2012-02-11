@@ -24,8 +24,7 @@ In all case, the computed guid is pb one like (computed in the same way)
 #include "curl/curl.h"
 #include "curl/easy.h"
 
-#define PB_KEY_LENGTH	18
-#define PB_GUID_LENGTH	32
+#define PB_KEY_LENGTH 18
 
 // pheno: PunkBuster compatible MD5 hash algorithm
 unsigned char *CG_PBCompatibleMD5( unsigned char *data, int len, int seed )

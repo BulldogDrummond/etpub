@@ -6,7 +6,7 @@
 #define MAX_DISCONNECTS 1024
 
 typedef struct {
-	char guid[33];
+	char guid[PB_GUID_LENGTH + 1];
 	char name[MAX_NAME_LENGTH];
 	int time;
 	float skill[SK_NUM_SKILLS];

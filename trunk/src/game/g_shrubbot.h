@@ -77,7 +77,7 @@ typedef struct g_shrubbot_level {
 } g_shrubbot_level_t;
 
 typedef struct g_shrubbot_admin {
-	char guid[33];
+	char guid[PB_GUID_LENGTH + 1];
 	char name[MAX_NAME_LENGTH];
 	int level;
 	char flags[MAX_SHRUBBOT_FLAGS];
@@ -87,7 +87,7 @@ typedef struct g_shrubbot_admin {
 
 typedef struct g_shrubbot_ban {
 	char name[MAX_NAME_LENGTH];
-	char guid[33];
+	char guid[PB_GUID_LENGTH + 1];
 	char ip[18];
 	char mac[18];
 	char reason[MAX_STRING_CHARS];
@@ -105,7 +105,7 @@ typedef struct g_shrubbot_command {
 
 typedef struct g_shrubbot_warning {
 	char name[MAX_NAME_LENGTH];
-	char guid[33];
+	char guid[PB_GUID_LENGTH + 1];
 	char ip[18];
 	char warning[MAX_STRING_CHARS];
 	int made;

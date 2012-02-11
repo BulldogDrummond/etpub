@@ -6,7 +6,7 @@
 
 typedef struct {
 	char name[MAX_NETNAME];
-	char guid[33];
+	char guid[PB_GUID_LENGTH + 1];
 	int axis_time;
 	int allies_time;
 } g_playermatchinfo_t;

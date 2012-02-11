@@ -3991,7 +3991,7 @@ qboolean G_shrubbot_userinfo(gentity_t *ent, int skiparg)
 	int	pids[MAX_CLIENTS],i;
 	char name[MAX_NAME_LENGTH], err[MAX_STRING_CHARS];
 	gentity_t *vic;
-	char guid[33];
+	char guid[PB_GUID_LENGTH + 1];
 	char *temp;
 	char userinfo[MAX_INFO_STRING];
 	char guid_short[9];

@@ -541,7 +541,7 @@ qboolean G_xpsave_add(gentity_t *ent,qboolean disconnect)
 	int i = 0;
 	int j = 0;
 	int k = 0;
-	char guid[33];
+	char guid[PB_GUID_LENGTH + 1];
 	char name[MAX_NAME_LENGTH] = {""};
 	int clientNum;
 	qboolean found = qfalse;

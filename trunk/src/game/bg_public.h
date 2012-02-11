@@ -122,6 +122,9 @@ extern vec3_t	playerlegsProneMaxs;
 
 #define MAX_FORCECVARS 64
 
+// pheno
+#define PB_GUID_LENGTH 32
+
 // RF, client damage identifiers
 
 // Arnout: different entity states
