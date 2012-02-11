@@ -581,6 +581,7 @@ vmCvar_t g_mg42;
 
 // harald
 vmCvar_t g_clientVersion;
+vmCvar_t g_panzerLevelUp;
 
 vmCvar_t g_countryFlags; //mcwf GeoIP
 
@@ -1160,6 +1161,7 @@ cvarTable_t		gameCvarTable[] = {
 
 	// harald
 	{ &g_clientVersion, "g_clientVersion", "", 0},
+	{ &g_panzerLevelUp, "g_panzerLevelUp", "1", 0},
 
 };
 
@@ -2166,7 +2168,8 @@ qboolean G_IsEtpubinfoCvar(vmCvar_t *c)
 		c == &g_skillFieldOps||
 		c == &g_skillCovertOps ||
 		c == &g_skillBattleSense ||
-		c == &g_skillLightWeapons
+		c == &g_skillLightWeapons ||
+		c == &g_panzerLevelUp
 		);
 
 }
@@ -2233,6 +2236,8 @@ void G_UpdateEtpubinfo(void)
 		va("%s", g_skillBattleSense.string));
 	Info_SetValueForKey(cs, "skill_lightweapons",
 		va("%s", g_skillLightWeapons.string));
+	Info_SetValueForKey(cs, "g_panzerLevelUp",
+		va("%s", g_panzerLevelUp.string));
 
 	// pheno
 	Info_SetValueForKey( cs, "g_friendlyFire",

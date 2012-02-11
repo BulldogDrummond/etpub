@@ -450,3 +450,4 @@ current
 * harald:  linux and windows send MAC address for hardware banning
 * pheno:   Mac OS X sends MAC address for hardware banning
 * harald:  automatic etkey downloading code from 7killer added
+* harald:  g_panzerLevelUp added (etpro b_panzerLevelUp)

@@ -23,13 +23,14 @@
 #define PM_GARAND_RELOADS 0 // tjw: no client mod
 #define PM_STAMINA_RECHARGE \
 	((cgs.etpub >= ETPUB_VERSION(0,6,0)) ? cgs.staminaRecharge : 1.0f)
-#define PM_JUMP_STAMINA (cgs.misc & MISC_JUMP_STAMINA) 
+#define PM_JUMP_STAMINA (cgs.misc & MISC_JUMP_STAMINA)
 #define PM_TRACEHEAD \
 	(cgs.etpub == ETPUB_VERSION(0,5,0) || (cgs.misc & MISC_TRACEHEAD))
 #define PM_MEDIC_NOSELFADREN 0 // don't know that this matters client side
 #define PM_TRACE_ALL (cgs.misc & MISC_TRACE_ALL)
 #define PM_OLD_PRONE (cgs.misc & MISC_OLD_PRONE)
 #define PM_MG_RELOADS 0
+#define PM_PANZER_LEVEL_UP ((cgs.etpub >= ETPUB_VERSION(1,0,0)) ? cgs.panzerLevelUp : 0)
 
 #elif GAMEDLL
 #define PM_GameType g_gametype.integer
@@ -46,6 +47,7 @@
 #define PM_TRACE_ALL (g_misc.integer & MISC_TRACE_ALL)
 #define PM_OLD_PRONE (g_misc.integer & MISC_OLD_PRONE)
 #define PM_MG_RELOADS (g_mg42.integer & MG_RELOADS)
+#define PM_PANZER_LEVEL_UP g_panzerLevelUp.integer
 #endif
 
 #define PM_IsSinglePlayerGame() (PM_GameType == GT_SINGLE_PLAYER || PM_GameType == GT_COOP)
@@ -260,14 +262,14 @@ PM_StartWeaponAnim
 static void PM_StartWeaponAnim( int anim ) {
 	if ( pm->ps->pm_type >= PM_DEAD )
 		return;
-	
+
 	if ( pm->pmext->weapAnimTimer > 0 )
 		return;
 
 	if(pm->cmd.weapon == WP_NONE)
 		return;
 
-	pm->ps->weapAnim = ( ( pm->ps->weapAnim & ANIM_TOGGLEBIT ) ^ ANIM_TOGGLEBIT ) | anim;	
+	pm->ps->weapAnim = ( ( pm->ps->weapAnim & ANIM_TOGGLEBIT ) ^ ANIM_TOGGLEBIT ) | anim;
 }
 
 void PM_ContinueWeaponAnim( int anim ) {
@@ -294,9 +296,9 @@ void PM_ClipVelocity( vec3_t in, vec3_t normal, vec3_t out, float overbounce ) {
 	float	backoff;
 	float	change;
 	int		i;
-	
+
 	backoff = DotProduct (in, normal);
-	
+
 	if ( backoff < 0 ) {
 		backoff *= overbounce;
 	} else {
@@ -381,8 +383,8 @@ void	PM_TraceAllLegs( trace_t *trace, float *legsOffset, vec3_t start, vec3_t en
 	pm->trace(trace, start, pm->mins, pm->maxs, end, pm->ps->clientNum, pm->tracemask);
 
 	/* legs */
-	if ( 
-		(pm->ps->eFlags & EF_PRONE) || 
+	if (
+		(pm->ps->eFlags & EF_PRONE) ||
 		(pm->ps->eFlags & EF_DEAD) ||
 		(pm->ps->eFlags & EF_PLAYDEAD)
 	) {
@@ -448,7 +450,7 @@ void PM_TraceHead(trace_t *trace,
 void	PM_TraceAllParts( trace_t *trace, float *legsOffset, vec3_t start, vec3_t end )
 {
 	pm->trace(trace, start, pm->mins, pm->maxs, end, pm->ps->clientNum, pm->tracemask);
-	
+
 	// legs and head
 	if((pm->ps->eFlags & EF_PRONE) ||
 		(pm->ps->eFlags & EF_DEAD) ||
@@ -499,7 +501,7 @@ void PM_TraceAll( trace_t *trace, vec3_t start, vec3_t end )
 	//         see: http://etpub.org/e107_plugins/forum/forum_viewtopic.php?11646
 	if(PM_TRACE_ALL)
 		PM_TraceAllParts( trace, NULL, start, end );
-	else 
+	else
 		PM_TraceAllLegs( trace, NULL, start, end );
 }
 
@@ -520,17 +522,17 @@ plays random exertion sound when sprint key is press
 		oldexerttime = pm->cmd.serverTime;
 	else
 		return;
-	
+
 	rval = rand()%3;
 
 	if (oldexertcnt != rval)
 		 oldexertcnt = rval;
 	else
 		oldexertcnt++;
-	
+
 	if (oldexertcnt > 2)
 		oldexertcnt = 0;
-				
+
 	if (oldexertcnt == 1)
 		PM_AddEvent (EV_EXERT2);
 	else if (oldexertcnt == 2)
@@ -554,7 +556,7 @@ static void PM_Friction( void ) {
 	float	drop;
 
 	vel = pm->ps->velocity;
-	
+
 	VectorCopy( vel, vec );
 	if ( pml.walking ) {
 		vec[2] = 0;	// ignore slope movement
@@ -589,7 +591,7 @@ static void PM_Friction( void ) {
 	}
 
 	// apply water friction even if just wading
-	if ( pm->waterlevel ) {	
+	if ( pm->waterlevel ) {
 		if ( pm->watertype == CONTENTS_SLIME )	//----(SA)	slag
 			drop += speed*pm_slagfriction*pm->waterlevel*pml.frametime;
 		else
@@ -648,7 +650,7 @@ static void PM_Accelerate( vec3_t wishdir, float wishspeed, float accel ) {
 	if (accelspeed > addspeed) {
 		accelspeed = addspeed;
 	}
-	
+
 	// Ridah, variable friction for AI's
 	if (pm->ps->groundEntityNum != ENTITYNUM_NONE) {
 		accelspeed *= (1.0 / pm->ps->friction);
@@ -658,7 +660,7 @@ static void PM_Accelerate( vec3_t wishdir, float wishspeed, float accel ) {
 	}
 
 	for (i=0 ; i<3 ; i++) {
-		pm->ps->velocity[i] += accelspeed*wishdir[i];	
+		pm->ps->velocity[i] += accelspeed*wishdir[i];
 	}
 #else
 	// proper way (avoids strafe jump maxspeed bug), but feels bad
@@ -738,7 +740,7 @@ static float PM_CmdScale( usercmd_t *cmd ) {
 	}
 	else
 		scale *= pm->ps->runSpeedScale;
-	
+
 	if (pm->ps->pm_type == PM_NOCLIP)
 		scale *= 3;
 
@@ -852,7 +854,7 @@ static void PM_SetMovementDir( void ) {
 			pm->ps->movementDir = 1;
 		} else if ( pm->ps->movementDir == 6 ) {
 			pm->ps->movementDir = 7;
-		} 
+		}
 	}
 #endif
 }
@@ -876,7 +878,7 @@ static qboolean PM_CheckJump( void ) {
 			return qfalse;
 	}
 
-	// don't allow if player tired 
+	// don't allow if player tired
 	// Perro: If g_misc 16 is set, require stamina to jump
 	if (PM_JUMP_STAMINA){
 		if (pm->pmext->sprintTime < 750) // JPW pulled this per id request; made airborne jumpers wildly inaccurate with gunfire to compensate
@@ -907,7 +909,7 @@ static qboolean PM_CheckJump( void ) {
 	pm->ps->groundEntityNum = ENTITYNUM_NONE;
 	pm->ps->velocity[2] = JUMP_VELOCITY;
 	PM_AddEvent( EV_JUMP );
-	
+
 	if ( pm->cmd.forwardmove >= 0 ) {
 		BG_AnimScriptEvent( pm->ps, pm->character->animModelInfo, ANIM_ET_JUMP, qfalse, qtrue );
 		pm->ps->pm_flags &= ~PMF_BACKWARDS_JUMP;
@@ -943,7 +945,7 @@ static qboolean PM_CheckDoubleJump( void ) {
 	if (pm->ps->pm_flags & PMF_DOUBLEJUMPING)	{
 			return qfalse;
 	}
-	
+
 	// jpw
 
 	// Only allow double jump when going up
@@ -974,7 +976,7 @@ static qboolean PM_CheckDoubleJump( void ) {
 	pm->ps->groundEntityNum = ENTITYNUM_NONE;
 	pm->ps->velocity[2] = PM_DOUBLE_JUMP_HEIGHT*JUMP_VELOCITY;
 	PM_AddEvent( EV_JUMP );
-	
+
 	if ( pm->cmd.forwardmove >= 0 ) {
 		BG_AnimScriptEvent( pm->ps, pm->character->animModelInfo, ANIM_ET_JUMP, qfalse, qtrue );
 		pm->ps->pm_flags &= ~PMF_BACKWARDS_JUMP;
@@ -1052,7 +1054,7 @@ static qboolean PM_CheckPlayDead (void)
 			return qfalse;
 		}
 
-		if(pm->ps->persistant[PERS_HWEAPON_USE] || 
+		if(pm->ps->persistant[PERS_HWEAPON_USE] ||
 			pm->ps->eFlags & EF_MOUNTEDTANK) {
 
 			return qfalse;
@@ -1080,8 +1082,8 @@ static qboolean PM_CheckPlayDead (void)
 			pm->ps->eFlags |= EF_DEAD;
 			pm->ps->pm_type = PM_DEAD;
 
-			// client uses stats[STAT_HEALTH] as the indicator for 
-			// revive sprites and player position 
+			// client uses stats[STAT_HEALTH] as the indicator for
+			// revive sprites and player position
 			pm->ps->stats[STAT_HEALTH] = 0;
 
 			// make the hitbox like a dead guy
@@ -1106,7 +1108,7 @@ static qboolean PM_CheckPlayDead (void)
 
 		if(trace.allsolid) {
 			// this would have been turned up to ent->health
-			// before running a PM_PLAYDEAD.  Set it back down 
+			// before running a PM_PLAYDEAD.  Set it back down
 			// if we can't stand up.
 			pm->ps->stats[STAT_HEALTH] = 0;
 			return qfalse;
@@ -1115,7 +1117,7 @@ static qboolean PM_CheckPlayDead (void)
 		// crouch for a bit
 		pm->ps->pm_flags |= PMF_DUCKED;
 
-		// turn the hitbox back up	
+		// turn the hitbox back up
 		pm->maxs[2] = pm->ps->maxs[2] = pm->ps->standViewHeight;
 
 		// stop playdead
@@ -1134,7 +1136,7 @@ static qboolean PM_CheckPlayDead (void)
 		// don't jump for a bit
 		pm->pmext->jumpTime = pm->cmd.serverTime - 650;
 		pm->ps->jumpTime = pm->cmd.serverTime - 650;
-		
+
 		return qtrue;
 	}
 	return qfalse;
@@ -1185,9 +1187,9 @@ static qboolean PM_CheckProne (void)
 		//	return qfalse;
 		//}
 
-		if(((pm->ps->pm_flags & PMF_DUCKED && 
+		if(((pm->ps->pm_flags & PMF_DUCKED &&
 			pm->cmd.doubleTap == DT_FORWARD) ||
-			(pm->cmd.wbuttons & WBUTTON_PRONE)) && 
+			(pm->cmd.wbuttons & WBUTTON_PRONE)) &&
 			pm->cmd.serverTime - -pm->pmext->proneTime > 750) {
 
 			trace_t trace;
@@ -1220,9 +1222,9 @@ static qboolean PM_CheckProne (void)
 			pm->ps->eFlags & EF_MOUNTEDTANK ||
 // zinx - what was the reason for this, anyway? removing fixes bug 424
 //			pm->cmd.serverTime - pm->pmext->proneGroundTime > 450 ||
-			((pm->cmd.doubleTap == DT_BACK || 
-			  pm->cmd.upmove > 10 || 
-			  pm->cmd.wbuttons & WBUTTON_PRONE) 
+			((pm->cmd.doubleTap == DT_BACK ||
+			  pm->cmd.upmove > 10 ||
+			  pm->cmd.wbuttons & WBUTTON_PRONE)
 			 && pm->cmd.serverTime - pm->pmext->proneTime > 750)) {
 
 			trace_t trace;
@@ -1240,7 +1242,7 @@ static qboolean PM_CheckProne (void)
 			pm->ps->eFlags &= ~EF_PRONE;
 			PM_TraceAll( &trace, pm->ps->origin, pm->ps->origin );
 			pm->ps->eFlags |= EF_PRONE;
-			
+
 			if(trace.fraction == 1.0f) {
 				// crouch for a bit
 				pm->ps->pm_flags |= PMF_DUCKED;
@@ -1288,7 +1290,7 @@ static qboolean PM_CheckProne (void)
 
 	if( pm->ps->eFlags & EF_PRONE ) {
 		//float frac;
-		
+
 		// See if we are moving
 		float spd = VectorLength( pm->ps->velocity );
 		qboolean userinput = abs(pm->cmd.forwardmove) + abs(pm->cmd.rightmove) > 10 ? qtrue : qfalse;
@@ -1317,15 +1319,15 @@ static qboolean PM_CheckProne (void)
 		//if( frac > 1.f )
 		//	frac = 1.f;
 
- 
+
 		//pm->maxs[2] = pm->ps->maxs[2] - pm->ps->standViewHeight - PRONE_VIEWHEIGHT;
-		// tjw: it appears that 12 is the magic number 
+		// tjw: it appears that 12 is the magic number
 		//      for the minimum maxs[2] that prevents
 		//      player from getting stuck into the world.
 		//pm->maxs[2] = 12;
 		if(PM_OLD_PRONE)
 			pm->maxs[2] = pm->ps->maxs[2] - pm->ps->standViewHeight - PRONE_VIEWHEIGHT;
-		else 
+		else
 			pm->maxs[2] = pm->ps->crouchMaxZ;
 
 		pm->ps->viewheight = PRONE_VIEWHEIGHT;
@@ -1347,7 +1349,7 @@ static qboolean PM_CheckDodge( void ) {
  		//if (pm->cmd.serverTime - pm->pmext->jumpTime < 850)
 		//	return qfalse;
 
-		// don't allow if player tired 
+		// don't allow if player tired
 //		if (pm->pmext->sprintTime < 2500) // JPW pulled this per id request; made airborne jumpers wildly inaccurate with gunfire to compensate
 //			return qfalse;
 	// jpw
@@ -1384,7 +1386,7 @@ static qboolean PM_CheckDodge( void ) {
 	pm->ps->groundEntityNum = ENTITYNUM_NONE;
 	pm->ps->velocity[2] = 130;
 	PM_AddEvent( EV_JUMP );
-	
+
 	//if ( pm->cmd.forwardmove >= 0 ) {
 	//	BG_AnimScriptEvent( pm->ps, ANIM_ET_JUMP, qfalse, qtrue );
 	//	pm->ps->pm_flags &= ~PMF_BACKWARDS_JUMP;
@@ -1498,7 +1500,7 @@ static void PM_WaterMove( void ) {
 	if ( pml.groundPlane && DotProduct( pm->ps->velocity, pml.groundTrace.plane.normal ) < 0 ) {
 		vel = VectorLength(pm->ps->velocity);
 		// slide along the ground plane
-		PM_ClipVelocity (pm->ps->velocity, pml.groundTrace.plane.normal, 
+		PM_ClipVelocity (pm->ps->velocity, pml.groundTrace.plane.normal,
 			pm->ps->velocity, OVERCLIP );
 
 		VectorNormalize(pm->ps->velocity);
@@ -1606,7 +1608,7 @@ static void PM_AirMove( void ) {
 
 		// JPW NERVE
 		pm->ps->jumpTime = pm->cmd.serverTime;	// Arnout: NOTE : TEMP DEBUG
-		
+
 		//return;
 	}
 
@@ -1651,7 +1653,7 @@ static void PM_AirMove( void ) {
 	// though we don't have a groundentity
 	// slide along the steep plane
 	if ( pml.groundPlane ) {
-		PM_ClipVelocity (pm->ps->velocity, pml.groundTrace.plane.normal, 
+		PM_ClipVelocity (pm->ps->velocity, pml.groundTrace.plane.normal,
 			pm->ps->velocity, OVERCLIP );
 	}
 
@@ -1723,7 +1725,7 @@ static void PM_WalkMove( void ) {
 
 		// JPW NERVE
 		pm->ps->jumpTime = pm->cmd.serverTime;	// Arnout: NOTE : TEMP DEBUG
-		
+
 		return;
 	} else/* if( !PM_CheckProne() )*/ {
 		if( pm->waterlevel <= 1 && PM_CheckDodge () ) {
@@ -1803,7 +1805,7 @@ static void PM_WalkMove( void ) {
 	// full control, which allows them to be moved a bit
 	if ( ( pml.groundTrace.surfaceFlags & SURF_SLICK ) || pm->ps->pm_flags & PMF_TIME_KNOCKBACK ) {
 		accelerate = pm_airaccelerate;
-	} 
+	}
 	else {
 		accelerate = pm_accelerate;
 	}
@@ -1815,7 +1817,7 @@ static void PM_WalkMove( void ) {
 
 	if ( ( pml.groundTrace.surfaceFlags & SURF_SLICK ) || pm->ps->pm_flags & PMF_TIME_KNOCKBACK ) {
 		pm->ps->velocity[2] -= pm->ps->gravity * pml.frametime;
-	} 
+	}
 	else {
 		// don't reset the z velocity for slopes
 		//pm->ps->velocity[2] = 0;
@@ -1929,7 +1931,7 @@ static void PM_NoclipMove( void ) {
 
 	fmove = pm->cmd.forwardmove;
 	smove = pm->cmd.rightmove;
-	
+
 	for (i=0 ; i<3 ; i++)
 		wishvel[i] = pml.forward[i]*fmove + pml.right[i]*smove;
 	wishvel[2] += pm->cmd.upmove;
@@ -1953,7 +1955,7 @@ PM_FootstepForSurface
 Returns an event number apropriate for the groundsurface
 ================
 */
-static int PM_FootstepForSurface( void ) 
+static int PM_FootstepForSurface( void )
 {
 #ifdef GAMEDLL
 	// In just the GAME DLL, we want to store the groundtrace surface stuff,
@@ -2059,7 +2061,7 @@ static void PM_CrashLand( void ) {
 		else if (delta > 58)
 		{
 			// this is a pain grunt, so don't play it if dead
-			if ( pm->ps->stats[STAT_HEALTH] > 0 ) 
+			if ( pm->ps->stats[STAT_HEALTH] > 0 )
 			{
 				PM_AddEventExt( EV_FALL_DMG_25, PM_FootstepForSurface() );
 			}
@@ -2067,7 +2069,7 @@ static void PM_CrashLand( void ) {
 		else if (delta > 48)
 		{
 			// this is a pain grunt, so don't play it if dead
-			if ( pm->ps->stats[STAT_HEALTH] > 0 ) 
+			if ( pm->ps->stats[STAT_HEALTH] > 0 )
 			{
 				PM_AddEventExt( EV_FALL_DMG_15, PM_FootstepForSurface() );
 			}
@@ -2075,16 +2077,16 @@ static void PM_CrashLand( void ) {
 		else if (delta > 38.75)
 		{
 			// this is a pain grunt, so don't play it if dead
-			if ( pm->ps->stats[STAT_HEALTH] > 0 ) 
+			if ( pm->ps->stats[STAT_HEALTH] > 0 )
 			{
 				PM_AddEventExt( EV_FALL_DMG_10, PM_FootstepForSurface() );
 			}
 		}
-		else if ( delta > 7 ) 
+		else if ( delta > 7 )
 		{
 			PM_AddEventExt( EV_FALL_SHORT, PM_FootstepForSurface() );
-		} 
-		else 
+		}
+		else
 		{
 			PM_AddEventExt( EV_FOOTSTEP, PM_FootstepForSurface() );
 		}
@@ -2179,7 +2181,7 @@ static void PM_GroundTraceMissed( void ) {
 		}
 	}
 
-	// If we've never yet touched the ground, it's because we're spawning, so don't 
+	// If we've never yet touched the ground, it's because we're spawning, so don't
 	// set to "in air"
 	if (pm->ps->groundEntityNum != -1)
 	{
@@ -2252,7 +2254,7 @@ static void PM_GroundTrace( void ) {
 		pml.walking = qfalse;
 		return;
 	}
-	
+
 	// slopes that are too steep will not be considered onground
 	if ( trace.plane.normal[2] < MIN_WALK_NORMAL ) {
 		if ( pm->debugLevel ) {
@@ -2282,7 +2284,7 @@ static void PM_GroundTrace( void ) {
 		if ( pm->debugLevel ) {
 			Com_Printf("%i:Land\n", c_pmove);
 		}
-		
+
 		PM_CrashLand();
 
 		// don't do landing time if we were just going down a slope
@@ -2322,7 +2324,7 @@ static void PM_SetWaterLevel( void ) {
 	// Ridah, modified this
 	point[0] = pm->ps->origin[0];
 	point[1] = pm->ps->origin[1];
-	point[2] = pm->ps->origin[2] + pm->ps->mins[2] + 1;	
+	point[2] = pm->ps->origin[2] + pm->ps->mins[2] + 1;
 	cont = pm->pointcontents( point, pm->ps->clientNum );
 
 	if ( cont & MASK_WATER ) {
@@ -2428,7 +2430,7 @@ static void PM_Footsteps( void ) {
 
 			if( !pm->ps->pm_time )
 				pm->ps->pm_flags &= ~PMF_FLAILING;	// the eagle has landed
-		} 
+		}
 		else if(!pm->ps->pm_time && !(pm->ps->pm_flags & PMF_LIMBO) ) { // DHM - Nerve :: before going to limbo, play a wounded/fallen animation
 			if ( pm->ps->groundEntityNum == ENTITYNUM_NONE ) {
 				// takeoff!
@@ -2449,7 +2451,7 @@ static void PM_Footsteps( void ) {
 	// all cyclic walking effects
 	//
 	pm->xyspeed = sqrt( pm->ps->velocity[0] * pm->ps->velocity[0] +  pm->ps->velocity[1] * pm->ps->velocity[1] );
-	
+
 	// mg42, always idle
 	if ( pm->ps->persistant[PERS_HWEAPON_USE] ) {
 		animResult = BG_AnimScriptAnimation( pm->ps, pm->character->animModelInfo, ANIM_MT_IDLE, qtrue );
@@ -2603,7 +2605,7 @@ static void PM_Footsteps( void ) {
 	if (iswalking) {
 		// sounds much more natural this way
 		if (old > pm->ps->bobCycle) {
-		
+
 			if ( pm->waterlevel == 0 ) {
 				if ( footstep && !pm->noFootsteps ) {
 					PM_AddEventExt( EV_FOOTSTEP, PM_FootstepForSurface() );
@@ -2620,7 +2622,7 @@ static void PM_Footsteps( void ) {
 
 		}
 	} else if ( ( ( old + 64 ) ^ ( pm->ps->bobCycle + 64 ) ) & 128 ) {
-		
+
 /*		if (pm->ps->sprintExertTime && pm->waterlevel <= 2)
 			PM_ExertSound ();*/
 
@@ -2807,7 +2809,7 @@ void PM_BeginWeaponChange( int oldweapon, int newweapon, qboolean reload ) {	//-
 	if( !( COM_BitCheck( pm->ps->weapons, newweapon ) ) ) {
 		return;
 	}
-	
+
 	if( pm->ps->weaponstate == WEAPON_DROPPING || pm->ps->weaponstate == WEAPON_DROPPING_TORELOAD ) {
 		return;
 	}
@@ -2846,7 +2848,7 @@ void PM_BeginWeaponChange( int oldweapon, int newweapon, qboolean reload ) {	//-
 
 			if( pm->waterlevel == 3 ) {
 				return;
-			}	
+			}
 			PM_AddEvent( EV_CHANGE_WEAPON );
 			break;
 		default:
@@ -3005,7 +3007,7 @@ static void PM_FinishWeaponChange( void ) {
 
 	switch(newweapon)
 	{
-		// don't really care about anim since these weapons don't show in view.  
+		// don't really care about anim since these weapons don't show in view.
 		// However, need to set the animspreadscale so they are initally at worst accuracy
 		case WP_K43_SCOPE:
 		case WP_GARAND_SCOPE:
@@ -3301,7 +3303,7 @@ void PM_CheckForReload( int weapon ) {
 			PM_BeginWeaponReload( weapon );
 	}
 
-		
+
 
 }
 
@@ -3380,7 +3382,7 @@ int PM_WeaponAmmoAvailable( int wp ) {
 	else {
 		//return pm->ps->ammoclip[BG_FindClipForWeapon( wp )];
 		takeweapon = BG_FindClipForWeapon( wp );
-		
+
 		if( BG_IsAkimboWeapon( wp ) ) {
 			if( !BG_AkimboFireSequence( wp, pm->ps->ammoclip[BG_FindClipForWeapon(wp)], pm->ps->ammoclip[BG_FindClipForWeapon(BG_AkimboSidearm(wp))] ) )
 				takeweapon = BG_AkimboSidearm(wp);
@@ -3397,14 +3399,14 @@ PM_WeaponClipEmpty
 ==============
 */
 int PM_WeaponClipEmpty( int wp ) {
-	
+
 	// kw: knives now use ammo as max throwing knifes indicator.
-	//     This hack fixes throwing knife double sound/animation 
+	//     This hack fixes throwing knife double sound/animation
 	//     when it's clip is empty.
 	if( wp == WP_KNIFE ) {
 		return 0;
 	}
-	
+
 	if(pm->noWeapClips) {
 		if(!(pm->ps->ammo[ BG_FindAmmoForWeapon(wp)]))
 			return 1;
@@ -3452,12 +3454,12 @@ void PM_CoolWeapons( void ) {
 		} else {
 			// rain - #172 - don't divide by 0
 			maxHeat = GetAmmoTableData(pm->ps->weapon)->maxHeat;
-			
+
 			// rain - floor to prevent 8-bit wrap
 			if (maxHeat != 0)
 				pm->ps->curWeapHeat = floor( ( ( (float)pm->ps->weapHeat[pm->ps->weapon] / (float)maxHeat) ) * 255.0f);
 			else
-				pm->ps->curWeapHeat = 0; 
+				pm->ps->curWeapHeat = 0;
 		}
 
 //		if(pm->ps->weapHeat[pm->ps->weapon])
@@ -3564,7 +3566,7 @@ void PM_AdjustAimSpreadScale( void ) {
 			// take player view rotation into account
 			for( i = 0; i < 2; i++ ) {
 				// tjw: angles need to be normalized since they're
-				//      often > 65535.  
+				//      often > 65535.
 				//      FIXME: Maybe this normalization should in Pmove()?
 				// tjw: need to use AngleSubtract() instead of just minus.
 				//viewchange += fabs( SHORT2ANGLE(pm->cmd.angles[i]) - SHORT2ANGLE(pm->oldcmd.angles[i]) );
@@ -3707,7 +3709,7 @@ static void PM_Weapon( void ) {
 					pm->ps->weaponTime = MAX_MG42_HEAT;	// cap heat to max
 					PM_AddEvent( EV_WEAP_OVERHEAT );
 					pm->ps->weaponTime = 2000;		// force "heat recovery minimum" to 2 sec right now
-				}		
+				}
 			}
 			return;
 		case 2:
@@ -3729,7 +3731,7 @@ static void PM_Weapon( void ) {
 				pm->ps->weaponTime += AAGUN_RATE_OF_FIRE;
 
 				BG_AnimScriptEvent( pm->ps, pm->character->animModelInfo, ANIM_ET_FIREWEAPON, qfalse, qtrue );
-//				pm->ps->viewlocked = 2;		// this enable screen jitter when firing		
+//				pm->ps->viewlocked = 2;		// this enable screen jitter when firing
 			}
 			return;
 	}
@@ -3773,7 +3775,7 @@ static void PM_Weapon( void ) {
 				PM_AddEvent( EV_WEAP_OVERHEAT );
 				pm->ps->weaponTime = 2000;		// force "heat recovery minimum" to 2 sec right now
 			}
-	
+
 		}
 		return;
 	}
@@ -3837,12 +3839,12 @@ static void PM_Weapon( void ) {
 	// do the recoil before setting the values, that way it will be shown next frame and not this
 	// forty - FIXME - predicted recoil does not always match on client and server.
 	//		   FIXME - Higher frame rates = more recoil.
-	if ( 
-		pm->pmove_fixed && 
-		pm->pmext->weapRecoilTime && 
+	if (
+		pm->pmove_fixed &&
+		pm->pmext->weapRecoilTime &&
 		(pm->pmext->weapRecoilTime + 50) < pm->cmd.serverTime
 	) {
-		// forty - with pmove_fixed enabled this would happen before the fire weapon event 
+		// forty - with pmove_fixed enabled this would happen before the fire weapon event
 		//		   is received by the server. Normally this happens after the server has fired the shot.
 		//		   Delaying this at least a server frame.
 
@@ -3884,7 +3886,7 @@ static void PM_Weapon( void ) {
 		}
 
 	} else if( pm->pmext->weapRecoilTime) {
-		// forty - since were not using pmove fixed take the stock path to preserve 
+		// forty - since were not using pmove fixed take the stock path to preserve
 		//		   compatibility with the stock client.
 		vec3_t muzzlebounce;
 		int i, deltaTime;
@@ -4084,7 +4086,7 @@ static void PM_Weapon( void ) {
 			return;
 		}
 
-		if( pm->skill[SK_HEAVY_WEAPONS] >= 1 ) {
+		if( pm->skill[SK_HEAVY_WEAPONS] >= PM_PANZER_LEVEL_UP ) {
 			if( pm->cmd.serverTime - pm->ps->classWeaponTime <
 					pm->soldierChargeTime * 0.66f ) {
 				return;
@@ -4111,7 +4113,7 @@ static void PM_Weapon( void ) {
 		} else if( pm->cmd.serverTime - pm->ps->classWeaponTime < (pm->soldierChargeTime*0.5f) ) {
 			return;
 		}
-		
+
 		if( !delayedFire ) {
 			pm->ps->weaponstate = WEAPON_READY;
 		}
@@ -4165,7 +4167,7 @@ static void PM_Weapon( void ) {
 		if (pm->skill[SK_FIRST_AID] >= 2 ) {
 			if( pm->cmd.serverTime - pm->ps->classWeaponTime < (pm->medicChargeTime*0.15f) ) {
 				if( pm->cmd.buttons & BUTTON_ATTACK ) {
-					BG_AnimScriptEvent( pm->ps, pm->character->animModelInfo, ANIM_ET_NOPOWER, qtrue, qfalse );		
+					BG_AnimScriptEvent( pm->ps, pm->character->animModelInfo, ANIM_ET_NOPOWER, qtrue, qfalse );
 				}
 				return;
 			}
@@ -4188,7 +4190,7 @@ static void PM_Weapon( void ) {
 	}
 
 	if( pm->ps->weapon == WP_MEDIC_ADRENALINE ) {
-		if (pm->cmd.serverTime - pm->ps->classWeaponTime 
+		if (pm->cmd.serverTime - pm->ps->classWeaponTime
 				< pm->medicChargeTime)
 			return;
 	}
@@ -4244,7 +4246,7 @@ static void PM_Weapon( void ) {
 	{
 		pm->ps->weaponTime	= 0;
 		pm->ps->weaponDelay	= 0;
-	
+
 		if(weaponstateFiring) {	// you were just firing, time to relax
 			PM_ContinueWeaponAnim(PM_IdleAnimForWeapon(pm->ps->weapon));
 		}
@@ -4285,7 +4287,7 @@ static void PM_Weapon( void ) {
 			pm->ps->weapon != WP_LANDMINE &&
 			pm->ps->weapon != WP_TRIPMINE &&
 			pm->ps->weapon != WP_SMOKE_BOMB &&
-			!(pm->ps->weapon == WP_MEDIC_SYRINGE 
+			!(pm->ps->weapon == WP_MEDIC_SYRINGE
 				&& PM_UW_SYRINGE) &&
 			!(pm->ps->weapon == WP_PLIERS
 				&& PM_UW_PLIERS)
@@ -4300,7 +4302,7 @@ static void PM_Weapon( void ) {
 #endif
 				pm->ps->weaponTime	= 500;
 				// avoid insta-fire after water exit on delayed weapon attacks
-				pm->ps->weaponDelay	= 0;			
+				pm->ps->weaponDelay	= 0;
 				return;
 		}
 	}
@@ -4490,7 +4492,7 @@ static void PM_Weapon( void ) {
 
 			// if not in auto-reload mode, and reload was not explicitely requested, just play the 'out of ammo' sound
 			if (!pm->pmext->bAutoReload && IS_AUTORELOAD_WEAPON(pm->ps->weapon) && !(pm->cmd.wbuttons & WBUTTON_RELOAD))
-			{        
+			{
 				reloading = qfalse;
 			}
 
@@ -4538,7 +4540,7 @@ static void PM_Weapon( void ) {
 		// checks for delayed weapons that have already been fired are return'ed above.
 		return;
 
-	if( !(pm->ps->eFlags & EF_PRONE) && (pml.groundTrace.surfaceFlags & SURF_SLICK) ) { 
+	if( !(pm->ps->eFlags & EF_PRONE) && (pml.groundTrace.surfaceFlags & SURF_SLICK) ) {
 		float fwdmove_knockback = 0.f;
 		float bckmove_knockback = 0.f;
 
@@ -4687,14 +4689,14 @@ static void PM_Weapon( void ) {
 	//      or even necessary?
 	// forty - It appears moving the grenade tick code
 	//         made this entirely unnecessary.
-	//		   This was originally here because optimized prediction 
-	//         would keep the grenade tick sound playing long after 
+	//		   This was originally here because optimized prediction
+	//         would keep the grenade tick sound playing long after
 	//         you had thrown the grenade away.
 	/*
-	if ( 
-		pm->ps->weapon == WP_GRENADE_LAUNCHER || 
-		pm->ps->weapon == WP_GRENADE_PINEAPPLE || 
-		pm->ps->weapon == WP_DYNAMITE || 
+	if (
+		pm->ps->weapon == WP_GRENADE_LAUNCHER ||
+		pm->ps->weapon == WP_GRENADE_PINEAPPLE ||
+		pm->ps->weapon == WP_DYNAMITE ||
 		pm->ps->weapon == WP_SMOKE_BOMB
 	) {
 		pm->ps->grenadeTimeLeft = 0;
@@ -4857,7 +4859,7 @@ static void PM_Weapon( void ) {
 	default:
 		break;
 	}
-	
+
 	// set weapon recoil
 	pm->pmext->lastRecoilDeltaTime = 0;
 
@@ -5035,7 +5037,7 @@ void PM_UpdateLean(playerState_t *ps, usercmd_t *cmd, pmove_t *tpm) {
   // ATVI Wolfenstein Misc #479 - initial fix to #270 would crash in g_synchronousClients 1 situation
 	if( ps->weaponstate == WEAPON_FIRING && ps->weapon == WP_DYNAMITE )
 		leaning = 0; // not allowed while tossing dynamite
-	
+
 	if( ps->eFlags & EF_PRONE || ps->weapon == WP_MORTAR_SET )
 		leaning = 0;	// not allowed to lean while prone
 
@@ -5085,8 +5087,8 @@ void PM_UpdateLean(playerState_t *ps, usercmd_t *cmd, pmove_t *tpm) {
 		VectorCopy( ps->viewangles, viewangles );
 		viewangles[ROLL] += leanofs/2.0f;
 		AngleVectors( viewangles, NULL, right, NULL );
-		VectorMA( start, leanofs, right, end );		
-		
+		VectorMA( start, leanofs, right, end );
+
 		VectorSet( tmins, -8, -8, -7 ); // ATVI Wolfenstein Misc #472, bumped from -4 to cover gun clipping issue
 		VectorSet( tmaxs, 8, 8, 4 );
 
@@ -5165,7 +5167,7 @@ void PM_UpdateViewAngles( playerState_t *ps, pmoveExt_t *pmext, usercmd_t *cmd, 
 		}
 		ps->viewangles[i] = SHORT2ANGLE(temp);
 	}
-	
+
 	if( BG_PlayerMounted(ps->eFlags) ) {
 		float yaw, oldYaw;
 		float degsSec = MG42_YAWSPEED;
@@ -5198,7 +5200,7 @@ void PM_UpdateViewAngles( playerState_t *ps, pmoveExt_t *pmext, usercmd_t *cmd, 
 		}
 
 		// limit harc and varc
-		
+
 		// pitch (varc)
 		arcMax = pmext->varc;
 		if(ps->eFlags & EF_AAGUN_ACTIVE) {
@@ -5226,7 +5228,7 @@ void PM_UpdateViewAngles( playerState_t *ps, pmoveExt_t *pmext, usercmd_t *cmd, 
 			ps->delta_angles[PITCH] = ANGLE2SHORT(ps->viewangles[PITCH]) - cmd->angles[PITCH];
 		} else if( arcDiff < -arcMax ) {
 			ps->viewangles[PITCH] = AngleNormalize180( pmext->centerangles[PITCH] - arcMax );
-			
+
 			// Set delta_angles properly
 			ps->delta_angles[PITCH] = ANGLE2SHORT(ps->viewangles[PITCH]) - cmd->angles[PITCH];
 		}
@@ -5243,7 +5245,7 @@ void PM_UpdateViewAngles( playerState_t *ps, pmoveExt_t *pmext, usercmd_t *cmd, 
 				ps->delta_angles[YAW] = ANGLE2SHORT(ps->viewangles[YAW]) - cmd->angles[YAW];
 			} else if( arcDiff < -arcMax ) {
 				ps->viewangles[YAW] = AngleNormalize180( pmext->centerangles[YAW] - arcMax );
-				
+
 				// Set delta_angles properly
 				ps->delta_angles[YAW] = ANGLE2SHORT(ps->viewangles[YAW]) - cmd->angles[YAW];
 			}
@@ -5323,7 +5325,7 @@ void PM_UpdateViewAngles( playerState_t *ps, pmoveExt_t *pmext, usercmd_t *cmd, 
 			ps->delta_angles[YAW] = ANGLE2SHORT(ps->viewangles[YAW]) - cmd->angles[YAW];
 		} else if( yawDiff < -30 ) {
 			ps->viewangles[YAW] = AngleNormalize180( pmext->mountedWeaponAngles[YAW] - 30.f );
-			
+
 			// Set delta_angles properly
 			ps->delta_angles[YAW] = ANGLE2SHORT(ps->viewangles[YAW]) - cmd->angles[YAW];
 		}
@@ -5344,7 +5346,7 @@ void PM_UpdateViewAngles( playerState_t *ps, pmoveExt_t *pmext, usercmd_t *cmd, 
 			ps->delta_angles[PITCH] = ANGLE2SHORT(ps->viewangles[PITCH]) - cmd->angles[PITCH];
 		} else if( pitchDiff < -(pitchMax) ) {
 			ps->viewangles[PITCH] = AngleNormalize180( pmext->mountedWeaponAngles[PITCH] - (pitchMax) );
-			
+
 			// Set delta_angles properly
 			ps->delta_angles[PITCH] = ANGLE2SHORT(ps->viewangles[PITCH]) - cmd->angles[PITCH];
 		}
@@ -5406,7 +5408,7 @@ void PM_UpdateViewAngles( playerState_t *ps, pmoveExt_t *pmext, usercmd_t *cmd, 
 				ps->delta_angles[YAW] = ANGLE2SHORT(ps->viewangles[YAW]) - cmd->angles[YAW];
 			} else if( yawDiff < -20 ) {
 				ps->viewangles[YAW] = AngleNormalize180( pmext->mountedWeaponAngles[YAW] - 20.f );
-				
+
 				// Set delta_angles properly
 				ps->delta_angles[YAW] = ANGLE2SHORT(ps->viewangles[YAW]) - cmd->angles[YAW];
 			}
@@ -5428,7 +5430,7 @@ void PM_UpdateViewAngles( playerState_t *ps, pmoveExt_t *pmext, usercmd_t *cmd, 
 			ps->delta_angles[PITCH] = ANGLE2SHORT(ps->viewangles[PITCH]) - cmd->angles[PITCH];
 		} else if( pitchDiff < -pitchMax ) {
 			ps->viewangles[PITCH] = AngleNormalize180( pmext->mountedWeaponAngles[PITCH] - pitchMax );
-			
+
 			// Set delta_angles properly
 			ps->delta_angles[PITCH] = ANGLE2SHORT(ps->viewangles[PITCH]) - cmd->angles[PITCH];
 		}
@@ -5447,8 +5449,8 @@ void PM_UpdateViewAngles( playerState_t *ps, pmoveExt_t *pmext, usercmd_t *cmd, 
 				// starting in a solid, no space
 				ps->viewangles[YAW] = oldYaw;
 				ps->delta_angles[YAW] = ANGLE2SHORT(ps->viewangles[YAW]) - cmd->angles[YAW];
-			} 
-			
+			}
+
 			if(PM_TRACE_ALL) {
 				memset(&traceres, 0, sizeof(traceres));
 
@@ -5458,10 +5460,10 @@ void PM_UpdateViewAngles( playerState_t *ps, pmoveExt_t *pmext, usercmd_t *cmd, 
 
 				if(traceres.fraction < 1.0f) {
 					ps->viewangles[YAW] = oldYaw;
-					ps->delta_angles[YAW] = 
-						ANGLE2SHORT(ps->viewangles[YAW]) 
+					ps->delta_angles[YAW] =
+						ANGLE2SHORT(ps->viewangles[YAW])
 						- cmd->angles[YAW];
-				} 
+				}
 			}
 		}
 	}
@@ -5492,7 +5494,7 @@ void PM_CheckLadderMove (void) {
 	float	tracedist;
 	#define	TRACE_LADDER_DIST	48.0
 	qboolean wasOnLadder;
-	
+
 	if (pm->ps->pm_time)
 		return;
 
@@ -5699,7 +5701,7 @@ void PM_LadderMove (void) {
 //      after much staring I have been unable to come up with a
 //      fix for the problem of getting stuck in solids after a
 //      revive, knockback, or even coming up from prone into a
-//      ledge.  This simply makes the bounding box bigger 
+//      ledge.  This simply makes the bounding box bigger
 //      until it hits a solid to detect free space.  It's dumb
 //      in that it doesn't unstick the player if he happens to be
 //      wedged between two solids or if he needs to go up or down
@@ -5812,7 +5814,7 @@ void PM_Sprint( void ) {
 			// take time from powerup before taking it from sprintTime
 			pm->ps->powerups[PW_NOFATIGUE] -= 50;
 
-			// (SA) go ahead and continue to recharge stamina at double 
+			// (SA) go ahead and continue to recharge stamina at double
 			// rate with stamina powerup even when exerting
 			pm->pmext->sprintTime += 10;
 			if (pm->pmext->sprintTime > SPRINTTIME)
@@ -5830,16 +5832,16 @@ void PM_Sprint( void ) {
 
 		if (pm->pmext->sprintTime < 0)
 			pm->pmext->sprintTime = 0;
-		
+
 		if (!pm->ps->sprintExertTime)
 		{
 			pm->ps->sprintExertTime = 1;
 		}
 	}
-	else 
-	{	
-		// JPW NERVE -- in multiplayer, recharge faster for top 75% of sprint bar 
-		// (for people that *just* use it for jumping, not sprint) this code was 
+	else
+	{
+		// JPW NERVE -- in multiplayer, recharge faster for top 75% of sprint bar
+		// (for people that *just* use it for jumping, not sprint) this code was
 		// mucked about with to eliminate client-side framerate-dependancy in wolf single player
 		if( pm->ps->powerups[PW_ADRENALINE] ) {
 			pm->pmext->sprintTime = SPRINTTIME;
@@ -5851,7 +5853,7 @@ void PM_Sprint( void ) {
 #ifdef GAMEDLL // Gordon: FIXME: predict leadership clientside
 			if( pm->leadership ) {
 				rechargebase = (float)(500 * PM_STAMINA_RECHARGE) + 500;
-			} else 
+			} else
 #endif // GAMEDLL
 			{
 				if( pm->skill[SK_BATTLE_SENSE] >= 2 )
@@ -5924,16 +5926,16 @@ void PmoveSingle (pmove_t *pmove) {
 			if (!BG_IsScopedWeapon(pm->ps->weapon) &&		// don't allow binocs if using the sniper scope
 				!BG_PlayerMounted(pm->ps->eFlags) &&		// or if mounted on a weapon
 				// rain - #215 - don't allow binocs w/ mounted mob. MG42 or mortar either.
-				pm->ps->weapon != WP_MOBILE_MG42_SET &&	
+				pm->ps->weapon != WP_MOBILE_MG42_SET &&
 				pm->ps->weapon != WP_MORTAR_SET)
 
 					pm->ps->eFlags |= EF_ZOOMING;
 		}
 
 		// don't allow binocs if in the middle of throwing grenade
-		if( (pm->ps->weapon == WP_GRENADE_LAUNCHER || 
-			pm->ps->weapon == WP_GRENADE_PINEAPPLE || 
-			pm->ps->weapon == WP_DYNAMITE) && 
+		if( (pm->ps->weapon == WP_GRENADE_LAUNCHER ||
+			pm->ps->weapon == WP_GRENADE_PINEAPPLE ||
+			pm->ps->weapon == WP_DYNAMITE) &&
 				pm->ps->grenadeTimeLeft > 0) {
 			pm->ps->eFlags &= ~EF_ZOOMING;
 		}
@@ -5968,7 +5970,7 @@ void PmoveSingle (pmove_t *pmove) {
 	}
 
 	// clear the respawned flag if attack and use are cleared
-	if ( pm->ps->stats[STAT_HEALTH] > 0 && 
+	if ( pm->ps->stats[STAT_HEALTH] > 0 &&
 		!( pm->cmd.buttons & (BUTTON_ATTACK /*| BUTTON_USE_HOLDABLE*/) ) ) {
 		pm->ps->pm_flags &= ~PMF_RESPAWNED;
 	}
@@ -6071,10 +6073,10 @@ void PmoveSingle (pmove_t *pmove) {
 		pm->cmd.forwardmove = 0;
 		pm->cmd.rightmove = 0;
 		pm->cmd.upmove = 0;
-		
+
 		#if 0
 			VectorClear(pm->ps->velocity);
-			
+
 			// set watertype, and waterlevel
 			PM_SetWaterLevel();
 			pml.previous_waterlevel = pmove->waterlevel;
@@ -6084,7 +6086,7 @@ void PmoveSingle (pmove_t *pmove) {
 
 			// set groundentity
 			PM_GroundTrace();
-			
+
 			// handle movement (gravity)
 			{
 				vec3_t	endVelocity;
@@ -6150,7 +6152,7 @@ void PmoveSingle (pmove_t *pmove) {
 				// tjw: this causes the 2.60 client to freak out
 				//PM_BeginWeaponChange( WP_SATCHEL_DET, WP_SATCHEL, qtrue );
 #ifdef CGAMEDLL
-				if(!(cgs.coverts & COVERTF_NO_SATCHEL_SWITCHBACK)) 
+				if(!(cgs.coverts & COVERTF_NO_SATCHEL_SWITCHBACK))
 					cg.weaponSelect = WP_SATCHEL;
 				else if(CG_WeaponSelectable(WP_STEN))
 					cg.weaponSelect = WP_STEN;
@@ -6212,7 +6214,7 @@ void PmoveSingle (pmove_t *pmove) {
 			PM_BeginWeaponChange( WP_MOBILE_MG42_SET, WP_MOBILE_MG42, qfalse );
 		}
 	}*/
-	
+
 	PM_Sprint();
 
 	// set groundentity, watertype, and waterlevel
@@ -6362,7 +6364,7 @@ int Pmove (pmove_t *pmove) {
 
 	if ( (pm->ps->stats[STAT_HEALTH] <= 0 || pm->ps->pm_type == PM_DEAD ) && pml.groundTrace.surfaceFlags & SURF_MONSTERSLICK )
 		return (pml.groundTrace.surfaceFlags);
-	else 
+	else
 		return (0);
 
 }
@@ -6398,5 +6400,5 @@ void PmovePredict(pmove_t *pmove, float frametime)
 		PM_StepSlideMove(qfalse);
 	else
 		PM_StepSlideMove(qtrue);
-		
+
 }

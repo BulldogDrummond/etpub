@@ -2292,6 +2292,7 @@ typedef struct {
 	float doubleJumpHeight; // from g_doubleJumpHeight
 	int misc; // from g_misc
 	float staminaRecharge; // Perro: Stamina Rebuild
+	int panzerLevelUp; // from g_panzerLevelUp
 	// tjw: etpub server version
 	int etpub;
 

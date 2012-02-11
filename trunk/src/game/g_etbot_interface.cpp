@@ -269,7 +269,7 @@ static qboolean weaponCharged(playerState_t* ps, team_t team, int weapon, int* s
 	case WP_PANZERFAUST:
 		if ( ps->eFlags & EF_PRONE )
 			return qfalse;
-		if ( skill[SK_HEAVY_WEAPONS] >= 1 )
+		if ( skill[SK_HEAVY_WEAPONS] >= g_panzerLevelUp.integer )
 		{
 			if ( WC_WEAPON_TIME_LEFT < WC_SOLDIER_TIME * 0.66f)
 				return qfalse;
@@ -1882,7 +1882,7 @@ public:
 		for (int clNum = 1; clNum < level.maxclients; clNum++)
 		{
 			clEnt = &g_entities[clNum];
-			if(!clEnt || clEnt->inuse || (clEnt->client && 
+			if(!clEnt || clEnt->inuse || (clEnt->client &&
 				(clEnt->client->pers.connected == CON_CONNECTED || clEnt->client->pers.connected == CON_CONNECTING)))
 			{
 				continue;
@@ -2288,7 +2288,7 @@ public:
 			if(ammo==0 && bot->client->ps.weaponstate==WEAPON_READY)
 				cmd.weapon = WP_CARBINE;
 		}
-		else if(cmd.weapon == WP_FOOTKICK) 
+		else if(cmd.weapon == WP_FOOTKICK)
 		{
 			// convert from weapon request to command
 			cmd.buttons |= BUTTON_GESTURE;

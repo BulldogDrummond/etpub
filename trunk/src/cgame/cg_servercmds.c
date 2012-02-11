@@ -392,6 +392,7 @@ void CG_ParseEtpubinfo( void ) {
 		atof(Info_ValueForKey(info, "g_doubleJumpHeight"));
 	cgs.staminaRecharge =
 		atof(Info_ValueForKey(info, "g_staminaRecharge"));
+	cgs.panzerLevelUp = atoi(Info_ValueForKey(info, "g_panzerLevelUp"));
 	cgs.weapons = atoi(Info_ValueForKey(info, "g_weapons"));
 	cgs.coverts = atoi(Info_ValueForKey(info, "g_coverts"));
 	cgs.medics = atoi(Info_ValueForKey(info, "g_medics"));

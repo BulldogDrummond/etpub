@@ -86,6 +86,8 @@ extern vmCvar_t g_staminaRecharge;
 extern vmCvar_t g_medics;
 // flms
 extern vmCvar_t g_mg42;
+// harald
+extern vmCvar_t g_panzerLevelUp;
 
 // pheno
 extern vmCvar_t g_mode;

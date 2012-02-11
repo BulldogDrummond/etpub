@@ -2112,3 +2112,5 @@
            guid to be banned
 * harald:  kick players with etpub client version mismatch when g_clientVersion
            is defined in server.cfg
+* harald:  added g_panzerLevelUp for gaining 'Improved Projectile Resources'
+           upgrade for panzers (etpro b_panzerLevelUp)

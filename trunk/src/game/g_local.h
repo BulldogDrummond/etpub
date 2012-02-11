@@ -2357,6 +2357,7 @@ extern vmCvar_t g_mg42;
 
 // harald
 extern vmCvar_t g_clientVersion;
+extern vmCvar_t g_panzerLevelUp;
 
 // Michael
 
