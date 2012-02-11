@@ -574,7 +574,7 @@ static const gentity_field_t gclient_fields[] = {
 	_et_gclient_addfield(		sess.sessionTeam,											FIELD_INT,			0										),
 	_et_gclient_addfield(		sess.spectatorTime,											FIELD_INT,			0										),
 	_et_gclient_addfield(		sess.spectatorState,										FIELD_INT,			0										),
-	_et_gclient_addfield(		sess.spectatorClient,										FIELD_ENTITY,		0										),
+	_et_gclient_addfield(		sess.spectatorClient,										FIELD_INT,		    0										),
 	// missing sess.latchSpectatorClient
 	_et_gclient_addfield(		sess.playerType,											FIELD_INT,			0										),
 	_et_gclient_addfield(		sess.playerWeapon,											FIELD_INT,			0										),
