@@ -2087,6 +2087,12 @@ void ClientUserinfoChanged( int clientNum ) {
 		}
 	}
 
+	// pheno: keep trying to load stored XP on every userinfo change in
+	//        case cl_guid is not yet set for the first connect
+	if( !client->XPSave_loaded ) {
+		client->XPSave_loaded = G_xpsave_load( ent );
+	}
+
 	client->medals = 0;
 	for( i = 0; i < SK_NUM_SKILLS; i++ ) {
 		client->medals += client->sess.medals[ i ];
