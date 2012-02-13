@@ -2595,9 +2595,9 @@ char *ClientConnect( int clientNum, qboolean firstTime, qboolean isBot ) {
 
 		value = Info_ValueForKey( userinfo, "ip" );
 
-		if( !client->sess.guid ||
-			!Q_stricmp( client->sess.guid, "" ) ||
-			!Q_stricmp( client->sess.guid, "NOIP" ) ) {
+		if( !client->sess.ip ||
+			!Q_stricmp( client->sess.ip, "" ) ||
+			!Q_stricmp( client->sess.ip, "NOIP" ) ) {
 			Q_strncpyz( client->sess.ip, value, sizeof( client->sess.ip ) );
 		}
 	//}
