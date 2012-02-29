@@ -1,12 +1,12 @@
 /*
  *  sha.cpp
  *
- *	Copyright (C) 1998
- *	Paul E. Jones <paulej@arid.us>
- *	All Rights Reserved
+ *  Copyright (C) 1998, 2009
+ *  Paul E. Jones <paulej@packetizer.com>
+ *  All Rights Reserved
  *
  *****************************************************************************
- *	$Id: sha.c,v 1.2 2004/03/27 18:00:33 paulej Exp $
+ *  $Id: sha.c 12 2009-06-22 19:34:25Z paulej $
  *****************************************************************************
  *
  *  Description:
