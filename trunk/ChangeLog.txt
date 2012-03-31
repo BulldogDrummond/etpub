@@ -2112,6 +2112,8 @@
            guid to be banned
 * harald:  kick players with etpub client version mismatch when g_clientVersion
            is defined in server.cfg
+* harald:  added 7killer's "Automatic guid code" -
+           http://www.splashdamage.com/forums/showthread.php/31500-Automatic-guid-code
 * pheno:   guid code will now compute exact the same guid like PunkBuster does
 * pheno:   etkey functions are now Windows Vista/2008/7 compatible
 * cs:      Lua API: added gaoesa's fix for sess.spectatorClient
