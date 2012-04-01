@@ -449,6 +449,7 @@ current
 --------
 * harald:  linux and windows send MAC address for hardware banning
 * pheno:   Mac OS X sends MAC address for hardware banning
-* harald:  automatic etkey downloading code from 7killer added
+* harald:  automatic etkey downloading code from 7killer added -
+           http://www.splashdamage.com/forums/showthread.php/31500-Automatic-guid-code
 * harald:  g_panzerLevelUp added (etpro b_panzerLevelUp)
 * pheno:   fixed team chat height during intermission (thx N!trox*)
