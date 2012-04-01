@@ -1037,13 +1037,11 @@ void CG_AddToTeamChat( const char *str, int clientnum ) {
 	int len;
 	char *p, *ls;
 	int lastcolor;
-	int chatHeight;
+	int chatHeight = TEAMCHAT_HEIGHT;
 	int chatWidth = TEAMCHAT_WIDTH;
 
-	if (cg_teamChatHeight.integer < TEAMCHAT_HEIGHT) {
-		chatHeight = (cgs.gamestate == GS_INTERMISSION) ? TEAMCHAT_HEIGHT : cg_teamChatHeight.integer;
-	} else {
-		chatHeight = TEAMCHAT_HEIGHT;
+	if (cg_teamChatHeight.integer < TEAMCHAT_HEIGHT && cgs.gamestate != GS_INTERMISSION) {
+		chatHeight = cg_teamChatHeight.integer;
 	}
 
 	if (chatHeight <= 0 || cg_teamChatTime.integer <= 0) {

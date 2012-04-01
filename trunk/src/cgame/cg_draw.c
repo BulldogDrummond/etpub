@@ -839,18 +839,16 @@ CG_DrawTeamInfo
 static void CG_DrawTeamInfo( void ) {
 	int i;
 	vec4_t		hcolor;
-	int		chatHeight;
+	int		chatHeight = TEAMCHAT_HEIGHT;
 	float	alphapercent;
 	float	lineHeight = 9.f;
 	float 	scaleVal;
 	qhandle_t flag = 0;
 
 	int chatWidth = 640 - cg.hud.chattext[0] - 100;
- 
-	if( cg_teamChatHeight.integer < TEAMCHAT_HEIGHT ) {
+
+	if( cg_teamChatHeight.integer < TEAMCHAT_HEIGHT && cgs.gamestate != GS_INTERMISSION ) {
 		chatHeight = cg_teamChatHeight.integer;
-	} else {
-		chatHeight = TEAMCHAT_HEIGHT;
 	}
 
 	if( chatHeight <= 0 || cg.hud.chattext[0] < 0 ) {
