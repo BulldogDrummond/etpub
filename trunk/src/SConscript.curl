@@ -16,25 +16,31 @@ class idBuildCurl( scons_utils.idSetupBase ):
 		self.TrySimpleCommand( 'cd ' + self.curl_dir + ' ; chmod u+x configure' )
 		self.TrySimpleCommand( 'cd ' + self.curl_dir + ' ; make distclean' )
 		
-		cmd = 'cd ' + self.curl_dir + ' ; CC=\'' + g_env['CC'] + '\' ; ./configure'
+		cmd = 'cd ' + self.curl_dir + ' ; ./configure'
 		
 		if( g_os == 'win32' ):
 			cmd += ' --host=i586-mingw32msvc'
 		
-		cmd += ' --enable-shared=no --enable-static=yes --enable-libgcc --enable-http --disable-manual --disable-ipv6 --disable-ares --without-ssl --without-zlib --without-libidn '
+		cmd += ' --enable-shared=no --enable-static=yes --enable-libgcc --enable-http --disable-manual --disable-ipv6 --disable-ares --without-ssl --without-zlib --without-libidn'
 		
 		# disable unneeded protocols
-		cmd += ' --disable-dict --disable-file --disable-ftp --disable-gopher --disable-imap --disable-ldap --disable-pop3 --disable-rtsp --disable-smtp --disable-telnet --disable-tftp '
+		cmd += ' --disable-dict --disable-file --disable-ftp --disable-gopher --disable-imap --disable-ldap --disable-pop3 --disable-rtsp --disable-smtp --disable-telnet --disable-tftp'
 		
-		if ( self.debug ):
-			cmd += '--enable-debug'
+		if( self.debug ):
+			cmd += ' --enable-debug'
 		else:
-			cmd += '--disable-debug'
+			cmd += ' --disable-debug'
+		
+		# pheno: build Mac OS X universal library
+		if( OS == 'Darwin' ):
+			cmd += ' --disable-dependency-tracking CFLAGS=\'-arch ppc -arch i386\' LDFLAGS=\'-arch ppc -arch i386\''
+		
+		cmd += ' CC=\'' + g_env['CC'] + '\''
 		
 		self.SimpleCommand( cmd )
 		self.SimpleCommand( 'cd ' + self.curl_dir + ' ; make' )
 		
-		if ( self.debug ):
+		if( self.debug ):
 			self.SimpleCommand( 'cd ' + self.curl_dir + ' ; mv ./lib/.libs/libcurl.a ./lib/.libs/libcurl-debug.a' )
 		else:
 			self.SimpleCommand( 'cd ' + self.curl_dir + ' ; mv ./lib/.libs/libcurl.a ./lib/.libs/libcurl-release.a' )
