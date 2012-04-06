@@ -13,7 +13,6 @@ Import( GLOBALS )
 class idBuildCurl( scons_utils.idSetupBase ):
 
 	def Compile( self, target = None, source = None, env = None ):
-		self.TrySimpleCommand( 'cd ' + self.curl_dir + ' ; chmod u+x configure' )
 		self.TrySimpleCommand( 'cd ' + self.curl_dir + ' ; make distclean' )
 		
 		cmd = 'cd ' + self.curl_dir + ' ; ./configure'
@@ -33,7 +32,7 @@ class idBuildCurl( scons_utils.idSetupBase ):
 		
 		# pheno: build Mac OS X universal library
 		if( OS == 'Darwin' ):
-			cmd += ' --disable-dependency-tracking CFLAGS=\'-arch ppc -arch i386\' LDFLAGS=\'-arch ppc -arch i386\''
+			cmd += ' --disable-dependency-tracking CFLAGS=\'-arch ppc -arch i386\''
 		
 		cmd += ' CC=\'' + g_env['CC'] + '\''
 		
