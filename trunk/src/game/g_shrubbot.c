@@ -4062,7 +4062,7 @@ qboolean G_shrubbot_userinfo(gentity_t *ent, int skiparg)
 	}else{
 		SPC(va("^1MAC MISMATCH! ^/Stored MAC: ^d%s", vic->client->sess.mac ?
 			vic->client->sess.mac : "Unknown"));
-		SPC( va("^/Current IP: ^d%s", temp ? temp : "Unknown"));
+		SPC( va("^/Current MAC: ^d%s", temp ? temp : "Unknown"));
 	}
 
 	return qtrue;
