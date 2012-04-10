@@ -3940,6 +3940,6 @@ void DisableStackTrace();
 //
 // cg_uid.c
 //
-void GUID_test(void);
+void CG_UpdateGUID( void );
 
 #endif

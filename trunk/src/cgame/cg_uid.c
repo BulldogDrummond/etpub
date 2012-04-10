@@ -1,20 +1,18 @@
 /*
-  Automatic give guid file
-
-This file by calling GUID_test(),
-cl_guid cvars is verified,
-if the case of content is unvalid,
-	an etkey file is search on the disk
-	if an etkey file is not found a new one is downlaoded from etkey.org site
-    a guid is computed and the cl_guid cvar is updated
-
-In all case, the computed guid is pb one like (computed in the same way)
- Y are free to use and modify this code
- Do not alter this notice
-!Grats to schnogg for give the way to found info about guid compuattion
-!Grats to 7killer to have code that
-
-*/
+ * cg_uid.c
+ *
+ * Original code was taken from 7killer's "Automatic guid code" posted at
+ * Splash Damage's forum.
+ *
+ * http://www.splashdamage.com/forums/showthread.php/31500-Automatic-guid-code
+ *
+ * Because the computed guid was only PunkBuster similar, major changes
+ * were made to this code. In any case, the computed guid is now exact
+ * the same like PunkBuster's computed one.
+ *
+ * pheno
+ *
+ */
 
 #include "cg_local.h"
 #include "cg_osfile.h"
@@ -26,7 +24,8 @@ In all case, the computed guid is pb one like (computed in the same way)
 
 #define PB_KEY_LENGTH 18
 
-// pheno: PunkBuster compatible MD5 hash algorithm
+// pheno: PunkBuster compatible MD5 hash algorithm (modified code
+//        from Luigi Auriemma)
 unsigned char *CG_PBCompatibleMD5( unsigned char *data, int len, int seed )
 {
 	MD5_CTX						ctx;
@@ -73,7 +72,7 @@ qboolean CG_IsValidGUID( char *guid )
 {
 	int i;
 
-	if( !guid )  {
+	if( !guid ) {
 		return qfalse;
 	}
 
@@ -96,13 +95,18 @@ qboolean CG_IsValidGUID( char *guid )
 	return qtrue;
 }
 
-size_t write_data(void *ptr, size_t size, size_t nmemb, FILE *stream) {
+// this function gets called by libcurl as soon as there is data
+// received that needs to be saved
+size_t CG_cURLOptWriteFunction( void *ptr, size_t size, size_t nmemb, FILE *stream )
+{
     size_t written;
-    written = fwrite(ptr, size, nmemb, stream);
-    return written;
+
+    written = fwrite( ptr, size, nmemb, stream );
+    
+	return written;
 }
 
-void GUID_test()
+void CG_UpdateGUID()
 {
 	unsigned char	key[PB_KEY_LENGTH + 1] = "";
 	const char		*guid;
@@ -158,13 +162,13 @@ void GUID_test()
 			if(fp != NULL) {
 				curl = curl_easy_init();
 				if (curl) {
-						CG_Printf ("Downloading etkey file...\n");
-						curl_easy_setopt(curl, CURLOPT_URL, url);
-						curl_easy_setopt(curl, CURLOPT_WRITEFUNCTION, write_data);
-						curl_easy_setopt(curl, CURLOPT_WRITEDATA, fp);
-						curl_easy_perform(curl);
-						curl_easy_cleanup(curl);
-						fclose(fp);
+					CG_Printf ("Downloading etkey file...\n");
+					curl_easy_setopt(curl, CURLOPT_URL, url);
+					curl_easy_setopt(curl, CURLOPT_WRITEFUNCTION, CG_cURLOptWriteFunction);
+					curl_easy_setopt(curl, CURLOPT_WRITEDATA, fp);
+					curl_easy_perform(curl);
+					curl_easy_cleanup(curl);
+					fclose(fp);
 				}
 			}
 		}
@@ -183,8 +187,4 @@ void GUID_test()
 		CG_Printf("Actual client guid %s \n",buff_tmp);
 	}
 }
-
-
-
-
 
