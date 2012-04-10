@@ -77,8 +77,8 @@ dt {
 enable shrubbot.  See <a href="#shrubbot">shrubbot</a> documentation for
 more information about this file.</p>
 <p>Example:<pre>g_shrubbot "shrubbot.cfg"</pre></p>
-<p>This depends on punkbuster's guid, so don't turn this on unless you
-have punkbuster enabled on your server.</p>
+<p>This depends on client's guid, so don't turn this on unless you
+have punkbuster enabled or a client > 20100628 installed on your server.</p>
 <p>Default is "" (Disabled)</p>
 
 <a name="g_logAdmin"></a>
@@ -310,7 +310,8 @@ shuffle, etc.
 <dt>16<dd>store the xp at restarts, nextmaps, mapvotes, campaignvotes and
 	similar cases.
 </dl>
-<p>Storing XP on disconnect depends on the client guid.</p>
+<p>Storing XP on disconnect depends on client's guid, so don't turn this on unless you
+have punkbuster enabled or a client > 20100628 installed on your server.</p>
 <p>Default is 0</p>
 
 <a name="g_XPSaveFile"></a>
