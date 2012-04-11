@@ -1979,7 +1979,8 @@ char *CheckSpoofing(gclient_t *client, char *guid, char *IP, char *mac, char *na
 	if(Q_stricmp(client->sess.guid, guid)){
 		if( !client->sess.guid ||
 			!Q_stricmp( client->sess.guid, "" ) ||
-			!Q_stricmp( client->sess.guid, "NOGUID" ) ) {
+			!Q_stricmp( client->sess.guid, "NOGUID" ) ||
+			!Q_stricmp( client->sess.guid, "unknown" ) ) {
 			// pheno: don't save defaults
 			if( Q_stricmp( guid, "unknown" ) && Q_stricmp( guid, "NO_GUID" ) ) {
 				Q_strncpyz( client->sess.guid, guid, sizeof( client->sess.guid ) );
@@ -2581,7 +2582,8 @@ char *ClientConnect( int clientNum, qboolean firstTime, qboolean isBot ) {
 		//      userinfo everywhere
 		if( !client->sess.guid ||
 			!Q_stricmp( client->sess.guid, "" ) ||
-			!Q_stricmp( client->sess.guid, "NOGUID" ) ) {
+			!Q_stricmp( client->sess.guid, "NOGUID" ) ||
+			!Q_stricmp( client->sess.guid, "unknown" ) ) {
 			if( Q_stricmp( guid, "unknown" ) && Q_stricmp( guid, "NO_GUID" ) ) {
 				Q_strncpyz( client->sess.guid, guid, sizeof( client->sess.guid ) );
 			}
