@@ -2087,6 +2087,12 @@ void ClientUserinfoChanged( int clientNum ) {
 		}
 	}
 
+	// pheno: keep trying to load stored XP on every userinfo change in
+	//        case cl_guid is not yet set for the first connect
+	if( !client->sess.XPSave_loaded ) {
+		client->sess.XPSave_loaded = G_xpsave_load( ent );
+	}
+
 	client->medals = 0;
 	for( i = 0; i < SK_NUM_SKILLS; i++ ) {
 		client->medals += client->sess.medals[ i ];
@@ -2651,8 +2657,9 @@ char *ClientConnect( int clientNum, qboolean firstTime, qboolean isBot ) {
 	// tjw: keep trying to load stored XP on every connect in case
 	//      cl_guid is not yet set for the firstTime connect
 	// josh: Moved this down here so the disconnect info isn't reset
-	if(!client->XPSave_loaded)
-		client->XPSave_loaded = G_xpsave_load(ent);
+	if( !client->sess.XPSave_loaded ) {
+		client->sess.XPSave_loaded = G_xpsave_load( ent );
+	}
 
 	if( g_gametype.integer == GT_WOLF_CAMPAIGN ) {
 		if( g_campaigns[level.currentCampaign].current == 0 || level.newCampaign ) {

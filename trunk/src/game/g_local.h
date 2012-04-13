@@ -720,6 +720,9 @@ typedef struct {
 	int ettv;
 	//flms - revive streak
 	int				rstreak;
+
+	// pheno
+	qboolean	XPSave_loaded;
 } clientSession_t;
 
 //
@@ -1073,7 +1076,6 @@ struct gclient_s {
 	qboolean		wantsscore;
 	qboolean		maxlivescalced;
 	int				disconnectLives;
-	qboolean		XPSave_loaded;
 	int				flametime;
 
 //unlagged - smooth clients #1
