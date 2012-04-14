@@ -2118,3 +2118,4 @@
 * harald:  added g_panzerLevelUp for gaining 'Improved Projectile Resources'
            upgrade for panzers (etpro b_panzerLevelUp)
 * pheno:   made XPSave more possible on PunkBuster disabled servers
+* pheno:   Lua API: et_ClientBegin() is now ETPro compatible (called only once per map)

@@ -2823,7 +2823,8 @@ void ClientBegin( int clientNum )
 	int			flags;
 	int			spawn_count, lives_left;		// DHM - Nerve
 	int			health;
-	qboolean	maxlives;
+	qboolean	maxlives,
+				callLuaHook = qfalse;
 
 	ent = g_entities + clientNum;
 
@@ -2879,6 +2880,8 @@ void ClientBegin( int clientNum )
 				level.forceCvars[i][0],
 				level.forceCvars[i][1]));
 		}
+
+		callLuaHook = qtrue;
 	}
 	client->pers.connected = CON_CONNECTED;
 	client->pers.teamState.state = TEAM_BEGIN;
@@ -3070,7 +3073,11 @@ void ClientBegin( int clientNum )
 
 #ifdef LUA_SUPPORT
 	// Lua API callbacks
-	G_LuaHook_ClientBegin( clientNum );
+	// pheno: call the hook only once at the first ClientBegin() call
+	//        for the client (ETPro behavior)
+	if( callLuaHook ) {
+		G_LuaHook_ClientBegin( clientNum );
+	}
 #endif // LUA_SUPPORT
 }
 
