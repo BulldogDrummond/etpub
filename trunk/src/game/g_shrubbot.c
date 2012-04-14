@@ -2738,9 +2738,9 @@ qboolean G_shrubbot_admintest(gentity_t *ent, int skiparg)
 	AP(va("chat \"^/admintest: ^7%s^7 is a level %d user %s%s^7%s\" -1",
 		vic->client->pers.netname,
 		l,
-		(lname) ? "(" : "",
-		(lname) ? lname : "",
-		(lname) ? ")" : ""));
+		(*lname) ? "(" : "",
+		(*lname) ? lname : "",
+		(*lname) ? ")" : ""));
 	return qtrue;
 }
 
