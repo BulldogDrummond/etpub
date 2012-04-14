@@ -1401,6 +1401,8 @@ void G_Hitsound(gentity_t *targ,
 		return;
 	// pheno: don't blow enemy cover with hitsounds on FF disabled servers
 	if( !g_friendlyFire.integer &&
+		!( g_reflectFriendlyFire.value > 0 &&
+			IsFFReflectable( mod ) ) &&
 		( OnSameTeam( targ, attacker ) ||
 			( targ->client->ps.powerups[PW_OPS_DISGUISED] &&
 				!( attacker->client->sess.skill[SK_SIGNALS] >= 4 &&
