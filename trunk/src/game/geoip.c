@@ -54,7 +54,7 @@ unsigned int GeoIP_seek_record(GeoIP *gi, unsigned long ipnum) {
 			step = 6 * x;
 
 			if (step + 6 >= gi->memsize) {
-				G_LogPrintf("GeoIP: Error Traversing Database for ipnum = %lu - Perhaps database is corrupt?\n",ipnum);
+				G_Printf("GeoIP: Error Traversing Database for ipnum = %lu - Perhaps database is corrupt?\n",ipnum);
 				return 255;
 			}
 
@@ -71,7 +71,7 @@ unsigned int GeoIP_seek_record(GeoIP *gi, unsigned long ipnum) {
 		}
 	}
 
-	G_LogPrintf("GeoIP: Error Traversing Database for ipnum = %lu - Perhaps database is corrupt?\n",ipnum);
+	G_Printf("GeoIP: Error Traversing Database for ipnum = %lu - Perhaps database is corrupt?\n",ipnum);
 	return 255;
 }
 
@@ -89,20 +89,20 @@ void GeoIP_open(void) {
 	gidb = (GeoIP *)malloc(sizeof(GeoIP));
 
 	if (gidb == NULL) {
-		G_LogPrintf("GeoIP: Memory allocation error for GeoIP struct\n");
+		G_Printf("GeoIP: Memory allocation error for GeoIP struct\n");
 		return;
 	}
 
 	gidb->memsize = trap_FS_FOpenFile("GeoIP.dat",&gidb->GeoIPDatabase,FS_READ);
 
 	if ((int)gidb->memsize < 0) {
-		G_LogPrintf("GeoIP: Error opening database\n");
+		G_Printf("GeoIP: Error opening database\n");
 		free(gidb);
 		gidb = NULL;
 		return;
 
 	} else if (gidb->memsize == 0) {
-		G_LogPrintf("GeoIP: Error zero-sized database file\n");
+		G_Printf("GeoIP: Error zero-sized database file\n");
 		trap_FS_FCloseFile(gidb->GeoIPDatabase);
 		free(gidb);
 		gidb = NULL;
@@ -117,7 +117,7 @@ void GeoIP_open(void) {
 				return;
 			}
 
-		G_LogPrintf("GeoIP: Memory allocation error for GeoIP cache\n");
+		G_Printf("GeoIP: Memory allocation error for GeoIP cache\n");
 		trap_FS_FCloseFile(gidb->GeoIPDatabase);
 		free(gidb);
 		gidb = NULL;
