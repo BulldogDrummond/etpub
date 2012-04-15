@@ -9,38 +9,19 @@ extern field_t fields[];
 
 lua_vm_t * lVM[LUA_NUM_VM];
 
-void QDECL LOG(const char *fmt, ...)
+void QDECL G_Lua_Printf( const char *fmt, ... )
 {
-	va_list argptr;
-	char buff[1024], string[1024];
-	int min, tens, sec;
+	va_list	argptr;
+	char	buff[1024];
 
-	va_start(argptr, fmt);
-	Q_vsnprintf(buff, sizeof(buff), fmt, argptr);
-	va_end(argptr);
+	va_start( argptr, fmt );
+	Q_vsnprintf( buff, sizeof( buff ), fmt, argptr );
+	va_end( argptr );
 	
-	if ( g_dedicated.integer ) {
-		trap_Printf(buff);
-	}
-	
-	if ( level.logFile ) {
-		if ( g_logOptions.integer & LOGOPTS_REALTIME ) {
-			Com_sprintf(string, sizeof(string), "%s %s", G_GetRealTime(), buff);
-		} else {
-			sec = level.time / 1000;
-			min = sec / 60;
-			sec -= min * 60;
-			tens = sec / 10;
-			sec -= tens * 10;
-
-			Com_sprintf(string, sizeof(string), "%i:%i%i %s", min, tens, sec, buff);
-		}
-
-		trap_FS_Write(string, strlen(string), level.logFile);
-	}
+	trap_Printf( buff );
 }
 
-void QDECL LOG(const char *fmt, ...)_attribute((format(printf,1,2)));
+void QDECL G_Lua_Printf( const char *fmt, ... )_attribute( ( format( printf, 1, 2 ) ) );
 
 /***************************/
 /* Lua et library handlers */
@@ -139,11 +120,36 @@ static int _et_G_Print(lua_State *L)
 }
 
 // et.G_LogPrint( text ) 
-static int _et_G_LogPrint(lua_State *L)
+static int _et_G_LogPrint( lua_State *L )
 {
-	char text[1024];
-	Q_strncpyz(text, luaL_checkstring(L, 1), sizeof(text));
-	LOG(text);
+	char	text[1024],
+			s[1024];
+	int		min,
+			tens,
+			sec;
+
+	Q_strncpyz( text, luaL_checkstring( L, 1 ), sizeof( text ) );
+
+	if( g_dedicated.integer ) {
+		trap_Printf( text );
+	}
+
+	if( level.logFile ) {
+		if( g_logOptions.integer & LOGOPTS_REALTIME ) {
+			Com_sprintf( s, sizeof( s ), "%s %s", G_GetRealTime(), text );
+		} else {
+			sec = level.time / 1000;
+			min = sec / 60;
+			sec -= min * 60;
+			tens = sec / 10;
+			sec -= tens * 10;
+
+			Com_sprintf( s, sizeof( s ), "%i:%i%i %s", min, tens, sec, text );
+		}
+
+		trap_FS_Write( s, strlen( s ), level.logFile );
+	}
+
 	return 0;
 }
 // }}}
@@ -1323,11 +1329,11 @@ qboolean G_LuaInit()
 			// try to open lua file
 			flen = trap_FS_FOpenFile(crt, &f, FS_READ);
 			if (flen < 0) {
-				LOG("Lua API: can not open file %s\n", crt);
+				G_Lua_Printf("Lua API: can not open file %s\n", crt);
 			} else if (flen > LUA_MAX_FSIZE) {
 				// quad: Let's not load arbitrarily big files to memory.
 				// If your lua file exceeds the limit, let me know.
-				LOG("Lua API: ignoring file %s (too big)\n", crt);
+				G_Lua_Printf("Lua API: ignoring file %s (too big)\n", crt);
 				trap_FS_FCloseFile(f);
 			} else {
 				code = malloc(flen + 1);
@@ -1339,7 +1345,7 @@ qboolean G_LuaInit()
 				if ( Q_stricmp(lua_allowedModules.string, "") &&
 					 !strstr(lua_allowedModules.string, signature) ) {
 					// don't load disallowed lua modules into vm
-					LOG("Lua API: Lua module [%s] [%s] disallowed by ACL\n", crt, signature);
+					G_Lua_Printf("Lua API: Lua module [%s] [%s] disallowed by ACL\n", crt, signature);
 				} else {
 					// Init lua_vm_t struct
 					vm = (lua_vm_t*) malloc(sizeof(lua_vm_t));
@@ -1369,7 +1375,7 @@ qboolean G_LuaInit()
 			else
 				crt = NULL;
 			if (num_vm >= LUA_NUM_VM) {
-				LOG("Lua API: too many lua files specified, only the first %d have been loaded\n", LUA_NUM_VM);
+				G_Lua_Printf("Lua API: too many lua files specified, only the first %d have been loaded\n", LUA_NUM_VM);
 				break;
 			}
 		}
@@ -1384,16 +1390,16 @@ qboolean G_LuaCall(lua_vm_t* vm, char *func, int nargs, int nresults)
 	int res = lua_pcall(vm->L, nargs, nresults, 0);
 	if (res == LUA_ERRRUN) {
 		// pheno: made output more ETPro compatible
-		LOG("Lua API: %s error running lua script: %s\n", func, lua_tostring(vm->L, -1));
+		G_Lua_Printf("Lua API: %s error running lua script: %s\n", func, lua_tostring(vm->L, -1));
 		lua_pop(vm->L, 1);
 		vm->err++;
 		return qfalse;
 	} else if (res == LUA_ERRMEM) {
-		LOG("Lua API: memory allocation error #2 ( %s )\n", vm->file_name);
+		G_Lua_Printf("Lua API: memory allocation error #2 ( %s )\n", vm->file_name);
 		vm->err++;
 		return qfalse;
 	} else if (res == LUA_ERRERR) {
-		LOG("Lua API: traceback error ( %s )\n", vm->file_name);
+		G_Lua_Printf("Lua API: traceback error ( %s )\n", vm->file_name);
 		vm->err++;
 		return qfalse;
 	}
@@ -1432,7 +1438,7 @@ qboolean G_LuaStartVM( lua_vm_t *vm )
 	// Open a new lua state
 	vm->L = luaL_newstate();
 	if( !vm->L ) {
-		LOG( "Lua API: Lua failed to initialise.\n" );
+		G_Lua_Printf( "Lua API: Lua failed to initialise.\n" );
 		return qfalse;
 	}
 
@@ -1497,17 +1503,17 @@ qboolean G_LuaStartVM( lua_vm_t *vm )
 	luaL_register( vm->L, "et", etlib );
 
 	// Load the code
-	LOG( "Lua API: Loading %s\n", vm->file_name );
+	G_Lua_Printf( "Lua API: Loading %s\n", vm->file_name );
 
 	res = luaL_loadbuffer( vm->L, vm->code, vm->code_size, vm->file_name );
 	if( res == LUA_ERRSYNTAX ) {
-		LOG( "Lua API: syntax error during pre-compilation: %s\n",
+		G_Lua_Printf( "Lua API: syntax error during pre-compilation: %s\n",
 			lua_tostring( vm->L, -1 ) );
 		lua_pop( vm->L, 1 );
 		vm->err++;
 		return qfalse;
 	} else if( res == LUA_ERRMEM ) {
-		LOG( "Lua API: memory allocation error #1 ( %s )\n", vm->file_name );
+		G_Lua_Printf( "Lua API: memory allocation error #1 ( %s )\n", vm->file_name );
 		vm->err++;
 		return qfalse;
 	}
@@ -1541,7 +1547,7 @@ void G_LuaStopVM(lua_vm_t *vm)
 		if (lVM[vm->id] == vm)
 			lVM[vm->id] = NULL;
 		if (!vm->err) {
-			LOG("Lua API: Lua module [%s] [%s] unloaded.\n", vm->file_name, vm->mod_signature);
+			G_Lua_Printf("Lua API: Lua module [%s] [%s] unloaded.\n", vm->file_name, vm->mod_signature);
 		}
 	}
 	free(vm);
