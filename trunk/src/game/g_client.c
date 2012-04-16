@@ -2864,7 +2864,7 @@ void ClientBegin( int clientNum )
 			}
 
 			// if defined, drop clients with client version mismatch
-			if(strcmp(g_clientVersion.string, "") && ent->active) {
+			if(strcmp(g_clientVersion.string, "")) {
 			char etpubc[10];
 			Q_strncpyz(etpubc, Info_ValueForKey(userinfo, "cg_etpubc"), sizeof(etpubc));
 				if(strcmp(g_clientVersion.string, etpubc)) {
