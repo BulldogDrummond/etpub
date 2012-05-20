@@ -2120,3 +2120,4 @@
 * pheno:   made XPSave and Shrubbot possible on PunkBuster disabled servers
 * pheno:   Lua API: et_ClientBegin() is now ETPro compatible (called only once per map)
 * pheno:   moved standard output of GeoIP and Lua API to console
+* harald:  g_friendlyFireOpts 8 allows for FF on vehichles (ET_MOVER)

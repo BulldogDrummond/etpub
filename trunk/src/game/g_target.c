@@ -674,7 +674,7 @@ void G_KillEnts( const char* target, gentity_t* ignore, gentity_t* killer, means
 		}
 
 		if( targ->s.eType == ET_CONSTRUCTIBLE ) {
-			if( killer ) {
+			if( killer && G_GetTeamFromEntity( killer ) != G_GetTeamFromEntity( targ ) ) {
 				G_AddKillSkillPointsForDestruction( killer, mod, &targ->constructibleStats );
 			}
 			targ->die(targ, killer, killer, targ->health, 0);

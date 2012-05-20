@@ -1793,7 +1793,7 @@ void G_Damage( gentity_t *targ, gentity_t *inflictor, gentity_t *attacker,  vec3
 		}
 
 		// check for team
-		if( G_GetTeamFromEntity( inflictor ) == G_GetTeamFromEntity( targ ) ) {
+		if( G_GetTeamFromEntity( inflictor ) == G_GetTeamFromEntity( targ ) && !(g_friendlyFireOpts.integer & FFOPTS_FF_MOVERS) ) {
 			return;
 		}
 	} else if ( targ->s.eType == ET_EXPLOSIVE ) {

@@ -3339,6 +3339,7 @@ void G_IntermissionVoteTally( gentity_t *ent );
 #define		FFOPTS_MINE_OVERRIDE 1
 #define		FFOPTS_ALLOW_BOOSTING 2
 #define		FFOPTS_NO_FRIENDLY_MINES 4
+#define		FFOPTS_FF_MOVERS 8
 
 // tjw: g_shuffle_rating
 #define SHUFR_XP	1
