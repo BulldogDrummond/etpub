@@ -2825,6 +2825,7 @@ void ClientBegin( int clientNum )
 	int			health;
 	qboolean	maxlives,
 				callLuaHook = qfalse;
+	char 		*dropReason = NULL;
 
 	ent = g_entities + clientNum;
 
@@ -2858,9 +2859,7 @@ void ClientBegin( int clientNum )
 				if(g_logOptions.integer & LOGOPTS_BAN_CONN) {
 					AP(va("cpm \"Banned player: %s^7, tried to connect.\"", Info_ValueForKey(userinfo, "name")));
 				}
-				trap_DropClient(clientNum,
-												va("You are banned from this server.\n%s\n%s\n", reason, g_dropMsg.string),
-												0);
+				dropReason = va("You are banned from this server.\n%s\n%s\n", reason, g_dropMsg.string);
 			}
 
 			// if defined, drop clients with client version mismatch
@@ -2869,7 +2868,7 @@ void ClientBegin( int clientNum )
 			Q_strncpyz(etpubc, Info_ValueForKey(userinfo, "cg_etpubc"), sizeof(etpubc));
 				if(strcmp(g_clientVersion.string, etpubc)) {
 					G_LogPrintf("Client version mismatch: found: %s, required: %s\n", etpubc, g_clientVersion.string);
-					trap_DropClient(clientNum, va("Client version mismatch:\nFound: %s\nRequired: %s", etpubc, g_clientVersion.string), 0);
+					dropReason = va("Client version mismatch:\nFound: %s\nRequired: %s", etpubc, g_clientVersion.string);
 				}
 			}
 		}
@@ -3071,11 +3070,15 @@ void ClientBegin( int clientNum )
 	G_smvUpdateClientCSList(ent);
 	// OSP
 
+	if( dropReason != NULL ) {
+		trap_DropClient( clientNum, dropReason, 0 );
+	}
+
 #ifdef LUA_SUPPORT
 	// Lua API callbacks
 	// pheno: call the hook only once at the first ClientBegin() call
 	//        for the client (ETPro behavior)
-	if( callLuaHook ) {
+	if( callLuaHook && dropReason == NULL ) {
 		G_LuaHook_ClientBegin( clientNum );
 	}
 #endif // LUA_SUPPORT
