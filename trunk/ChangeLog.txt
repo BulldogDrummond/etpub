@@ -2112,8 +2112,6 @@
            guid to be banned
 * harald:  kick players with etpub client version mismatch when g_clientVersion
            is defined in server.cfg
-* pheno:   guid code will now compute exact the same guid like PunkBuster does
-* pheno:   etkey functions are now Windows Vista/2008/7 compatible
 * cs:      Lua API: added gaoesa's fix for sess.spectatorClient
 * harald:  added g_panzerLevelUp for gaining 'Improved Projectile Resources'
            upgrade for panzers (etpro b_panzerLevelUp)

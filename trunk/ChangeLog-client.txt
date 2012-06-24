@@ -451,5 +451,7 @@ current
 * pheno:   Mac OS X sends MAC address for hardware banning
 * harald:  automatic etkey downloading code from 7killer added -
            http://www.splashdamage.com/forums/showthread.php/31500-Automatic-guid-code
+* pheno:   guid code will now compute exact the same guid like PunkBuster does
+* pheno:   etkey functions are now Windows Vista/2008/7 compatible
 * harald:  g_panzerLevelUp added (etpro b_panzerLevelUp)
 * pheno:   fixed team chat height during intermission (thx N!trox*)
