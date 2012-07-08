@@ -62,25 +62,6 @@ bg_playerclass_t bg_allies_playerclasses[NUM_PLAYER_CLASSES] = {
 	},
 };
 
-// pheno: mode - class for allies with all weapons
-bg_playerclass_t bg_allies_modeallweaponsclass = {
-	0,
-	"",
-	"",
-	"",
-	{
-		WP_THOMPSON,
-		WP_MOBILE_MG42,
-		WP_FLAMETHROWER,
-		WP_PANZERFAUST,
-		WP_MORTAR,
-		WP_CARBINE,
-		WP_STEN,
-		WP_FG42,
-		WP_GARAND
-	}
-};
-
 bg_playerclass_t bg_axis_playerclasses[NUM_PLAYER_CLASSES] = {
 	{
 		PC_SOLDIER,
@@ -140,24 +121,27 @@ bg_playerclass_t bg_axis_playerclasses[NUM_PLAYER_CLASSES] = {
 	},
 };
 
-// pheno: mode - class for axis with all weapons
-bg_playerclass_t bg_axis_modeallweaponsclass = {
-	0,
-	"",
-	"",
-	"",
-	{
-		WP_MP40,
-		WP_MOBILE_MG42,
-		WP_FLAMETHROWER,
-		WP_PANZERFAUST,
-		WP_MORTAR,
-		WP_KAR98,
-		WP_STEN,
-		WP_FG42,
-		WP_K43
-	}
+// pheno
+#ifdef GAMEDLL
+weapon_t bg_unlockedWeaponsME[MAX_WEAPS_PER_CLASS] =
+{
+	WP_NONE,
+	WP_STEN
 };
+
+weapon_t bg_unlockedWeapons[MAX_WEAPS_PER_CLASS] =
+{
+	WP_NONE,
+	WP_PANZERFAUST,
+	WP_FLAMETHROWER,
+	WP_STEN,
+	WP_CARBINE,
+	WP_GARAND,
+	WP_MOBILE_MG42,
+	WP_FG42,
+	WP_MORTAR
+};
+#endif
 
 bg_playerclass_t* BG_GetPlayerClassInfo( int team, int cls ) {
 	bg_playerclass_t* teamList;
@@ -190,13 +174,6 @@ qboolean BG_ClassHasWeapon(bg_playerclass_t* classInfo, weapon_t weap) {
 		return qfalse;
 	}
 
-	// pheno: mode - players can pick up any weapon on the ground
-#ifdef GAMEDLL
-	if( g_mode.integer & MODE_ALLWEAPONS ) {
-		return qtrue;
-	}
-#endif
-
 	for( i = 0; i < MAX_WEAPS_PER_CLASS; i++) {
 		if(classInfo->classWeapons[i] == weap) {
 			return qtrue;
@@ -205,6 +182,28 @@ qboolean BG_ClassHasWeapon(bg_playerclass_t* classInfo, weapon_t weap) {
 	return qfalse;
 }
 
+/*
+================
+BG_UnlockWeapons
+
+pheno: unlock weapons for both teams and all classes
+================
+*/
+#ifdef GAMEDLL
+void BG_UnlockWeapons(bg_playerclass_t *classInfo, int classnum, team_t team)
+{
+	if (g_unlockedWeapons.integer & (1 << classnum)) {
+		memcpy(classInfo->classWeapons, bg_unlockedWeapons, sizeof(classInfo->classWeapons));
+
+		if (team == TEAM_ALLIES) {
+			classInfo->classWeapons[0] = WP_THOMPSON;
+		} else if (team == TEAM_AXIS) {
+			classInfo->classWeapons[0] = WP_MP40;
+		}
+	}
+}
+#endif
+
 qboolean BG_WeaponIsPrimaryForClassAndTeam( int classnum, team_t team, weapon_t weapon )
 {
 	bg_playerclass_t *classInfo;
@@ -212,9 +211,19 @@ qboolean BG_WeaponIsPrimaryForClassAndTeam( int classnum, team_t team, weapon_t 
 	if( team == TEAM_ALLIES ) {
 		classInfo = &bg_allies_playerclasses[classnum];
 
+// pheno: unlock weapons for allied team
+#ifdef GAMEDLL
+		BG_UnlockWeapons(classInfo, classnum, team);
+#endif
+
 		return BG_ClassHasWeapon( classInfo, weapon );
 	} else if( team == TEAM_AXIS ) {
 		classInfo = &bg_axis_playerclasses[classnum];
+
+// pheno: unlock weapons for axis team
+#ifdef GAMEDLL
+		BG_UnlockWeapons(classInfo, classnum, team);
+#endif
 
 		return BG_ClassHasWeapon( classInfo, weapon );
 	}

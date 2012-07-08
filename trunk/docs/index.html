@@ -33,6 +33,12 @@ dt {
 <td><a href="#g_panzerLevelUp">g_panzerLevelUp</a></td>
 <td><a href="#g_friendlyFireOpts">g_friendlyFireOpts</a></td>
 </tr>
+<tr>
+<td><a href="#g_mode">g_mode</a></td>
+<td><a href="#g_unlockedWeapons">g_unlockedWeapons</a></td>
+<td>&nbsp;</td>
+<td>&nbsp;</td>
+</tr>
 </table>
 
 <br>
@@ -3330,9 +3336,6 @@ will be replaced by the name of the <strong>a</strong>ttacker.</p>
 	<dd>Each class receives adrenaline
 	<dt>4
 	<dd>No damage on players
-	<dt>8
-	<dd>Players can pick up any weapon on the ground (Removing this
-bitflag will force all players to respawn!)</p>
 </dl>
 <p>Default is 0</p>
 
@@ -3349,6 +3352,25 @@ bitflag will force all players to respawn!)</p>
 <p>Determines the skill level at which the panzerfausts receive the 'Improved Projectile Resources' upgrade. The mortar is unaffected.</p>
 <p>A value of 5 means that the panzerfaust will never be subject to this upgrade, valid values 1 - 5.</p>
 <p>Default is 1</p>
+
+<a name="g_unlockedWeapons"></a>
+<dt>g_unlockedWeapons [integer]
+<dd>
+<p>Unlock all weapons (pick-up) per class. This bitflag cvar supports the following values:</p>
+<dl>
+	<dt>1
+	<dd>Enable all weapons for soldiers
+	<dt>2
+	<dd>Enable all weapons for medics
+	<dt>4
+	<dd>Enable all weapons for engineers
+	<dt>8
+	<dd>Enable all weapons for field ops
+	<dt>16
+	<dd>Enable all weapons for coverts
+</dl>
+<p><b>NOTE:</b> This cvar replaces the previous g_mode 8 flag and will only be changed upon restarting!</p>
+<p>Default is 0</p>
 
 <hr>
 <a name="mapvoting"></a>

@@ -2346,6 +2346,7 @@ extern vmCvar_t g_firstBloodMsg;
 extern vmCvar_t g_firstBloodMsgPos;
 extern vmCvar_t g_lastBloodMsg;
 extern vmCvar_t g_mode;
+extern vmCvar_t g_unlockedWeapons;
 
 #ifdef LUA_SUPPORT
 // Lua API
