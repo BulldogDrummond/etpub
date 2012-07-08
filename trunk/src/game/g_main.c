@@ -567,7 +567,7 @@ vmCvar_t g_ettvFlags;
 vmCvar_t g_firstBloodMsg;
 vmCvar_t g_firstBloodMsgPos;
 vmCvar_t g_lastBloodMsg;
-vmCvar_t g_unlockedWeapons;
+vmCvar_t g_unlockWeapons;
 
 #ifdef LUA_SUPPORT
 // Lua API
@@ -1147,7 +1147,7 @@ cvarTable_t		gameCvarTable[] = {
 	{ &g_firstBloodMsg, "g_firstBloodMsg", "^7[a] ^7drew ^1FIRST BLOOD ^7from [v]", 0 },
 	{ &g_firstBloodMsgPos, "g_firstBloodMsgPos", "2", 0 },
 	{ &g_lastBloodMsg, "g_lastBloodMsg", "^8And the final kill of this round goes to [a]^8!", 0 },
-	{ &g_unlockedWeapons, "g_unlockedWeapons", "0", CVAR_LATCH },
+	{ &g_unlockWeapons, "g_unlockWeapons", "0", CVAR_LATCH },
 
 #ifdef LUA_SUPPORT
 	// Lua API

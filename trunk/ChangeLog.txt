@@ -2119,6 +2119,6 @@
 * pheno:   Lua API: et_ClientBegin() is now ETPro compatible (called only once per map)
 * pheno:   moved standard output of GeoIP and Lua API to console
 * harald:  g_friendlyFireOpts 8 allows for FF on vehichles (ET_MOVER)
-* pheno:   added g_unlockedWeapons cvar for unlocking weapons per class (see docs)
+* pheno:   added g_unlockWeapons cvar for unlocking weapons per class (see docs)
 * pheno:   removed g_mode cvar and added flags 2048 (instant spawn), 4096 (adrenaline for all) and
            8192 (no damage) to g_misc cvar (see docs) 

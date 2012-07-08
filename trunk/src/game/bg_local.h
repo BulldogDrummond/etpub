@@ -90,6 +90,6 @@ extern vmCvar_t g_mg42;
 extern vmCvar_t g_panzerLevelUp;
 
 // pheno
-extern vmCvar_t g_unlockedWeapons;
+extern vmCvar_t g_unlockWeapons;
 
 #endif

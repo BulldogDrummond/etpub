@@ -2249,11 +2249,10 @@ void BG_DisableWeaponForAllClasses( int weapon );
 extern bg_playerclass_t bg_allies_playerclasses[NUM_PLAYER_CLASSES];
 extern bg_playerclass_t bg_axis_playerclasses[NUM_PLAYER_CLASSES];
 
-// pheno: unlocked weapons
+// pheno: unlock weapons
 #ifdef GAMEDLL
 void BG_UnlockWeapons(bg_playerclass_t *classInfo, int classnum, team_t team);
-extern weapon_t bg_unlockedWeaponsME[MAX_WEAPS_PER_CLASS];
-extern weapon_t bg_unlockedWeapons[MAX_WEAPS_PER_CLASS];
+extern weapon_t bg_unlockWeapons[MAX_WEAPS_PER_CLASS];
 #endif
 
 #define MAX_PATH_CORNERS		512
