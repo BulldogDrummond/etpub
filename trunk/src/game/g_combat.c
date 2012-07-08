@@ -1679,8 +1679,8 @@ void G_Damage( gentity_t *targ, gentity_t *inflictor, gentity_t *attacker,  vec3
 	int			ffDamage; //Perro: FF reflecting damage
 	float		hsRatio; // Replacement for g_dmg 8
 	
-	// pheno: mode - no damage on players
-	if( targ->client && ( g_mode.integer & MODE_NODAMAGE ) ) {
+	// pheno: g_misc flag 8192 - no damage on players
+	if( targ->client && ( g_misc.integer & MISC_NODAMAGE ) ) {
 		return;
 	}
 

@@ -17,8 +17,8 @@ wordDictionary censorNamesDictionary;
 
 level_locals_t	level;
 
-// pheno: mode - stores last g_mode value
-int g_mode_lastValue;
+// pheno: stores last g_misc value
+int g_misc_lastValue;
 
 typedef struct {
 	vmCvar_t	*vmCvar;
@@ -567,7 +567,6 @@ vmCvar_t g_ettvFlags;
 vmCvar_t g_firstBloodMsg;
 vmCvar_t g_firstBloodMsgPos;
 vmCvar_t g_lastBloodMsg;
-vmCvar_t g_mode;
 vmCvar_t g_unlockedWeapons;
 
 #ifdef LUA_SUPPORT
@@ -1148,7 +1147,6 @@ cvarTable_t		gameCvarTable[] = {
 	{ &g_firstBloodMsg, "g_firstBloodMsg", "^7[a] ^7drew ^1FIRST BLOOD ^7from [v]", 0 },
 	{ &g_firstBloodMsgPos, "g_firstBloodMsgPos", "2", 0 },
 	{ &g_lastBloodMsg, "g_lastBloodMsg", "^8And the final kill of this round goes to [a]^8!", 0 },
-	{ &g_mode, "g_mode", "0", 0 },
 	{ &g_unlockedWeapons, "g_unlockedWeapons", "0", CVAR_LATCH },
 
 #ifdef LUA_SUPPORT
@@ -2105,8 +2103,8 @@ void G_RegisterCvars( void )
 	else if(g_fixedphysicsfps.integer > 333)
 		trap_Cvar_Set("g_fixedphysicsfps", "333");
 
-	// pheno: mode - get current g_mode value
-	g_mode_lastValue = g_mode.integer;
+	// pheno: get current g_misc value
+	g_misc_lastValue = g_misc.integer;
 }
 
 static qboolean G_IsVoteFlagCvar( cvarTable_t *cv )
@@ -2380,7 +2378,7 @@ G_ChangeMode
 pheno: change mode and announce the changes
 ================
 */
-const char modes[MODE_MAXMODES][3][32] =
+/*const char modes[MODE_MAXMODES][3][32] =
 {
 	{ "Instant Spawn",	"^2on",	"^1off" },
 	{ "Adrenaline",		"^2on",	"^1off" },
@@ -2405,7 +2403,7 @@ void G_ChangeMode()
 			G_PrintMessage( message, 2 );
 		}
 	}
-}
+}*/
 
 /*
 =================
@@ -2538,10 +2536,10 @@ void G_UpdateCvars( void )
 						G_RemoveAllShoutcasters();
 					}
 				}
-				// pheno: mode - check for g_mode changes
-				else if( cv->vmCvar == &g_mode ) {
-					G_ChangeMode();
-					g_mode_lastValue = g_mode.integer;
+				// pheno: check for g_misc value changes
+				else if( cv->vmCvar == &g_misc ) {
+//					G_ChangeMode();
+					g_misc_lastValue = g_misc.integer;
 				}
 #ifdef LUA_SUPPORT
 				// quad - Lua API cvars

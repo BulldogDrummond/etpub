@@ -1123,11 +1123,11 @@ void G_AddClassSpecificTools(gclient_t *client)
 		}
 	}
 	// Josh: adren in different classes when level 4
-	// pheno: mode - each class receives adrenaline
+	// pheno: g_misc flag 4096 - each class receives adrenaline
 	if( ( ( client->sess.playerType != PC_MEDIC &&
 			( g_skills.integer & SKILLS_ADREN ) ) &&
 			client->sess.skill[SK_FIRST_AID] >= 4 ) ||
-		( g_mode.integer & MODE_ADRENALINE ) ) {
+		( g_misc.integer & MISC_ADRENALINE ) ) {
 		AddWeaponToPlayer( client,
 			WP_MEDIC_ADRENALINE,
 			GetAmmoTableData(WP_MEDIC_ADRENALINE)->defaultStartingAmmo,

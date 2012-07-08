@@ -904,17 +904,9 @@ typedef enum {
 #define MISC_TRACE_ALL 256 // forty - http://etpub.org/e107_plugins/forum/forum_viewtopic.php?11646
 #define MISC_OLD_PRONE 512 // forty - http://etpub.org/e107_plugins/forum/forum_viewtopic.php?11646
 #define MISC_OLD_MAXZ 1024 // forty - http://etpub.org/e107_plugins/forum/forum_viewtopic.php?11646
-
-// pheno: mode - g_mode flags
-#define MODE_MAXMODES 4
-// players spawn instantly
-#define MODE_INSTANTSPAWN 1
-// each class receives adrenaline
-#define MODE_ADRENALINE 2
-// no damage on players
-#define MODE_NODAMAGE 4
-// players can pick up any weapon on the ground
-#define MODE_ALLWEAPONS 8
+#define MISC_INSTANTSPAWN 2048 // pheno: players spawn instantly
+#define MISC_ADRENALINE 4096 // pheno: each class receives adrenaline
+#define MISC_NODAMAGE 8192 // pheno: no damage on players
 
 // matt: g_medics flags
 // Medics can't pick up their own med packs to heal poisoning

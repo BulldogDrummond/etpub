@@ -34,8 +34,8 @@ dt {
 <td><a href="#g_friendlyFireOpts">g_friendlyFireOpts</a></td>
 </tr>
 <tr>
-<td><a href="#g_mode">g_mode</a></td>
 <td><a href="#g_unlockedWeapons">g_unlockedWeapons</a></td>
+<td><a href="#g_misc">g_misc</a></td>
 <td>&nbsp;</td>
 <td>&nbsp;</td>
 </tr>
@@ -1122,6 +1122,12 @@ to use the unmodified hitboxes from etmain.
 <dd>Stock Et prone box height.
 <dt>1024
 <dd>Old crouch box height (= crouch viewheight).
+<dt>2048
+<dd>Players will spawn instantly
+<dt>4096
+<dd>Each class receives adrenaline
+<dt>8192
+<dd>No damage on players
 </dl>
 
 <p><b>Imporant note:</b> in etpub 0.8.1 the flags 256, 512 and 1024 were added, because some
@@ -3325,20 +3331,6 @@ will be replaced by the name of the <strong>a</strong>ttacker.</p>
 <p>Note: To disable this message set this cvar to &quot;&quot;.</p>
 <p>Default is "^8And the final kill of this round goes to [a]^8!"</p>
 
-<a name="g_mode"></a>
-<dt>g_mode [integer]
-<dd>
-<p>This is a bitflag cvar that supports the following values:</p>
-<dl>
-	<dt>1
-	<dd>Players will spawn instantly
-	<dt>2
-	<dd>Each class receives adrenaline
-	<dt>4
-	<dd>No damage on players
-</dl>
-<p>Default is 0</p>
-
 <a name="g_clientVersion"></a>
 <dt>g_clientVersion [string]
 <dd>
@@ -3369,7 +3361,6 @@ will be replaced by the name of the <strong>a</strong>ttacker.</p>
 	<dt>16
 	<dd>Enable all weapons for coverts
 </dl>
-<p><b>NOTE:</b> This cvar replaces the previous g_mode 8 flag and will only be changed upon restarting!</p>
 <p>Default is 0</p>
 
 <hr>
