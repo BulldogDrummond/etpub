@@ -17,7 +17,7 @@ wordDictionary censorNamesDictionary;
 
 level_locals_t	level;
 
-// pheno: stores last g_misc value
+// pheno: store last g_misc value
 int g_misc_lastValue;
 
 typedef struct {
@@ -2373,37 +2373,52 @@ void G_RifleWar()
 
 /*
 ================
-G_ChangeMode
+G_AnnounceCvarChanges
 
-pheno: change mode and announce the changes
+pheno: broadcast cvar changes
 ================
 */
-/*const char modes[MODE_MAXMODES][3][32] =
-{
-	{ "Instant Spawn",	"^2on",	"^1off" },
-	{ "Adrenaline",		"^2on",	"^1off" },
-	{ "No Damage",		"^2on",	"^1off" }
+typedef struct {
+	char	*cvarname;
+	int		flag;
+	char	*description;
+	char	*enabled;
+	char	*disabled;
+} cvarChanges_t;
+
+static const cvarChanges_t cvarChanges[] = {
+	{ "g_misc", 1, "Double Jump", "EN", "DIS" },
+	{ "g_misc", 2048, "Instant Spawn", "EN", "DIS" },
+	{ "g_misc", 4096, "Adrenaline", "EN", "DIS" },
+	{ "g_misc", 8192, "No Damage", "EN", "DIS" },
+	{ NULL, 0, "", "", "" }
 };
 
-void G_ChangeMode()
+void G_AnnounceCvarChanges()
 {
-	int i;
-	char message[128];
+	int			i;
+	char		message[128];
+	qboolean	announce;
 
-	if( g_mode.integer == g_mode_lastValue ) {
-		return;
-	}
-
-	for( i = 0; i < MODE_MAXMODES; i++ ) {
-		if( ( g_mode.integer & ( 1 << i ) ) !=
-				( g_mode_lastValue & ( 1 << i ) ) ) {
-			Com_sprintf( message, 128, "^1** ^3%s ^7mode %s %s", modes[i][0],
-				( 1 << i ) == MODE_ALLWEAPONS ? "changed to" : "is now",
-				modes[i][g_mode_lastValue & ( 1 << i ) ? 2 : 1] );
-			G_PrintMessage( message, 2 );
+	if (g_misc.integer == g_misc_lastValue) {
+		for (i = 0; cvarChanges[i].cvarname != NULL; i++) {
+			// g_misc
+			if (!Q_stricmp(cvarChanges[i].cvarname, "g_misc")) {
+				if ((g_misc.integer & cvarChanges[i].flag) != (g_misc_lastValue & cvarChanges[i].flag)) {
+					Com_sprintf(message, 128, "^3%s is:^5 %sABLED", cvarChanges[i].description,
+						(g_misc_lastValue & cvarChanges[i].flag) ? cvarChanges[i].disabled : cvarChanges[i].enabled);
+					G_PrintMessage(message, 2);
+					announce = qtrue;
+				}
+			}
 		}
 	}
-}*/
+
+	if (announce) {
+		AP("cp \"^1** Admin Server Setting Change **\n\"");
+		G_globalSound("sound/misc/referee.wav");
+	}
+}
 
 /*
 =================
@@ -2527,6 +2542,12 @@ void G_UpdateCvars( void )
 				}
 				else if(G_IsEtpubinfoCvar(cv->vmCvar)) {
 					G_UpdateEtpubinfo();
+
+					// pheno: check for g_misc value changes
+					if (cv->vmCvar == &g_misc) {
+						G_AnnounceCvarChanges();
+						g_misc_lastValue = g_misc.integer;
+					}
 				}
 				// pheno: logout all currently logged in shoutcasters
 				//        when changing shoutcastPassword to '' or 'none'
@@ -2535,11 +2556,6 @@ void G_UpdateCvars( void )
 						!shoutcastPassword.string[0] ) {
 						G_RemoveAllShoutcasters();
 					}
-				}
-				// pheno: check for g_misc value changes
-				else if( cv->vmCvar == &g_misc ) {
-//					G_ChangeMode();
-					g_misc_lastValue = g_misc.integer;
 				}
 #ifdef LUA_SUPPORT
 				// quad - Lua API cvars
