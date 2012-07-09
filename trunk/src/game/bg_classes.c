@@ -123,7 +123,7 @@ bg_playerclass_t bg_axis_playerclasses[NUM_PLAYER_CLASSES] = {
 
 // pheno
 #ifdef GAMEDLL
-weapon_t bg_unlockWeapons[MAX_WEAPS_PER_CLASS] =
+weapon_t bg_unlockedWeapons[MAX_WEAPS_PER_CLASS] =
 {
 	WP_NONE,
 	WP_PANZERFAUST,
@@ -187,7 +187,7 @@ pheno: unlock weapons for both teams and all classes
 void BG_UnlockWeapons(bg_playerclass_t *classInfo, int classnum, team_t team)
 {
 	if (g_unlockWeapons.integer & (1 << classnum)) {
-		memcpy(classInfo->classWeapons, bg_unlockWeapons, sizeof(classInfo->classWeapons));
+		memcpy(classInfo->classWeapons, bg_unlockedWeapons, sizeof(classInfo->classWeapons));
 
 		if (team == TEAM_ALLIES) {
 			classInfo->classWeapons[0] = WP_THOMPSON;
