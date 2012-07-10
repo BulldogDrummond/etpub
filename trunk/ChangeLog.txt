@@ -2123,3 +2123,4 @@
 * pheno:   removed g_mode cvar and added flags 2048 (instant spawn), 4096 (adrenaline) and
            8192 (no damage) to g_misc cvar (see docs)
 * pheno:   added server gameplay cvar change announcement
+* pheno:   fixed a bug where gameplay cvar changes wasn't announced

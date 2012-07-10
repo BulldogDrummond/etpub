@@ -2400,7 +2400,7 @@ void G_AnnounceCvarChanges()
 	char		message[128];
 	qboolean	announce;
 
-	if (g_misc.integer == g_misc_lastValue) {
+	if (g_misc.integer != g_misc_lastValue) {
 		for (i = 0; cvarChanges[i].cvarname != NULL; i++) {
 			// g_misc
 			if (!Q_stricmp(cvarChanges[i].cvarname, "g_misc")) {
