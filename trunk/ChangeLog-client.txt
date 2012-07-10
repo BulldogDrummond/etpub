@@ -455,3 +455,5 @@ current
 * pheno:   etkey functions are now Windows Vista/2008/7 compatible
 * harald:  g_panzerLevelUp added (etpro b_panzerLevelUp)
 * pheno:   fixed team chat height during intermission (thx N!trox*)
+* pheno:   added server controlled hitsound handling (NOTE: only available with installed
+           etpub server > 0.9.1)

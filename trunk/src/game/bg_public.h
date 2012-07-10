@@ -659,7 +659,7 @@ typedef enum {
 	PERS_RESPAWNS_PENALTY,			// how many respawns you have to sit through before respawning again
 
 	PERS_REVIVE_COUNT,
-	PERS_BLEH_2,
+	PERS_HITSOUND,			// pheno: was PERS_BLEH_2 before, used now for client side hitsound handling
 	PERS_BLEH_3,
 
 	// Rafael - mg42		// (SA) I don't understand these here.  can someone explain?

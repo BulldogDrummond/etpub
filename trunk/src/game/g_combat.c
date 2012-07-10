@@ -1373,15 +1373,25 @@ qboolean IsArmShot( gentity_t *targ, gentity_t* ent, vec3_t point, int mod ) {
 	return qtrue;
 }
 
-void G_Hitsound(gentity_t *targ,
-		gentity_t *attacker,
-		int mod,
-		qboolean gib,
-		qboolean headShot) 
+// pheno
+void G_doHitSound(gentity_t *attacker, const char *sound, int index)
 {
-	gentity_t *hs_ent;
+	gentity_t *tent;
+
+	if (attacker->client->pers.etpubc <= 20100628) {
+		// server
+		tent = G_TempEntity(attacker->client->ps.origin, EV_GLOBAL_CLIENT_SOUND);
+		tent->s.teamNum = (attacker->client - level.clients);
+		tent->s.eventParm = G_SoundIndex(sound);
+	} else {
+		// client
+		attacker->client->ps.persistant[PERS_HITSOUND] = index;
+	}
+}
+
+void G_HitSound(gentity_t *targ, gentity_t *attacker, int mod, qboolean gib, qboolean headShot) 
+{
 	gclient_t *client;
-	int snd;
 
 	if(!(g_hitsounds.integer & HSF_ENABLE))
 		return;
@@ -1412,13 +1422,6 @@ void G_Hitsound(gentity_t *targ,
 
 	client = targ->client;
 
-	hs_ent = G_TempEntity(attacker->client->ps.origin, 
-		       EV_GLOBAL_CLIENT_SOUND);
-	hs_ent->s.teamNum = (attacker->client - level.clients);
-
-	// default hitsound
-	snd = G_SoundIndex(g_hitsound_default.string);
-
 	if((targ->health <= 0) && (g_hitsounds.integer & HSF_NO_CORPSE_HEAD)) 
 		headShot = qfalse;
 
@@ -1437,37 +1440,29 @@ void G_Hitsound(gentity_t *targ,
 			g_gamestate.integer == GS_PLAYING &&
 			!gib) {
 			
-			if(client->sess.sessionTeam == TEAM_AXIS) {
-				snd = G_SoundIndex(
-					g_hitsound_team_warn_axis.string);
+			if (client->sess.sessionTeam == TEAM_AXIS) {
+				G_doHitSound(attacker, g_hitsound_team_warn_axis.string, 6);
+			} else {
+				G_doHitSound(attacker, g_hitsound_team_warn_allies.string, 7);
 			}
-			else {
-				snd = G_SoundIndex(
-					g_hitsound_team_warn_allies.string);
+		} else if (headShot) {
+			if (!(targ->client->ps.eFlags & EF_HEADSHOT)) {
+				G_doHitSound(attacker, g_hitsound_team_helmet.string, 4);
+			} else {
+				G_doHitSound(attacker, g_hitsound_team_head.string, 5);
 			}
+		} else {
+			G_doHitSound(attacker, g_hitsound_team_default.string, 3);
 		}
-		else if(headShot) {
-
-			if(!(targ->client->ps.eFlags & EF_HEADSHOT)) {
-				snd = G_SoundIndex(
-					g_hitsound_team_helmet.string);
-			}
-			else { 
-				snd = G_SoundIndex(
-					g_hitsound_team_head.string);
-			}
+	} else if (headShot) {
+		if (!(targ->client->ps.eFlags & EF_HEADSHOT)) {
+			G_doHitSound(attacker, g_hitsound_helmet.string, 1);
+		} else {
+			G_doHitSound(attacker, g_hitsound_head.string, 2);
 		}
-		else {
-			snd = G_SoundIndex(g_hitsound_team_default.string);
-		}
+	} else {
+		G_doHitSound(attacker, g_hitsound_default.string, 0);
 	}
-	else if(headShot) {
-		if(!(targ->client->ps.eFlags & EF_HEADSHOT))
-			snd = G_SoundIndex(g_hitsound_helmet.string);
-		else 
-			snd = G_SoundIndex(g_hitsound_head.string);
-	}
-	hs_ent->s.eventParm = snd;
 }
 
 int G_TeamPlayerTypeInRange(gentity_t *ent, int playerType, team_t team, int range)
@@ -2169,7 +2164,7 @@ void G_Damage( gentity_t *targ, gentity_t *inflictor, gentity_t *attacker,  vec3
 							}
 							// apply the damage...
 							if(!g_friendlyFire.integer) {
-								G_Hitsound(attacker, attacker, mod, ((targ->health - take) <= limbo_health), headShot);
+								G_HitSound(attacker, attacker, mod, ((targ->health - take) <= limbo_health), headShot);
 							}
 							attacker->health -= ffDamage;
 							attacker->client->lasthurt_mod = MOD_REFLECTED_FF;
@@ -2222,23 +2217,15 @@ void G_Damage( gentity_t *targ, gentity_t *inflictor, gentity_t *attacker,  vec3
 	}
 
 	// add to the attacker's hit counter
-	if ( attacker->client && 
-			targ->client &&
-			targ != attacker &&
-			targ->health > limbo_health ) {
-		
-		if(OnSameTeam( targ, attacker)) {
+	if (attacker->client && targ->client && targ != attacker && targ->health > limbo_health) {
+		// pheno: moved it up because of possible client side hitsound handling
+		G_HitSound(targ, attacker, mod, ((targ->health - take) <= limbo_health), headShot);
+
+		if (OnSameTeam( targ, attacker)) {
 			attacker->client->ps.persistant[PERS_HITS] -= damage;
-		}
-		else {
+		} else {
 			attacker->client->ps.persistant[PERS_HITS] += damage;
 		}
-		G_Hitsound(targ,
-			attacker,
-			mod, 
-			((targ->health - take) <= limbo_health),
-			headShot);
-				
 	}
 
 	// remember that this player has no helmet

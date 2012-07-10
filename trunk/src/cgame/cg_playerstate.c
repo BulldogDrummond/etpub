@@ -385,6 +385,13 @@ void CG_CheckLocalSounds( playerState_t *ps, playerState_t *ops ) {
 		}
 	}
 
+	// pheno: hitsound handling
+	if (cg_hitSounds.integer == 1 &&
+		cgs.etpub > ETPUB_VERSION(0,9,1) &&
+		ps->persistant[PERS_HITS] != ops->persistant[PERS_HITS]) {
+		trap_S_StartSound(NULL, ps->clientNum, CHAN_AUTO, cgs.media.hitSound[ps->persistant[PERS_HITSOUND]]);
+	}
+
 	// timelimit warnings
 	if ( cgs.timelimit > 0 && cgs.gamestate == GS_PLAYING) {
 		int		msec;

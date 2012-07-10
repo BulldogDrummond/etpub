@@ -1786,6 +1786,9 @@ typedef struct {
 
 	sfxHandle_t sndMedicCall[2];
 
+	// pheno: hitsounds
+	sfxHandle_t hitSound[8];
+
 	qhandle_t	ccStamps[2];
 	qhandle_t	ccFilterPics[10];
 	qhandle_t	ccFilterBackOn;

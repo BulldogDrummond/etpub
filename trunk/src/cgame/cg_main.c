@@ -1664,6 +1664,15 @@ static void CG_RegisterSounds( void ) {
 	cgs.media.sndMedicCall[0] =		trap_S_RegisterSound ("sound/chat/axis/medic.wav", qfalse );
 	cgs.media.sndMedicCall[1] =		trap_S_RegisterSound ("sound/chat/allies/medic.wav", qfalse );
 
+	// pheno: register hitsounds
+	cgs.media.hitSound[0] =			trap_S_RegisterSound("sound/hitsounds/default.wav", qfalse);
+	cgs.media.hitSound[1] =			trap_S_RegisterSound("sound/hitsounds/helmet.wav", qfalse);
+	cgs.media.hitSound[2] =			trap_S_RegisterSound("sound/hitsounds/head.wav", qfalse);
+	cgs.media.hitSound[3] =			trap_S_RegisterSound("sound/hitsounds/team_default.wav", qfalse);
+	cgs.media.hitSound[4] =			trap_S_RegisterSound("sound/hitsounds/team_helmet.wav", qfalse);
+	cgs.media.hitSound[5] =			trap_S_RegisterSound("sound/hitsounds/team_head.wav", qfalse);
+	cgs.media.hitSound[6] =			trap_S_RegisterSound("sound/hitsounds/team_warn_axis.wav", qfalse);
+	cgs.media.hitSound[7] =			trap_S_RegisterSound("sound/hitsounds/team_warn_allies.wav", qfalse);
 
 	// FIXME: send as a special event
 	trap_S_RegisterSound( "sound/weapons/artillery/artillery_fly_1.wav", qfalse );

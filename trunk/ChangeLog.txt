@@ -2124,3 +2124,5 @@
            8192 (no damage) to g_misc cvar (see docs)
 * pheno:   added server gameplay cvar change announcement
 * pheno:   fixed a bug where gameplay cvar changes wasn't announced
+* pheno:   added client side hitsound handling (NOTE: only available with installed
+           etpub client > 20100628)
