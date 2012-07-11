@@ -386,11 +386,10 @@ void CG_CheckLocalSounds( playerState_t *ps, playerState_t *ops ) {
 	}
 
 	// pheno: hitsound handling
-	if (cgs.etpub > ETPUB_VERSION(0,9,1) &&
-		cg_hitSounds.integer == 1 &&
+	if (cg_hitSounds.integer == 1 &&
+		cgs.etpub > ETPUB_VERSION(0,9,1) &&
 		ps->persistant[PERS_HITS] != 0 && // fix hitsound on PERS_HITS reset
 		ps->persistant[PERS_HITS] != ops->persistant[PERS_HITS]) {
-		CG_Printf("DEBUG: hitsound %d\n", ps->persistant[PERS_HITS]);
 		trap_S_StartSound(NULL, ps->clientNum, CHAN_AUTO, cgs.media.hitSound[ps->persistant[PERS_HITSOUND]]);
 	}
 
