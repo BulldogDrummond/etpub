@@ -11,3 +11,6 @@ Important Notes For Upgrading etpub 0.9.x to 1.0.x
    file. If the etkey file does not exist it will be automatically downloaded from etkey.org. No
    stored XP or shrubbot permissions will be lost.
 
+2) With this version the g_mode server cvar was completely removed. To unlock weapons for certain
+   classes use g_unlockWeapons instead. All other options of g_mode have been moved to g_misc.
+
