@@ -458,3 +458,4 @@ current
 * pheno:   added server controlled hitsound handling (NOTE: only available with installed
            etpub server > 0.9.1)
 * pheno:   fixed a bug where hitsound was played on team change
+* pheno:   fixed a bug where hitsound was played after disabling hitsounds with console command

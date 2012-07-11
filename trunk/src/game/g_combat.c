@@ -1426,8 +1426,11 @@ void G_HitSound(gentity_t *targ, gentity_t *attacker, int mod, qboolean gib, qbo
 		return;
 	if(!attacker->client)
 		return;
-	if(!attacker->client->pers.hitsounds)
+	if(!attacker->client->pers.hitsounds) {
+		// pheno: fix hitsound after client has disabed hitsounds with console command
+		attacker->client->ps.persistant[PERS_HITSOUND] = NULL;
 		return;
+	}
 	if(!targ->client) 
 		return;
 	if(mod == MOD_GOOMBA) 
