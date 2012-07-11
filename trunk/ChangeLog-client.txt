@@ -457,3 +457,4 @@ current
 * pheno:   fixed team chat height during intermission (thx N!trox*)
 * pheno:   added server controlled hitsound handling (NOTE: only available with installed
            etpub server > 0.9.1)
+* pheno:   fixed a bug where hitsound was played on team change
