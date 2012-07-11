@@ -1374,12 +1374,39 @@ qboolean IsArmShot( gentity_t *targ, gentity_t* ent, vec3_t point, int mod ) {
 }
 
 // pheno
-void G_doHitSound(gentity_t *attacker, const char *sound, int index)
+void G_doHitSound(gentity_t *attacker, int index)
 {
-	gentity_t *tent;
+	const char* sound;
 
 	if (attacker->client->pers.etpubc <= 20100628) {
 		// server
+		switch (index) {
+			case 0:
+				sound = g_hitsound_default.string;
+				break;
+			case 1:
+				sound = g_hitsound_helmet.string;
+				break;
+			case 2:
+				sound = g_hitsound_head.string;
+				break;
+			case 3:
+				sound = g_hitsound_team_default.string;
+				break;
+			case 4:
+				sound = g_hitsound_team_helmet.string;
+				break;
+			case 5:
+				sound = g_hitsound_team_head.string;
+				break;
+			case 6:
+				sound = g_hitsound_team_warn_axis.string;
+				break;
+			case 7:
+				sound = g_hitsound_team_warn_allies.string;
+				break;
+		}
+
 		G_ClientSound(attacker, G_SoundIndex(sound));
 	} else {
 		// client
@@ -1439,27 +1466,27 @@ void G_HitSound(gentity_t *targ, gentity_t *attacker, int mod, qboolean gib, qbo
 			!gib) {
 			
 			if (client->sess.sessionTeam == TEAM_AXIS) {
-				G_doHitSound(attacker, g_hitsound_team_warn_axis.string, 6);
+				G_doHitSound(attacker, 6);
 			} else {
-				G_doHitSound(attacker, g_hitsound_team_warn_allies.string, 7);
+				G_doHitSound(attacker, 7);
 			}
 		} else if (headShot) {
 			if (!(targ->client->ps.eFlags & EF_HEADSHOT)) {
-				G_doHitSound(attacker, g_hitsound_team_helmet.string, 4);
+				G_doHitSound(attacker, 4);
 			} else {
-				G_doHitSound(attacker, g_hitsound_team_head.string, 5);
+				G_doHitSound(attacker, 5);
 			}
 		} else {
-			G_doHitSound(attacker, g_hitsound_team_default.string, 3);
+			G_doHitSound(attacker, 3);
 		}
 	} else if (headShot) {
 		if (!(targ->client->ps.eFlags & EF_HEADSHOT)) {
-			G_doHitSound(attacker, g_hitsound_helmet.string, 1);
+			G_doHitSound(attacker, 1);
 		} else {
-			G_doHitSound(attacker, g_hitsound_head.string, 2);
+			G_doHitSound(attacker, 2);
 		}
 	} else {
-		G_doHitSound(attacker, g_hitsound_default.string, 0);
+		G_doHitSound(attacker, 0);
 	}
 }
 
