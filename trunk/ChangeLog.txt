@@ -2106,6 +2106,7 @@
 * pheno:   fixed resetting *war modes on map changes
 
 1.0.0
+* cs:      added some fixes from gaoesa of silEnT team
 * harald:  bans are now based on IP, guid and MAC address
 * harald:  added g_spoofOptions for MAC spoofing
 * harald:  banning 1 person without a guid doesn't cause all players without
