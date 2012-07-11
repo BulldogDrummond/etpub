@@ -389,9 +389,9 @@ void CG_CheckLocalSounds( playerState_t *ps, playerState_t *ops ) {
 	if (cg_hitSounds.integer == 1 &&
 		ps->persistant[PERS_HITS] != ops->persistant[PERS_HITS] &&
 		ps->persistant[PERS_HITS] != 0 && // fix hitsound on PERS_HITS reset
-		ps->persistant[PERS_HITSOUND] && // fix hitsound after disabling hitsounds with console command
+		ps->persistant[PERS_HITSOUND] != 0 && // fix hitsound after disabling hitsounds with console command
 		cgs.etpub > ETPUB_VERSION(0,9,1)) {
-		trap_S_StartSound(NULL, ps->clientNum, CHAN_AUTO, cgs.media.hitSound[ps->persistant[PERS_HITSOUND]]);
+		trap_S_StartSound(NULL, ps->clientNum, CHAN_AUTO, cgs.media.hitSound[ps->persistant[PERS_HITSOUND] - 1]);
 	}
 
 	// timelimit warnings

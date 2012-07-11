@@ -1381,28 +1381,28 @@ void G_doHitSound(gentity_t *attacker, int index)
 	if (attacker->client->pers.etpubc <= 20100628) {
 		// server
 		switch (index) {
-			case 0:
+			case 1:
 				sound = g_hitsound_default.string;
 				break;
-			case 1:
+			case 2:
 				sound = g_hitsound_helmet.string;
 				break;
-			case 2:
+			case 3:
 				sound = g_hitsound_head.string;
 				break;
-			case 3:
+			case 4:
 				sound = g_hitsound_team_default.string;
 				break;
-			case 4:
+			case 5:
 				sound = g_hitsound_team_helmet.string;
 				break;
-			case 5:
+			case 6:
 				sound = g_hitsound_team_head.string;
 				break;
-			case 6:
+			case 7:
 				sound = g_hitsound_team_warn_axis.string;
 				break;
-			case 7:
+			case 8:
 				sound = g_hitsound_team_warn_allies.string;
 				break;
 		}
@@ -1428,7 +1428,7 @@ void G_HitSound(gentity_t *targ, gentity_t *attacker, int mod, qboolean gib, qbo
 		return;
 	if(!attacker->client->pers.hitsounds) {
 		// pheno: fix hitsound after client has disabed hitsounds with console command
-		attacker->client->ps.persistant[PERS_HITSOUND] = NULL;
+		attacker->client->ps.persistant[PERS_HITSOUND] = 0;
 		return;
 	}
 	if(!targ->client) 
@@ -1469,27 +1469,27 @@ void G_HitSound(gentity_t *targ, gentity_t *attacker, int mod, qboolean gib, qbo
 			!gib) {
 			
 			if (client->sess.sessionTeam == TEAM_AXIS) {
-				G_doHitSound(attacker, 6);
-			} else {
 				G_doHitSound(attacker, 7);
+			} else {
+				G_doHitSound(attacker, 8);
 			}
 		} else if (headShot) {
 			if (!(targ->client->ps.eFlags & EF_HEADSHOT)) {
-				G_doHitSound(attacker, 4);
-			} else {
 				G_doHitSound(attacker, 5);
+			} else {
+				G_doHitSound(attacker, 6);
 			}
 		} else {
-			G_doHitSound(attacker, 3);
+			G_doHitSound(attacker, 4);
 		}
 	} else if (headShot) {
 		if (!(targ->client->ps.eFlags & EF_HEADSHOT)) {
-			G_doHitSound(attacker, 1);
-		} else {
 			G_doHitSound(attacker, 2);
+		} else {
+			G_doHitSound(attacker, 3);
 		}
 	} else {
-		G_doHitSound(attacker, 0);
+		G_doHitSound(attacker, 1);
 	}
 }
 
