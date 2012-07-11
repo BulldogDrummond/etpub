@@ -1380,9 +1380,7 @@ void G_doHitSound(gentity_t *attacker, const char *sound, int index)
 
 	if (attacker->client->pers.etpubc <= 20100628) {
 		// server
-		tent = G_TempEntity(attacker->client->ps.origin, EV_GLOBAL_CLIENT_SOUND);
-		tent->s.teamNum = (attacker->client - level.clients);
-		tent->s.eventParm = G_SoundIndex(sound);
+		G_ClientSound(attacker, G_SoundIndex(sound));
 	} else {
 		// client
 		attacker->client->ps.persistant[PERS_HITSOUND] = index;
