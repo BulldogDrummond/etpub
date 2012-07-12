@@ -2127,5 +2127,5 @@
 * pheno:   fixed a bug where gameplay cvar changes wasn't announced
 * pheno:   added client side hitsound handling (NOTE: only available with installed
            etpub client > 20100628)
-* pheno:   fixed a bug where hitsound was played after client has disabled hitsounds with
-           console command (with latest etpub client installed)
+* pheno:   fixed a bug with latest etpub client installed where last hitsound is repeated after
+           changing hitsound options server and/or client side

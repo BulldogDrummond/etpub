@@ -668,6 +668,17 @@ typedef enum {
 	PERS_WOLFKICK
 } persEnum_t;
 
+// pheno: hitsound indexes
+#define HITSOUND_NONE				0
+#define HITSOUND_DEFAULT			1
+#define HITSOUND_HELMET				2
+#define HITSOUND_HEAD				3
+#define HITSOUND_TEAM_DEFAULT		4
+#define HITSOUND_TEAM_HELMET		5
+#define HITSOUND_TEAM_HEAD			6
+#define HITSOUND_TEAM_WARN_AXIS		7
+#define HITSOUND_TEAM_WARN_ALLIES	8
+
 // pheno: misc score flags
 #define MSF_READY	1	// player is ready
 #define MSF_BOT		2	// player is a bot

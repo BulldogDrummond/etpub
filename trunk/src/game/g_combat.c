@@ -1381,28 +1381,28 @@ void G_doHitSound(gentity_t *attacker, int index)
 	if (attacker->client->pers.etpubc <= 20100628) {
 		// server
 		switch (index) {
-			case 1:
+			case HITSOUND_DEFAULT:
 				sound = g_hitsound_default.string;
 				break;
-			case 2:
+			case HITSOUND_HELMET:
 				sound = g_hitsound_helmet.string;
 				break;
-			case 3:
+			case HITSOUND_HEAD:
 				sound = g_hitsound_head.string;
 				break;
-			case 4:
+			case HITSOUND_TEAM_DEFAULT:
 				sound = g_hitsound_team_default.string;
 				break;
-			case 5:
+			case HITSOUND_TEAM_HELMET:
 				sound = g_hitsound_team_helmet.string;
 				break;
-			case 6:
+			case HITSOUND_TEAM_HEAD:
 				sound = g_hitsound_team_head.string;
 				break;
-			case 7:
+			case HITSOUND_TEAM_WARN_AXIS:
 				sound = g_hitsound_team_warn_axis.string;
 				break;
-			case 8:
+			case HITSOUND_TEAM_WARN_ALLIES:
 				sound = g_hitsound_team_warn_allies.string;
 				break;
 		}
@@ -1418,6 +1418,12 @@ void G_HitSound(gentity_t *targ, gentity_t *attacker, int mod, qboolean gib, qbo
 {
 	gclient_t *client;
 
+	// pheno: make sure to reset PERS_HITSOUND because changing hitsound
+	//        options server and/or client side within a running game
+	if (attacker->client->pers.etpubc > 20100628) {
+		attacker->client->ps.persistant[PERS_HITSOUND] = HITSOUND_NONE;
+	}
+
 	if(!(g_hitsounds.integer & HSF_ENABLE))
 		return;
 	if((g_hitsounds.integer & HSF_NO_POISON) && mod == MOD_POISON)
@@ -1426,14 +1432,11 @@ void G_HitSound(gentity_t *targ, gentity_t *attacker, int mod, qboolean gib, qbo
 		return;
 	if(!attacker->client)
 		return;
-	if(!attacker->client->pers.hitsounds) {
-		// pheno: fix hitsound after client has disabed hitsounds with console command
-		attacker->client->ps.persistant[PERS_HITSOUND] = 0;
+	if(!attacker->client->pers.hitsounds)
 		return;
-	}
-	if(!targ->client) 
+	if(!targ->client)
 		return;
-	if(mod == MOD_GOOMBA) 
+	if(mod == MOD_GOOMBA)
 		return;
 	if(targ->health <= 0 && (g_hitsounds.integer & HSF_SILENT_CORPSE))
 		return;
@@ -1469,27 +1472,27 @@ void G_HitSound(gentity_t *targ, gentity_t *attacker, int mod, qboolean gib, qbo
 			!gib) {
 			
 			if (client->sess.sessionTeam == TEAM_AXIS) {
-				G_doHitSound(attacker, 7);
+				G_doHitSound(attacker, HITSOUND_TEAM_WARN_AXIS);
 			} else {
-				G_doHitSound(attacker, 8);
+				G_doHitSound(attacker, HITSOUND_TEAM_WARN_ALLIES);
 			}
 		} else if (headShot) {
 			if (!(targ->client->ps.eFlags & EF_HEADSHOT)) {
-				G_doHitSound(attacker, 5);
+				G_doHitSound(attacker, HITSOUND_TEAM_HELMET);
 			} else {
-				G_doHitSound(attacker, 6);
+				G_doHitSound(attacker, HITSOUND_TEAM_HEAD);
 			}
 		} else {
-			G_doHitSound(attacker, 4);
+			G_doHitSound(attacker, HITSOUND_TEAM_DEFAULT);
 		}
 	} else if (headShot) {
 		if (!(targ->client->ps.eFlags & EF_HEADSHOT)) {
-			G_doHitSound(attacker, 2);
+			G_doHitSound(attacker, HITSOUND_HELMET);
 		} else {
-			G_doHitSound(attacker, 3);
+			G_doHitSound(attacker, HITSOUND_HEAD);
 		}
 	} else {
-		G_doHitSound(attacker, 1);
+		G_doHitSound(attacker, HITSOUND_DEFAULT);
 	}
 }
 
