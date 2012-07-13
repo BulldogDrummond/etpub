@@ -29,27 +29,6 @@ void G_settings_readconfig()
 	qboolean revive_open;
 	int i = 0;
 
-	for(i=0; g_killingSprees[i]; i++) {
-		free(g_killingSprees[i]);
-		g_killingSprees[i] = NULL;
-	}
-	for(i=0; g_ks_ends[i]; i++) {
-		free(g_ks_ends[i]);
-		g_ks_ends[i] = NULL;
-	}
-	for(i=0; g_multiKills[i]; i++) {
-		free(g_multiKills[i]);
-		g_multiKills[i] = NULL;
-	}
-	for(i=0; g_banners[i]; i++) {
-		free(g_banners[i]);
-		g_banners[i] = NULL;
-	}
-	for(i=0; g_reviveSprees[i]; i++) {
-		free(g_reviveSprees[i]);
-		g_reviveSprees[i] = NULL;
-	}
-
 	if(!g_settings.string[0]){
 		return;
 	}
@@ -402,6 +381,35 @@ void G_settings_readconfig()
 
 	G_Printf("settings: loaded %d sprees, %d ends, %d kills, %d banners and %d revive sprees\n"
 		, sc, ec, kc, bc, rc);
+}
+
+void G_settings_cleanup() {
+	int i = 0;
+
+	for (i = 0; g_killingSprees[i]; i++) {
+		free(g_killingSprees[i]);
+		g_killingSprees[i] = NULL;
+	}
+
+	for (i = 0; g_ks_ends[i]; i++) {
+		free(g_ks_ends[i]);
+		g_ks_ends[i] = NULL;
+	}
+	
+	for (i = 0; g_multiKills[i]; i++) {
+		free(g_multiKills[i]);
+		g_multiKills[i] = NULL;
+	}
+	
+	for (i = 0; g_banners[i]; i++) {
+		free(g_banners[i]);
+		g_banners[i] = NULL;
+	}
+	
+	for (i = 0; g_reviveSprees[i]; i++) {
+		free(g_reviveSprees[i]);
+		g_reviveSprees[i] = NULL;
+	}
 }
 
 // Dens: moved from g_combat.c

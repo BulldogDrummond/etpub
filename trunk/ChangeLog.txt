@@ -2132,3 +2132,4 @@
 * pheno:   Lua API: added RO access to sess.aWeaponStats (reworked code from fart11eleven)
            http://www.etpub.org/viewtopic.php?f=8&t=69
 * pheno:   Lua API: fixed trajectory get and set functions to have the correct data types
+* pheno:   fixed memory leaking in settings config handling and in Lua API (thx gaoesa)

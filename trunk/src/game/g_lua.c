@@ -1377,6 +1377,7 @@ qboolean G_LuaInit()
 				if ( Q_stricmp(lua_allowedModules.string, "") &&
 					 !strstr(lua_allowedModules.string, signature) ) {
 					// don't load disallowed lua modules into vm
+					free(code);
 					G_Lua_Printf("Lua API: Lua module [%s] [%s] disallowed by ACL\n", crt, signature);
 				} else {
 					// Init lua_vm_t struct

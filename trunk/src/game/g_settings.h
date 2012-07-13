@@ -65,6 +65,7 @@ typedef struct {
 } g_reviveSpree_t;
 
 void G_settings_readconfig();
+void G_settings_cleanup();
 void G_check_killing_spree(gentity_t *ent, int number);
 void G_check_killing_spree_end(gentity_t *ent, gentity_t *other, int number, int start);
 void G_check_multikill(gentity_t *ent, int number);

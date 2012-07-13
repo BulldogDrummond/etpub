@@ -3261,6 +3261,7 @@ void G_ShutdownGame( int restart )
 
 	G_shrubbot_cleanup();
 	G_xpsave_cleanup();
+	G_settings_cleanup();
 }
 
 
