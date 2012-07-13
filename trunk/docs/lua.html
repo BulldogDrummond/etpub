@@ -30,10 +30,19 @@ pre {
     line-height: 1.1em;
 }
 
+table.border {
+	margin-top: 0;
+	padding: 1em;
+	border: 1px dashed #2f6fab;
+	color: black;
+	background-color: #f9f9f9;
+	line-height: 1.1em;
+}
+
 .list th {
 	font-family: monospace;
 	font-size: 9pt;
-    color: white;
+	color: white;
 	padding: 0px 10px;
 	text-align: left;
 }
@@ -42,16 +51,7 @@ pre {
 	font-family: monospace;
 	font-size: 9pt;
 	padding: 0px 10px;
-    color: black;
-}
-
-table.border {
-	margin-top: 0;
-    padding: 1em;
-    border: 1px dashed #2f6fab;
-    color: black;
-    background-color: #f9f9f9;
-    line-height: 1.1em;
+	color: black;
 }
 
 h1, h2, h3, h4, h5, h6 {
@@ -365,16 +365,68 @@ et.HOSTARCH</p>
 <p>&nbsp;</p>
 
 <a name="et_library_calls"></a><h2>ET VARIABLE TYPES</h2>
+
+<a name="vec3"></a><h3>vec3</h3>
+<dl>
+	<dd>a <strong>vec3</strong> is a 3-element array of numbers. It is usually used to store and
+	process coordinates in 3D space. In lua a vector is an array (table indexed by integers)
+	containing 3 numbers. It can be accessed by doing:</dd>
+	<dd>&nbsp;</dd>
+	<dd>&nbsp;</dd>
+	<dd><h6>LUA CODE EXAMPLE</h6><pre>origin = et.gentity_get(entNum, "origin")
+x, y, z = origin[1], origin[2], origin[3]</pre></dd>
+</dl>
+
+<a name="trajectory"></a><h3>trajectory</h3>
+<dl>
+	<dd>A <strong>trajectory</strong> is returned as a lua table described below.</dd>
+	<dd>&nbsp;</dd>
+	<dd>&nbsp;</dd>
+	<dd><h6>LUA TRAJECTORY TABLE</h6><pre>{
+	trType = &lt;number&gt;, -- int (see below for allowed values)
+	trTime = &lt;number&gt;, -- int
+	trDuration = &lt;number&gt;, -- int
+	trBase = &lt;vec3&gt;, -- vec3 (as described above)
+	trDelta = &lt;vec3&gt; -- vec3
+}</pre></dd>
+	<dd>&nbsp;</dd>
+	<dd>The allowed values for trType (along with the enum names and original comments from the ET
+	source), are as follows. Note that not all values make sense for all entity types.</dd>
+	<dd>&nbsp;</dd>
+	<dd>&nbsp;</dd>
+	<dd><h6>TRTYPE ALLOWED VALUES</h6>
+	<table class="border">
+	<tr><td>
+		<table border='0' class="list">
+			<tr bgcolor='#888888'><th width="50">Index</th><th width="200">Weapon</th><th>Description</th></tr>
+			<tr><td>0</td><td>TR_STATIONARY</td><td>&nbsp;</td></tr>
+			<tr bgcolor="#d7d7d7"><td>1</td><td>TR_INTERPOLATE</td><td>non-parametric, but interpolate between snapshots</td></tr>
+			<tr><td>2</td><td>TR_LINEAR</td><td>&nbsp;</td></tr>
+			<tr bgcolor="#d7d7d7"><td>3</td><td>TR_LINEAR_STOP</td><td>&nbsp;</td></tr>
+			<tr><td>4</td><td>TR_LINEAR_STOP_BACK</td><td>reverse movement can be different than forward</td></tr>
+			<tr bgcolor="#d7d7d7"><td>5</td><td>TR_SINE</td><td>value = base + sin(time / duration) * delta</td></tr>
+			<tr><td>6</td><td>TR_GRAVITY</td><td>&nbsp;</td></tr>
+			<tr bgcolor="#d7d7d7"><td>7</td><td>TR_GRAVITY_LOW</td><td>&nbsp;</td></tr>
+			<tr><td>8</td><td>TR_GRAVITY_FLOAT</td><td>super low grav with no gravity acceleration</td></tr>
+			<tr bgcolor="#d7d7d7"><td>9</td><td>TR_GRAVITY_PAUSED</td><td>has stopped, but trace to see if it should be switched back to TR_GRAVITY</td></tr>
+			<tr><td>10</td><td>TR_ACCELERATE</td><td>&nbsp;</td></tr>
+			<tr bgcolor="#d7d7d7"><td>11</td><td>TR_DECCELERATE</td><td>&nbsp;</td></tr>
+			<tr><td>12</td><td>TR_SPLINE</td><td>&nbsp;</td></tr>
+			<tr bgcolor="#d7d7d7"><td>13</td><td>TR_LINEAR_PATH</td><td>&nbsp;</td></tr>
+		</table>
+		</td></tr>
+	</table>
+	</dd>
+</dl>
+
 <a name="weaponstats"></a><h3>weaponstats</h3>
 <dl>
-	<dd><strong>weaponstats</strong> are returned as a lua table described below.</dd>
-	<dd>&nbsp;</dd>
-	<dd>Note: To be compatible to the game code the weaponstats table
-	starts at index <strong>0</strong>.</dd>
+	<dd>The <strong>weaponstats</strong> are returned as a lua table described below. Note that the
+	table index starts at <strong>0</strong> to be compatible to the game code.</dd>
 	<dd>&nbsp;</dd>
 	<dd>&nbsp;</dd>
 	<dd><h6>LUA WEAPONSTATS TABLE</h6><pre>{
-	&lt;weaponindex&gt; { -- see below for available indexes
+	&lt;weaponindex&gt; { -- int (see below for available indexes)
 		atts = &lt;number&gt;, -- int
 		deaths = &lt;number&gt;, -- int
 		headshots = &lt;number&gt;, -- int
@@ -397,8 +449,8 @@ et.HOSTARCH</p>
 			<tr><td>2</td><td>WS_COLT</td></tr>
 			<tr bgcolor="#d7d7d7"><td>3</td><td>WS_MP40</td></tr>
 			<tr><td>4</td><td>WS_THOMPSON</td></tr>
-			<tr bgcolor="#d7d7d7"><td>5</td><td>WS_STEN</td>
-			</tr><tr><td>6</td><td>WS_FG42</td></tr>
+			<tr bgcolor="#d7d7d7"><td>5</td><td>WS_STEN</td></tr>
+			<tr><td>6</td><td>WS_FG42</td></tr>
 			<tr bgcolor="#d7d7d7"><td>7</td><td>WS_PANZERFAUST</td></tr>
 			<tr><td>8</td><td>WS_FLAMETHROWER</td></tr>
 			<tr bgcolor="#d7d7d7"><td>9</td><td>WS_GRENADE</td></tr>
@@ -422,7 +474,7 @@ et.HOSTARCH</p>
 	<dd>&nbsp;</dd>
 	<dd><h6>LUA CODE EXAMPLE</h6><pre>WS_MP40 = 3
 
-local weaponstats = et.gentity_get(clientNum, "sess.aWeaponStats")
+weaponstats = et.gentity_get(clientNum, "sess.aWeaponStats")
 if weaponstats[WS_MP40].atts > 0 then
 	et.G_Print(string.format("MP40 Accuracy: %0.1f\n", weaponstats[WS_MP40].hits / weaponstats[WS_MP40].atts * 100))
 end</pre></dd>
