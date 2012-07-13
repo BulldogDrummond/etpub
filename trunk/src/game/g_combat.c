@@ -1376,7 +1376,7 @@ qboolean IsArmShot( gentity_t *targ, gentity_t* ent, vec3_t point, int mod ) {
 // pheno
 void G_doHitSound(gentity_t *attacker, int index)
 {
-	const char* sound;
+	const char *sound = "";
 
 	if (attacker->client->pers.etpubc <= 20100628) {
 		// server

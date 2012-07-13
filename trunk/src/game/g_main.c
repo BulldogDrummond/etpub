@@ -2398,7 +2398,7 @@ void G_AnnounceCvarChanges()
 {
 	int			i;
 	char		message[128];
-	qboolean	announce;
+	qboolean	announce = qfalse;
 
 	if (g_misc.integer != g_misc_lastValue) {
 		for (i = 0; cvarChanges[i].cvarname != NULL; i++) {
