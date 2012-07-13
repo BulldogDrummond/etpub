@@ -27,7 +27,6 @@ void G_settings_readconfig()
 	qboolean kill_open;
 	qboolean banner_open;
 	qboolean revive_open;
-	int i = 0;
 
 	if(!g_settings.string[0]){
 		return;
