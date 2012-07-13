@@ -812,11 +812,11 @@ void _et_gentity_gettrajectory(lua_State *L, trajectory_t *traj)
 
 	lua_newtable(L);
 	index = lua_gettop(L);
-	lua_pushstring(L, "trTime");
-	lua_pushinteger(L, traj->trTime);
-	lua_settable(L, -3);
 	lua_pushstring(L, "trType");
 	lua_pushinteger(L, traj->trType);
+	lua_settable(L, -3);
+	lua_pushstring(L, "trTime");
+	lua_pushinteger(L, traj->trTime);
 	lua_settable(L, -3);
 	lua_pushstring(L, "trDuration");
 	lua_pushinteger(L, traj->trDuration);
@@ -835,15 +835,15 @@ void _et_gentity_settrajectory(lua_State *L, trajectory_t *traj)
 {
 	lua_pushstring(L, "trType");
 	lua_gettable(L, -2);
-	traj->trType = (float)lua_tonumber(L, -1);
+	traj->trType = (trType_t)lua_tointeger(L, -1);
 	lua_pop(L, 1);
 	lua_pushstring(L, "trTime");
 	lua_gettable(L, -2);
-	traj->trTime = (float)lua_tonumber(L, -1);
+	traj->trTime = lua_tointeger(L, -1);
 	lua_pop(L, 1);
 	lua_pushstring(L, "trDuration");
 	lua_gettable(L, -2);
-	traj->trDuration = (float)lua_tonumber(L, -1);
+	traj->trDuration = lua_tointeger(L, -1);
 	lua_pop(L, 1);
 	lua_pushstring(L, "trBase");
 	lua_gettable(L, -2);
