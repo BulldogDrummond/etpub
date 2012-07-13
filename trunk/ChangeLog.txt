@@ -2129,3 +2129,5 @@
            etpub client > 20100628)
 * pheno:   fixed a bug with latest etpub client installed where last hitsound is repeated after
            changing hitsound options server and/or client side
+* pheno:   Lua API: added RO access to sess.aWeaponStats (reworked code from fart11eleven)
+           http://www.etpub.org/viewtopic.php?f=8&t=69

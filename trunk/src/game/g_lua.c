@@ -608,8 +608,7 @@ static const gentity_field_t gclient_fields[] = {
 	_et_gclient_addfield(		sess.team_kills,											FIELD_INT,			0										),
 	_et_gclient_addfield(		sess.team_damage_given,										FIELD_INT,			0										),
 	_et_gclient_addfield(		sess.team_damage_received,									FIELD_INT,			0										),
-	// TODO: sess.aWeaponStats
-	//_et_gclient_addfield(sess.aWeaponStats, FIELD_?_ARRAY, 0),
+	_et_gclient_addfield(		sess.aWeaponStats,											FIELD_WEAPONSTATS,	FIELD_FLAG_READONLY						),
 	
 	// To be compatible with ETPro:
 	_et_gclient_addfieldalias(	client.inactivityTime,			inactivityTime,				FIELD_INT,			0										),
@@ -854,6 +853,36 @@ void _et_gentity_settrajectory(lua_State *L, trajectory_t *traj)
 	lua_gettable(L, -2);
 	_et_gentity_setvec3(L, (vec3_t *)traj->trDelta);
 	lua_pop(L, 1);
+}
+
+void _et_gentity_getweaponstats(lua_State *L, weapon_stat_t *ws)
+{
+	int index, i;
+
+	lua_newtable(L);
+	index = lua_gettop(L);
+
+	for (i = WS_KNIFE; i < WS_MAX; i++) {
+		lua_settop(L, index);
+		lua_pushinteger(L, i);
+		lua_newtable(L);
+		lua_pushstring(L, "atts");
+		lua_pushinteger(L, ws[i].atts);
+		lua_settable(L, -3);
+		lua_pushstring(L, "deaths");
+		lua_pushinteger(L, ws[i].deaths);
+		lua_settable(L, -3);
+		lua_pushstring(L, "headshots");
+		lua_pushinteger(L, ws[i].headshots);
+		lua_settable(L, -3);
+		lua_pushstring(L, "hits");
+		lua_pushinteger(L, ws[i].hits);
+		lua_settable(L, -3);
+		lua_pushstring(L, "kills");
+		lua_pushinteger(L, ws[i].kills);
+		lua_settable(L, -3);
+		lua_settable(L, -3);
+	}
 }
 
 // entnum = et.G_Spawn()
@@ -1108,6 +1137,9 @@ int _et_gentity_get(lua_State *L)
 			return 1;
 		case FIELD_FLOAT_ARRAY:
 			lua_pushnumber(L, (*(float *)(addr + (sizeof(int) * luaL_optint(L, 3, 0)))));
+			return 1;
+		case FIELD_WEAPONSTATS:
+			_et_gentity_getweaponstats(L, (weapon_stat_t *)addr);
 			return 1;
 	}
 	return 0;
