@@ -21,7 +21,31 @@ i.diff {
 }
 
 pre {
-	font-size: 90%;
+	font-size: 9pt;
+	margin-top: 0;
+    padding: 1em;
+    border: 1px dashed #2f6fab;
+    color: black;
+    background-color: #f9f9f9;
+    line-height: 1.1em;
+}
+
+.list th {
+	font-family: monospace;
+	font-size: 9pt;
+    color: white;
+	padding: 0px 10px;
+	text-align: left;
+}
+
+.list td {
+	font-family: monospace;
+	font-size: 9pt;
+	padding: 0px 10px;
+    color: black;
+}
+
+table.border {
 	margin-top: 0;
     padding: 1em;
     border: 1px dashed #2f6fab;
@@ -337,6 +361,72 @@ et.HOSTARCH</p>
 </dl>
 
 <a name="config"></a><h2>CONFIG</h2>
+
+<p>&nbsp;</p>
+
+<a name="et_library_calls"></a><h2>ET VARIABLE TYPES</h2>
+<a name="weaponstats"></a><h3>weaponstats</h3>
+<dl>
+	<dd><strong>weaponstats</strong> are returned as a lua table described below.</dd>
+	<dd>&nbsp;</dd>
+	<dd>Note: To be compatible to the game code the weaponstats table
+	starts at index <strong>0</strong>.</dd>
+	<dd>&nbsp;</dd>
+	<dd>&nbsp;</dd>
+	<dd><h6>LUA WEAPONSTATS TABLE</h6><pre>{
+	&lt;weaponindex&gt; { -- see below for available indexes
+		atts = &lt;number&gt;, -- int
+		deaths = &lt;number&gt;, -- int
+		headshots = &lt;number&gt;, -- int
+		hits = &lt;number&gt;, -- int
+		kills = &lt;number&gt; -- int
+	},
+	...
+}</pre></dd>
+	<dd>&nbsp;</dd>
+	<dd>The available weapon indexes are as follows.</dd>
+	<dd>&nbsp;</dd>
+	<dd>&nbsp;</dd>
+	<dd><h6>WEAPONSTATS AVAILABLE INDEXES</h6>
+	<table class="border">
+	<tr><td>
+		<table border='0' class="list">
+			<tr bgcolor='#888888'><th width="50">Index</th><th width="200">Weapon</th></tr>
+			<tr><td>0</td><td>WS_KNIFE</td></tr>
+			<tr bgcolor="#d7d7d7"><td>1</td><td>WS_LUGER</td></tr>
+			<tr><td>2</td><td>WS_COLT</td></tr>
+			<tr bgcolor="#d7d7d7"><td>3</td><td>WS_MP40</td></tr>
+			<tr><td>4</td><td>WS_THOMPSON</td></tr>
+			<tr bgcolor="#d7d7d7"><td>5</td><td>WS_STEN</td>
+			</tr><tr><td>6</td><td>WS_FG42</td></tr>
+			<tr bgcolor="#d7d7d7"><td>7</td><td>WS_PANZERFAUST</td></tr>
+			<tr><td>8</td><td>WS_FLAMETHROWER</td></tr>
+			<tr bgcolor="#d7d7d7"><td>9</td><td>WS_GRENADE</td></tr>
+			<tr><td>10</td><td>WS_MORTAR</td></tr>
+			<tr bgcolor="#d7d7d7"><td>11</td><td>WS_DYNAMITE</td></tr>
+			<tr><td>12</td><td>WS_AIRSTRIKE</td></tr>
+			<tr bgcolor="#d7d7d7"><td>13</td><td>WS_ARTILLERY</td></tr>
+			<tr><td>14</td><td>WS_SYRINGE</td></tr>
+			<tr bgcolor="#d7d7d7"><td>15</td><td>WS_SMOKE</td></tr>
+			<tr><td>16</td><td>WS_SATCHEL</td></tr>
+			<tr bgcolor="#d7d7d7"><td>17</td><td>WS_GRENADELAUNCHER</td></tr>
+			<tr><td>18</td><td>WS_LANDMINE</td></tr>
+			<tr bgcolor="#d7d7d7"><td>19</td><td>WS_MG42</td></tr>
+			<tr><td>20</td><td>WS_GARAND</td></tr>
+			<tr bgcolor="#d7d7d7"><td>21</td><td>WS_K43</td></tr>
+		</table>
+		</td></tr>
+	</table>
+	</dd>
+	<dd>&nbsp;</dd>
+	<dd>&nbsp;</dd>
+	<dd><h6>LUA CODE EXAMPLE</h6><pre>WS_MP40 = 3
+
+local weaponstats = et.gentity_get(clientNum, "sess.aWeaponStats")
+if weaponstats[WS_MP40].atts > 0 then
+	et.G_Print(string.format("MP40 Accuracy: %0.1f\n", weaponstats[WS_MP40].hits / weaponstats[WS_MP40].atts * 100))
+end</pre></dd>
+</dl>
 
 <a name="caveats"></a><h2>CAVEATS</h2>
 <p>Like qagame, lua modules are unloaded and reloaded on map_restart and map changes. This means that all global variables and other information is lost. Modules may choose to store persistent data in cvars or external files.</p>
