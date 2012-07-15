@@ -2481,13 +2481,13 @@ void CG_Debriefing_ChatEditFinish( panel_button_t* button ) {
 
 	switch( cgs.dbChatMode ) {
 		case 0:
-			trap_SendClientCommand( va( "say %s\n", buffer ) );
+			trap_SendClientCommand( va( "say %s\n", escape_string( buffer ) ) );
 			break;
 		case 1:
-			trap_SendClientCommand( va( "say_team %s\n", buffer ) );
+			trap_SendClientCommand( va( "say_team %s\n", escape_string( buffer ) ) );
 			break;
 		case 2:
-			trap_SendClientCommand( va( "say_buddy %s\n", buffer ) );
+			trap_SendClientCommand( va( "say_buddy %s\n", escape_string( buffer ) ) );
 			break;
 	}
 
