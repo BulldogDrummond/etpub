@@ -219,17 +219,31 @@ et.G_ClientSound(3, soundindex)</pre></dd>
 	<dd>- <strong>dflags</strong> is a bitflag number to decide how the damage is inflicted.</dd>
 	<dd>- <strong>mod</strong> is a number from 0 up to <b>*</b><i class="diff">69</i> to set the type of damage.</dd>
 	<dd>&nbsp;</dd>
+	<dd>Damage flags are bitflags with the following available bits.</dd>
+	<dd>&nbsp;</dd>
+	<dd>&nbsp;</dd>
+	<dd><h6>DFLAGS AVAILABLE BITS</h6>
+	<table class="border">
+	<tr><td>
+		<table border='0' class="list">
+			<tr bgcolor='#888888'><th width="50">Bit</th><th width="200">Type</th><th>Description</th></tr>
+			<tr><td>1</td><td>DAMAGE_RADIUS</td><td>damage was indirect</td></tr>
+			<tr bgcolor="#d7d7d7"><td>2</td><td>DAMAGE_HALF_KNOCKBACK</td><td>do less knockback</td></tr>
+			<tr><td>8</td><td>DAMAGE_NO_KNOCKBACK</td><td>do not affect velocity, just view angles</td></tr>
+			<tr bgcolor="#d7d7d7"><td>16</td><td>DAMAGE_NO_TEAM_PROTECTION</td><td>armor, shields, invulnerability, and godmode have no effect</td></tr>
+			<tr><td>32</td><td>DAMAGE_NO_PROTECTION</td><td>armor, shields, invulnerability, and godmode have no effect</td></tr>
+			<tr bgcolor="#d7d7d7"><td>64</td><td>DAMAGE_DISTANCEFALLOFF</td><td>distance falloff</td></tr>
+		</table>
+		</td></tr>
+	</table>
+	</dd>
+	<dd>&nbsp;</dd>
 	<dd>&nbsp;</dd>
 	<dd><h6>LUA CODE EXAMPLE</h6><pre>-- do 50 damage with no protection (dflags = 32) on client #0
 -- with MOD_UNKNOWN (mod = 0) as &lt;world&gt; entity (inflictor, attacker = 1022)
 et.G_Damage(0, 1022, 1022, 50, 32, 0)</pre></dd>
-	<dd><h6>DFLAGS LIST</h6><pre>DAMAGE_RADIUS                  1 // damage was indirect
-DAMAGE_HALF_KNOCKBACK          2 // do less knockback
-DAMAGE_NO_KNOCKBACK            8 // do not affect velocity, just view angles
-DAMAGE_NO_TEAM_PROTECTION     16 // armor, shields, invulnerability, and godmode have no effect
-DAMAGE_NO_PROTECTION          32 // armor, shields, invulnerability, and godmode have no effect
-DAMAGE_DISTANCEFALLOFF        64 // distance falloff</pre></dd>
 </dl>
+
 <p><b>*</b><i class="diff"><strong>flooding</strong> = et.ClientIsFlooding( <strong>clientnum</strong> )</i></p>
 <dl>
 	<dd>Checks if client <strong>clientnum</strong> is <strong>flooding</strong> (1) or not (0).</dd>
@@ -398,7 +412,7 @@ x, y, z = origin[1], origin[2], origin[3]</pre></dd>
 	<table class="border">
 	<tr><td>
 		<table border='0' class="list">
-			<tr bgcolor='#888888'><th width="50">Index</th><th width="200">Weapon</th><th>Description</th></tr>
+			<tr bgcolor='#888888'><th width="50">Number</th><th width="200">Type</th><th>Description</th></tr>
 			<tr><td>0</td><td>TR_STATIONARY</td><td>&nbsp;</td></tr>
 			<tr bgcolor="#d7d7d7"><td>1</td><td>TR_INTERPOLATE</td><td>non-parametric, but interpolate between snapshots</td></tr>
 			<tr><td>2</td><td>TR_LINEAR</td><td>&nbsp;</td></tr>
