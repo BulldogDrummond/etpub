@@ -2347,6 +2347,11 @@ int BG_MaxAmmoForWeapon( weapon_t weaponNum, int *skill );
 void BG_InitLocations( vec2_t world_mins, vec2_t world_maxs );
 char *BG_GetLocationString( vec_t* pos );
 
+// pheno: moved this from cg_local.h/g_local.h
+int trap_Argc( void );
+void trap_Argv( int n, char *buffer, int bufferLength );
+char *ConcatArgs( int start );
+
 // START Mad Doc - TDF
 typedef struct botpool_x
 {

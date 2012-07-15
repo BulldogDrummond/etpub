@@ -1501,7 +1501,6 @@ int ClientNumberFromString( gentity_t *to, char *s );
 void DecolorString( char *in, char *out );
 void SanitizeString( char *in, char *out, qboolean fToLower );
 void G_DropItems(gentity_t *self);
-char *ConcatArgs( int start );
 char *Q_SayConcatArgs(int start);
 char *Q_AddCR(char *s);
 int Q_SayArgc();
@@ -2549,8 +2548,6 @@ extern vmCvar_t g_countryFlags; //mcwf GeoIP
 void	trap_Printf( const char *fmt );
 void	trap_Error( const char *fmt );
 int		trap_Milliseconds( void );
-int		trap_Argc( void );
-void	trap_Argv( int n, char *buffer, int bufferLength );
 void	trap_Args( char *buffer, int bufferLength );
 int		trap_FS_FOpenFile( const char *qpath, fileHandle_t *f, fsMode_t mode );
 void	trap_FS_Read( void *buffer, int len, fileHandle_t f );

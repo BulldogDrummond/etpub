@@ -3235,8 +3235,6 @@ void		trap_Cvar_LatchedVariableStringBuffer( const char *var_name, char *buffer,
 
 
 // ServerCommand and ConsoleCommand parameter access
-int			trap_Argc( void );
-void		trap_Argv( int n, char *buffer, int bufferLength );
 void		trap_Args( char *buffer, int bufferLength );
 
 // filesystem access
