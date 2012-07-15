@@ -249,16 +249,20 @@ void PushBot( gentity_t *ent, gentity_t *other ) {
 	vec3_t dir, ang, f, r;
 	float oldspeed;
 
+	if (!other->client) {
+	    return;
+	}
+
 	// dont push when mounted in certain stationary weapons or scripted not to be pushed
-	if(other->client)
-	{
-		if (Bot_Util_AllowPush(other->client->ps.weapon) == qfalse || !other->client->sess.botPush)	
-			return;
+	if (Bot_Util_AllowPush(other->client->ps.weapon) == qfalse || !other->client->sess.botPush) {	
+		return;
 	}
 
 	oldspeed = VectorLength( other->client->ps.velocity );
-	if (oldspeed < 200)
+	if (oldspeed < 200) {
 		oldspeed = 200;
+	}
+
 	//
 	VectorSubtract( other->r.currentOrigin, ent->r.currentOrigin, dir );
 	VectorNormalize( dir );

@@ -3995,7 +3995,7 @@ qboolean Bullet_Fire_Extended(gentity_t *source, gentity_t *attacker, vec3_t sta
 				traceEnt->client &&
 				traceEnt->health > 0 &&
 				!BG_IsScopedWeapon( attacker->s.weapon ) &&
-				!traceEnt->client->ps.eFlags & EF_PLAYDEAD) {
+				!(traceEnt->client->ps.eFlags & EF_PLAYDEAD)) {
 			//G_LogPrintf("Hit Prevented.\n");
 			return hitClient;
 		}
