@@ -2133,3 +2133,4 @@
            http://www.etpub.org/viewtopic.php?f=8&t=69
 * pheno:   Lua API: fixed trajectory get and set functions to have the correct data types
 * pheno:   fixed memory leaking in settings config handling and in Lua API (thx gaoesa)
+* pheno:   Lua API: added RO access to gentity field pers.etpubc

@@ -270,11 +270,184 @@ static int _et_trap_DropClient(lua_State *L)
 }
 
 // et.trap_SendServerCommand( clientnum, command )
+qboolean Lua_Argv(const char *s, int n, char *buffer, int bufferLength)
+{
+	int bc = 1;
+	int c = 0;
+//	char *s;
+
+	if(bufferLength < 1) return qfalse;
+	if(n < 0) return qfalse;
+	*buffer = '\0';
+//	s = ConcatArgs(0);
+	while(*s) {
+		if(c == n) {
+			while(*s && (bc < bufferLength)) {
+				if(*s == ' ') {
+					*buffer = '\0';
+					return qtrue;
+				}
+				*buffer = *s;
+				buffer++;
+				s++;
+				bc++;
+			}
+			*buffer = '\0';
+			return qtrue;
+		}
+		if(*s == ' ') {
+			s++;
+			if(*s != ' ') {
+				c++;
+				continue;
+			}
+			while(*s && *s == ' ') s++;
+			c++;
+		}
+		s++;
+	}
+	return qfalse;
+}
+
+/*
+============
+G_Lua_TokenizeString
+
+Parses the given string into command line tokens.
+The text is copied to a seperate buffer and 0 characters
+are inserted in the apropriate place, The argv array
+will point into this temporary buffer.
+
+pheno: modified version from ET_GPLs Cmd_TokenizeString()
+============
+*/
+static char tokenized[BIG_INFO_STRING + MAX_STRING_TOKENS]; // will have 0 bytes inserted
+
+int G_Lua_TokenizeString(const char *text_in, char **argv)
+{
+	int			argc = 0;
+	const char	*text;
+	char		*textOut;
+
+	if ( !text_in ) {
+		return argc;
+	}
+
+	text = text_in;
+	textOut = tokenized;
+
+	while ( 1 ) {
+		if ( argc == MAX_STRING_TOKENS ) {
+			return argc;         // this is usually something malicious
+		}
+
+		while ( 1 ) {
+			// skip whitespace
+			while ( *text && *text <= ' ' ) {
+				text++;
+			}
+			if ( !*text ) {
+				return argc;         // all tokens parsed
+			}
+
+			// skip // comments
+			if ( text[0] == '/' && text[1] == '/' ) {
+				//bani - lets us put 'http://' in commandlines
+				if ( text == text_in || ( text > text_in && text[-1] != ':' ) ) {
+					return argc;         // all tokens parsed
+				}
+			}
+
+			// skip /* */ comments
+			if ( text[0] == '/' && text[1] == '*' ) {
+				while ( *text && ( text[0] != '*' || text[1] != '/' ) ) {
+					text++;
+				}
+				if ( !*text ) {
+					return argc;     // all tokens parsed
+				}
+				text += 2;
+			} else {
+				break;          // we are ready to parse a token
+			}
+		}
+
+		// handle quoted strings
+		if ( *text == '"' ) {
+			argv[argc] = textOut;
+			argc++;
+			text++;
+			while ( *text && *text != '"' ) {
+				*textOut++ = *text++;
+			}
+			*textOut++ = 0;
+			if ( !*text ) {
+				return argc;     // all tokens parsed
+			}
+			text++;
+			continue;
+		}
+
+		// regular token
+		argv[argc] = textOut;
+		argc++;
+
+		// skip until whitespace, quote, or command
+		while ( *text > ' ' ) {
+			if ( text[0] == '"' ) {
+				break;
+			}
+
+			if ( text[0] == '/' && text[1] == '/' ) {
+				//bani - lets us put 'http://' in commandlines
+				if ( text == text_in || ( text > text_in && text[-1] != ':' ) ) {
+					break;
+				}
+			}
+
+			// skip /* */ comments
+			if ( text[0] == '/' && text[1] == '*' ) {
+				break;
+			}
+
+			*textOut++ = *text++;
+		}
+
+		*textOut++ = 0;
+
+		if ( !*text ) {
+			return argc;     // all tokens parsed
+		}
+	}
+}
+
 static int _et_trap_SendServerCommand(lua_State *L)
 {
-	int clientnum = luaL_checkint(L, 1);
-	const char *cmd = luaL_checkstring(L, 2);
-	trap_SendServerCommand(clientnum, cmd);
+	int			clientNum = luaL_checkint(L, 1),
+				argc;
+	const char	*command = luaL_checkstring(L, 2);
+	char		*argv[MAX_STRING_TOKENS];
+
+	argc = G_Lua_TokenizeString(command, argv);
+
+	G_Printf("DEBUG: %i arg0 %s\n", argc, argv[0]);
+	G_Printf("DEBUG: %i arg1 %s\n", argc, argv[1]);
+	G_Printf("DEBUG: %i arg2 %s\n", argc, argv[2]);
+
+	/*if (!Q_stricmp(cmd_argv[0], "c")) {
+		if (cmd_argc < 3) {
+			G_Lua_Printf("Lua API: trap_SendServerCommand error, 'c' command needs at least two arguments.\n");
+			return 0;
+		}
+		G_Say(g_entities + atoi(cmd_argv[1]), (clientnum == -1) ? NULL : g_entities + clientnum, SAY_ALL, cmd_argv[2]);
+	} else if (!Q_stricmp(cmd_argv[0], "tc")) {
+		G_Say(g_entities + atoi(cmd_argv[1]), (clientnum == -1) ? NULL : g_entities + clientnum, SAY_TEAM, cmd_argv[2]);
+	} else if (!Q_stricmp(cmd_argv[0], "bc")) {
+		G_Say(g_entities + atoi(cmd_argv[1]), (clientnum == -1) ? NULL : g_entities + clientnum, SAY_BUDDY, cmd_argv[2]);
+	} else {*/
+		trap_SendServerCommand(clientNum, command);
+//	}
+
 	return 0;
 }
 
@@ -629,6 +802,7 @@ static const gentity_field_t gclient_fields[] = {
 	_et_gclient_addfield(		sess.dstreak,												FIELD_INT,			FIELD_FLAG_READONLY						),
 	_et_gclient_addfield(		sess.rstreak,												FIELD_INT,			FIELD_FLAG_READONLY						),
 	_et_gclient_addfield(		sess.shoutcaster,											FIELD_INT,			0										),
+	_et_gclient_addfield(		pers.etpubc,												FIELD_INT,			FIELD_FLAG_READONLY						),
 	_et_gclient_addfield(		pers.lastkilled_client,										FIELD_INT,			FIELD_FLAG_READONLY						),
 	_et_gclient_addfield(		pers.lastrevive_client,										FIELD_INT,			FIELD_FLAG_READONLY						),
 	_et_gclient_addfield(		pers.lastkiller_client,										FIELD_INT,			FIELD_FLAG_READONLY						),
