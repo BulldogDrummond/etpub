@@ -834,7 +834,7 @@ typedef struct {
 	// tjw
 	int hitsounds;
 	qboolean slashKill;
-	qboolean etpubc;
+	int etpubc;
 	int lastkilled_client;
 	int	lastrevive_client;
 	int	lastkiller_client;
