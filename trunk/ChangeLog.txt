@@ -2134,3 +2134,5 @@
 * pheno:   Lua API: fixed trajectory get and set functions to have the correct data types
 * pheno:   fixed memory leaking in settings config handling and in Lua API (thx gaoesa)
 * pheno:   Lua API: added RO access to gentity field pers.etpubc
+* pheno:   Lua API: added chat commands "c", "tc" and "bc" to et.trap_SendServerCommand()
+           library call (http://wolfwiki.anime.net/index.php/SendServerCommand)

@@ -1837,6 +1837,7 @@ void Cmd_Class_f( gentity_t *ent, unsigned int dwCommand, qboolean fValue );
 void Cmd_NextTeam_f( gentity_t* ent, unsigned int dwCommand, qboolean fValue );
 void G_PlaySound_Cmd(void);
 void G_KillSpree(gentity_t *ent, gentity_t *attacker);
+char *G_Shortcuts(gentity_t *ent, char *text);
 
 //
 // g_pweapon.c

@@ -11,6 +11,14 @@
 #define LUA_NUM_VM 16
 #define LUA_MAX_FSIZE 1024*1024 // 1MB
 
+#define MAX_SSC_COMMAND_TOKENS 6
+
+#define SSC_COMMAND_C		1
+#define SSC_COMMAND_TCNL	2
+#define SSC_COMMAND_TC		3
+#define SSC_COMMAND_BCNL	4
+#define SSC_COMMAND_BC		5
+
 #define FIELD_INT			0
 #define FIELD_STRING		1
 #define FIELD_FLOAT			2

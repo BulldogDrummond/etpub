@@ -23,6 +23,81 @@ void QDECL G_Lua_Printf( const char *fmt, ... )
 
 void QDECL G_Lua_Printf( const char *fmt, ... )_attribute( ( format( printf, 1, 2 ) ) );
 
+void G_Lua_Say(gentity_t *ent, gentity_t *target, int mode, char *message, vec3_t origin)
+{
+	char		text[MAX_SAY_TEXT],
+				censoredText[MAX_SAY_TEXT];
+	char		*shortcuts,
+				name[64];
+	int			color,
+				i;
+	qboolean	localize = qfalse;
+	gentity_t	*other;
+
+	unescape_string(message); // ext. ASCII chars
+	Q_strncpyz(text, message, sizeof(text));
+
+	// censor
+	if ((g_censor.string[0] || g_censorNeil.integer) &&
+		!(G_shrubbot_permission(ent,SBF_NOCENSORFLOOD))) {
+		SanitizeString(text, censoredText, qtrue);
+
+		if (G_CensorText(censoredText, &censorDictionary)) {
+			// like shrub, if the text is censored, it becomes colorless
+			Q_strncpyz(text, censoredText, sizeof(text));
+			G_CensorPenalize(ent);
+		}
+	}
+
+	// shortcuts
+	if (g_shortcuts.integer) {
+		shortcuts = G_Shortcuts(ent, text);
+		Q_strncpyz(text, shortcuts, sizeof(text));
+	}
+
+	switch (mode) {
+		default:
+		case SSC_COMMAND_C:
+			Com_sprintf(name, sizeof(name), "%s%c%c: ",
+				ent->client->pers.netname, Q_COLOR_ESCAPE, COLOR_WHITE);
+			
+			mode = SAY_ALL;
+			color = COLOR_GREEN;
+			
+			break;
+		case SSC_COMMAND_TCNL:
+		case SSC_COMMAND_TC:
+		case SSC_COMMAND_BCNL:
+		case SSC_COMMAND_BC:
+			if (!origin) {
+				Com_sprintf(name, sizeof(name), "(%s%c%c): ",
+					ent->client->pers.netname, Q_COLOR_ESCAPE, COLOR_WHITE);
+			} else {
+				Com_sprintf(name, sizeof(name), "[lof](%s%c%c) %c%c(%s)%c%c: ",
+					ent->client->pers.netname, Q_COLOR_ESCAPE, COLOR_WHITE, Q_COLOR_ESCAPE,
+					COLOR_YELLOW, BG_GetLocationString(origin), Q_COLOR_ESCAPE, COLOR_WHITE);
+			
+				localize = qtrue;
+			}
+
+			mode = (mode == SSC_COMMAND_TCNL || mode == SSC_COMMAND_TC) ? SAY_TEAM : SAY_BUDDY;
+			color = (mode == SAY_TEAM) ? COLOR_CYAN : COLOR_YELLOW;
+
+			break;
+	}
+
+	if (target) {
+		G_SayTo(ent, target, mode, color, name, text, localize);
+		return;
+	}
+
+	// send it to all the apropriate clients
+	for (i = 0; i < level.numConnectedClients; i++) {
+		other = &g_entities[level.sortedClients[i]];
+		G_SayTo(ent, other, mode, color, name, text, localize);
+	}
+}
+
 /***************************/
 /* Lua et library handlers */
 /***************************/
@@ -272,9 +347,72 @@ static int _et_trap_DropClient(lua_State *L)
 // et.trap_SendServerCommand( clientnum, command )
 static int _et_trap_SendServerCommand(lua_State *L)
 {
-	int clientnum = luaL_checkint(L, 1);
-	const char *cmd = luaL_checkstring(L, 2);
-	trap_SendServerCommand(clientnum, cmd);
+	int			clientNum = luaL_checkint(L, 1),
+				argc = 0;
+	const char	*command = luaL_checkstring(L, 2);
+	char		*data,
+				*token,
+				*argv[MAX_SSC_COMMAND_TOKENS] = { NULL };
+	
+	// parse commandline
+	data = (char *)command;
+
+	while (1) {
+		token = COM_ParseExt(&data, qfalse);
+
+		if (!token || !token[0] || argc == MAX_SSC_COMMAND_TOKENS) {
+			break;
+		}
+
+		argv[argc] = va("%s", token);
+		argc++;
+	}
+
+	// pheno: TODO?: error handling for c, tc and bc commands
+
+	// "c clientNum \"message"\"
+	if (!Q_stricmp(argv[0], "c")) {
+		if (argc == 3) {
+			G_Lua_Say(g_entities + atoi(argv[1]),
+				(clientNum == -1) ? NULL : g_entities + clientNum, SSC_COMMAND_C, argv[2], NULL);
+		}
+
+		return 0;
+	}
+	
+	// "tc clientNum \"message\" x-location y-location z-location"
+	if (!Q_stricmp(argv[0], "tc")) {
+		if (argc == 3) {
+			G_Lua_Say(g_entities + atoi(argv[1]),
+				(clientNum == -1) ? NULL : g_entities + clientNum, SSC_COMMAND_TCNL, argv[2], NULL);
+		} else if (argc == 6) {
+			vec3_t origin = { atof(argv[3]), atof(argv[4]), atof(argv[5]) };
+
+			G_Lua_Say(g_entities + atoi(argv[1]),
+				(clientNum == -1) ? NULL : g_entities + clientNum, SSC_COMMAND_TC, argv[2], origin);
+		}
+
+		return 0;
+	}
+	
+	// "bc clientNum \"message\" x-location y-location z-location"
+	if (!Q_stricmp(argv[0], "bc")) {
+		if (argc == 3) {
+			G_Lua_Say(g_entities + atoi(argv[1]),
+				(clientNum == -1) ? NULL : g_entities + clientNum, SSC_COMMAND_BCNL, argv[2], NULL);
+		} else if (argc == 6) {
+			vec3_t origin = { atof(argv[3]), atof(argv[4]), atof(argv[5]) };
+
+			G_Lua_Say(g_entities + atoi(argv[1]),
+				(clientNum == -1) ? NULL : g_entities + clientNum, SSC_COMMAND_BC, argv[2], origin);
+		}
+		
+		return 0;
+	}
+	
+	// other command
+	trap_SendServerCommand(clientNum, command);
+
 	return 0;
 }
 
