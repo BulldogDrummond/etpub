@@ -3213,7 +3213,7 @@ void CG_AddAtmosphericEffects();
 // These functions are how the cgame communicates with the main game system
 //
 
-void trap_PumpEventLoop( void );
+//void trap_PumpEventLoop( void );
 
 // print message on the local console
 void		trap_Print( const char *fmt );
@@ -3442,7 +3442,7 @@ void trap_UI_Popup( int arg0 );
 
 // NERVE - SMF
 qhandle_t getTestShader(void); // JPW NERVE shhh
-void trap_UI_ClosePopup( const char *arg0);
+//void trap_UI_ClosePopup( const char *arg0);
 void trap_Key_GetBindingBuf( int keynum, char *buf, int buflen );
 void trap_Key_SetBinding( int keynum, const char *binding );
 void trap_Key_KeynumToStringBuf( int keynum, char *buf, int buflen );
