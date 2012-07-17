@@ -11,6 +11,32 @@ body {
     color: black;
 }
 
+h1, h2, h3, h4, h5, h6 {
+    color: black;
+    background: none;
+    font-weight: normal;
+    margin: 0;
+    padding-top: .5em;
+    padding-bottom: .17em;
+    border-bottom: 1px solid #aaa;
+}
+h1 { font-size: 188%; }
+h2 { font-size: 150%; }
+
+h3, h4, h5, h6 {
+    border-bottom: none;
+    font-weight: bold;
+}
+h3 { font-size: 132%; }
+h4 { font-size: 116%; }
+h5 { font-size: 100%; }
+h6 {
+	font-size: 80%;
+	color: #2f6fab;
+	margin-left: .5em;
+	margin-top: 20px;
+}
+
 b {
 	font-weight: normal;
 	color: #b00;
@@ -28,6 +54,7 @@ pre {
     color: black;
     background-color: #f9f9f9;
     line-height: 1.1em;
+	margin-bottom: 20px;
 }
 
 table.border {
@@ -37,6 +64,7 @@ table.border {
 	color: black;
 	background-color: #f9f9f9;
 	line-height: 1.1em;
+	margin-bottom: 20px;
 }
 
 .list th {
@@ -52,30 +80,6 @@ table.border {
 	font-size: 9pt;
 	padding: 0px 10px;
 	color: black;
-}
-
-h1, h2, h3, h4, h5, h6 {
-    color: black;
-    background: none;
-    font-weight: normal;
-    margin: 0;
-    padding-top: .5em;
-    padding-bottom: .17em;
-    border-bottom: 1px solid #aaa;
-}
-h1 { font-size: 188%; }
-h2 { font-size: 150%; }
-h3, h4, h5, h6 {
-    border-bottom: none;
-    font-weight: bold;
-}
-h3 { font-size: 132%; }
-h4 { font-size: 116%; }
-h5 { font-size: 100%; }
-h6 {
-	font-size: 80%;
-	color: #2f6fab;
-	margin-left: .5em;
 }
 </style>
 </head>
@@ -132,8 +136,6 @@ h6 {
 <p><p><b>*</b><i class="diff"><strong>clientnum</strong> = et.G_ClientNumberFromString( <strong>string</strong> )</i></p>
 <dl>
 	<dd>Searches for one partial match with <strong>string</strong>. If one is found the <strong>clientnum</strong> is returned. If there is none or more than one match <strong>-1</strong> is returned.</dd>
-	<dd>&nbsp;</dd>
-	<dd>&nbsp;</dd>
 	<dd><h6>LUA CODE EXAMPLE</h6><pre>-- get number from client with partial name match 'ETPla'
 clientnum = et.G_ClientNumberFromString("ETPla")</pre></dd>
 </dl>
@@ -142,15 +144,11 @@ clientnum = et.G_ClientNumberFromString("ETPla")</pre></dd>
 <p><strong>fd</strong>, <strong>len</strong> = et.trap_FS_FOpenFile( <strong>filename</strong>, <strong>mode</strong> )</p>
 <dl>
 	<dd>Attempts to open the file <strong>filename</strong> with the access mode <strong>mode</strong> (see <a href="#predefined_constants">et.FS_* constants</a>). Returns the filedescriptor <strong>fd</strong> and file length <strong>len</strong>. On error, <strong>len</strong> returns -1.</dd>
-	<dd>&nbsp;</dd>
-	<dd>&nbsp;</dd>
 	<dd><h6>LUA CODE EXAMPLE</h6><pre>fd, len = et.trap_FS_FOpenFile("mymodule.log", et.FS_READ)</pre></dd>
 </dl>
 <p><strong>filedata</strong> = et.trap_FS_Read( <strong>fd</strong>, <strong>count</strong> )</p>
 <dl>
 	<dd>Reads <strong>count</strong> bytes from filedescriptor <strong>fd</strong>.</dd>
-	<dd>&nbsp;</dd>
-	<dd>&nbsp;</dd>
 	<dd><h6>LUA CODE EXAMPLE</h6><pre>fd, len = et.trap_FS_FOpenFile("mymodule.log", et.FS_READ)
 
 if len ~= -1 then
@@ -162,8 +160,6 @@ et.trap_FS_FCloseFile(fd)</pre></dd>
 <p><strong>count</strong> = et.trap_FS_Write( <strong>filedata</strong>, <strong>count</strong>, <strong>fd</strong> )</p>
 <dl>
 	<dd>Attempts to write <strong>count</strong> bytes of <strong>filedata</strong> to filedescriptor <strong>fd</strong>. Returns number of bytes (<strong>count</strong>) successfully written.</dd>
-	<dd>&nbsp;</dd>
-	<dd>&nbsp;</dd>
 	<dd><h6>LUA CODE EXAMPLE</h6><pre>fd, len = et.trap_FS_FOpenFile("mymodule.log", et.FS_APPEND)
 content = "MODEVENT: X Y: Player X does something with player Y.\n"
 
@@ -176,15 +172,11 @@ et.trap_FS_FCloseFile(fd)</pre></dd>
 <p>et.trap_FS_Rename( <strong>oldname</strong>, <strong>newname</strong> )</p>
 <dl>
 	<dd>Renames file <strong>oldname</strong> to <strong>newname</strong>.</dd>
-	<dd>&nbsp;</dd>
-	<dd>&nbsp;</dd>
 	<dd><h6>LUA CODE EXAMPLE</h6><pre>et.trap_FS_Rename("mymodule.log", "mymodule.bak")</pre></dd>
 </dl>
 <p>et.trap_FS_FCloseFile( <strong>fd</strong> )</p>
 <dl>
 	<dd>Closes filedescriptor <strong>fd</strong>.</dd>
-	<dd>&nbsp;</dd>
-	<dd>&nbsp;</dd>
 	<dd><h6>LUA CODE EXAMPLE</h6><pre>fd, len = et.trap_FS_FOpenFile("mymodule.log", et.FS_READ)
 
 -- read file content here
@@ -196,8 +188,6 @@ et.trap_FS_FCloseFile(fd)</pre></dd>
 <p><p><b>*</b><i class="diff">et.G_ClientSound( <strong>clientnum</strong>, <strong>soundindex</strong> )</i></p>
 <dl>
 	<dd>Plays the sound <strong>soundindex</strong> for the client with <strong>clientnum</strong> only.</dd>
-	<dd>&nbsp;</dd>
-	<dd>&nbsp;</dd>
 	<dd><h6>LUA CODE EXAMPLE</h6><pre>-- play a sound for client #3 only
 soundindex = et.G_SoundIndex("sound/world/alarm_01.wav")
 et.G_ClientSound(3, soundindex)</pre></dd>
@@ -207,8 +197,6 @@ et.G_ClientSound(3, soundindex)</pre></dd>
 <p><strong>milliseconds</strong> = et.trap_Milliseconds()</p>
 <dl>
 	<dd>Returns a number (<strong>milliseconds</strong>) indicating the current server time in milliseconds.</dd>
-	<dd>&nbsp;</dd>
-	<dd>&nbsp;</dd>
 	<dd><h6>LUA CODE EXAMPLE</h6><pre>milliseconds = et.trap_Milliseconds()</pre></dd>
 </dl>
 <p>et.G_Damage( <strong>target</strong>, <strong>inflictor</strong>, <strong>attacker</strong>, <strong>damage</strong>, <strong>dflags</strong>, <strong>mod</strong> )</p>
@@ -220,8 +208,6 @@ et.G_ClientSound(3, soundindex)</pre></dd>
 	<dd>- <strong>mod</strong> is a number from 0 up to <b>*</b><i class="diff">69</i> to set the type of damage.</dd>
 	<dd>&nbsp;</dd>
 	<dd>Damage flags are bitflags with the following available bits.</dd>
-	<dd>&nbsp;</dd>
-	<dd>&nbsp;</dd>
 	<dd><h6>DFLAGS AVAILABLE BITS</h6>
 	<table class="border">
 	<tr><td>
@@ -237,8 +223,6 @@ et.G_ClientSound(3, soundindex)</pre></dd>
 		</td></tr>
 	</table>
 	</dd>
-	<dd>&nbsp;</dd>
-	<dd>&nbsp;</dd>
 	<dd><h6>LUA CODE EXAMPLE</h6><pre>-- do 50 damage with no protection (dflags = 32) on client #0
 -- with MOD_UNKNOWN (mod = 0) as &lt;world&gt; entity (inflictor, attacker = 1022)
 et.G_Damage(0, 1022, 1022, 50, 32, 0)</pre></dd>
@@ -249,8 +233,6 @@ et.G_Damage(0, 1022, 1022, 50, 32, 0)</pre></dd>
 	<dd>Checks if client <strong>clientnum</strong> is <strong>flooding</strong> (1) or not (0).</dd>
 	<dd>&nbsp;</dd>
 	<dd>Note: There will be done no update to the flood protect behaviour on running this library call. ETPub only checks on <i>callvote</i>, <i>say</i>, <i>m</i>, <i>mt</i>, <i>ma</i>, <i>say_team</i>, <i>vsay</i>, <i>vsay_team</i>, <i>say_buddy</i>, <i>vsay_buddy</i>, <i>fireteam</i>, <i>rconAuth</i>, <i>ready</i>, <i>say_teamnl</i>, <i>specinvite</i>, <i>readyteam</i> client commands for flooding.</dd>
-	<dd>&nbsp;</dd>
-	<dd>&nbsp;</dd>
 	<dd><h6>LUA CODE EXAMPLE</h6><pre>if et.ClientIsFlooding(clientnum) == 1 then
 	-- client is flooding, do something
 end</pre></dd>
@@ -258,8 +240,6 @@ end</pre></dd>
 <p><b>*</b><i class="diff">et.G_AddSkillPoints( <strong>ent</strong>, <strong>skill</strong>, <strong>points</strong> )</i></p>
 <dl>
 	<dd>Note: To remove skill points you can also use negative <strong>points</strong> values.</dd>
-	<dd>&nbsp;</dd>
-	<dd>&nbsp;</dd>
 	<dd><h6>LUA CODE EXAMPLE</h6><pre>-- add 100.5 points to heavy weapons skill (skill = 5) of client #0
 et.G_AddSkillPoints(0, 5, 100.5)</pre></dd>
 </dl>
@@ -287,8 +267,6 @@ et.G_LoseSkillPoints(0, 5, 100.5)</pre></dd>
 	<dd>Checks if client <strong>ent</strong> has <strong>permission</strong> (1) for <strong>flag</strong> or not (0).</dd>
 	<dd>&nbsp;</dd>
 	<dd>Note: Use <i>nil</i> or <i>-1</i> to check permission for console (Console always returns 1!).</dd>
-	<dd>&nbsp;</dd>
-	<dd>&nbsp;</dd>
 	<dd><h6>LUA CODE EXAMPLE</h6><pre>-- check if client #1 has permission for flag "C"
 if et.G_shrubbot_permission(1, "C") == 1 then
 	-- client has permission, do something
@@ -299,8 +277,6 @@ end</pre></dd>
 	<dd>Returns the <strong>level</strong> for client <strong>ent</strong>.</dd>
 	<dd>&nbsp;</dd>
 	<dd>Note: Use <i>nil</i> or <i>-1</i> to get the level for console.</dd>
-	<dd>&nbsp;</dd>
-	<dd>&nbsp;</dd>
 	<dd><h6>LUA CODE EXAMPLE</h6><pre>-- get shrubbot level for client #2
 level = et.G_shrubbot_level(2)</pre></dd>
 </dl>
@@ -331,8 +307,6 @@ level = et.G_shrubbot_level(2)</pre></dd>
 <p>(<strong>customObit</strong>) = et_Obituary( <strong>victim</strong>, <strong>killer</strong>, <strong>meansOfDeath</strong> )</p>
 <dl>
 	<dd>Called whenever a player is killed. <b>*</b><i class="diff">Modules should return a string (<strong>customObit</strong>) to override the default obituary or <strong>nil</strong> to leave it as it is.</i></dd>
-	<dd>&nbsp;</dd>
-	<dd>&nbsp;</dd>
 	<dd><h6>LUA CODE EXAMPLE</h6><pre>function et_Obituary(victim, killer, meansOfDeath)
 	if victim == killer and meansOfDeath == 26 then
 		customObit = "%s ^7had an ^1EXPLOSIVE ^7relationship with his dynamite."
@@ -340,8 +314,6 @@ level = et.G_shrubbot_level(2)</pre></dd>
 	end
 end</pre></dd>
 </dl>
-
-<br />
 
 <a name="predefined_constants"></a><h2>PREDEFINED CONSTANTS</h2>
 <p><b>*</b><i class="diff">et.CS_PLAYERS</i><br />
@@ -382,11 +354,9 @@ et.HOSTARCH</p>
 
 <a name="vec3"></a><h3>vec3</h3>
 <dl>
-	<dd>a <strong>vec3</strong> is a 3-element array of numbers. It is usually used to store and
+	<dd>A <strong>vec3</strong> is a 3-element array of numbers. It is usually used to store and
 	process coordinates in 3D space. In lua a vector is an array (table indexed by integers)
 	containing 3 numbers. It can be accessed by doing:</dd>
-	<dd>&nbsp;</dd>
-	<dd>&nbsp;</dd>
 	<dd><h6>LUA CODE EXAMPLE</h6><pre>origin = et.gentity_get(entNum, "origin")
 x, y, z = origin[1], origin[2], origin[3]</pre></dd>
 </dl>
@@ -394,8 +364,6 @@ x, y, z = origin[1], origin[2], origin[3]</pre></dd>
 <a name="trajectory"></a><h3>trajectory</h3>
 <dl>
 	<dd>A <strong>trajectory</strong> is returned as a lua table described below.</dd>
-	<dd>&nbsp;</dd>
-	<dd>&nbsp;</dd>
 	<dd><h6>LUA TRAJECTORY TABLE</h6><pre>{
 	trType = &lt;number&gt;, -- int (see below for allowed values)
 	trTime = &lt;number&gt;, -- int
@@ -406,8 +374,6 @@ x, y, z = origin[1], origin[2], origin[3]</pre></dd>
 	<dd>&nbsp;</dd>
 	<dd>The allowed values for trType (along with the enum names and original comments from the ET
 	source), are as follows. Note that not all values make sense for all entity types.</dd>
-	<dd>&nbsp;</dd>
-	<dd>&nbsp;</dd>
 	<dd><h6>TRTYPE ALLOWED VALUES</h6>
 	<table class="border">
 	<tr><td>
@@ -433,27 +399,15 @@ x, y, z = origin[1], origin[2], origin[3]</pre></dd>
 	</dd>
 </dl>
 
-<a name="weaponstats"></a><h3>weaponstats</h3>
+<a name="weaponstat"></a><h3>weaponstat</h3>
 <dl>
-	<dd>The <strong>weaponstats</strong> are returned as a lua table described below. Note that the
-	table index starts at <strong>0</strong> to be compatible to the game code.</dd>
-	<dd>&nbsp;</dd>
-	<dd>&nbsp;</dd>
-	<dd><h6>LUA WEAPONSTATS TABLE</h6><pre>{
-	&lt;weaponindex&gt; { -- int (see below for available indexes)
-		atts = &lt;number&gt;, -- int
-		deaths = &lt;number&gt;, -- int
-		headshots = &lt;number&gt;, -- int
-		hits = &lt;number&gt;, -- int
-		kills = &lt;number&gt; -- int
-	},
-	...
-}</pre></dd>
-	<dd>&nbsp;</dd>
+	<dd>A <strong>weaponstat</strong> is a 5-element array of integers. It is usually used to store weapon
+	statistics such as atts (shots), deaths, headshots, hits and kills. In lua a weapon stat is an array
+	(table indexed by integers) containing 5 integers. It can be accessed by doing:</dd>
+	<dd><h6>LUA CODE EXAMPLE</h6><pre>ws = et.gentity_get(clientNum, "sess.aWeaponStats", 3) -- MP40
+atts, deaths, headshots, hits, kills = ws[1], ws[2], ws[3], ws[4], ws[5]</pre></dd>
 	<dd>The available weapon indexes are as follows.</dd>
-	<dd>&nbsp;</dd>
-	<dd>&nbsp;</dd>
-	<dd><h6>WEAPONSTATS AVAILABLE INDEXES</h6>
+	<dd><h6>WEAPONSTAT AVAILABLE INDEXES</h6>
 	<table class="border">
 	<tr><td>
 		<table border='0' class="list">
@@ -484,14 +438,6 @@ x, y, z = origin[1], origin[2], origin[3]</pre></dd>
 		</td></tr>
 	</table>
 	</dd>
-	<dd>&nbsp;</dd>
-	<dd>&nbsp;</dd>
-	<dd><h6>LUA CODE EXAMPLE</h6><pre>WS_MP40 = 3
-
-weaponstats = et.gentity_get(clientNum, "sess.aWeaponStats")
-if weaponstats[WS_MP40].atts > 0 then
-	et.G_Print(string.format("MP40 Accuracy: %0.1f\n", weaponstats[WS_MP40].hits / weaponstats[WS_MP40].atts * 100))
-end</pre></dd>
 </dl>
 
 <a name="caveats"></a><h2>CAVEATS</h2>

@@ -27,7 +27,7 @@
 #define FIELD_INT_ARRAY		5
 #define FIELD_TRAJECTORY	6
 #define FIELD_FLOAT_ARRAY	7
-#define FIELD_WEAPONSTATS	8
+#define FIELD_WEAPONSTAT	8
 
 #define FIELD_FLAG_GENTITY	1 // marks a gentity_s field
 #define FIELD_FLAG_GCLIENT	2 // marks a gclient_s field
