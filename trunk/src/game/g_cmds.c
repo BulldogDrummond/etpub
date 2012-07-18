@@ -3292,7 +3292,7 @@ void G_Say( gentity_t *ent, gentity_t *target, int mode, const char *chatText ) 
 	case SAY_BUDDY:
 		localize = qtrue;
 		G_LogPrintf( "saybuddy: %s: %s\n", ent->client->pers.netname, text );
-		loc = BG_GetLocationString( ent->r.currentOrigin );
+		loc = BG_GetLocationString(ent->client->ps.origin);
 		Com_sprintf (name, sizeof(name), "[lof](%s%c%c) %c%c(%s)%c%c: ", ent->client->pers.netname,
 			Q_COLOR_ESCAPE, COLOR_WHITE, Q_COLOR_ESCAPE, COLOR_YELLOW, loc, Q_COLOR_ESCAPE, COLOR_WHITE);
 		color = COLOR_YELLOW;
@@ -3300,7 +3300,7 @@ void G_Say( gentity_t *ent, gentity_t *target, int mode, const char *chatText ) 
 	case SAY_TEAM:
 		localize = qtrue;
 		G_LogPrintf( "sayteam: %s: %s\n", ent->client->pers.netname, text );
-		loc = BG_GetLocationString( ent->r.currentOrigin );
+		loc = BG_GetLocationString(ent->client->ps.origin);
 		Com_sprintf (name, sizeof(name), "[lof](%s%c%c) %c%c(%s)%c%c: ", ent->client->pers.netname,
 			Q_COLOR_ESCAPE, COLOR_WHITE, Q_COLOR_ESCAPE, COLOR_YELLOW, loc, Q_COLOR_ESCAPE, COLOR_WHITE);
 		color = COLOR_CYAN;
