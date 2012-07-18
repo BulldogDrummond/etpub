@@ -60,13 +60,7 @@ void G_Lua_Say(gentity_t *ent, gentity_t *target, char *command, char *message, 
 		Q_strncpyz(text, shortcuts, sizeof(text));
 	}
 
-	if (!Q_stricmp(command, "c")) {
-		Com_sprintf(name, sizeof(name), "%s%c%c: ",
-			ent->client->pers.netname, Q_COLOR_ESCAPE, COLOR_WHITE);
-			
-		mode = SAY_ALL;
-		color = COLOR_GREEN;
-	} else if (!Q_stricmp(command, "tc") || !Q_stricmp(command, "bc")) {
+	if (!Q_stricmp(command, "tc") || !Q_stricmp(command, "bc")) {
 		if (!origin) {
 			Com_sprintf(name, sizeof(name), "(%s%c%c): ",
 				ent->client->pers.netname, Q_COLOR_ESCAPE, COLOR_WHITE);
@@ -80,6 +74,13 @@ void G_Lua_Say(gentity_t *ent, gentity_t *target, char *command, char *message, 
 
 		mode = (!Q_stricmp(command, "tc")) ? SAY_TEAM : SAY_BUDDY;
 		color = (mode == SAY_TEAM) ? COLOR_CYAN : COLOR_YELLOW;
+	// default chat command 'c'
+	} else {
+		Com_sprintf(name, sizeof(name), "%s%c%c: ",
+			ent->client->pers.netname, Q_COLOR_ESCAPE, COLOR_WHITE);
+			
+		mode = SAY_ALL;
+		color = COLOR_GREEN;
 	}
 
 	if (target) {
@@ -351,7 +352,7 @@ static int _et_trap_SendServerCommand(lua_State *L)
 				*argv[MAX_SSC_COMMAND_TOKENS] = { NULL };
 	gentity_t	*ent,
 				*target;
-	vec3_t		origin = { 0, 0, 0 };
+	vec3_t		origin;
 	
 	// parse commandline
 	data = (char *)command;
