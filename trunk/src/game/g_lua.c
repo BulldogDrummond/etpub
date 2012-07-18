@@ -23,16 +23,21 @@ void QDECL G_Lua_Printf( const char *fmt, ... )
 
 void QDECL G_Lua_Printf( const char *fmt, ... )_attribute( ( format( printf, 1, 2 ) ) );
 
-void G_Lua_Say(gentity_t *ent, gentity_t *target, int mode, char *message, vec3_t origin)
+void G_Lua_Say(gentity_t *ent, gentity_t *target, char *command, char *message, vec3_t origin)
 {
 	char		text[MAX_SAY_TEXT],
 				censoredText[MAX_SAY_TEXT];
 	char		*shortcuts,
 				name[64];
-	int			color,
+	int			mode,
+				color,
 				i;
 	qboolean	localize = qfalse;
 	gentity_t	*other;
+
+	if (!ent || !ent->inuse || !ent->client) {
+		return;
+	}
 
 	unescape_string(message); // ext. ASCII chars
 	Q_strncpyz(text, message, sizeof(text));
@@ -55,35 +60,26 @@ void G_Lua_Say(gentity_t *ent, gentity_t *target, int mode, char *message, vec3_
 		Q_strncpyz(text, shortcuts, sizeof(text));
 	}
 
-	switch (mode) {
-		default:
-		case SSC_COMMAND_C:
-			Com_sprintf(name, sizeof(name), "%s%c%c: ",
+	if (!Q_stricmp(command, "c")) {
+		Com_sprintf(name, sizeof(name), "%s%c%c: ",
+			ent->client->pers.netname, Q_COLOR_ESCAPE, COLOR_WHITE);
+			
+		mode = SAY_ALL;
+		color = COLOR_GREEN;
+	} else if (!Q_stricmp(command, "tc") || !Q_stricmp(command, "bc")) {
+		if (!origin) {
+			Com_sprintf(name, sizeof(name), "(%s%c%c): ",
 				ent->client->pers.netname, Q_COLOR_ESCAPE, COLOR_WHITE);
+		} else {
+			Com_sprintf(name, sizeof(name), "[lof](%s%c%c) %c%c(%s)%c%c: ",
+				ent->client->pers.netname, Q_COLOR_ESCAPE, COLOR_WHITE, Q_COLOR_ESCAPE,
+				COLOR_YELLOW, BG_GetLocationString(origin), Q_COLOR_ESCAPE, COLOR_WHITE);
 			
-			mode = SAY_ALL;
-			color = COLOR_GREEN;
-			
-			break;
-		case SSC_COMMAND_TCNL:
-		case SSC_COMMAND_TC:
-		case SSC_COMMAND_BCNL:
-		case SSC_COMMAND_BC:
-			if (!origin) {
-				Com_sprintf(name, sizeof(name), "(%s%c%c): ",
-					ent->client->pers.netname, Q_COLOR_ESCAPE, COLOR_WHITE);
-			} else {
-				Com_sprintf(name, sizeof(name), "[lof](%s%c%c) %c%c(%s)%c%c: ",
-					ent->client->pers.netname, Q_COLOR_ESCAPE, COLOR_WHITE, Q_COLOR_ESCAPE,
-					COLOR_YELLOW, BG_GetLocationString(origin), Q_COLOR_ESCAPE, COLOR_WHITE);
-			
-				localize = qtrue;
-			}
+			localize = qtrue;
+		}
 
-			mode = (mode == SSC_COMMAND_TCNL || mode == SSC_COMMAND_TC) ? SAY_TEAM : SAY_BUDDY;
-			color = (mode == SAY_TEAM) ? COLOR_CYAN : COLOR_YELLOW;
-
-			break;
+		mode = (!Q_stricmp(command, "tc")) ? SAY_TEAM : SAY_BUDDY;
+		color = (mode == SAY_TEAM) ? COLOR_CYAN : COLOR_YELLOW;
 	}
 
 	if (target) {
@@ -353,6 +349,9 @@ static int _et_trap_SendServerCommand(lua_State *L)
 	char		*data,
 				*token,
 				*argv[MAX_SSC_COMMAND_TOKENS] = { NULL };
+	gentity_t	*ent,
+				*target;
+	vec3_t		origin = { 0, 0, 0 };
 	
 	// parse commandline
 	data = (char *)command;
@@ -368,45 +367,24 @@ static int _et_trap_SendServerCommand(lua_State *L)
 		argc++;
 	}
 
-	// pheno: TODO?: error handling for c, tc and bc commands
-
-	// "c clientNum \"message"\"
-	if (!Q_stricmp(argv[0], "c")) {
-		if (argc == 3) {
-			G_Lua_Say(g_entities + atoi(argv[1]),
-				(clientNum == -1) ? NULL : g_entities + clientNum, SSC_COMMAND_C, argv[2], NULL);
+	// chat commands
+	if (!Q_stricmp(argv[0], "c") || !Q_stricmp(argv[0], "tc") || !Q_stricmp(argv[0], "bc")) {
+		// TODO?: error handling (ETPro doesn't)
+		if (argc < 3 || (Q_stricmp(argv[0], "c") && argc > 3 && argc < 6)) {
+			return 0;
 		}
 
-		return 0;
-	}
-	
-	// "tc clientNum \"message\" x-location y-location z-location"
-	if (!Q_stricmp(argv[0], "tc")) {
-		if (argc == 3) {
-			G_Lua_Say(g_entities + atoi(argv[1]),
-				(clientNum == -1) ? NULL : g_entities + clientNum, SSC_COMMAND_TCNL, argv[2], NULL);
-		} else if (argc == 6) {
-			vec3_t origin = { atof(argv[3]), atof(argv[4]), atof(argv[5]) };
+		ent = g_entities + atoi(argv[1]);
+		target = (clientNum == -1) ? NULL : g_entities + clientNum;
 
-			G_Lua_Say(g_entities + atoi(argv[1]),
-				(clientNum == -1) ? NULL : g_entities + clientNum, SSC_COMMAND_TC, argv[2], origin);
+		if (argc >= 6) {
+			origin[0] = atof(argv[3]);
+			origin[1] = atof(argv[4]);
+			origin[2] = atof(argv[5]);
 		}
 
-		return 0;
-	}
-	
-	// "bc clientNum \"message\" x-location y-location z-location"
-	if (!Q_stricmp(argv[0], "bc")) {
-		if (argc == 3) {
-			G_Lua_Say(g_entities + atoi(argv[1]),
-				(clientNum == -1) ? NULL : g_entities + clientNum, SSC_COMMAND_BCNL, argv[2], NULL);
-		} else if (argc == 6) {
-			vec3_t origin = { atof(argv[3]), atof(argv[4]), atof(argv[5]) };
+		G_Lua_Say(ent, target, argv[0], argv[2], (argc >= 6) ? origin : NULL);
 
-			G_Lua_Say(g_entities + atoi(argv[1]),
-				(clientNum == -1) ? NULL : g_entities + clientNum, SSC_COMMAND_BC, argv[2], origin);
-		}
-		
 		return 0;
 	}
 	

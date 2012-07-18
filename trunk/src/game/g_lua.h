@@ -13,12 +13,6 @@
 
 #define MAX_SSC_COMMAND_TOKENS 6
 
-#define SSC_COMMAND_C		0
-#define SSC_COMMAND_TCNL	1
-#define SSC_COMMAND_TC		2
-#define SSC_COMMAND_BCNL	3
-#define SSC_COMMAND_BC		4
-
 #define FIELD_INT			0
 #define FIELD_STRING		1
 #define FIELD_FLOAT			2
