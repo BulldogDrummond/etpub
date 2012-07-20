@@ -27,7 +27,7 @@ int CG_Text_Width_Ext( const char *text, float scale, int limit, fontInfo_t* fon
 	glyphInfo_t *glyph;
 	const char *s = text;
 	float out, useScale = scale * font->glyphScale;
-	
+
 	out = 0;
 	if( text ) {
 		len = strlen( text );
@@ -353,8 +353,8 @@ void CG_DrawKeyModel( int keynum, float x, float y, float w, float h, int fadeti
 	origin[2] = -0.5 * ( mins[2] + maxs[2] );
 	origin[1] = 0.5 * ( mins[1] + maxs[1] );
 
-//	len = 0.5 * ( maxs[2] - mins[2] );		
-	len = 0.75 * ( maxs[2] - mins[2] );		
+//	len = 0.5 * ( maxs[2] - mins[2] );
+	len = 0.75 * ( maxs[2] - mins[2] );
 	origin[0] = len / 0.268;	// len / tan( fov/2 )
 
 	angles[YAW] = 30 * sin( cg.time / 2000.0 );;
@@ -407,7 +407,7 @@ static float CG_DrawSnapshot( float y ) {
 	char		*s;
 	int			w;
 
-	s = va( "time:%i snap:%i cmd:%i", cg.snap->serverTime, 
+	s = va( "time:%i snap:%i cmd:%i", cg.snap->serverTime,
 		cg.latestSnapshotNum, cgs.serverCommandSequence );
 	w = CG_DrawStrlen( s ) * BIGCHAR_WIDTH;
 
@@ -479,14 +479,14 @@ float CG_DrawTime( float y )
 	displayTime[0] = '\0';
 
 	if(cg_drawTime.integer == 1) {
-		Q_strcat(displayTime, sizeof(displayTime), 
+		Q_strcat(displayTime, sizeof(displayTime),
 				va("%d:%02d", tm.tm_hour, tm.tm_min));
 		if(cg_drawTimeSeconds.integer) {
 			Q_strcat(displayTime, sizeof(displayTime),
 				va(":%02d",tm.tm_sec));
 		}
 	} else {
-		Q_strcat(displayTime, sizeof(displayTime), 
+		Q_strcat(displayTime, sizeof(displayTime),
 			va("%d:%02d",
 				((tm.tm_hour == 0 || tm.tm_hour == 12)
 					?12:tm.tm_hour%12),
@@ -500,9 +500,9 @@ float CG_DrawTime( float y )
 	}
 	w = CG_Text_Width_Ext(displayTime, 0.19f, 0, &cgs.media.font1);
 	CG_FillRect( UPPERRIGHT_X - w - 2, y, w + 5, 12 + 2, timerBackground );
-	CG_DrawRect_FixedBorder( UPPERRIGHT_X - w - 2, y, w + 5, 12 + 2, 1, 
+	CG_DrawRect_FixedBorder( UPPERRIGHT_X - w - 2, y, w + 5, 12 + 2, 1,
 			timerBorder );
-	CG_Text_Paint_Ext( UPPERRIGHT_X - w, y + 11, 0.19f, 0.19f, tclr, 
+	CG_Text_Paint_Ext( UPPERRIGHT_X - w, y + 11, 0.19f, 0.19f, tclr,
 			displayTime, 0, 0, 0, &cgs.media.font1);
 	return y + 12 + 4;
 }
@@ -512,13 +512,13 @@ float CG_DrawTime( float y )
 #define   SPEED_US_TO_KPH   14.56f
 #define   SPEED_US_TO_MPH   23.44f
 
-/* 
+/*
 	cg_drawspeed:
 		1 draw ups only
 		2 draw ups (max: xx) only
 		3 draw speedometer only - missing
 		4 draw speedometer and ups (max: xx) - missing
-		5 draw speedometer and ups - missing 
+		5 draw speedometer and ups - missing
 */
 
 // forty - originally from chruker's speedometer code
@@ -540,25 +540,25 @@ static float CG_DrawSpeed( float y ) {
 	thistime = trap_Milliseconds();
 
 	if(thistime > (lasttime + cg_speedinterval.integer)) {
-		
+
 		speed = VectorLength(cg.predictedPlayerState.velocity);
-		
+
 		if (speed > highestSpeed) {
 				highestSpeed = speed;
 		}
-		
-		lasttime = thistime;
-	
 
-	} 
+		lasttime = thistime;
+
+
+	}
 
 	switch (cg_drawspeed.integer) {
-		default:	
+		default:
 		case 1:
 			// kw: swapped 1 and 2 to match etpro's b_speedunit
 			switch(cg_speedunit.integer) {
 				default:
-				case 0:      
+				case 0:
 					// Units per second
 					s = va("%.1f UPS", speed);
 					break;
@@ -576,7 +576,7 @@ static float CG_DrawSpeed( float y ) {
 		case 2:
 			switch(cg_speedunit.integer) {
 				default:
-				case 0:      
+				case 0:
 					// Units per second
 					s = va("%.1f UPS (%.1f MAX)", speed, highestSpeed);
 					break;
@@ -600,7 +600,7 @@ static float CG_DrawSpeed( float y ) {
 	CG_Text_Paint_Ext( UPPERRIGHT_X - w, y + 11, 0.19f, 0.19f, tclr, s, 0, 0, 0, &cgs.media.font1 );
 
 	return y + 12 + 4;
-} 
+}
 
 /*
 =================
@@ -622,7 +622,7 @@ static float CG_DrawTimer( float y ) {
 	if(cgs.gametype != GT_WOLF_LMS &&
 		cg_drawReinforcementTime.integer > 0 &&
 		cgs.clientinfo[cg.clientNum].team != TEAM_SPECTATOR) {
-		
+
 		rt = va("^F%d%s", CG_CalculateReinfTime( qfalse ),
 			((cgs.timelimit <= 0.0f) ? "" : " ")) ;
 
@@ -644,7 +644,7 @@ static float CG_DrawTimer( float y ) {
 		seconds -= mins * 60;
 		tens = seconds / 10;
 		seconds -= tens * 10;
-		s = va("^d%i:%i%i ^*WARMUP", mins, tens, seconds);	
+		s = va("^d%i:%i%i ^*WARMUP", mins, tens, seconds);
 		color[3] = fabs(sin(cg.time * 0.002));
 	} else if ( msec < 0 && cgs.timelimit > 0.0f) {
 		s = va( "^N0:00" );
@@ -707,9 +707,9 @@ static float CG_DrawWatermark( float y ) {
 	// Check if need to fade out watermark
 	watermarkVisibleDuration = cg.time - cg.watermarkConnectTime ;
 
-	if ( 
+	if (
 		g_watermarkFadeAfter.integer && g_watermarkFadeTime.integer &&
-		watermarkVisibleDuration > (g_watermarkFadeAfter.integer * 1000.0f) 
+		watermarkVisibleDuration > (g_watermarkFadeAfter.integer * 1000.0f)
 	) {
 		// Determine fading intensity
 		watermarkVisibleDuration -= ( g_watermarkFadeAfter.integer * 1000.0f );
@@ -769,9 +769,9 @@ static void CG_DrawUpperRight( void ) {
 	//          cg_drawFireteamOverlay
 	if(
 		(
-		cg_drawFireteamOverlay.integer && 
-		CG_IsOnFireteam(cg.clientNum) && 
-		cg.hud.fireteam[0] >= 0 
+		cg_drawFireteamOverlay.integer &&
+		CG_IsOnFireteam(cg.clientNum) &&
+		cg.hud.fireteam[0] >= 0
 		) ||
 		cg.hudEditor.showHudEditor
 	) {
@@ -805,7 +805,7 @@ static void CG_DrawUpperRight( void ) {
 	// forty - speedometer
 	if ( cg_drawspeed.integer ) {
 		y = CG_DrawSpeed( y );
-	} 
+	}
 
 	// forty - #297 - watermarks
 	// HOLLEMOD - START
@@ -813,7 +813,7 @@ static void CG_DrawUpperRight( void ) {
 		y = CG_DrawWatermark( y );
 	}
 	// HOLLEMOD - END
-	
+
 	if ( cg_drawSnapshot.integer ) {
 		y = CG_DrawSnapshot( y );
 	}
@@ -887,7 +887,7 @@ static void CG_DrawTeamInfo( void ) {
 			hcolor[3] = cg_chatAlpha.value * alphapercent;
 
 			trap_R_SetColor( hcolor );
-			CG_DrawPic( cg.hud.chattext[0], 
+			CG_DrawPic( cg.hud.chattext[0],
 				cg.hud.chattext[1] - (cgs.teamChatPos - i)*lineHeight,
 				chatWidth, lineHeight, cgs.media.teamStatusBar );
 
@@ -905,7 +905,7 @@ static void CG_DrawTeamInfo( void ) {
 			}
 			if( flag ){
 				CG_DrawPic( cg.hud.chattext[0],
-					cg.hud.chattext[1] - 
+					cg.hud.chattext[1] -
 						(cgs.teamChatPos - i - 1) * lineHeight - 9,
 					12, 8, flag );
 			}
@@ -915,7 +915,7 @@ static void CG_DrawTeamInfo( void ) {
 				cg.hud.chattext[1] -
 					(cgs.teamChatPos - i - 1) * lineHeight - 1,
 				scaleVal, scaleVal, hcolor,
-				cgs.teamChatMsgs[i % chatHeight], 
+				cgs.teamChatMsgs[i % chatHeight],
 				0, 0, 0, &cgs.media.font3 );
 
 			trap_R_SetColor( NULL );
@@ -999,9 +999,9 @@ static void CG_DrawNotify( void ) {
 			alphapercent = 1.0f - ((cg.time - cgs.notifyMsgTimes[i % chatHeight]) / notifytime);
 			if (alphapercent > 0.5f)
 				alphapercent = 1.0f;
-			else 
+			else
 				alphapercent *= 2;
-			
+
 			if (alphapercent < 0.f)
 				alphapercent = 0.f;
 
@@ -1009,8 +1009,8 @@ static void CG_DrawNotify( void ) {
 			hcolor[3] = alphapercent;
 			trap_R_SetColor( hcolor );
 
-			CG_DrawStringExt( NOTIFYLOC_X + TINYCHAR_WIDTH, 
-				yLoc - (cgs.notifyPos - i)*TINYCHAR_HEIGHT, 
+			CG_DrawStringExt( NOTIFYLOC_X + TINYCHAR_WIDTH,
+				yLoc - (cgs.notifyPos - i)*TINYCHAR_HEIGHT,
 				cgs.notifyMsgs[i % chatHeight], hcolor, qfalse, qfalse,
 				TINYCHAR_WIDTH, TINYCHAR_HEIGHT, maxCharsBeforeOverlay );
 		}
@@ -1099,7 +1099,7 @@ static void CG_DrawDisconnect( void ) {
 
 	// OSP - dont draw if a demo and we're running at a different timescale
 	if(cg.demoPlayback && cg_timescale.value != 1.0f) return;
-	
+
 	// ydnar: don't draw if the server is respawning
 	if( cg.serverRespawning )
 		return;
@@ -1149,7 +1149,7 @@ static void CG_DrawLagometer( void ) {
 	// shutup VC6
 	lagBackground[3] = cg_lagometerAlpha.value;
 
-	if ( !cg_lagometer.integer || cgs.localServer || 
+	if ( !cg_lagometer.integer || cgs.localServer ||
 				cg.hud.lagometer[0] < 0 ) {
 //	if(0) {
 		CG_DrawDisconnect();
@@ -1243,9 +1243,9 @@ static void CG_DrawLagometer( void ) {
 
 	trap_R_SetColor( NULL );
 
-	if ( cg_nopredict.integer 
+	if ( cg_nopredict.integer
 #ifdef ALLOW_GSYNC
-		|| cg_synchronousClients.integer 
+		|| cg_synchronousClients.integer
 #endif // ALLOW_GSYNC
 		) {
 		CG_DrawBigString( ax, ay, "snc", 1.0 );
@@ -1273,7 +1273,7 @@ void CG_DrawLivesLeft( void ) {
 		(int)(cg.hud.livesleft[2] * 3.4f),
 		//24,
 		(int)(cg.hud.livesleft[2] * 1.7f),
-		cg.snap->ps.persistant[PERS_TEAM] == TEAM_ALLIES ? 
+		cg.snap->ps.persistant[PERS_TEAM] == TEAM_ALLIES ?
 				cgs.media.hudAlliedHelmet : cgs.media.hudAxisHelmet );
 
 	CG_DrawField(
@@ -1281,7 +1281,7 @@ void CG_DrawLivesLeft( void ) {
 		(cg.hud.livesleft[0] + (cg.hud.livesleft[2] * 2.86f)),
 		cg.hud.livesleft[1],
 		3,
-		cg.snap->ps.persistant[PERS_RESPAWNS_LEFT], 
+		cg.snap->ps.persistant[PERS_RESPAWNS_LEFT],
 		//14,
 		cg.hud.livesleft[2],
 		//20,
@@ -1321,7 +1321,7 @@ void CG_BannerPrint( const char *str ) {
 	// turn spaces into newlines, if we've run over the linewidth
 	len = strlen( cg.bannerPrint );
 	for ( i = 0, textlen = 0; i < len; i++, textlen++) {
-		
+
 		// "\n" in center/banner prints are seen as new lines.
 		// kw: this is also done serverside in etpub
 		if ( cg.bannerPrint[i] == '\\' && cg.bannerPrint[i+1] == 'n' ) {
@@ -1336,7 +1336,7 @@ void CG_BannerPrint( const char *str ) {
 		if( Q_IsColorString( &cg.bannerPrint[i] ) )
 			textlen -= 2;
 
-		// NOTE: subtracted a few chars here so long words still 
+		// NOTE: subtracted a few chars here so long words still
 		// get displayed properly
 		if ( textlen % ( BP_LINEWIDTH - 10 ) == 0 && textlen > 0 )
 			neednewline = qtrue;
@@ -1369,13 +1369,13 @@ void CG_BannerPrint( const char *str ) {
 			continue;
 		}
 		// no spaces at the beginning of the string
-		if(len == 0 && cg.bannerPrint[i] == ' ') 
+		if(len == 0 && cg.bannerPrint[i] == ' ')
 			continue;
 		buff[len] = cg.bannerPrint[i];
 		len++;
 	}
 	buff[len] = 0;
-	
+
 	// show the banner in the console
 	// Dens: only if the client wants that
 	if(cg_logConsole.integer & CONLOG_BANNERS){
@@ -1432,9 +1432,9 @@ static void CG_DrawBannerPrint( void ) {
 				0, &cgs.media.font4);
 
 		x = ( SCREEN_WIDTH - w ) / 2;
-		
+
 		// colors are saved over newlines in bannerprint messages.
-		//CG_DrawStringExt( x, y, va( "^%c%s", colorchar, linebuffer) , color, 
+		//CG_DrawStringExt( x, y, va( "^%c%s", colorchar, linebuffer) , color,
 		//		qfalse, qtrue, MINICHAR_WIDTH, MINICHAR_HEIGHT, 0 );
 		y += charHeight * 1.5;
 		CG_Text_Paint_Ext( x, y,
@@ -1498,13 +1498,13 @@ void CG_PriorityCenterPrint( const char *str, int y, int charWidth, int priority
 		// (playdead is the best example of this)
 		if(!(!Q_stricmp(cg.centerPrintLast,str) &&
 			((cg.time - cg.centerPrintLastTime) < 1000))){
-			
+
 			Q_strncpyz( cg.centerPrintLast, str, sizeof(cg.centerPrintLast) );
 			cg.centerPrintLastTime = cg.time;
 			Q_strncpyz( buff, str, sizeof(buff) );
 
 			// Dens: take out the newlines and makes spaces instead
-			// This way things meant to be on two lines, dont make 
+			// This way things meant to be on two lines, dont make
 			// one long unreadable line
 			for(i=0; i < strlen(buff); i++){
 				if(buff[i] == '\\' && (i+1) < strlen(buff) && buff[i+1] == 'n'){
@@ -1516,7 +1516,7 @@ void CG_PriorityCenterPrint( const char *str, int y, int charWidth, int priority
 			}
 
 			CG_Printf( "^9centerprint: ^7%s\n", buff);
-		}	
+		}
 	}
 
 	Q_strncpyz( cg.centerPrint, str, sizeof(cg.centerPrint) );
@@ -1542,11 +1542,11 @@ void CG_PriorityCenterPrint( const char *str, int y, int charWidth, int priority
 			textlen -= 2;
 		}
 
-		// NOTE: subtract a few chars here so long words still 
+		// NOTE: subtract a few chars here so long words still
 		// get displayed properly
 		if ( textlen % ( CP_LINEWIDTH - 20 ) == 0 && textlen > 0 )
 			neednewline = qtrue;
-		
+
 		if ( cg.centerPrint[i] == ' ' && neednewline ) {
 			cg.centerPrint[i] = '\n';
 			textlen = 0;
@@ -1591,7 +1591,7 @@ static void CG_DrawCenterString( void ) {
 	float	*color;
 	char	lastcolor = COLOR_WHITE;
 	int charHeight;
-	
+
 	if ( !cg.centerPrintTime ) {
 		return;
 	}
@@ -1635,8 +1635,8 @@ static void CG_DrawCenterString( void ) {
 		y += charHeight * 1.5;
 
 		// colors are saved over newlines in centerprint messages.
-		//CG_DrawStringExt( x, y, va( "^%c%s", colorchar, linebuffer), color, 
-		//		qfalse, qtrue, cg.centerPrintCharWidth, 
+		//CG_DrawStringExt( x, y, va( "^%c%s", colorchar, linebuffer), color,
+		//		qfalse, qtrue, cg.centerPrintCharWidth,
 		//		(int)(cg.centerPrintCharWidth * 1.5), 0 );
 		CG_Text_Paint_Ext( x, y, cg_fontCPScale.value, cg_fontCPScale.value,
 				color, va( "^%c%s", colorchar, linebuffer),
@@ -1796,7 +1796,7 @@ static void CG_DrawMortarReticle( void ) {
 
 		if( i % 3 == majorOffset) {
 			printval = min - val * 15 + 180;
-			
+
 			// rain - old tertiary abuse was nasty and had undefined result
 			if (printval < 0)
 				printval += 360;
@@ -1811,7 +1811,7 @@ static void CG_DrawMortarReticle( void ) {
 			val++;
 		} else {
 			//CG_FillRect( 140 + localOffset, 256, 1, 8, color);
-			CG_FillRect( 500 - localOffset, 256, 1, 8, color);			
+			CG_FillRect( 500 - localOffset, 256, 1, 8, color);
 		}
 	}
 
@@ -1954,7 +1954,7 @@ static void CG_DrawMortarReticle( void ) {
 
 		if( i % 4 == majorOffset ) {
 			printval = min - val * 10;
-			
+
 			// rain - old tertiary abuse was nasty and had undefined result
 			if (printval <= -180)
 				printval += 360;
@@ -2026,7 +2026,7 @@ static void CG_DrawMortarReticle( void ) {
 			}
 		}
 	}
- 
+
 	/*s = va( "%.2f (%i / %i)", angle + .5f * 50, majorOffset, min );
 	CG_Text_Paint( 348, 164, .25f, color, s, 0, 0, 0 );
 	s = va( "%.2f",angle );
@@ -2118,7 +2118,7 @@ static void CG_DrawCrosshair(void) {
 						CG_FinishWeaponChange( WP_K43_SCOPE, WP_K43 );
 					}
 				}
-				
+
 				// OSP
 				if(cg.mvTotalClients < 1 || cg.snap->ps.stats[STAT_HEALTH] > 0)
 					CG_DrawWeapReticle();
@@ -2170,7 +2170,7 @@ static void CG_DrawCrosshair(void) {
 	f = (float)((cg_crosshairPulse.integer == 0) ? 0 : cg.predictedPlayerState.aimSpreadScale / 255.0);
 	w *= ( 1 + f*2.0 );
 	h *= ( 1 + f*2.0 );
-	
+
 	x = cg_crosshairX.integer;
 	y = cg_crosshairY.integer;
 	CG_AdjustFrom640( &x, &y, &w, &h );
@@ -2200,7 +2200,7 @@ static void CG_DrawNoShootIcon( void ) {
 
 	if( cg.predictedPlayerState.eFlags & EF_PRONE && cg.snap->ps.weapon == WP_PANZERFAUST ) {
 		trap_R_SetColor( colorRed );
-	} else if ( cg.crosshairClientNoShoot 
+	} else if ( cg.crosshairClientNoShoot
 				// xkan, 1/6/2003 - don't shoot friend or civilian
 				|| cg.snap->ps.serverCursorHint == HINT_PLYR_NEUTRAL
 				|| cg.snap->ps.serverCursorHint == HINT_PLYR_FRIEND) {
@@ -2246,7 +2246,7 @@ void CG_ScanForCrosshairMine(centity_t *cent) {
 	}
 
 	VectorCopy( cg.refdef.vieworg, start );
-	VectorMA( start, 512, cg.refdef.viewaxis[0], end );   
+	VectorMA( start, 512, cg.refdef.viewaxis[0], end );
 
 	CG_Trace( &trace, start, NULL, NULL, end, -1, MASK_SOLID );
 
@@ -2268,7 +2268,7 @@ void CG_ScanForCrosshairMine(centity_t *cent) {
 			//cg.crosshairMine = -1;
 		}
 
-} 
+}
 
 /*
 =================
@@ -2289,11 +2289,11 @@ void CG_ScanForCrosshairDyna(centity_t *cent) {
 	}
 
 	VectorCopy( cg.refdef.vieworg, start );
-	VectorMA( start, 512, cg.refdef.viewaxis[0], end );   
+	VectorMA( start, 512, cg.refdef.viewaxis[0], end );
 
 	CG_Trace( &trace, start, NULL, NULL, end, -1, MASK_SOLID );
 
-	// Dens: pos.trBase is not the middle of the dyna, but due to different 
+	// Dens: pos.trBase is not the middle of the dyna, but due to different
 	// orientations relative to the map axis, this cannot be corrected in a
 	// simple way unfortunately
 	if(
@@ -2307,8 +2307,8 @@ void CG_ScanForCrosshairDyna(centity_t *cent) {
 				cg.crosshairDyna = cent->currentState.otherEntityNum;
 				cg.crosshairDynaTime = cg.time;
 			}
-		} 
-} 
+		}
+}
 
 /*
 =================
@@ -2348,7 +2348,7 @@ static float CG_ScanForCrosshairEntity( float * zChange, qboolean * hitClient ) 
 
 		// is a tank with a healthbar
 		// this might have some side-effects, but none right now as the script_mover is the only one that sets effect1Time
-		if( ( cg_entities[trace.entityNum].currentState.eType == ET_MOVER && 
+		if( ( cg_entities[trace.entityNum].currentState.eType == ET_MOVER &&
 				cg_entities[trace.entityNum].currentState.effect1Time ) ) {
 			// update the fade timer
 			cg.crosshairClientNum = trace.entityNum;
@@ -2529,7 +2529,7 @@ static void CG_DrawCrosshairNames( void ) {
 			CG_DrawSmallStringColor( 320 - w / 2, 170, s, color );
 		} else {
 			// colored names
-			CG_DrawStringExt( 320 - w / 2, 170, s, color, qfalse, qtrue, 
+			CG_DrawStringExt( 320 - w / 2, 170, s, color, qfalse, qtrue,
 				SMALLCHAR_WIDTH, SMALLCHAR_HEIGHT, 0 );
 		}
 
@@ -2547,7 +2547,7 @@ static void CG_DrawCrosshairNames( void ) {
 			CG_DrawSmallStringColor( 320 - w / 2, 170, s, color );
 		} else {
 			// colored names
-			CG_DrawStringExt( 320 - w / 2, 170, s, color, qfalse, qtrue, 
+			CG_DrawStringExt( 320 - w / 2, 170, s, color, qfalse, qtrue,
 				SMALLCHAR_WIDTH, SMALLCHAR_HEIGHT, 0 );
 		}
 
@@ -2587,14 +2587,14 @@ static void CG_DrawCrosshairNames( void ) {
 		}
 
 		// kw: spectators have crosshairnames too
-		if( cg_entities[cg.crosshairClientNum].currentState.eType == ET_MOVER && 
+		if( cg_entities[cg.crosshairClientNum].currentState.eType == ET_MOVER &&
 				cg_entities[cg.crosshairClientNum].currentState.effect1Time ) {
 			isTank = qtrue;
 
 			playerHealth = cg_entities[cg.crosshairClientNum].currentState.dl_intensity;
 			maxHealth = 255;
 
-			s = Info_ValueForKey( CG_ConfigString( CS_SCRIPT_MOVER_NAMES ), 
+			s = Info_ValueForKey( CG_ConfigString( CS_SCRIPT_MOVER_NAMES ),
 				va( "%i", cg.crosshairClientNum ) );
 
 			if( !*s ) {
@@ -2615,13 +2615,13 @@ static void CG_DrawCrosshairNames( void ) {
 		if( !isTank ) {
 			return;
 		}
-	} else if( cgs.clientinfo[cg.crosshairClientNum].team != 
+	} else if( cgs.clientinfo[cg.crosshairClientNum].team !=
 			cgs.clientinfo[cg.snap->ps.clientNum].team ) {
 
-		if( cg_entities[cg.crosshairClientNum].currentState.powerups & 
+		if( cg_entities[cg.crosshairClientNum].currentState.powerups &
 				(1 << PW_OPS_DISGUISED) ) {
 			if( cgs.clientinfo[cg.snap->ps.clientNum].team != TEAM_SPECTATOR &&
-				cgs.clientinfo[cg.snap->ps.clientNum].skill[SK_SIGNALS] >= 4 && 
+				cgs.clientinfo[cg.snap->ps.clientNum].skill[SK_SIGNALS] >= 4 &&
 				cgs.clientinfo[cg.snap->ps.clientNum].cls == PC_FIELDOPS ) {
 				s = CG_TranslateString( "Disguised Enemy!" );
 				w = CG_DrawStrlen( s ) * SMALLCHAR_WIDTH;
@@ -2646,7 +2646,7 @@ static void CG_DrawCrosshairNames( void ) {
 					playerHealth = cg.snap->ps.identifyClientHealth;
 				} else {
 					if(cgs.etpub >= ETPUB_VERSION(0,7,0)) {
-						// kw: In etmain enemy health isn't send by tinfo, 
+						// kw: In etmain enemy health isn't send by tinfo,
 						//     but this is now fixed serverside.
 						playerHealth = cgs.clientinfo[ cg.crosshairClientNum ].health;
 					} else {
@@ -2665,8 +2665,8 @@ static void CG_DrawCrosshairNames( void ) {
 				name = cgs.clientinfo[ cg.crosshairClientNum ].disguiseName;
 
 				if(cg_drawRanks.integer == 1){
-					playerRank = cgs.clientinfo[ cg.crosshairClientNum ].team != TEAM_AXIS ? 
-						rankNames_Axis[cgs.clientinfo[cg.crosshairClientNum].disguiseRank] : 
+					playerRank = cgs.clientinfo[ cg.crosshairClientNum ].team != TEAM_AXIS ?
+						rankNames_Axis[cgs.clientinfo[cg.crosshairClientNum].disguiseRank] :
 						rankNames_Allies[cgs.clientinfo[cg.crosshairClientNum].disguiseRank];
 					if(cg_drawClassIcons.integer & CLASSICON_CROSSHAIR){
 						s = va("%s %s", playerRank, name);
@@ -2674,8 +2674,8 @@ static void CG_DrawCrosshairNames( void ) {
 						s = va( "[%s] %s %s", CG_TranslateString( playerClass ), playerRank, name );
 					}
 				}else if(cg_drawRanks.integer == 2){
-					playerRank = cgs.clientinfo[ cg.crosshairClientNum ].team != TEAM_AXIS ? 
-						miniRankNames_Axis[cgs.clientinfo[cg.crosshairClientNum].disguiseRank] : 
+					playerRank = cgs.clientinfo[ cg.crosshairClientNum ].team != TEAM_AXIS ?
+						miniRankNames_Axis[cgs.clientinfo[cg.crosshairClientNum].disguiseRank] :
 						miniRankNames_Allies[cgs.clientinfo[cg.crosshairClientNum].disguiseRank];
 					if(cg_drawClassIcons.integer & CLASSICON_CROSSHAIR){
 						s = va("%s %s", playerRank, name);
@@ -2692,6 +2692,10 @@ static void CG_DrawCrosshairNames( void ) {
 				if(cg_drawClassIcons.integer & CLASSICON_CROSSHAIR){
 					// Dens: 4 is for the space between the icon and the text
 					w = CG_DrawStrlen( s ) * SMALLCHAR_WIDTH + 4 + SMALLCHAR_HEIGHT;
+					if(cg_countryFlags.integer & COUNTRYFLAG_CROSSHAIR
+						&& cf_draw(320 - (w + 3*SMALLCHAR_WIDTH + 4) / 2, 164, color[3], cg.crosshairClientNum)) {
+						w-= 3*SMALLCHAR_WIDTH + 4;
+					}
 					trap_R_SetColor( color );
 					CG_DrawPic(320 - w/2, 170, SMALLCHAR_HEIGHT, SMALLCHAR_HEIGHT,
 							cgs.media.skillPics[BG_ClassSkillForClass( (cg_entities[ cg.crosshairClientNum ].currentState.powerups >> PW_OPS_CLASS_1) & 7 )] );
@@ -2699,6 +2703,10 @@ static void CG_DrawCrosshairNames( void ) {
 					w -= 2*(4+SMALLCHAR_HEIGHT);
 				}else{
 					w = CG_DrawStrlen( s ) * SMALLCHAR_WIDTH;
+					if(cg_countryFlags.integer & COUNTRYFLAG_CROSSHAIR
+						&& cf_draw(320 - (w + 3*SMALLCHAR_WIDTH + 4) / 2, 164, color[3], cg.crosshairClientNum)) {
+						w-= 3*SMALLCHAR_WIDTH + 4;
+					}
 				}
 
 				// draw the name and class
@@ -2707,7 +2715,7 @@ static void CG_DrawCrosshairNames( void ) {
 					CG_DrawSmallStringColor( 320 - w / 2, 170, s, color );
 				} else {
 					// colored names
-					CG_DrawStringExt( 320 - w / 2, 170, s, color, qfalse, qtrue, 
+					CG_DrawStringExt( 320 - w / 2, 170, s, color, qfalse, qtrue,
 						SMALLCHAR_WIDTH, SMALLCHAR_HEIGHT, 0 );
 				}
 
@@ -2746,8 +2754,8 @@ static void CG_DrawCrosshairNames( void ) {
 		name = cgs.clientinfo[ cg.crosshairClientNum ].name;
 
 		if(cg_drawRanks.integer == 1){
-			playerRank = cgs.clientinfo[cg.crosshairClientNum].team == TEAM_AXIS ? 
-				rankNames_Axis[cgs.clientinfo[cg.crosshairClientNum].rank] : 
+			playerRank = cgs.clientinfo[cg.crosshairClientNum].team == TEAM_AXIS ?
+				rankNames_Axis[cgs.clientinfo[cg.crosshairClientNum].rank] :
 				rankNames_Allies[cgs.clientinfo[cg.crosshairClientNum].rank];
 			if(cg_drawClassIcons.integer & CLASSICON_CROSSHAIR){
 				s = va("%s %s", playerRank, name);
@@ -2755,8 +2763,8 @@ static void CG_DrawCrosshairNames( void ) {
 				s = va( "[%s] %s %s", CG_TranslateString( playerClass ), playerRank, name );
 			}
 		}else if(cg_drawRanks.integer == 2){
-			playerRank = cgs.clientinfo[cg.crosshairClientNum].team == TEAM_AXIS ? 
-				miniRankNames_Axis[cgs.clientinfo[cg.crosshairClientNum].rank] : 
+			playerRank = cgs.clientinfo[cg.crosshairClientNum].team == TEAM_AXIS ?
+				miniRankNames_Axis[cgs.clientinfo[cg.crosshairClientNum].rank] :
 				miniRankNames_Allies[cgs.clientinfo[cg.crosshairClientNum].rank];
 			if(cg_drawClassIcons.integer & CLASSICON_CROSSHAIR){
 				s = va("%s %s", playerRank, name);
@@ -2800,14 +2808,14 @@ static void CG_DrawCrosshairNames( void ) {
 			CG_DrawSmallStringColor( 320 - w / 2, 170, s, color );
 		} else {
 			// colored names
-			CG_DrawStringExt( 320 - w / 2, 170, s, color, qfalse, qtrue, 
-				SMALLCHAR_WIDTH, SMALLCHAR_HEIGHT, 0 );			
+			CG_DrawStringExt( 320 - w / 2, 170, s, color, qfalse, qtrue,
+				SMALLCHAR_WIDTH, SMALLCHAR_HEIGHT, 0 );
 		}
 
 		// set the health
 		if( cg.crosshairClientNum == cg.snap->ps.identifyClient &&
 				cgs.clientinfo[cg.clientNum].team != TEAM_SPECTATOR ) {
-			// kw: identifyHealth doesn't get updated for spectators, 
+			// kw: identifyHealth doesn't get updated for spectators,
 			//     so always use the clientinfo health.
 			playerHealth = cg.snap->ps.identifyClientHealth;
 		} else {
@@ -2846,7 +2854,7 @@ static void CG_DrawCrosshairNames( void ) {
 	}
 
 	// draw the health bar
-//	if ( isTank || (cg.crosshairClientNum == cg.snap->ps.identifyClient && drawStuff && cgs.clientinfo[cg.snap->ps.clientNum].team != TEAM_SPECTATOR ) ) 
+//	if ( isTank || (cg.crosshairClientNum == cg.snap->ps.identifyClient && drawStuff && cgs.clientinfo[cg.snap->ps.clientNum].team != TEAM_SPECTATOR ) )
 	if( isTank || playerHealth ) {
 		vec4_t bgcolor;
 
@@ -2885,7 +2893,7 @@ static void CG_DrawCrosshairNames( void ) {
 			}else if(playerHealth < 0){
 				playerHealth = 0;
 			}
-			
+
 			// Dens: not a standard lib function
 			// itoa(cgs.clientinfo[ cg.crosshairClientNum ].health, buff, 10);
 			Com_sprintf(buff, 5, "%d", playerHealth);
@@ -2896,8 +2904,8 @@ static void CG_DrawCrosshairNames( void ) {
 				CG_DrawSmallStringColor( 320 - w / 2, 185, va("%s HP",buff), color );
 			} else {
 				// colored HP
-				CG_DrawStringExt( 320 - w / 2, 185, va("%s HP",buff), c, qfalse, qtrue, 
-					SMALLCHAR_WIDTH, SMALLCHAR_HEIGHT, 0 );			
+				CG_DrawStringExt( 320 - w / 2, 185, va("%s HP",buff), c, qfalse, qtrue,
+					SMALLCHAR_WIDTH, SMALLCHAR_HEIGHT, 0 );
 			}
 		}
 	}
@@ -3073,7 +3081,7 @@ static void CG_DrawVote(void) {
 			&cgs.media.font4);
 		return;
 	}
-	
+
 	if ( cgs.autoFireteamJoinEndTime > cg.time && cgs.autoFireteamJoinNum == -1 ) {
 		Q_strncpyz( str1, BindingFromName( "vote yes" ), 32 );
 		Q_strncpyz( str2, BindingFromName( "vote no" ), 32 );
@@ -3093,7 +3101,7 @@ static void CG_DrawVote(void) {
 			&cgs.media.font4);
 		return;
 	}
-	
+
 
 	if( cgs.voteTime ) {
 		Q_strncpyz( str1, BindingFromName( "vote yes" ), 32 );
@@ -3157,7 +3165,7 @@ static void CG_DrawVote(void) {
 					str1, cgs.voteYes,
 					str2, cgs.voteNo,
 					str3);
-				
+
 			}
 			//CG_DrawStringExt( x, y+14, s, color, qtrue, qtrue, TINYCHAR_WIDTH, TINYCHAR_HEIGHT, 60 );
 			CG_Text_Paint_Ext( x, y+height+4, cg_fontQAScale.value, cg_fontQAScale.value,
@@ -3426,7 +3434,7 @@ static void CG_ActivateLimboMenu(void) {
 
 	// auto open/close limbo mode
 	if(cg_popupLimboMenu.integer && !cg.demoPlayback) {
-		if(test && !latch) {			
+		if(test && !latch) {
 			CG_LimboMenu_f();
 			latch = qtrue;
 		} else if(!test && latch && cg.showGameView) {
@@ -3461,7 +3469,7 @@ static void CG_DrawSpectatorMessage( void ) {
 
 		lastconfigGet = cg.time;
 	}
-	
+
 	charHeight = CG_Text_Height_Ext("A", cg_fontLimboScale.value,
 									0, &cgs.media.font4);
 
@@ -3477,7 +3485,7 @@ static void CG_DrawSpectatorMessage( void ) {
 	}
 	str = va( CG_TranslateString( "Press %s to open Limbo Menu" ), str2 );
 	//CG_DrawStringExt( INFOTEXT_STARTX, 146, str, colorWhite, qtrue, qtrue, TINYCHAR_WIDTH, TINYCHAR_HEIGHT, 0 );
-	CG_Text_Paint_Ext(INFOTEXT_STARTX, 
+	CG_Text_Paint_Ext(INFOTEXT_STARTX,
 		INFOTEXT_STARTY + ((charHeight * 2.0f) * 3),
 		cg_fontLimboScale.value, cg_fontLimboScale.value,
 		colorWhite, str,
@@ -3507,8 +3515,8 @@ static void CG_DrawSpectatorMessage( void ) {
 
 
 float CG_CalculateReinfTime_Float( qboolean menu ) {
-	team_t team; 
-	int dwDeployTime; 
+	team_t team;
+	int dwDeployTime;
 
 	if( menu ) {
 		if(cgs.clientinfo[cg.clientNum].team == TEAM_SPECTATOR) {
@@ -3537,7 +3545,7 @@ CG_DrawLimboMessage
 
 static void CG_DrawLimboMessage( void ) {
 	float color[4] = { 1, 1, 1, 1 };
-	const char *str; 
+	const char *str;
 	playerState_t *ps;
 	int y = 118;
 	int charHeight;
@@ -3547,7 +3555,7 @@ static void CG_DrawLimboMessage( void ) {
 	if ( ps->stats[STAT_HEALTH] > 0 ) {
 		return;
 	}
-	
+
 	if(ps->eFlags & EF_PLAYDEAD) {
 		return;
 	}
@@ -3569,7 +3577,7 @@ static void CG_DrawLimboMessage( void ) {
 			color, str,
 			0, 0, ITEM_TEXTSTYLE_SHADOWED,
 			&cgs.media.font4);
-		
+
 
 		if( cgs.gametype == GT_WOLF_LMS ) {
 			trap_R_SetColor( NULL );
@@ -3634,7 +3642,7 @@ static qboolean CG_DrawFollow(void)
 		0, &cgs.media.font4);
 
 	// Spectator view teamflags
-	if(cg.snap->ps.clientNum != cg.clientNum && 
+	if(cg.snap->ps.clientNum != cg.clientNum &&
 		cgs.clientinfo[cg.clientNum].team == TEAM_SPECTATOR) {
 
 		if(cgs.clientinfo[cg.snap->ps.clientNum].team == TEAM_ALLIES) {
@@ -3644,7 +3652,7 @@ static qboolean CG_DrawFollow(void)
 		}
 	}
 
-	// if in limbo, show different follow message 
+	// if in limbo, show different follow message
 	if(cg.snap->ps.pm_flags & PMF_LIMBO) {
 		if(cgs.gametype != GT_WOLF_LMS) {
 			if( cg.snap->ps.persistant[PERS_RESPAWNS_LEFT] == 0 ) {
@@ -3661,7 +3669,7 @@ static qboolean CG_DrawFollow(void)
 				Com_sprintf(deploytime, 128, CG_TranslateString("Deploying in ^3%d ^7seconds"), CG_CalculateReinfTime(qfalse));
 			}
 			//CG_DrawStringExt(INFOTEXT_STARTX, 118, deploytime, colorWhite, qtrue, qtrue, TINYCHAR_WIDTH, TINYCHAR_HEIGHT, 80);
-			CG_Text_Paint_Ext(INFOTEXT_STARTX, 
+			CG_Text_Paint_Ext(INFOTEXT_STARTX,
 				INFOTEXT_STARTY + (charHeight * 2.0f),
 				cg_fontLimboScale.value, cg_fontLimboScale.value,
 				colorWhite, deploytime,
@@ -3671,16 +3679,16 @@ static qboolean CG_DrawFollow(void)
 
 		// Don't display if you're following yourself
 		if(cg.snap->ps.clientNum != cg.clientNum) {
-			Com_sprintf(deploytime, 128, "(%s %s %s^7 [%s])", 
+			Com_sprintf(deploytime, 128, "(%s %s %s^7 [%s])",
 					CG_TranslateString("Following"),
 					cgs.clientinfo[cg.snap->ps.clientNum].team == TEAM_ALLIES ?
-						rankNames_Allies[cgs.clientinfo[cg.snap->ps.clientNum].rank] : 
+						rankNames_Allies[cgs.clientinfo[cg.snap->ps.clientNum].rank] :
 						rankNames_Axis[cgs.clientinfo[cg.snap->ps.clientNum].rank],
 					cgs.clientinfo[cg.snap->ps.clientNum].name,
 					BG_ClassnameForNumber(cgs.clientinfo[cg.snap->ps.clientNum].cls));
 
 			//CG_DrawStringExt( INFOTEXT_STARTX, 118+2+TINYCHAR_HEIGHT, deploytime, colorWhite, inWhite, qtrue, TINYCHAR_WIDTH, TINYCHAR_HEIGHT, 80);
-			CG_Text_Paint_Ext(INFOTEXT_STARTX, 
+			CG_Text_Paint_Ext(INFOTEXT_STARTX,
 				INFOTEXT_STARTY + ((charHeight * 2.0f) * 2),
 				cg_fontLimboScale.value, cg_fontLimboScale.value,
 				colorWhite, deploytime,
@@ -3693,10 +3701,10 @@ static qboolean CG_DrawFollow(void)
 		//			cgs.clientinfo[cg.snap->ps.clientNum].team == TEAM_ALLIES ?
 		//				rankNames_Allies[cgs.clientinfo[cg.snap->ps.clientNum].rank] :
 		//				rankNames_Axis[cgs.clientinfo[cg.snap->ps.clientNum].rank],
-		//			cgs.clientinfo[cg.snap->ps.clientNum].name, 
+		//			cgs.clientinfo[cg.snap->ps.clientNum].name,
 		//			BG_ClassnameForNumber(cgs.clientinfo[cg.snap->ps.clientNum].cls)),
 		//			colorWhite, inWhite, qtrue, TINYCHAR_WIDTH, TINYCHAR_HEIGHT, 0);
-		CG_Text_Paint_Ext(INFOTEXT_STARTX, 
+		CG_Text_Paint_Ext(INFOTEXT_STARTX,
 				INFOTEXT_STARTY + (charHeight * 2.0f),
 				cg_fontLimboScale.value, cg_fontLimboScale.value,
 				colorWhite,
@@ -3705,7 +3713,7 @@ static qboolean CG_DrawFollow(void)
 					cgs.clientinfo[cg.snap->ps.clientNum].team == TEAM_ALLIES ?
 						rankNames_Allies[cgs.clientinfo[cg.snap->ps.clientNum].rank] :
 						rankNames_Axis[cgs.clientinfo[cg.snap->ps.clientNum].rank],
-					cgs.clientinfo[cg.snap->ps.clientNum].name, 
+					cgs.clientinfo[cg.snap->ps.clientNum].name,
 					BG_ClassnameForNumber(cgs.clientinfo[cg.snap->ps.clientNum].cls)),
 				0, 0, ITEM_TEXTSTYLE_SHADOWED,
 				&cgs.media.font4);
@@ -3746,11 +3754,11 @@ static void CG_DrawWarmup( void ) {
 				} else {
 					s2 = va( "Press ^3%s^* to start", str1 );
 					s2 = CG_TranslateString( s2 );
-				}				
+				}
 				w = CG_DrawStrlen( s2 );
 				CG_DrawStringExt(320 - w * cw/2, 16, s2, colorWhite, qfalse, qtrue, cw, (int)(cw * 1.5), 0);
 			}
-	
+
 /*	if ( !sec ) {
 		if ( cgs.gamestate == GS_WAITING_FOR_PLAYERS ) {
 			cw = 10;
@@ -3765,11 +3773,11 @@ static void CG_DrawWarmup( void ) {
 			s2 = CG_TranslateString( "or call a vote to start the match" );
 
 			w = CG_DrawStrlen( s1 );
-			CG_DrawStringExt( 320 - w * cw/2, 160, s1, colorWhite, 
+			CG_DrawStringExt( 320 - w * cw/2, 160, s1, colorWhite,
 				qfalse, qtrue, cw, (int)(cw * 1.5), 0 );
 
 			w = CG_DrawStrlen( s2 );
-			CG_DrawStringExt( 320 - w * cw/2, 180, s2, colorWhite, 
+			CG_DrawStringExt( 320 - w * cw/2, 180, s2, colorWhite,
 				qfalse, qtrue, cw, (int)(cw * 1.5), 0 );
 			}
 */
@@ -3853,15 +3861,15 @@ static void CG_DrawWarmup( void ) {
 		cw = 10;
 
 		w = CG_DrawStrlen( s );
-		CG_DrawStringExt( 320 - w * cw/2, 16, s, colorWhite, 
+		CG_DrawStringExt( 320 - w * cw/2, 16, s, colorWhite,
 			qfalse, qtrue, cw, cw * 3 / 2, 0 );
 
 		w = CG_DrawStrlen( s1 );
-		CG_DrawStringExt( 320 - w * cw/2, 32, s1, colorWhite, 
+		CG_DrawStringExt( 320 - w * cw/2, 32, s1, colorWhite,
 			qfalse, qtrue, cw, cw * 3 / 2, 0 );
 
 		w = CG_DrawStrlen( s2 );
-		CG_DrawStringExt( 320 - w * cw/2, 48, s2, colorWhite, 
+		CG_DrawStringExt( 320 - w * cw/2, 48, s2, colorWhite,
 			qfalse, qtrue, cw, cw * 3 / 2, 0 );
 	}
 }
@@ -4169,7 +4177,7 @@ static void CG_DrawObjectiveInfo( void ) {
 
 // JPW NERVE
 	//	y = cg.oidPrintY - cg.oidPrintLines * BIGCHAR_HEIGHT / 2;
-	//y = 400 - cg.oidPrintLines*BIGCHAR_HEIGHT/2; 
+	//y = 400 - cg.oidPrintLines*BIGCHAR_HEIGHT/2;
 	y = 400 - cg.oidPrintLines * charHeight/2;
 
 	x1 = 319;
@@ -4268,7 +4276,7 @@ static void CG_DrawObjectiveInfo( void ) {
 				&cgs.media.font4);
 
 		//y += cg.oidPrintCharWidth * 1.5;
-		
+
 
 		while ( *start && ( *start != '\n' ) ) {
 			start++;
@@ -4500,21 +4508,21 @@ void CG_DrawCompassIcon( float x, float y, float w, float h, vec3_t origin, vec3
 
 		len = 1 - min( 1.f, len / 2000.f );
 		iconWidth = 14 * len + 4; // where did this calc. come from?
-		iconHeight = 14 * len + 4; 
+		iconHeight = 14 * len + 4;
 
 		// adjust so that icon is always outside of the map
 		if ( (angle > 5.0*M_PI/4.0) && (angle < 2*M_PI) )
 		{
 
 			y -= iconHeight;
-		} 
+		}
 
 		if ((angle >= 3.0*M_PI/4.0) && (angle <= 5.0*M_PI/4.0) )
 		{
 			x -= iconWidth;
 		}
-	
-		
+
+
 		CG_DrawPic( x, y, iconWidth, iconHeight, shader );
 
 
@@ -4583,7 +4591,7 @@ static void CG_DrawNewCompass( void ) {
 
 	CG_DrawPic( basex + 4, basey + 4, basew - 8, baseh - 8, cgs.media.compassShader );
 
-	angle = ( cg.predictedPlayerState.viewangles[YAW] + 180.f ) / 360.f - ( 0.125f );	
+	angle = ( cg.predictedPlayerState.viewangles[YAW] + 180.f ) / 360.f - ( 0.125f );
 	diff = AngleSubtract( angle * 360, lastangle * 360 ) / 360.f;
 	anglespeed /= 1.08f;
 	anglespeed += diff * 0.01f;
@@ -4710,7 +4718,7 @@ static void CG_DrawNewCompass( void ) {
 			if ( !cgs.clientinfo[ent->clientNum].infoValid || cg.predictedPlayerState.persistant[PERS_TEAM] != cgs.clientinfo[ent->clientNum].team ) {
 				continue;
 			}
-			
+
 			if(!CG_IsOnSameFireteam( cg.clientNum, ent->clientNum )) {
 				continue;
 			}
@@ -4754,7 +4762,7 @@ static int CG_PlayerAmmoValue( int *ammo, int *clips, int *akimboammo ) {
 		case WP_AMMO:
 		case WP_MEDKIT:
 		//KW: draw the throwing knife ammo
-		//case WP_KNIFE:	
+		//case WP_KNIFE:
 		case WP_PLIERS:
 		case WP_SMOKE_MARKER:
 		case WP_DYNAMITE:
@@ -4809,7 +4817,7 @@ static int CG_PlayerAmmoValue( int *ammo, int *clips, int *akimboammo ) {
 	} else if( weap == WP_MORTAR || weap == WP_MORTAR_SET || weap == WP_PANZERFAUST ) {
 		*ammo += *clips;
 	}
-	
+
 	if( skipammo ) {
 		*clips = -1;
 	}
@@ -4844,7 +4852,7 @@ static void CG_DrawPlayerStatusHead( void ) {
 		anim = HD_ATTACK_END;
 	} else if( cg.time - cg.painTime < (character->hudheadanimations[ HD_PAIN ].numFrames * character->hudheadanimations[ HD_PAIN ].frameLerp) ) {
 		anim = HD_PAIN;
-	} else if( cg.time > cg.nextIdleTime ) { 
+	} else if( cg.time > cg.nextIdleTime ) {
 		cg.nextIdleTime = cg.time + 7000 + rand() % 1000;
 		if( cg.snap->ps.stats[ STAT_HEALTH ] < 40 ) {
 			cg.idleAnim = (rand() % (HD_DAMAGED_IDLE3 - HD_DAMAGED_IDLE2 + 1)) + HD_DAMAGED_IDLE2;
@@ -4872,7 +4880,7 @@ static void CG_DrawPlayerStatusHead( void ) {
 			cg.idleAnim = HD_IDLE1;
 		}
 	}
-	
+
 
 	CG_DrawPlayerHead( &headRect, character, headcharacter, 180, 0, cg.snap->ps.eFlags & EF_HEADSHOT ? qfalse : qtrue, anim, painshader, cgs.clientinfo[ cg.snap->ps.clientNum ].rank, qfalse );
 
@@ -4882,7 +4890,7 @@ static void CG_DrawPlayerStatusHead( void ) {
 static void CG_DrawPlayerHealthBar( rectDef_t *rect ) {
 	vec4_t bgcolour =	{	1.f,	1.f,	1.f,	0.3f	};
 	vec4_t colour;
-		
+
 	int flags = 1|4|16|64;
 	float frac;
 
@@ -4998,7 +5006,7 @@ static void CG_DrawPlayerStatus( void ) {
 //	vec4_t			colorFaded = { 1.f, 1.f, 1.f, 0.3f };
 
 	ps = &cg.snap->ps;
-	
+
 	// Draw weapon icon and overheat bar
 	if(cg.hud.overheat[0] >= 0) {
 		rect.x = cg.hud.overheat[0];
@@ -5018,29 +5026,29 @@ static void CG_DrawPlayerStatus( void ) {
 			CG_DrawPlayerWeaponIcon(&rect, qtrue, ITEM_ALIGN_RIGHT, &colorWhite);
 		} else if( cg_drawWeaponIconFlash.integer == 2 ) {
 			// kw: Added new cg_drawWeaponIconFlash (ETpro style)
-			int ws = (cg.mvTotalClients > 0) ? 
-					cgs.clientinfo[cg.snap->ps.clientNum].weaponState : 
+			int ws = (cg.mvTotalClients > 0) ?
+					cgs.clientinfo[cg.snap->ps.clientNum].weaponState :
 					BG_simpleWeaponState(cg.snap->ps.weaponstate);
-			CG_DrawPlayerWeaponIcon( 
-				&rect, 
-				(ws != WSTATE_IDLE), 
-				ITEM_ALIGN_RIGHT, 
-				((ws == WSTATE_SWITCH || ws == WSTATE_RELOAD ) ? 
-					&colorYellow : 
+			CG_DrawPlayerWeaponIcon(
+				&rect,
+				(ws != WSTATE_IDLE),
+				ITEM_ALIGN_RIGHT,
+				((ws == WSTATE_SWITCH || ws == WSTATE_RELOAD ) ?
+					&colorYellow :
 					(ws == WSTATE_FIRE) ? &colorRed : &colorWhite
 				)
 			);
 		} else {
-			int ws = (cg.mvTotalClients > 0) ? 
-					cgs.clientinfo[cg.snap->ps.clientNum].weaponState : 
+			int ws = (cg.mvTotalClients > 0) ?
+					cgs.clientinfo[cg.snap->ps.clientNum].weaponState :
 					BG_simpleWeaponState(cg.snap->ps.weaponstate);
-			CG_DrawPlayerWeaponIcon( 
-				&rect, 
-				(ws != WSTATE_IDLE), 
-				ITEM_ALIGN_RIGHT, 
-				((ws == WSTATE_SWITCH || ws == WSTATE_RELOAD ) ? 
-					&colorWhite : 
-					(ws == WSTATE_FIRE) ? &colorRed : &colorYellow			
+			CG_DrawPlayerWeaponIcon(
+				&rect,
+				(ws != WSTATE_IDLE),
+				ITEM_ALIGN_RIGHT,
+				((ws == WSTATE_SWITCH || ws == WSTATE_RELOAD ) ?
+					&colorWhite :
+					(ws == WSTATE_FIRE) ? &colorRed : &colorYellow
 				)
 			);
 		}
@@ -5127,12 +5135,12 @@ static void CG_DrawSkillBar( float x, float y, float w, float h, int skill ) {
 //		CG_DrawPic( x, draw_y, w, blockheight, cgs.media.hudBorderVert2 );
 		draw_y -= ( blockheight + 1 );
 	}
-/*	CG_Text_Paint_Ext( 
-		x, 
-		300, 
-		0.25f, 0.25f, 
-		clr, 
-//		va("%d",cgs.clientinfo[cg.snap->ps.clientNum].skill[skill]), 
+/*	CG_Text_Paint_Ext(
+		x,
+		300,
+		0.25f, 0.25f,
+		clr,
+//		va("%d",cgs.clientinfo[cg.snap->ps.clientNum].skill[skill]),
 		va("%d",skill),
 		0, 0, ITEM_TEXTSTYLE_SHADOWED, &cgs.media.font1 );*/
 }
@@ -5174,7 +5182,7 @@ static void CG_DrawPlayerStats( void ) {
 	skillType_t			skill;
 	int					i, maxDynamite = 0, team, enemy;
 	// Dens: to make sure there are no gaps between dyna's (in the hud)
-	int					count; 
+	int					count;
 	const char*			str;
 	float				w,h;
 	vec_t*				clr;
@@ -5209,7 +5217,7 @@ static void CG_DrawPlayerStats( void ) {
 		if(cg.hud.skilltexts[i][0] >= 0) {
 			scaleVal = cg.hud.skilltexts[i][2]/100.f;
 			CG_Text_Paint_Ext(cg.hud.skilltexts[i][0],cg.hud.skilltexts[i][1],
-				scaleVal, scaleVal, colorWhite, 
+				scaleVal, scaleVal, colorWhite,
 				va("%d",ci->skill[skill]),
 				0, 0, ITEM_TEXTSTYLE_SHADOWED, &cgs.media.font1 );
 		}
@@ -5225,7 +5233,7 @@ static void CG_DrawPlayerStats( void ) {
 		}else{
 			team = -1;
 		}
-		
+
 		if(team != -1){
 			// Dens: allow per team settings
 			if(cg_maxTeamDynas.integer > MAXDYNAMITE){
@@ -5238,18 +5246,18 @@ static void CG_DrawPlayerStats( void ) {
 				for (i = 0, count = 0; i < MAXDYNAMITE && count < maxDynamite; i++) {
 					// only allow the planting team to see the counter
 					if (cg.dynamiteplanted[team][i].planted > 0 &&
-						cg.time - cg.dynamiteplanted[team][i].planted <= 30000 &&				
+						cg.time - cg.dynamiteplanted[team][i].planted <= 30000 &&
 						cg.dynamiteplanted[team][i].entityNum) {
 						str = va(":%02i", 30 - ((cg.time - cg.dynamiteplanted[team][i].planted) / 1000) );
-						
+
 						if(cg_dynoCounter.integer == 1){
 							w = CG_Text_Width_Ext( str, cg_fontLimboScale.value, 0, &cgs.media.font4);
 							CG_Text_Paint_Ext( 12, 180 + (count * 40), cg_fontLimboScale.value, cg_fontLimboScale.value,
 								colorWhite, str, 0, 0, ITEM_TEXTSTYLE_SHADOWED, &cgs.media.font4 );
 							trap_R_SetColor(NULL);
-							
+
 							CG_DrawPic( 16, 170 + (count * 40), 32, 32, cgs.media.pmImages[PM_DYNAMITE] );
-							
+
 							w = CG_Text_Width_Ext( cg.dynamiteplanted[team][i].pos, cg_fontLimboScale.value, 0, &cgs.media.font4);
 							h = CG_Text_Height_Ext( cg.dynamiteplanted[team][i].pos, cg_fontLimboScale.value, 0, &cgs.media.font4);
 							CG_Text_Paint_Ext( 52-w, 180 + (count * 40) + 20 - h, cg_fontLimboScale.value, cg_fontLimboScale.value,
@@ -5267,7 +5275,7 @@ static void CG_DrawPlayerStats( void ) {
 							CG_Text_Paint_Ext( 4 + w, 180 + ((count+1) * (h + 5)), cg_fontLimboScale.value, cg_fontLimboScale.value,
 								colorYellow, va("(%s)",cg.dynamiteplanted[team][i].pos), 0, 0, ITEM_TEXTSTYLE_SHADOWED, &cgs.media.font4 );
 							trap_R_SetColor(NULL);
-						}	
+						}
 						count++;
 					}
 				}
@@ -5315,15 +5323,15 @@ static void CG_DrawPlayerStats( void ) {
 		for (i = 0; i < MAXDYNAMITE; i++) {
 			for(team = 0; team < 2; team++){
 				if (cg.dynamiteplanted[team][i].planted > 0 &&
-					cg.time - cg.dynamiteplanted[team][i].planted > 30000 && 
+					cg.time - cg.dynamiteplanted[team][i].planted > 30000 &&
 					cg.dynamiteplanted[team][i].entityNum) {
-					
+
 					if(developer.integer)
 						CG_Printf("FIXME: Dyno Counter Draw code freed a counter slot\n");
 					cg.dynamiteplanted[team][i].entityNum = 0;
 					cg.dynamiteplanted[team][i].planted = 0;
 					cg.dynamiteindex[team]--;
-				} 
+				}
 			}
 		}
 	} // end dyno counters
@@ -5451,7 +5459,7 @@ void CG_DrawDemoRecording( void ) {
 	// tjw: cl_demorecording, cl_demooffset, and cl_demofilename cvars
         //      are always referencing garbage in OSX.
         //      The etmain client doesn't seem to have this problem and the
-	//      game engine shows the correct values...  Very strange. 
+	//      game engine shows the correct values...  Very strange.
 	//      BTW, this is a dirty hack.
         #if defined(__MACOS__)
 	{
@@ -5542,7 +5550,7 @@ static void CG_Draw2D( void ) {
 		CG_DrawFlashBlendBehindHUD();
 
 		if ( cg.snap->ps.persistant[PERS_TEAM] == TEAM_SPECTATOR ) {
-			
+
 			CG_DrawSpectator();
 			CG_DrawCrosshair();
 			CG_DrawCrosshairNames();
@@ -5561,7 +5569,7 @@ static void CG_Draw2D( void ) {
 			// Dens: if someone is waiting for a medic: show the name of that medic
 			}else if( cg.snap->ps.viewlocked == 7 ){
 				CG_DrawStringExt( 320 - (CG_DrawStrlen( cgs.clientinfo[cg.snap->ps.viewlocked_entNum].name ) * SMALLCHAR_WIDTH) / 2,
-					170, cgs.clientinfo[cg.snap->ps.viewlocked_entNum].name, colorWhite, qfalse, qtrue, 
+					170, cgs.clientinfo[cg.snap->ps.viewlocked_entNum].name, colorWhite, qfalse, qtrue,
 					SMALLCHAR_WIDTH, SMALLCHAR_HEIGHT, 0 );
 			}
 
@@ -5581,7 +5589,7 @@ static void CG_Draw2D( void ) {
 
 	// don't draw center string if scoreboard is up
 	if ( !CG_DrawScoreboard() ) {
-		
+
 		// kw: now also draw compass for spectators
 		if ( cg_drawCompass.integer && cg.hud.compass[0] >= 0 ) {
 			CG_DrawNewCompass();
@@ -5680,7 +5688,7 @@ void CG_ShakeCamera() {
 		cg.cameraShakeScale = 0; // JPW NERVE all pending explosions resolved, so reset shakescale
 		return;
 	}
-	
+
 	// JPW NERVE starts at 1, approaches 0 over time
 	x = (cg.cameraShakeTime - cg.time) / cg.cameraShakeLength;
 
@@ -5688,7 +5696,7 @@ void CG_ShakeCamera() {
 	#if 0
 		// up/down
 		val = sin(M_PI * 8 * x + cg.cameraShakePhase) * x * 18.0f * cg.cameraShakeScale;
-		cg.refdefViewAngles[0] += val; 
+		cg.refdefViewAngles[0] += val;
 
 		// left/right
 		val = sin(M_PI * 15 * x + cg.cameraShakePhase) * x * 16.0f * cg.cameraShakeScale;
@@ -5716,10 +5724,10 @@ void CG_DrawMiscGamemodels( void ) {
 
 	ent.reType = RT_MODEL;
 	ent.nonNormalizedAxes =	qtrue;
-	
+
 	// ydnar: static gamemodels don't project shadows
 	ent.renderfx = RF_NOSHADOW;
-	
+
 	for( i = 0; i < cg.numMiscGameModels; i++ ) {
 		if( cgs.miscGameModels[i].radius ) {
 			if( CG_CullPointAndRadius( cgs.miscGameModels[i].org, cgs.miscGameModels[i].radius ) ) {
@@ -5770,7 +5778,7 @@ void CG_DrawMiscGamemodels( void ) {
 			VectorCopy( cgs.miscGameModels[i].axes[j], ent.axis[j] );
 		}
 		ent.hModel = cgs.miscGameModels[i].model;
-		
+
 		trap_R_AddRefEntityToScene( &ent );
 
 		drawn++;
