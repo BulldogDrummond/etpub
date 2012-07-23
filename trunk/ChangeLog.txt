@@ -2139,3 +2139,4 @@
 * pheno:   Lua API: fixed a bug in chat command handling where the chat message will be sent
            even if the player is not on the server
 * pheno:   fixed using the wrong origin for the player localization
+* pheno:   made clients inactivityTime value calculation ETPro compatible

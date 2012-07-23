@@ -779,10 +779,10 @@ qboolean ClientInactivityTimer( gclient_t *client )
 				client->inactivityTime = level.time +
 					g_spectatorInactivity.integer * 500; // Just for safety
 			}
-		} else {
+		}/* else {
 			// otherwise give the client some more time
 			client->inactivityTime = level.time + 60 * 1000;
-		}
+		}*/
 	}
 
 	return qtrue;
