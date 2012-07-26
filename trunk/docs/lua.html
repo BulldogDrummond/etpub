@@ -350,7 +350,7 @@ et.HOSTARCH</p>
 
 <p>&nbsp;</p>
 
-<a name="et_library_calls"></a><h2>ET VARIABLE TYPES</h2>
+<a name="et_variable_types"></a><h2>ET VARIABLE TYPES</h2>
 
 <a name="vec3"></a><h3>vec3</h3>
 <dl>
@@ -438,6 +438,36 @@ atts, deaths, headshots, hits, kills = ws[1], ws[2], ws[3], ws[4], ws[5]</pre></
 		</td></tr>
 	</table>
 	</dd>
+</dl>
+
+<a name="server_commands"></a><h2>SERVER COMMANDS</h2>
+<p>et.trap_SendServerCommand() is used to send a command from the server to one or more clients. The
+first argument is the slot number of the client the command will be sent to. If it's equal to -1,
+the command will be broadcast to all clients.</p>
+<p>The following commands can be issued with this function:</p>
+<a name="chatting"></a><h3>Chatting</h3>
+<p>"<strong>c</strong> clientNum \"message\""</p>
+<dl>
+	<dd><strong>c</strong> prints <i>message</i> as a global chat message on behalf of the client
+	specified by <i>clientNum</i>.</dd>
+</dl>
+<p>"<strong>tc</strong> clientNum \"message\" X-location Y-location Z-location"</p>
+<dl>
+	<dd><strong>tc</strong> prints <i>message</i> as a team chat message on behalf of the client
+	specified by <i>clientNum</i>.<br />
+	The <i>X</i>, <i>Y</i> and <i>Z-location</i>'s are optional parameters that represent the
+	client's location.<br />
+	If the <i>X</i>, <i>Y</i> and <i>Z-location</i>'s are left out then the message will be printed
+	without a location.</dd>
+</dl>
+<p>"<strong>bc</strong> clientNum \"message\" X-location Y-location Z-location"</p>
+<dl>
+	<dd><strong>bc</strong> prints <i>message</i> as a fireteam chat message on behalf of the client
+	specified by <i>clientNum</i>.<br />
+	The <i>X</i>, <i>Y</i> and <i>Z-location</i>'s are optional parameters that represent the
+	client's location.<br />
+	If the <i>X</i>, <i>Y</i> and <i>Z-location</i>'s are left out then the message will be printed
+	without a location.</dd>
 </dl>
 
 <a name="caveats"></a><h2>CAVEATS</h2>
