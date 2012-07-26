@@ -725,7 +725,7 @@ static const gentity_field_t gclient_fields[] = {
 	_et_gclient_addfield(		sess.team_kills,											FIELD_INT,			0										),
 	_et_gclient_addfield(		sess.team_damage_given,										FIELD_INT,			0										),
 	_et_gclient_addfield(		sess.team_damage_received,									FIELD_INT,			0										),
-	_et_gclient_addfield(		sess.aWeaponStats,											FIELD_WEAPONSTAT,	FIELD_FLAG_READONLY						),
+	_et_gclient_addfield(		sess.aWeaponStats,											FIELD_WEAPONSTATS,	FIELD_FLAG_READONLY						),
 	
 	// To be compatible with ETPro:
 	_et_gclient_addfieldalias(	client.inactivityTime,			inactivityTime,				FIELD_INT,			0										),
@@ -973,7 +973,7 @@ void _et_gentity_settrajectory(lua_State *L, trajectory_t *traj)
 	lua_pop(L, 1);
 }
 
-void _et_gentity_getweaponstat(lua_State *L, weapon_stat_t *ws)
+void _et_gentity_getweaponstats(lua_State *L, weapon_stat_t *ws)
 {
 	lua_newtable(L);
 	lua_pushinteger(L, 1);
@@ -1246,8 +1246,9 @@ int _et_gentity_get(lua_State *L)
 		case FIELD_FLOAT_ARRAY:
 			lua_pushnumber(L, (*(float *)(addr + (sizeof(int) * luaL_optint(L, 3, 0)))));
 			return 1;
-		case FIELD_WEAPONSTAT:
-			_et_gentity_getweaponstat(L, (weapon_stat_t *)(addr + (sizeof(weapon_stat_t) * luaL_optint(L, 3, 0))));
+		case FIELD_WEAPONSTATS:
+			_et_gentity_getweaponstats(L,
+				(weapon_stat_t *)(addr + (sizeof(weapon_stat_t) * luaL_optint(L, 3, 0))));
 			return 1;
 	}
 	return 0;

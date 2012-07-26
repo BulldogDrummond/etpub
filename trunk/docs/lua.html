@@ -399,15 +399,15 @@ x, y, z = origin[1], origin[2], origin[3]</pre></dd>
 	</dd>
 </dl>
 
-<a name="weaponstat"></a><h3>weaponstat</h3>
+<a name="weaponstats"></a><h3>weaponstats</h3>
 <dl>
-	<dd>A <strong>weaponstat</strong> is a 5-element array of integers. It is usually used to store weapon
-	statistics such as atts (shots), deaths, headshots, hits and kills. In lua a weapon stat is an array
-	(table indexed by integers) containing 5 integers. It can be accessed by doing:</dd>
+	<dd>A <strong>weaponstats</strong> is a 5-element array of integers. It is usually used to store
+	weapon statistics such as atts (shots), deaths, headshots, hits and kills. In lua a weaponstats
+	is an array (table indexed by integers) containing 5 integers. It can be accessed by doing:</dd>
 	<dd><h6>LUA CODE EXAMPLE</h6><pre>ws = et.gentity_get(clientNum, "sess.aWeaponStats", 3) -- MP40
 atts, deaths, headshots, hits, kills = ws[1], ws[2], ws[3], ws[4], ws[5]</pre></dd>
 	<dd>The available weapon indexes are as follows.</dd>
-	<dd><h6>WEAPONSTAT AVAILABLE INDEXES</h6>
+	<dd><h6>WEAPONSTATS AVAILABLE INDEXES</h6>
 	<table class="border">
 	<tr><td>
 		<table border='0' class="list">
