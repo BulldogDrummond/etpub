@@ -2140,3 +2140,5 @@
            even if the player is not on the server
 * pheno:   fixed using the wrong origin for the player localization
 * pheno:   made clients inactivityTime value calculation ETPro compatible
+* pheno:   fixed a bug where client wasn't moved to spectators if g_inactivityOptions
+           flag '4' is set

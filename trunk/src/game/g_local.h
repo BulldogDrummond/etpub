@@ -3434,10 +3434,10 @@ void G_IntermissionVoteTally( gentity_t *ent );
 #define IO_DONT_DROP_SHOUTCASTERS 1
 // don't drop spectators when in following mode
 #define IO_DONT_DROP_FOLLOWERS 2
-// ETmain inactivity behavior (don't wait for a full server)
-#define IO_ETMAIN_BEHAVIOR 4
+// don't wait for a full server to kick spectators (etmain spectator inactivity behavior)
+#define IO_FORCE_KICKING_SPECTATORS 4
 // shrubbot flag '0' admins will be moved to spectators due to team inactivity
-#define IO_NO_SBF_TEAM_INACTIVITY 8
+#define IO_FORCE_MOVING_TO_SPECTATORS 8
 
 // pheno: g_ettvFlags
 // prevent ettv slaves from being callvote kicked
