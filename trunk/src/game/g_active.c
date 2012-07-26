@@ -749,7 +749,7 @@ qboolean ClientInactivityTimer(gclient_t *client)
 				client->inactivityTime = level.time +
 					(g_spectatorInactivity.integer ? g_spectatorInactivity.integer : 60) * 1000;
 				client->inactivityWarning = qfalse;
-					
+				
 				SetTeam(ent, "s", qtrue, WP_NONE, WP_NONE, qfalse);
 				AP(va("chat \"inactivity: %s^7 moved to spectators\" -1", client->pers.netname));
 			} else if (!CIT_PROTECTED_SPECTATOR) {

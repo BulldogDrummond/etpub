@@ -3101,7 +3101,7 @@ char *G_Shortcuts(gentity_t *ent, char *text)
 
 	if (ent) {
 		Q_strncpyz(l,
-			BG_GetLocationString(ent->r.currentOrigin),
+			BG_GetLocationString(ent->client->ps.origin),
 			sizeof(l));
 	}
 
