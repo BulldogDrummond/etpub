@@ -54,7 +54,8 @@
 #define	CHAR_HEIGHT			48
 #define	TEXT_ICON_SPACE		4
 
-#define	TEAMCHAT_WIDTH		70
+#define	TEAMCHAT_WIDTH		65		// was 70
+#define	TEAMCHAT_IM_WIDTH	100		// intermission width
 #define TEAMCHAT_HEIGHT		8
 
 #define	NOTIFY_WIDTH		80

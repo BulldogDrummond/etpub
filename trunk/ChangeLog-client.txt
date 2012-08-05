@@ -461,3 +461,5 @@ current
 * pheno:   fixed a bug where last hitsound is repeated after changing hitsound options
            server and/or client side
 * pheno:   intermission chat can handle additional font characters from 0x7F to 0xFF (thx gaoesa)
+* pheno:   fixed chat area text overlaps with the gun icon
+* pheno:   fixed width of the chat area text during intermission
