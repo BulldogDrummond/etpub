@@ -440,13 +440,13 @@ void G_ready_cmd(gentity_t *ent, unsigned int dwCommand, qboolean state)
 // Team chat w/no location info
 void G_say_teamnl_cmd(gentity_t *ent, unsigned int dwCommand, qboolean fValue)
 {
-	// forty - in mod flood protection
-	if(ClientIsFlooding(ent, qfalse)) {
-		CP("print \"^1Spam Protection: ^7dropping teamchat\n\"");
-		return;
-	}
+	qboolean flooding = ClientIsFlooding(ent, qfalse);
 
-	Cmd_Say_f(ent, SAY_TEAMNL, qfalse);
+	if (ent->client->sess.auto_unmute_time == 0 && !flooding) {
+		Cmd_Say_f(ent, SAY_TEAMNL, qfalse);
+	} else if (flooding) {
+		CP("print \"^1Spam Protection: ^7dropping team say\n\"");
+	}
 }
 
 
