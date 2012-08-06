@@ -1059,7 +1059,7 @@ void CG_AddToTeamChat( const char *str, int clientnum ) {
 
 	// pheno
 	if (cgs.gamestate == GS_INTERMISSION) {
-		chatWidth == TEAMCHAT_IM_WIDTH;
+		chatWidth = TEAMCHAT_IM_WIDTH;
 	}
 
 	// kw: 2 characters less per line for chatflags
