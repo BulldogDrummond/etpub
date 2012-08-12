@@ -17,8 +17,6 @@
 #include "g_etbot_interface.h"
 #include "../ui/menudef.h"
 
-char *G_Shortcuts(gentity_t *ent, char *text);
-
 extern char bigTextBuffer[100000];
 
 extern vmCvar_t g_panzerwar, g_sniperwar, g_riflewar;
@@ -1031,12 +1029,17 @@ void G_shrubbot_greeting( gentity_t *ent )
 
 qboolean G_shrubbot_cmd_check(gentity_t *ent)
 {
-	int i;
-	char command[MAX_SHRUBBOT_CMD_LEN];
-	char *cmd;
-	char *string;
-	int skip = 0;
-	qboolean millisecs;
+	int			i;
+	char		command[MAX_SHRUBBOT_CMD_LEN];
+	char		*cmd;
+	char		*string;
+	int			skip = 0;
+	qboolean	millisecs;
+	shortcut_t	shortcuts[MAX_SHORTCUTS + 10];
+	char		*rep,
+				cmdline[MAX_STRING_CHARS] = {""};
+	int			j;
+	char		arg[MAX_TOKEN_CHARS];
 
 	if(g_minCommandWaitTime.integer == 1000){
 		string = "second\0";
@@ -1082,29 +1085,28 @@ qboolean G_shrubbot_cmd_check(gentity_t *ent)
 			continue;
 
 		if(_shrubbot_command_permission(ent, cmd)) {
-			char *cmdLine;
-			int argIx;
-			char execLine[MAX_STRING_CHARS] = {""};
+			// prepare shortcuts
+			G_Shortcuts(ent, shortcuts);
 
-			// Replace shortcuts
-			cmdLine = G_Shortcuts(ent, g_shrubbot_commands[i]->exec);
-
-			// pheno: replace [i] shortcut with player ID
+			// pheno: prepare [i] shortcut for player id
 			// gaoesa: ps.clientNum is unreliable in case of spectating
-			if( ent && ent->client ) {
-				cmdLine = Q_StrReplace( cmdLine, "[i]",
-					va( "%i", ent - g_entities ) ); // was ent->client->ps.clientNum
+			shortcuts[MAX_SHORTCUTS].character = 'i';
+			shortcuts[MAX_SHORTCUTS].replacement =
+				(ent && ent->client) ? va("%i", ent - g_entities) : ""; // was ent->client->ps.clientNum
+
+			// prepare arguments
+			for (j = 1; j <= 9; j++) {
+				Q_SayArgv(skip + j, arg, sizeof(arg));
+
+				shortcuts[MAX_SHORTCUTS + j].character = '0' + j;
+				shortcuts[MAX_SHORTCUTS + j].replacement = va("%s", arg);
 			}
 
-			// Replace arguments
-			for (argIx = 1; argIx <= 9; argIx++) {
-				char arg[MAX_NAME_LENGTH];
-				Q_SayArgv(skip + argIx, arg, sizeof(arg));
-				cmdLine = Q_StrReplace(cmdLine, va("[%i]", argIx), arg);
-			}
+			// replace shortcuts
+			rep = G_ReplaceShortcuts(g_shrubbot_commands[i]->exec, shortcuts, MAX_SHORTCUTS + 10);
 
 			// pheno: only the max allowed length after argument replacement
-			Q_strncpyz( execLine, cmdLine, sizeof( execLine ) );
+			Q_strncpyz(cmdline, rep, sizeof(cmdline));
 
 			if( ent && level.time - ent->client->pers.lastCommandTime < g_minCommandWaitTime.integer ) {
 				SPC(va("^/%s: ^7you have to wait %d %s between using commands",
@@ -1114,7 +1116,7 @@ qboolean G_shrubbot_cmd_check(gentity_t *ent)
 				_shrubbot_log(ent, "attempted", skip-1);
 				return qfalse;
 			} else {
-				trap_SendConsoleCommand( EXEC_APPEND, execLine );
+				trap_SendConsoleCommand( EXEC_APPEND, cmdline );
 				if( ent )
 					ent->client->pers.lastCommandTime = level.time;
 				_shrubbot_log(ent, cmd, skip);

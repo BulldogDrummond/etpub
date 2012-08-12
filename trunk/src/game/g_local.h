@@ -1710,11 +1710,19 @@ void mg42_stopusing( gentity_t *self );
 void aagun_fire( gentity_t *other );
 
 // pheno
+#define MAX_SHORTCUTS 12
+
+typedef struct {
+	char character;
+	char *replacement;
+} shortcut_t;
+
 void G_PrintMessage( char *message, int position );
-void G_FirstBloodMessage( gentity_t *attacker, gentity_t *victim );
+void G_FirstBloodMessage(gentity_t *attacker, gentity_t *victim);
 void G_LastBloodMessage();
 void G_ReportGib( gentity_t *targ, gentity_t *attacker );
-
+void G_Shortcuts(gentity_t *ent, shortcut_t *shortcuts);
+char *G_ReplaceShortcuts(char *text, shortcut_t *shortcuts, int size);
 
 //
 // g_weapon.c
@@ -1837,7 +1845,6 @@ void Cmd_Class_f( gentity_t *ent, unsigned int dwCommand, qboolean fValue );
 void Cmd_NextTeam_f( gentity_t* ent, unsigned int dwCommand, qboolean fValue );
 void G_PlaySound_Cmd(void);
 void G_KillSpree(gentity_t *ent, gentity_t *attacker);
-char *G_Shortcuts(gentity_t *ent, char *text);
 
 //
 // g_pweapon.c

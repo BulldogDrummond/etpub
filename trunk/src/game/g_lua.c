@@ -27,7 +27,8 @@ void G_Lua_Say(gentity_t *ent, gentity_t *target, char *command, char *message, 
 {
 	char		text[MAX_SAY_TEXT],
 				censoredText[MAX_SAY_TEXT];
-	char		*shortcuts,
+	shortcut_t	shortcuts[MAX_SHORTCUTS];
+	char		*rep,
 				name[64];
 	int			mode,
 				color,
@@ -44,7 +45,7 @@ void G_Lua_Say(gentity_t *ent, gentity_t *target, char *command, char *message, 
 
 	// censor
 	if ((g_censor.string[0] || g_censorNeil.integer) &&
-		!(G_shrubbot_permission(ent,SBF_NOCENSORFLOOD))) {
+		!(G_shrubbot_permission(ent, SBF_NOCENSORFLOOD))) {
 		SanitizeString(text, censoredText, qtrue);
 
 		if (G_CensorText(censoredText, &censorDictionary)) {
@@ -56,8 +57,9 @@ void G_Lua_Say(gentity_t *ent, gentity_t *target, char *command, char *message, 
 
 	// shortcuts
 	if (g_shortcuts.integer) {
-		shortcuts = G_Shortcuts(ent, text);
-		Q_strncpyz(text, shortcuts, sizeof(text));
+		G_Shortcuts(ent, shortcuts);
+		rep = G_ReplaceShortcuts(text, shortcuts, MAX_SHORTCUTS);
+		Q_strncpyz(text, rep, sizeof(text));
 	}
 
 	if (!Q_stricmp(command, "tc") || !Q_stricmp(command, "bc")) {

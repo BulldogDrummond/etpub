@@ -2903,56 +2903,27 @@ void G_PrintMessage( char *message, int position )
 
 /*
 ================
-G_FirstBloodSanitize
-================
-*/
-char *G_FirstBloodSanitize( char *name )
-{
-	static char n[MAX_NAME_LENGTH] = {""};
-
-	if( !name || !*name ) {
-		return n;
-	}
-
-	Q_strncpyz( n, name, sizeof( n ) );
-	Q_strncpyz( n, Q_StrReplace( n, "[a]", "(a)" ), sizeof( n ) );
-	Q_strncpyz( n, Q_StrReplace( n, "[v]", "(v)" ), sizeof( n ) );
-
-	return n;
-}
-
-/*
-================
 G_FirstBloodMessage
 ================
 */
 qboolean firstblood; // firstblood state
-void G_FirstBloodMessage( gentity_t *attacker, gentity_t *victim )
+void G_FirstBloodMessage(gentity_t *attacker, gentity_t *victim)
 {
-	char aname[MAX_NAME_LENGTH] = {"*unknown*"};
-	char vname[MAX_NAME_LENGTH] = {"*unknown*"};
-	char *message;
+	shortcut_t	shortcuts[2];
+	char		*message;
 
-	if( attacker ) {
-		Q_strncpyz( aname,
-			G_FirstBloodSanitize( attacker->client->pers.netname ),
-			sizeof( aname ) );
+	shortcuts[0].character = 'a';
+	shortcuts[0].replacement = (attacker) ? attacker->client->pers.netname : "*unknown*";
+	
+	shortcuts[1].character = 'v';
+	shortcuts[1].replacement = (victim) ? victim->client->pers.netname : "*unknown*";
+
+	if (g_firstBloodSound.string[0]) {
+		G_globalSound(g_firstBloodSound.string);
 	}
 
-	if( victim ) {
-		Q_strncpyz( vname,
-			G_FirstBloodSanitize( victim->client->pers.netname ),
-			sizeof( vname ) );
-	}
-
-	message = Q_StrReplace( g_firstBloodMsg.string, "[a]", aname );
-	message = Q_StrReplace( message, "[v]", vname );
-
-	if( g_firstBloodSound.string[0] ) {
-		G_globalSound( g_firstBloodSound.string );
-	}
-
-	G_PrintMessage( message, g_firstBloodMsgPos.integer );
+	message = G_ReplaceShortcuts(g_firstBloodMsg.string, shortcuts, 2);
+	G_PrintMessage(message, g_firstBloodMsgPos.integer);
 	
 	firstblood = qtrue;
 }
@@ -2964,18 +2935,19 @@ G_LastBloodMessage
 */
 void G_LastBloodMessage()
 {
-	gentity_t *ent = &g_entities[level.lastBloodClient];
-	char name[MAX_NAME_LENGTH] = {"*unknown*"};
+	gentity_t	*ent = &g_entities[level.lastBloodClient];
+	shortcut_t	shortcuts[1];
+	char		*message;
 
-	if( !level.lastBloodClient || !g_lastBloodMsg.string[0] ) {
+	if (!level.lastBloodClient || !g_lastBloodMsg.string[0]) {
 		return;
 	}
 
-	if( ent ) {
-		Q_strncpyz( name, ent->client->pers.netname, sizeof( name ) );
-	}
+	shortcuts[0].character = 'a';
+	shortcuts[0].replacement = (ent) ? ent->client->pers.netname : "*unknown*";
 
-	G_PrintMessage( Q_StrReplace( g_lastBloodMsg.string, "[a]", name ), 0 );
+	message = G_ReplaceShortcuts(g_firstBloodMsg.string, shortcuts, 1);
+	G_PrintMessage(message, MSGPOS_CHAT);
 }
 
 // pheno: -- moved from old botai code -----------
@@ -3181,3 +3153,163 @@ void G_ReportGib( gentity_t *targ, gentity_t *attacker )
 			targ->client->pers.netname, attacker->client->pers.netname ) );
 	}
 }
+
+/*
+==================
+G_Shortcuts
+==================
+*/
+void G_Shortcuts(gentity_t *ent, shortcut_t *shortcuts)
+{
+	char		*chars = "adghklnrpswt",
+				guid[9];
+	int			i,
+				clip,
+				ammo;
+	gclient_t	*client;
+	gentity_t	*crosshairEnt;
+	gitem_t		*weapon;
+
+	// default values
+	for (i = 0; i < MAX_SHORTCUTS; i++) {
+		shortcuts[i].character = *(chars + i);
+		shortcuts[i].replacement = "*unknown*";
+	}
+
+	if (!ent || !ent->client) {
+		return;
+	}
+
+	// [a] - last player who gave you ammo
+	if (ent->client->pers.lastammo_client != -1) {
+		client = &level.clients[ent->client->pers.lastammo_client];
+
+		if (client) {
+			shortcuts[0].replacement = client->pers.netname;
+		}
+	}
+
+	// [d] - last player who killed you
+	if (ent->client->pers.lastkiller_client != -1) {
+		client = &level.clients[ent->client->pers.lastkiller_client];
+		
+		if (client) {
+			shortcuts[1].replacement = client->pers.netname;
+		}
+	}
+
+	// [g] - the last 8 characters of your guid
+	for (i = 0; i <= 8; i++) {
+		guid[i] = ent->client->sess.guid[24 + i] ? ent->client->sess.guid[24 + i] : '\0';
+	}
+	
+	shortcuts[2].replacement = va("%s", guid);
+
+	// [h] - last player who gave you health
+	if (ent->client->pers.lasthealth_client != -1) {
+		client = &level.clients[ent->client->pers.lasthealth_client];
+		
+		if (client) {
+			shortcuts[3].replacement = client->pers.netname;
+		}
+	}
+
+	// [k] - last player you killed
+	if (ent->client->pers.lastkilled_client != -1) {
+		client = &level.clients[ent->client->pers.lastkilled_client];
+		
+		if (client) {
+			shortcuts[4].replacement = client->pers.netname;
+		}
+	}
+
+	// [l] - your location (letter,number)
+	shortcuts[5].replacement = BG_GetLocationString(ent->client->ps.origin);
+
+	// [n] - your name
+	shortcuts[6].replacement = ent->client->pers.netname;
+
+	// [r] - last player who revived you
+	if (ent->client->pers.lastrevive_client != -1) {
+		client = &level.clients[ent->client->pers.lastrevive_client];
+		
+		if (client) {
+			shortcuts[7].replacement = client->pers.netname;
+		}
+	}
+
+	// [p] - last player you looked at
+	crosshairEnt = &g_entities[ent->client->ps.identifyClient];
+
+	// Dens: only give the name of the other client, if the player should be able to see it
+	if (crosshairEnt &&
+		crosshairEnt->client &&
+		crosshairEnt->inuse && 
+		(ent->client->sess.sessionTeam == crosshairEnt->client->sess.sessionTeam ||
+			crosshairEnt->client->ps.powerups[PW_OPS_DISGUISED] ||
+			ent->client->sess.sessionTeam == TEAM_SPECTATOR)) {
+		client = crosshairEnt->client;
+		
+		if (client) {
+			// Dens: show the name of the owner of the suit
+			if (client->ps.powerups[PW_OPS_DISGUISED] &&
+				(ent->client->sess.sessionTeam != client->sess.sessionTeam)){
+				shortcuts[8].replacement = client->disguiseNetname;
+			} else {
+				shortcuts[8].replacement = client->pers.netname;
+			}
+		}
+	}
+
+	// [s] - health remaining
+	shortcuts[9].replacement = va("%i", ent->health);
+
+	// [w] - name of current weapon
+	weapon = BG_FindItemForWeapon((weapon_t)ent->client->ps.weapon);
+	shortcuts[10].replacement = va("%s", weapon->pickup_name);
+
+	// [t] - ammo for current weapon
+	clip = BG_FindClipForWeapon((weapon_t)ent->client->ps.weapon);
+	ammo = BG_FindAmmoForWeapon((weapon_t)ent->client->ps.weapon);
+	shortcuts[11].replacement = va("%i", (ent->client->ps.ammoclip[clip] +
+		((ent->client->ps.weapon == WP_KNIFE) ? 0 : ent->client->ps.ammo[ammo])));
+}
+
+/*
+==================
+G_ReplaceShortcuts
+==================
+pheno: one pass shortcut replacement
+*/
+char *G_ReplaceShortcuts(char *text, shortcut_t *shortcuts, int size)
+{
+	static char	dest[MAX_STRING_CHARS];
+	int			i,
+				j,
+				maxlen;
+	char		*replacement;
+
+	for (i = 0; i < MAX_STRING_CHARS - 1 && *text;) {
+		if (*text == '[' && *(text + 1) && *(text + 2) == ']') {
+			for (j = 0; j < size; j++) {
+				if (*(text + 1) == shortcuts[j].character) {
+					replacement = shortcuts[j].replacement;
+					maxlen = sizeof(dest) - i;
+					
+					while (*replacement && i < maxlen) {
+						dest[i++] = *replacement++;
+					}
+					
+					text += 3;
+				}
+			}
+		}
+
+		dest[i++] = *text++;
+	}
+
+	dest[i] = '\0';
+
+	return dest;
+}
+
