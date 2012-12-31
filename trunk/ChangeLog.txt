@@ -2144,4 +2144,5 @@
            flag '4' is set
 * pheno:   fixed a bug where a muted player could use the say_teamnl command
 * pheno:   fixed a bug where a player name was changed if it contains shortcut characters because
-           of multiple text replacement processing
+           of multiple text replacement processing#
+* pheno:   added IlDuca's fix for damaged g_antiwarp (thx ira)

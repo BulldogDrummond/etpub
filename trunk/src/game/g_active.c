@@ -1352,7 +1352,8 @@ void ClientThink_real( gentity_t *ent ) {
 	}
 //unlagged - true ping
 
-	if(client->warping && g_maxWarp.integer && !G_DoAntiwarp(ent)) {
+	// IlDuca - Fixing antiwarp : removed !
+	if(client->warping && g_maxWarp.integer && G_DoAntiwarp(ent)) {
 		int frames = (level.framenum - client->lastUpdateFrame);
 
 		if(frames > g_maxWarp.integer)
@@ -2498,7 +2499,8 @@ void ClientEndFrame( gentity_t *ent ) {
 	// see how many frames the client has missed
 	frames = level.framenum - ent->client->lastUpdateFrame - 1;
 	
-	if(g_maxWarp.integer && frames > g_maxWarp.integer && !G_DoAntiwarp(ent)) 
+	// IlDuca - Fixing antiwarp : removed !
+	if(g_maxWarp.integer && frames > g_maxWarp.integer && G_DoAntiwarp(ent))
 		ent->client->warping = qtrue;
 
 	if(g_skipCorrection.integer && !ent->client->warped && frames > 0 && !G_DoAntiwarp(ent)) {
