@@ -72,7 +72,7 @@
       <WarningLevel>Level3</WarningLevel>
       <SuppressStartupBanner>true</SuppressStartupBanner>
       <DebugInformationFormat>ProgramDatabase</DebugInformationFormat>
-      <AdditionalIncludeDirectories>..\curl-7.26.0\include;..\md5</AdditionalIncludeDirectories>
+      <AdditionalIncludeDirectories>..\curl-7.28.1\include;..\md5</AdditionalIncludeDirectories>
       <BasicRuntimeChecks>Default</BasicRuntimeChecks>
     </ClCompile>
     <ResourceCompile>
@@ -95,7 +95,7 @@
       </DataExecutionPrevention>
       <ImportLibrary>.\Debug/cgame_mp_x86.lib</ImportLibrary>
       <TargetMachine>MachineX86</TargetMachine>
-      <AdditionalLibraryDirectories>..\curl-7.26.0\lib\Debug</AdditionalLibraryDirectories>
+      <AdditionalLibraryDirectories>..\curl-7.28.1\lib\Debug</AdditionalLibraryDirectories>
       <IgnoreSpecificDefaultLibraries>libcmtd</IgnoreSpecificDefaultLibraries>
     </Link>
   </ItemDefinitionGroup>
@@ -125,7 +125,7 @@
       <ProgramDataBaseFileName>.\Release/</ProgramDataBaseFileName>
       <WarningLevel>Level3</WarningLevel>
       <SuppressStartupBanner>true</SuppressStartupBanner>
-      <AdditionalIncludeDirectories>..\curl-7.26.0\include;..\md5</AdditionalIncludeDirectories>
+      <AdditionalIncludeDirectories>..\curl-7.28.1\include;..\md5</AdditionalIncludeDirectories>
     </ClCompile>
     <ResourceCompile>
       <PreprocessorDefinitions>NDEBUG;%(PreprocessorDefinitions)</PreprocessorDefinitions>
@@ -147,7 +147,7 @@
       </DataExecutionPrevention>
       <ImportLibrary>.\Release/cgame_mp_x86.lib</ImportLibrary>
       <TargetMachine>MachineX86</TargetMachine>
-      <AdditionalLibraryDirectories>..\curl-7.26.0\lib\Release</AdditionalLibraryDirectories>
+      <AdditionalLibraryDirectories>..\curl-7.28.1\lib\Release</AdditionalLibraryDirectories>
       <IgnoreSpecificDefaultLibraries>libcmt</IgnoreSpecificDefaultLibraries>
     </Link>
   </ItemDefinitionGroup>
