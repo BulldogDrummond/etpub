@@ -132,10 +132,18 @@
 		//If we don't do this stack traces are less accurate.
 		#ifdef GLIBC_21
 			G_LogPrintf("Stack frames: %Zd entries\n", size-1);
+		#ifndef __x86_64__
 			array[1] = (void *)ctx->uc_mcontext.gregs[EIP];
 		#else
+			array[1] = (void *)ctx->uc_mcontext.gregs[RIP];
+		#endif
+		#else
 			G_LogPrintf("Stack frames: %zd entries\n", size-1);
+		#ifndef __x86_64__
 			array[1] = (void *)ctx->uc_mcontext.gregs[REG_EIP];
+		#else
+			array[1] = (void *)ctx->uc_mcontext.gregs[REG_RIP];
+		#endif
 		#endif
 		G_LogPrintf("Backtrace:\n");
 

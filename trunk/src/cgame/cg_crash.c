@@ -151,10 +151,18 @@ void linux_backtrace(ucontext_t *ctx) {
 	//If we don't do this stack traces are less accurate.
 #ifdef GLIBC_21
 	Crash_Printf("Stack frames: %Zd entries\n", size-1);
+#ifndef __x86_64__
 	array[1] = (void *)ctx->uc_mcontext.gregs[EIP];
 #else
+	array[1] = (void *)ctx->uc_mcontext.gregs[RIP];
+#endif
+#else
 	Crash_Printf("Stack frames: %zd entries\n", size-1);
+#ifndef __x86_64__
 	array[1] = (void *)ctx->uc_mcontext.gregs[REG_EIP];
+#else
+	array[1] = (void *)ctx->uc_mcontext.gregs[REG_RIP];
+#endif
 #endif
 	Crash_Printf("Backtrace:\n");
 

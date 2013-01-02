@@ -103,8 +103,10 @@ if( WITH_LUA_SUPPORT == '1' ):
 	
 	if( g_os == 'Linux' ):
 		local_env.Append( LINKFLAGS = ['-Wl,-rpath=./'] )
-	
-	local_env.Append( LIBPATH = ['%s/lua-5.1.4/libs/%s' % ( GetLaunchDir(), g_os )] )
+		local_env.Append( LIBPATH = ['%s/lua-5.1.4/libs/linux/%s' % ( GetLaunchDir(), cpu )] )
+	else:
+		local_env.Append( LIBPATH = ['%s/lua-5.1.4/libs/win32' % GetLaunchDir()] )
+		
 	local_env.Append( LIBS = ['lua5.1'] )
 	qagame_string += lua_string
 
