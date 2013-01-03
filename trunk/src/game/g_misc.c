@@ -2946,7 +2946,7 @@ void G_LastBloodMessage()
 	shortcuts[0].character = 'a';
 	shortcuts[0].replacement = (ent) ? ent->client->pers.netname : "*unknown*";
 
-	message = G_ReplaceShortcuts(g_firstBloodMsg.string, shortcuts, 1);
+	message = G_ReplaceShortcuts(g_lastBloodMsg.string, shortcuts, 1);
 	G_PrintMessage(message, MSGPOS_CHAT);
 }
 
