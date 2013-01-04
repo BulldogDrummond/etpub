@@ -8,7 +8,7 @@
 #include "q_shared.h"
 #include "bg_public.h"
 #include "g_public.h"
-#include "g_threads.h"
+//#include "g_threads.h"
 #include "etpub.h"
 
 #include "../game/be_aas.h"

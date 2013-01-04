@@ -74,7 +74,7 @@
       </HeaderFileName>
     </Midl>
     <ClCompile>
-      <AdditionalOptions>/D "NO_BOT_SUPPORT" /D "THREADS" /D "LUA_SUPPORT" /D "_CRT_SECURE_NO_DEPRECATE" %(AdditionalOptions)</AdditionalOptions>
+      <AdditionalOptions>/D "NO_BOT_SUPPORT" /D "LUA_SUPPORT" /D "_CRT_SECURE_NO_DEPRECATE" %(AdditionalOptions)</AdditionalOptions>
       <Optimization>Disabled</Optimization>
       <AdditionalIncludeDirectories>..\..\Omnibot\ET;..\..\Omnibot\Common;..\lua-5.1.4\include;..\sha-1;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
       <PreprocessorDefinitions>WIN32;_DEBUG;_WINDOWS;BUILDING_REF_GL;DEBUG;GAMEDLL;USE_MDXFILE;%(PreprocessorDefinitions)</PreprocessorDefinitions>
@@ -125,7 +125,7 @@
       </HeaderFileName>
     </Midl>
     <ClCompile>
-      <AdditionalOptions>/D "NO_BOT_SUPPORT" /D "THREADS" /D "_CRT_SECURE_NO_DEPRECATE" %(AdditionalOptions)</AdditionalOptions>
+      <AdditionalOptions>/D "NO_BOT_SUPPORT" /D "_CRT_SECURE_NO_DEPRECATE" %(AdditionalOptions)</AdditionalOptions>
       <Optimization>MaxSpeed</Optimization>
       <InlineFunctionExpansion>OnlyExplicitInline</InlineFunctionExpansion>
       <AdditionalIncludeDirectories>..\..\Omnibot\ET;..\..\Omnibot\Common;..\sha-1;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
@@ -182,7 +182,7 @@
       </HeaderFileName>
     </Midl>
     <ClCompile>
-      <AdditionalOptions>/D "NO_BOT_SUPPORT" /D "THREADS" /D "LUA_SUPPORT" /D "_CRT_SECURE_NO_DEPRECATE" %(AdditionalOptions)</AdditionalOptions>
+      <AdditionalOptions>/D "NO_BOT_SUPPORT" /D "LUA_SUPPORT" /D "_CRT_SECURE_NO_DEPRECATE" %(AdditionalOptions)</AdditionalOptions>
       <Optimization>MaxSpeed</Optimization>
       <InlineFunctionExpansion>OnlyExplicitInline</InlineFunctionExpansion>
       <AdditionalIncludeDirectories>..\..\Omnibot\ET;..\..\Omnibot\Common;..\lua-5.1.4\include;..\sha-1;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
