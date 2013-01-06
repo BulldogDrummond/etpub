@@ -2517,10 +2517,6 @@ extern vmCvar_t			cg_debugSkills;
 extern vmCvar_t			cg_drawFireteamOverlay;
 extern vmCvar_t			cg_drawSmallPopupIcons;
 
-#ifdef SAVEGAME_SUPPORT
-extern	vmCvar_t		cg_reloading;
-#endif // SAVEGAME_SUPPORT
-
 // Gordon: some optimization cvars
 //extern	vmCvar_t		cg_fastSolids;		// UNUSED
 extern	vmCvar_t		cg_instanttapout;

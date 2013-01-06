@@ -1502,12 +1502,6 @@ void CG_InitConsoleCommands( void ) {
 	//trap_AddCommand ("selectbuddy"); 
 	// CHRUKER: b011 - Doesn't exist
 	//trap_AddCommand ("selectNextBuddy");	// xkan 9/26/2002
-
-#ifdef SAVEGAME_SUPPORT
-	// CHRUKER: b011 - Only available with savegame support
-	trap_AddCommand ("loadgame");
-	trap_AddCommand ("savegame");
-#endif
 	
 	// CHRUKER: b011 - Missing commands
 	trap_AddCommand ("imready");

@@ -1368,11 +1368,6 @@ void Cmd_Kill_f( gentity_t *ent )
 	ent->client->pers.slashKill = qtrue;
 	ent->client->pers.selfKills++;
 
-#ifdef SAVEGAME_SUPPORT
-	if( g_gametype.integer == GT_SINGLE_PLAYER && g_reloading.integer )
-		return;
-#endif // SAVEGAME_SUPPORT
-
 	ent->flags &= ~FL_GODMODE;
 	ent->client->ps.stats[STAT_HEALTH] = ent->health = 0;
 	// TTimo - if using /kill while at MG42
