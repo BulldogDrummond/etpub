@@ -463,3 +463,4 @@ current
 * pheno:   intermission chat can handle additional font characters from 0x7F to 0xFF (thx gaoesa)
 * pheno:   fixed chat area text overlaps with the gun icon
 * pheno:   fixed width of the chat area text during intermission
+* pheno:   added FG42 prone to stand 3rd person animation bugfix by N!trox*

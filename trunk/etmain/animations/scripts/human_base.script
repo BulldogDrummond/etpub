@@ -1,6 +1,7 @@
 //==========================================================================
 // $Id: human_base.script,v 1.1.2.4 2004/04/10 05:16:37 rain Exp $
 // kw: thanks to Rain and nUllSkillZ for these animation fixes.
+// pheno: added FG42 prone to stand 3rd person animation bugfix by N!trox*
 //
 // Character Animation Script     M U L T I P L A Y E R
 //
@@ -220,6 +221,10 @@ STATE COMBAT
 			both stand_rifle
 		}
 		weapons M1 Garand Scope
+		{
+			both stand_rifle
+		}
+		weapons FG42 Scope
 		{
 			both stand_rifle
 		}
@@ -2227,7 +2232,7 @@ fireweaponprone
 	}
 	weapons FG42 Scope
 	{
-		torso prone_rifle_fire
+		torso e_prone_rifle_snipefire
 	}
 }
 
