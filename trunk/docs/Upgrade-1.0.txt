@@ -14,8 +14,8 @@ Important Notes For Upgrading etpub 0.9.x to 1.0.x
 2) With this version the g_mode server cvar was completely removed. To unlock weapons for certain
    classes use g_unlockWeapons instead. All other options of g_mode have been moved to g_misc.
 
-3) The bahvior of hitsound handling has changed. Without installed client the hitsounds are handled
-   by the server configured with g_hitsound_* server cvars. With installed client (recommended) the
+3) The behavior of hitsound handling has changed. Without installed client the hitsounds are handled
+   by the server configured by g_hitsound_* server cvars. With installed client (recommended) the
    hitsounds are handled by the client. All g_hitsound_* server cvars are become useless.
    
    If you choose to use the client you have the opportunity to override the default sounds with your
