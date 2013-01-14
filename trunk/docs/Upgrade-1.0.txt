@@ -14,3 +14,21 @@ Important Notes For Upgrading etpub 0.9.x to 1.0.x
 2) With this version the g_mode server cvar was completely removed. To unlock weapons for certain
    classes use g_unlockWeapons instead. All other options of g_mode have been moved to g_misc.
 
+3) The bahvior of hitsound handling has changed. Without installed client the hitsounds are handled
+   by the server configured with g_hitsound_* server cvars. With installed client (recommended) the
+   hitsounds are handled by the client. All g_hitsound_* server cvars are become useless.
+   
+   If you choose to use the client you have the opportunity to override the default sounds with your
+   own custom pk3. Create a zip archive with following file structure and rename it to pk3 (same as
+   for other mods like ETPro or No Quarter):
+   
+      sound/hitsounds/default.wav
+      sound/hitsounds/head.wav
+      sound/hitsounds/helmet.wav
+      sound/hitsounds/team_default.wav
+      sound/hitsounds/team_head.wav
+      sound/hitsounds/team_helmet.wav
+      sound/hitsounds/team_warn_allies.wav
+      sound/hitsounds/team_warn_axis.wav
+   
+   Note: NEVER replace the default sound files within the client pk3!
