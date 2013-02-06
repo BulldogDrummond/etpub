@@ -1,5 +1,11 @@
 trunk/bin
 
+trunk/src/build/
+trunk/src/cgame.mp.i386.so
+trunk/src/qagame.mp.i386.so
+trunk/src/ui.mp.i386.so
+trunk/Omnibot/Common/BotLoadLibrary.os
+
 trunk/src/curl-7.28.1/src/*.o
 trunk/src/curl-7.28.1/src/*.lo
 
